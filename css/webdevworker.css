@@ -1,4 +1,4 @@
-/* WebDevWorker Universal Design System - Dark & Light */
+/* WebDevWorker Production Design System */
 :root, [data-theme="dark"] {
   --bg-body: #06080d;
   --bg-surface: #0c1017;
@@ -7,13 +7,13 @@
   --bg-input: #080c14;
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
+  --text-dim: #64748b;
   --border: rgba(255, 255, 255, 0.08);
   --border-focus: #38bdf8;
   --brand-cyan: #38bdf8;
   --brand-primary: #2563eb;
 }
 
-/* Force Light Mode on ALL elements across ALL tools */
 [data-theme="light"], html[data-theme="light"], body[data-theme="light"] {
   --bg-body: #f8fafc !important;
   --bg-surface: #ffffff !important;
@@ -31,15 +31,109 @@
 
 *, *::before, *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  padding: 0;
   background-color: var(--bg-body);
   color: var(--text-main);
-  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* Sidebar & Logo Fix */
+.app-shell {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 280px;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  overflow-y: auto;
+}
+
+.sidebar-brand {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--border);
+  min-height: 70px;
+}
+
+/* YEH LINE LOGO KO 52px PAR LOCK KARTI HAI */
+.sidebar-logo, .sidebar-brand img {
+  max-height: 48px !important;
+  max-width: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
+}
+
+.sidebar-nav {
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.sidebar-group-title, .nav-group-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  padding: 10px 10px 4px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.sidebar-link:hover, .sidebar-link.active {
+  color: var(--brand-cyan);
+  background: rgba(56, 189, 248, 0.1);
+}
+
+.main-viewport {
+  flex: 1;
+  margin-left: 280px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg-body);
+}
+
+.topbar {
+  height: 60px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
 }
 
 #sidebarBackdrop {
@@ -47,7 +141,23 @@ body {
   opacity: 0;
 }
 
-#sidebarBackdrop.open {
-  pointer-events: auto;
-  opacity: 1;
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .main-viewport {
+    margin-left: 0;
+  }
+  #sidebarBackdrop.open {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 40;
+    pointer-events: auto;
+    opacity: 1;
+  }
 }
