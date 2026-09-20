@@ -1,4 +1,4 @@
-# WebDevWorker <div align="center">
+<div align="center">
   <a href="https://webdevworker.com">
     <img src="https://webdevworker.com/assets/webdevworker-logo-horizontal.svg" alt="WebDevWorker Logo" width="420" />
   </a>
@@ -51,7 +51,7 @@
 
 In corporate software engineering, pasting proprietary source code, internal SQL schema definitions, JWT tokens, and sensitive JSON payloads into cloud SaaS formatters creates major **SOC 2 Type II, HIPAA, and IP sovereignty compliance violations**.
 
-Most online developer utilities send your clipboard data across unencrypted HTTP requests to third-party servers where inputs are logged, cached, or exfiltrated.
+ большинство online developer utilities send your clipboard data across unencrypted HTTP requests to third-party servers where inputs are logged, cached, or exfiltrated.
 
 **WebDevWorker changes the paradigm completely:**
 - 🔒 **100% Client-Side In-Memory Execution:** Every formatter, transpiler, regex evaluator, and cryptographic cipher runs strictly inside your local browser tab (Google Chrome V8, Apple JavaScriptCore, Mozilla SpiderMonkey).
@@ -113,7 +113,7 @@ High-precision generative UI builders, responsive math calculators, and CSS spec
 | **CSS Box Shadow Generator** | Multi-layer realistic shadow elevation and neon ambient glow physics | [Launch Tool](https://webdevworker.com/tools/css-box-shadow-generator.html) |
 | **CSS Gradient Generator** | Linear, radial, and conic gradients with color-stop CSS code generation | [Launch Tool](https://webdevworker.com/tools/css-gradient-generator.html) |
 | **CSS Glassmorphism Builder** | Frosted glass UI builder with `backdrop-filter: blur()`, specular highlights, and borders | [Launch Tool](https://webdevworker.com/tools/css-glassmorphism-generator.html) |
-| **Border Radius & Blob Shaper** | 8-point organic blob border-radius generator for modern SaaS UI | [Launch Tool](https://webdevworker.com/tools/css-border-radius-generator.html) |
+| **Border Radius & Blob Shaper** | 8-point organic organic blob border-radius generator for modern SaaS UI | [Launch Tool](https://webdevworker.com/tools/css-border-radius-generator.html) |
 | **Color Contrast & WCAG Tester** | Relative luminance calculation with WCAG 2.1 AA/AAA accessibility score verification | [Launch Tool](https://webdevworker.com/tools/color-converter-contrast.html) |
 | **CSS Flexbox Builder** | Visual playground for flex-direction, justify-content, align-items, and gap | [Launch Tool](https://webdevworker.com/tools/css-flexbox-generator.html) |
 | **CSS Grid 2D Builder** | Interactive 2D grid template areas, explicit rows/columns, and fractional sizing | [Launch Tool](https://webdevworker.com/tools/css-grid-generator.html) |
@@ -224,11 +224,35 @@ Vector assets, icon matrices, and brand styling:
 
 ## 🤖 Built-In AI Assistant Gateway
 
-WebDevWorker includes an intelligent floating developer assistant powered by a dual-gateway architecture:
-- **Groq Cloud Auto-Discovery:** Discovers and routes developer queries through high-velocity models (`qwen/qwen3.8-27b`, `openai/gpt-oss-20b`, `groq/compound-mini`) with sub-second response times.
-- **Failover to xAI Grok:** Automatic fallback to `grok-4` if primary endpoints experience downtime.
-- **Bilingual Support:** Fluently responds in English and Roman Urdu to questions regarding tool usage, formulas, and architecture.
-- **Strict Knowledge Base:** Programmed with the exact mathematical models, algorithms, and links to all 85 WebDevWorker utilities.
+WebDevWorker includes an intelligent floating developer assistant with **100% Client-Side In-Memory Execution** (zero server dependency, zero telemetry):
+- **100% Client-Side Privacy:** Operates with zero network latency directly in the browser's JavaScript memory sandbox. No source code, secrets, or JWT tokens ever leave the user's device.
+- **Typo-Tolerant Developer Matcher:** Levenshtein distance matching paired with developer acronym expansions (`jsx`, `jwt`, `pem`, `cors`, `cron`, `rem`, `docker`) and phonetic dictionaries (`bycript` -> Bcrypt, `dokker` -> Docker, `jason` -> JSON).
+- **Dual Tool & Guide Linking:** Every query surfaces instant usage steps, syntax examples, and dual action buttons: **Open Tool →** and **📖 Read Guide →**.
+- **Natural Conversational Processing:** Handles English and Roman Urdu developer questions, greetings ("salam", "hello"), and unit conversions ("16px to rem").
+
+---
+
+## ⚡ Vercel Edge Hosting & Autonomous Architecture
+
+WebDevWorker is optimized for global edge distribution via **Vercel** with full static edge caching and automated developer SEO operations:
+
+### 1. Vercel Edge Infrastructure (`vercel.json`)
+- Clean URLs (`cleanUrls: true`) and strict trailing slash handling (`trailingSlash: false`).
+- Enterprise security headers on all responses: `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `X-XSS-Protection: 1; mode=block`, and `Referrer-Policy: strict-origin-when-cross-origin`.
+- Immutable 1-year asset caching (`Cache-Control: public, max-age=31536000, immutable`) for all CSS, JS, and media assets.
+
+### 2. Autonomous 24/7 AI SEO Agent (GitHub Actions)
+- Daily cron pipeline (`.github/workflows/autonomous_seo_agent.yml`) running at `06:00 UTC`.
+- Powered by **Groq API** (`openai/gpt-oss-120b` / `qwen/qwen3.8-27b`) reading secrets securely (`${{ secrets.GROQ_API_KEY }}`).
+- Generates 2,500+ word production-grade developer guides, updates `sitemap.xml`, and automatically pings search engines via IndexNow.
+
+### 3. Instant Search Engine Indexing (IndexNow Engine)
+- Root verification key hosted at `https://www.webdevworker.com/e7c2a4b89f014d5e82a3c7b6d1e49f82.txt`.
+- Multi-endpoint Python submission engine (`scripts/indexnow_submit.py`) pushing 182+ verified URLs across IndexNow API, Yandex, and Bing.
+
+### 4. Programmatic Guides Hub (`/articles/`)
+- 85 dedicated developer guides (`/articles/<slug>-guide-2026.html`) with Schema.org `Article` & `FAQPage` JSON-LD structured data.
+- Live client-side searchable Guides Hub at `https://www.webdevworker.com/articles/`.
 
 ---
 

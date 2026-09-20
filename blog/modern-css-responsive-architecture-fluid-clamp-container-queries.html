@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html data-theme="dark" lang="en">
+<head>
+<link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#eab308"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="WebDevWorker"/>
+<script>
+  (function(){
+    try {
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      var t = localStorage.getItem('wdw_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+    } catch(e){}
+  })();
+</script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Architecting Fluid Responsive Web Interfaces: Mastering CSS Clamp() &amp; Container Queries | WebDevWorker</title>
+<meta content="An architectural deep dive into mathematical typography scaling with CSS clamp(), component-driven layouts via @container queries, and eliminating Cumulative Layout Shift (CLS) for peak Core Web Vitals." name="description"/>
+<meta content="css clamp fluid typography, css container queries, fluid responsive design, zero cls core web vitals, linear interpolation clamp, modern css architecture, webdevworker engineering blog" name="keywords"/>
+<meta content="Zaviyan, Zaviyan LLC" name="author"/>
+<meta content="index, follow" name="robots"/>
+<link href="https://webdevworker.com/blog/modern-css-responsive-architecture-fluid-clamp-container-queries.html" rel="canonical"/>
+
+<!-- Open Graph & Social Sharing -->
+<meta content="Architecting Fluid Responsive Web Interfaces: Mastering CSS Clamp() &amp; Container Queries" property="og:title"/>
+<meta content="Eliminate arbitrary media query breakpoints with linear mathematical interpolation using clamp(), dynamic @container queries, and zero Cumulative Layout Shift (CLS)." property="og:description"/>
+<meta content="https://webdevworker.com/blog/modern-css-responsive-architecture-fluid-clamp-container-queries.html" property="og:url"/>
+<meta content="article" property="og:type"/>
+<meta content="https://webdevworker.com/assets/logo.png" property="og:image"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="Architecting Fluid Responsive Web Interfaces: Mastering CSS Clamp() &amp; Container Queries" name="twitter:title"/>
+<meta content="Eliminate arbitrary media query breakpoints with linear mathematical interpolation using clamp(), dynamic @container queries, and zero Cumulative Layout Shift (CLS)." name="twitter:description"/>
+
+<!-- Schema.org Comprehensive Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "headline": "Architecting Fluid Responsive Web Interfaces: Mastering CSS Clamp() and Container Queries",
+      "description": "An architectural deep dive into mathematical typography scaling with CSS clamp(), component-driven layouts via @container queries, and eliminating Cumulative Layout Shift (CLS) for peak Core Web Vitals.",
+      "url": "https://webdevworker.com/blog/modern-css-responsive-architecture-fluid-clamp-container-queries.html",
+      "datePublished": "2026-09-18T10:00:00+00:00",
+      "dateModified": "2026-09-18T10:00:00+00:00",
+      "author": {
+        "@type": "Person",
+        "name": "Zaviyan",
+        "jobTitle": "Chief Architect & Founder",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Zaviyan LLC",
+          "url": "https://webdevworker.com"
+        }
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://webdevworker.com",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://webdevworker.com/assets/logo.png"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://webdevworker.com/blog/modern-css-responsive-architecture-fluid-clamp-container-queries.html"
+      },
+      "proficiencyLevel": "Expert",
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Engineering Blog",
+          "item": "https://webdevworker.com/blog/index.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Modern CSS Architecture",
+          "item": "https://webdevworker.com/blog/modern-css-responsive-architecture-fluid-clamp-container-queries.html"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why is CSS clamp() superior to writing multiple @media breakpoints for typography?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Traditional media queries produce jarring, stepped typography shifts at discrete pixel thresholds (e.g., 768px, 1024px). CSS clamp() calculates a smooth, continuous linear interpolation between minimum and maximum viewport widths, resulting in seamless typographic scaling on every conceivable device screen without Cumulative Layout Shift."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between CSS @media queries and @container queries?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "@media queries evaluate the global viewport dimensions of the browser window. In contrast, @container queries evaluate the specific dimensions of a component's direct parent element. This allows a card widget to render a compact mobile layout when placed in a narrow sidebar, yet automatically expand into a multi-column desktop layout when placed in the main content area, regardless of window size."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does fluid clamp calculation impact Google Core Web Vitals and Cumulative Layout Shift (CLS)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "By establishing deterministic minimum and maximum bounds along with proportional viewport scaling, CSS clamp() eliminates layout jumping when fonts or screen orientations change. When paired with explicit aspect-ratio constraints, browsers calculate exact bounding boxes before assets render, achieving a 0.00 CLS score."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<link href="/assets/favicon.png" rel="icon" type="image/png"/>
+<!-- Google AdSense -->
+<script async crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384"></script>
+<!-- Google tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G718R5DYYR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G718R5DYYR');
+</script>
+<link href="/css/webdevworker.css?v=2026-wdw-v36" rel="stylesheet"/>
+<link href="/css/ai-widget.css?v=2026-wdw-v36" rel="stylesheet"/>
+
+<style>
+
+  .blog-page-wrapper {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 24px 16px 80px 16px;
+  }
+  .blog-article-wrapper {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 20px 0 60px 0;
+  }
+  .blog-header {
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 28px;
+  }
+  .blog-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: rgba(234, 179, 8, 0.12);
+    border: 1px solid rgba(234, 179, 8, 0.35);
+    color: var(--brand-primary);
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+  .blog-title {
+    font-size: clamp(2rem, 3.5vw, 2.7rem);
+    font-weight: 900;
+    line-height: 1.22;
+    letter-spacing: -0.03em;
+    color: var(--text-main);
+    margin-bottom: 18px;
+  }
+  .blog-meta-strip {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .blog-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .blog-content {
+    color: var(--text-muted);
+    font-size: 1.02rem;
+    line-height: 1.85;
+  }
+  .blog-content h2 {
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 44px 0 16px 0;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .blog-content h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 30px 0 12px 0;
+  }
+  .blog-content p {
+    margin-bottom: 20px;
+  }
+  .blog-content strong {
+    color: var(--text-main);
+  }
+  .blog-content a {
+    color: var(--brand-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 600;
+  }
+  .blog-content a:hover {
+    filter: brightness(1.2);
+  }
+  .blog-callout {
+    background: rgba(234, 179, 8, 0.08);
+    border-left: 4px solid var(--brand-primary);
+    border-radius: 0 10px 10px 0;
+    padding: 18px 22px;
+    margin: 28px 0;
+  }
+  .blog-callout.warning {
+    background: rgba(239, 68, 68, 0.08);
+    border-left-color: #ef4444;
+  }
+  .blog-callout-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .blog-code-block {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 22px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: #e2e8f0;
+    margin: 24px 0;
+  }
+  .blog-table-wrap {
+    overflow-x: auto;
+    margin: 32px 0;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  .blog-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    text-align: left;
+  }
+  .blog-table th {
+    background: var(--bg-surface-elevated, #1e293b);
+    color: var(--text-main);
+    padding: 12px 16px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+  }
+  .blog-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .blog-table tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .blog-author-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 50px;
+  }
+  .blog-author-avatar {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ca8a04, #eab308);
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    font-weight: 900;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(234, 179, 8, 0.3);
+  }
+  .blog-author-info h4 {
+    margin: 0 0 4px 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-main);
+  }
+  .blog-author-info p {
+    margin: 0;
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .toc-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 28px 0;
+  }
+  .toc-title {
+    font-size: 0.88rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .toc-list a {
+    font-size: 0.9rem;
+    color: var(--text-main);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .toc-list a:hover {
+    color: var(--brand-primary);
+  }
+  /* Hub Grid */
+  .blog-hub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .blog-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+  }
+  .blog-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--brand-primary);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  }
+  .blog-card-badge {
+    align-self: flex-start;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .blog-card-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.35;
+    margin-bottom: 10px;
+  }
+  .blog-card-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex-grow: 1;
+  }
+  .blog-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><a href="/"><img alt="WebDevWorker Logo" src="/assets/webdevworker-logo-horizontal.svg"/></a></div>
+    <div class="sidebar-nav"><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Overview</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/" class="nav-item" title="Dashboard" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Dashboard</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">CSS &amp; Visual UI</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/tailwind-to-css-converter.html" class="nav-item" title="Tailwind to CSS Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Tailwind to CSS Converter</span></a></li><li><a href="/tools/css-box-shadow-generator.html" class="nav-item" title="CSS Box Shadow Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Box Shadow Generator</span></a></li><li><a href="/tools/css-gradient-generator.html" class="nav-item" title="CSS Gradient Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌈</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Gradient Generator</span></a></li><li><a href="/tools/css-glassmorphism-generator.html" class="nav-item" title="CSS Glassmorphism Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Glassmorphism Builder</span></a></li><li><a href="/tools/css-border-radius-generator.html" class="nav-item" title="Border Radius &amp; Blob Shaper" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🟣</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Border Radius &amp; Blob Shaper</span></a></li><li><a href="/tools/color-converter-contrast.html" class="nav-item" title="Color Contrast &amp; WCAG Tester" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎭</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Color Contrast &amp; WCAG Tester</span></a></li><li><a href="/tools/css-flexbox-generator.html" class="nav-item" title="CSS Flexbox Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Flexbox Builder</span></a></li><li><a href="/tools/css-grid-generator.html" class="nav-item" title="CSS Grid 2D Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Grid 2D Builder</span></a></li><li><a href="/tools/css-clamp-calculator.html" class="nav-item" title="CSS clamp() Fluid Typography" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔤</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS clamp() Fluid Typography</span></a></li><li><a href="/tools/css-cubic-bezier-generator.html" class="nav-item" title="CSS Cubic-Bezier Visualizer" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Cubic-Bezier Visualizer</span></a></li><li><a href="/tools/css-clip-path-generator.html" class="nav-item" title="CSS Clip-Path Polygon Shaper" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">✂️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Clip-Path Polygon Shaper</span></a></li><li><a href="/tools/css-keyframes-animation-generator.html" class="nav-item" title="CSS @keyframes Animation Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎬</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS @keyframes Animation Studio</span></a></li><li><a href="/tools/css-triangle-generator.html" class="nav-item" title="CSS Triangle &amp; Tooltip Arrow" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">▲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Triangle &amp; Tooltip Arrow</span></a></li><li><a href="/tools/svg-to-data-uri-converter.html" class="nav-item" title="SVG to CSS Data URI Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🖼️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG to CSS Data URI Converter</span></a></li><li><a href="/tools/css-text-shadow-generator.html" class="nav-item" title="CSS Text Shadow &amp; Neon Glow" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">✨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Text Shadow &amp; Neon Glow</span></a></li><li><a href="/tools/color-palette-harmonies-generator.html" class="nav-item" title="Color Palette &amp; Harmonies" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Color Palette &amp; Harmonies</span></a></li><li><a href="/tools/css-filter-effects-generator.html" class="nav-item" title="CSS Filter Effects Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎭</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Filter Effects Studio</span></a></li><li><a href="/tools/css-neumorphism-generator.html" class="nav-item" title="CSS Neumorphism (Soft UI)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔘</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Neumorphism (Soft UI)</span></a></li><li><a href="/tools/css-unit-converter.html" class="nav-item" title="CSS Unit Converter (PX/REM/VW)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Unit Converter (PX/REM/VW)</span></a></li><li><a href="/tools/css-specificity-calculator.html" class="nav-item" title="CSS Specificity Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎯</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Specificity Calculator</span></a></li><li><a href="/tools/css-transform-3d-matrix-calculator.html" class="nav-item" title="CSS 3D Transform &amp; Matrix3d" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS 3D Transform &amp; Matrix3d</span></a></li><li><a href="/tools/css-aspect-ratio-calculator.html" class="nav-item" title="CSS Aspect Ratio Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📺</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Aspect Ratio Calculator</span></a></li><li><a href="/tools/css-gradient-mesh-generator.html" class="nav-item" title="CSS Mesh Gradient Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌌</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Mesh Gradient Generator</span></a></li><li><a href="/tools/css-media-query-generator.html" class="nav-item" title="CSS Media &amp; Container Query" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Media &amp; Container Query</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Code, Data &amp; APIs</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/sql-to-typescript-prisma-converter.html" class="nav-item" title="SQL to TypeScript &amp; Prisma" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔷</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SQL to TypeScript &amp; Prisma</span></a></li><li><a href="/tools/json-formatter-validator.html" class="nav-item" title="JSON Formatter &amp; Validator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📋</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON Formatter &amp; Validator</span></a></li><li><a href="/tools/curl-to-code-converter.html" class="nav-item" title="cURL to Code Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">💻</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">cURL to Code Converter</span></a></li><li><a href="/tools/json-to-typescript-generator.html" class="nav-item" title="JSON to TypeScript Interface" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔷</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to TypeScript Interface</span></a></li><li><a href="/tools/mock-data-generator.html" class="nav-item" title="Mock Data Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Mock Data Generator</span></a></li><li><a href="/tools/code-beautifier-minifier.html" class="nav-item" title="Code Beautifier &amp; Minifier" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧹</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Code Beautifier &amp; Minifier</span></a></li><li><a href="/tools/sql-formatter.html" class="nav-item" title="SQL Query Formatter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🗄️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SQL Query Formatter</span></a></li><li><a href="/tools/base64-encoder-decoder.html" class="nav-item" title="Base64 Image &amp; Text Tool" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔤</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Base64 Image &amp; Text Tool</span></a></li><li><a href="/tools/url-encoder-decoder.html" class="nav-item" title="URL Encoder &amp; Decoder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔗</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">URL Encoder &amp; Decoder</span></a></li><li><a href="/tools/markdown-html-converter.html" class="nav-item" title="Markdown to HTML Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📝</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Markdown to HTML Converter</span></a></li><li><a href="/tools/lorem-ipsum-generator.html" class="nav-item" title="Lorem Ipsum &amp; Text Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📄</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Lorem Ipsum &amp; Text Generator</span></a></li><li><a href="/tools/html-table-to-json-converter.html" class="nav-item" title="HTML Table to JSON &amp; CSV" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML Table to JSON &amp; CSV</span></a></li><li><a href="/tools/yaml-to-json-converter.html" class="nav-item" title="YAML to JSON Configuration" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📜</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">YAML to JSON Configuration</span></a></li><li><a href="/tools/json-schema-generator.html" class="nav-item" title="JSON Schema Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON Schema Generator</span></a></li><li><a href="/tools/webhook-payload-formatter.html" class="nav-item" title="Webhook Payload &amp; Verifier" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Webhook Payload &amp; Verifier</span></a></li><li><a href="/tools/json-to-go-struct-converter.html" class="nav-item" title="JSON to Go Struct Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐹</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Go Struct Generator</span></a></li><li><a href="/tools/json-to-rust-struct-converter.html" class="nav-item" title="JSON to Rust Struct (Serde)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🦀</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Rust Struct (Serde)</span></a></li><li><a href="/tools/json-to-python-pydantic-converter.html" class="nav-item" title="JSON to Python Pydantic" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Python Pydantic</span></a></li><li><a href="/tools/json-to-yaml-converter.html" class="nav-item" title="JSON to YAML Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📑</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to YAML Converter</span></a></li><li><a href="/tools/json-to-csv-converter.html" class="nav-item" title="JSON to CSV / Excel Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to CSV / Excel Converter</span></a></li><li><a href="/tools/xml-formatter-json-converter.html" class="nav-item" title="XML Formatter &amp; JSON Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🏷️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">XML Formatter &amp; JSON Converter</span></a></li><li><a href="/tools/string-case-converter.html" class="nav-item" title="String Case Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔠</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">String Case Converter</span></a></li><li><a href="/tools/html-entity-encoder-decoder.html" class="nav-item" title="HTML Entity Encoder &amp; Decoder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML Entity Encoder &amp; Decoder</span></a></li><li><a href="/tools/unix-timestamp-converter.html" class="nav-item" title="Unix Timestamp Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⏱️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Unix Timestamp Converter</span></a></li><li><a href="/tools/number-base-converter.html" class="nav-item" title="Number Base Converter (Bin/Hex)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔢</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Number Base Converter (Bin/Hex)</span></a></li><li><a href="/tools/html-to-jsx-converter.html" class="nav-item" title="HTML to JSX / React Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚛️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML to JSX / React Converter</span></a></li><li><a href="/tools/json-to-zod-schema.html" class="nav-item" title="JSON to Zod Schema Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Zod Schema Generator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Security &amp; Cryptography</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/openssl-command-generator.html" class="nav-item" title="OpenSSL Command Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔒</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">OpenSSL Command Generator</span></a></li><li><a href="/tools/hash-generator.html" class="nav-item" title="SHA Hash &amp; Checksum" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔒</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SHA Hash &amp; Checksum</span></a></li><li><a href="/tools/uuid-generator.html" class="nav-item" title="UUID / GUID v4 Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🆔</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">UUID / GUID v4 Generator</span></a></li><li><a href="/tools/password-generator.html" class="nav-item" title="Strong Password Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔑</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Strong Password Generator</span></a></li><li><a href="/tools/jwt-decoder.html" class="nav-item" title="JWT Token Inspector" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JWT Token Inspector</span></a></li><li><a href="/tools/subresource-integrity-hash-generator.html" class="nav-item" title="Subresource Integrity (SRI)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Subresource Integrity (SRI)</span></a></li><li><a href="/tools/content-security-policy-generator.html" class="nav-item" title="Content Security Policy (CSP)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Content Security Policy (CSP)</span></a></li><li><a href="/tools/hmac-hash-generator.html" class="nav-item" title="HMAC Hash &amp; Key Signature" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HMAC Hash &amp; Key Signature</span></a></li><li><a href="/tools/aes-encryption-decryption-tool.html" class="nav-item" title="AES-GCM Encryption / Decryption" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🗝️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">AES-GCM Encryption / Decryption</span></a></li><li><a href="/tools/ulid-nanoid-generator.html" class="nav-item" title="ULID &amp; NanoID Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🆔</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">ULID &amp; NanoID Generator</span></a></li><li><a href="/tools/bcrypt-hash-cost-calculator.html" class="nav-item" title="Bcrypt Hash &amp; Cost Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧮</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Bcrypt Hash &amp; Cost Calculator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">DevOps &amp; Webmaster</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/aws-iam-s3-policy-generator.html" class="nav-item" title="AWS IAM &amp; S3 Policy Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">☁️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">AWS IAM &amp; S3 Policy Generator</span></a></li><li><a href="/tools/dockerfile-compose-generator.html" class="nav-item" title="Dockerfile &amp; Compose Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐳</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Dockerfile &amp; Compose Generator</span></a></li><li><a href="/tools/seo-keyword-density-analyzer.html" class="nav-item" title="SEO Keyword Density &amp; N-Gram" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SEO Keyword Density &amp; N-Gram</span></a></li><li><a href="/tools/cron-expression-generator.html" class="nav-item" title="Cron Expression Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⏰</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Cron Expression Builder</span></a></li><li><a href="/tools/chmod-permissions-calculator.html" class="nav-item" title="Linux Chmod Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Linux Chmod Calculator</span></a></li><li><a href="/tools/http-status-codes-inspector.html" class="nav-item" title="HTTP Status Codes Spec" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTTP Status Codes Spec</span></a></li><li><a href="/tools/javascript-keycode-tester.html" class="nav-item" title="JS KeyCode Event Tester" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⌨️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JS KeyCode Event Tester</span></a></li><li><a href="/tools/htaccess-generator.html" class="nav-item" title=".htaccess Rule Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚙️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">.htaccess Rule Builder</span></a></li><li><a href="/tools/meta-tag-generator.html" class="nav-item" title="Meta Tags &amp; Open Graph" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🏷️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Meta Tags &amp; Open Graph</span></a></li><li><a href="/tools/regex-tester.html" class="nav-item" title="Regex Tester &amp; Explainer" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Regex Tester &amp; Explainer</span></a></li><li><a href="/tools/text-diff-checker.html" class="nav-item" title="Code Diff &amp; Comparison" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚖️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Code Diff &amp; Comparison</span></a></li><li><a href="/tools/dns-record-lookup-generator.html" class="nav-item" title="DNS Zone &amp; SPF/DMARC" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">DNS Zone &amp; SPF/DMARC</span></a></li><li><a href="/tools/robots-txt-generator.html" class="nav-item" title="Robots.txt &amp; Crawler Rules" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🤖</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Robots.txt &amp; Crawler Rules</span></a></li><li><a href="/tools/user-agent-parser.html" class="nav-item" title="User-Agent &amp; Client Hints" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">User-Agent &amp; Client Hints</span></a></li><li><a href="/tools/cidr-subnet-calculator.html" class="nav-item" title="CIDR &amp; IP Subnet Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CIDR &amp; IP Subnet Calculator</span></a></li><li><a href="/tools/nginx-config-generator.html" class="nav-item" title="Nginx Server Block Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Nginx Server Block Generator</span></a></li><li><a href="/tools/websocket-client-tester.html" class="nav-item" title="WebSocket Client &amp; Debugger" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">WebSocket Client &amp; Debugger</span></a></li><li><a href="/tools/git-command-generator.html" class="nav-item" title="Git Command &amp; Workflow Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔀</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Git Command &amp; Workflow Generator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Media, Assets &amp; Viral</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/image-color-palette-extractor.html" class="nav-item" title="Image Palette &amp; Contrast" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Image Palette &amp; Contrast</span></a></li><li><a href="/tools/qr-code-generator.html" class="nav-item" title="Custom QR Code Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Custom QR Code Studio</span></a></li><li><a href="/tools/multi-favicon-pwa-generator.html" class="nav-item" title="Favicon &amp; App Icon Matrix" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📦</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Favicon &amp; App Icon Matrix</span></a></li><li><a href="/tools/svg-optimizer-converter.html" class="nav-item" title="SVG Optimizer &amp; Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG Optimizer &amp; Converter</span></a></li><li><a href="/tools/svg-path-visualizer.html" class="nav-item" title="SVG Path Visualizer &amp; Editor" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG Path Visualizer &amp; Editor</span></a></li></ul></div><div style="border-top:1px solid var(--border);margin:16px 6px;padding-top:10px;"><div style="font-size:0.72rem;text-transform:uppercase;color:var(--text-muted);letter-spacing:1px;padding:4px 14px;font-weight:700;">Legal &amp; Info</div><a href="/blog/index.html" style="display:block;padding:5px 14px;color:var(--brand-primary);font-size:0.8rem;text-decoration:none;font-weight:700;">📖 Engineering Blog</a><a href="/about.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">About WebDevWorker</a><a href="/contact.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Contact Engineering</a><a href="/privacy.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Privacy Policy</a><a href="/terms.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Terms of Service</a></div></div>
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">Modern CSS Architecture Whitepaper</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 85+ tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="blog-article-wrapper">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/blog/index.html" style="color: var(--brand-primary); text-decoration: none;">Engineering Blog</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Modern CSS Architecture</span>
+        </nav>
+
+        <header class="blog-header">
+          <div class="blog-badge">🎨 Responsive CSS &amp; Design Systems</div>
+          <h1 class="blog-title">Architecting Fluid Responsive Web Interfaces: Mastering CSS Clamp(), Container Queries, and Modern Viewport Units</h1>
+          <div class="blog-meta-strip">
+            <div class="blog-meta-item"><span>✍️</span> <strong>Zaviyan (Zaviyan LLC)</strong></div>
+            <div class="blog-meta-item"><span>📅</span> <span>September 18, 2026</span></div>
+            <div class="blog-meta-item"><span>⏱️</span> <span>15 min read</span></div>
+            <div class="blog-meta-item"><span>🎯</span> <span>Core Web Vitals &amp; Zero CLS</span></div>
+          </div>
+        </header>
+
+        <!-- Table of Contents -->
+        <div class="toc-box">
+          <div class="toc-title">Table of Contents</div>
+          <ul class="toc-list">
+            <li><a href="#section-1">1. The Death of the Rigid Breakpoint Grid</a></li>
+            <li><a href="#section-2">2. The Mathematical Calculus of CSS clamp()</a></li>
+            <li><a href="#section-3">3. Component-Driven Responsive Design with @container Queries</a></li>
+            <li><a href="#section-4">4. Achieving Zero Cumulative Layout Shift (CLS = 0.00)</a></li>
+            <li><a href="#section-5">5. Modern Dynamic Viewport Units: dvh, lvh, and svh</a></li>
+            <li><a href="#section-6">6. Architectural Comparison: Responsive Layout Techniques</a></li>
+            <li><a href="#section-7">7. Frequently Asked Engineering Questions</a></li>
+          </ul>
+        </div>
+
+        <div class="blog-content">
+
+          <h2 id="section-1">1. The Death of the Rigid Breakpoint Grid</h2>
+          <p>
+            For more than a decade, frontend development was dominated by rigid, device-specific media query breakpoints: <code>320px</code> (iPhone SE), <code>768px</code> (iPad Portrait), <code>1024px</code> (iPad Landscape), and <code>1440px</code> (Desktop). Developers wrote sprawling CSS cascades containing dozens of <code>@media (min-width: ...)</code> rules that abruptly mutated font sizes, paddings, and layout columns at specific pixel thresholds.
+          </p>
+          <p>
+            In 2026, this paradigm has broken down entirely. The hardware ecosystem has fractured into thousands of viewport permutations: foldable displays with dynamic hinges, ultra-wide 49-inch curved monitors, split-screen multitasking on tablets, and ambient web interfaces on automotive screens. When a user resizes a browser window or unfolds a screen across a rigid breakpoint, typography violently "pops" into a different size, causing visual disorientation and triggering layout recalculations.
+          </p>
+          <p>
+            Modern frontend architecture replaces stepped media queries with <strong>fluid mathematical scaling</strong> and <strong>container-aware components</strong>. Instead of asking <em>"What is the browser window size?"</em>, contemporary applications define continuous rate-of-change equations using CSS <code>clamp()</code> and query the immediate parent boundary via <code>@container</code>.
+          </p>
+
+          <div class="blog-callout">
+            <div class="blog-callout-title">📐 The Golden Rule of Modern Responsive CSS</div>
+            Use <code>clamp()</code> for fluid values that scale continuously with screen dimensions (typography, padding, gaps); use <code>@container</code> for structural transformations (switching from a stacked column to a horizontal grid); reserve <code>@media</code> strictly for hardware capabilities (color-scheme, prefers-reduced-motion, pointer precision).
+          </div>
+
+          <h2 id="section-2">2. The Mathematical Calculus of CSS clamp()</h2>
+          <p>
+            The CSS <code>clamp()</code> function takes three parameters: a minimum boundary, a preferred dynamic value, and a maximum boundary:
+          </p>
+
+          <div class="blog-code-block">
+<pre>font-size: clamp(min, preferred, max);</pre>
+          </div>
+
+          <p>
+            While setting <code>clamp(1rem, 4vw, 2.5rem)</code> is straightforward, naive implementations often produce suboptimal typography because raw viewport units (<code>vw</code>) scale infinitely. At <code>320px</code> screen width, <code>4vw</code> is only <code>12.8px</code>, while at <code>1920px</code>, <code>4vw</code> swells to <code>76.8px</code>. The text hits the clamp ceiling prematurely or stays pinned to the floor.
+          </p>
+          <p>
+            To achieve true linear interpolation between a specific minimum viewport width ((V_{min})) and maximum viewport width ((V_{max})), engineers must calculate the <strong>slope</strong> and <strong>y-intercept</strong> of a linear equation ((y = mx + b)):
+          </p>
+
+          <div class="blog-callout">
+            <div class="blog-callout-title">🧮 Fluid Slope Formula</div>
+            $$	ext{Slope} = rac{	ext{FontMax} - 	ext{FontMin}}{	ext{ViewportMax} - 	ext{ViewportMin}}$$
+            $$	ext{Y-Intercept} = 	ext{FontMin} - (	ext{Slope} 	imes 	ext{ViewportMin})$$
+          </div>
+
+          <p>
+            For example, suppose we desire an <code>h1</code> heading that scales smoothly from <code>2rem</code> (32px) at a <code>400px</code> viewport up to <code>3.75rem</code> (60px) at a <code>1200px</code> viewport:
+          </p>
+          <ul>
+            <li>(Delta 	ext{Font} = 60	ext{px} - 32	ext{px} = 28	ext{px})</li>
+            <li>(Delta 	ext{Viewport} = 1200	ext{px} - 400	ext{px} = 800	ext{px})</li>
+            <li>(	ext{Slope} = rac{28}{800} = 0.035 = 3.5	ext{vw})</li>
+            <li>(	ext{Intercept} = 32	ext{px} - (0.035 	imes 400	ext{px}) = 32	ext{px} - 14	ext{px} = 18	ext{px} = 1.125	ext{rem})</li>
+          </ul>
+
+          <p>
+            The resulting mathematically pure CSS statement is:
+          </p>
+
+          <div class="blog-code-block">
+<pre>/* Mathematically fluid typography: scales smoothly between 400px and 1200px viewports */
+h1.hero-title {
+  font-size: clamp(2rem, 1.125rem + 3.5vw, 3.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}</pre>
+          </div>
+
+          <p>
+            Calculating these linear equations by hand across dozens of font styles and spacing variables is error-prone. With WebDevWorker's <a href="/tools/css-clamp-calculator.html">CSS clamp() Fluid Typography Calculator</a>, engineers input their minimum and maximum bounds, and the exact slope-intercept equation is computed instantly with zero latency.
+          </p>
+
+          <h2 id="section-3">3. Component-Driven Responsive Design with @container Queries</h2>
+          <p>
+            While <code>clamp()</code> solves fluid scaling, it does not solve structural layout shifts for reusable UI components. A classic design system problem is the <strong>Product Card</strong> or <strong>Analytics Widget</strong>. When placed in the primary viewport column, the card has 800px of available space and should display an image alongside title, description, metrics, and call-to-action buttons in a horizontal flex row. But when that exact same card is placed in a narrow 300px sidebar, it must wrap into a vertical stack.
+          </p>
+          <p>
+            Traditional media queries cannot solve this because the global window width might still be 1440px desktop! In the past, teams created hacky class overrides like <code>.card--sidebar</code> or <code>.card--compact</code>.
+          </p>
+          <p>
+            CSS Container Queries (now natively supported across all modern rendering engines) provide the architectural solution:
+          </p>
+
+          <div class="blog-code-block">
+<pre>/* 1. Define the component's parent as a containment context */
+.widget-card-container {
+  container-type: inline-size;
+  container-name: widget;
+}
+
+/* 2. Default layout: Compact vertical stack for narrow containers */
+.widget-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+/* 3. Container Query: Automatically re-architect into horizontal layout when parent > 500px */
+@container widget (min-width: 500px) {
+  .widget-card {
+    flex-direction: row;
+    align-items: center;
+    padding: 24px;
+    gap: 20px;
+  }
+  .widget-card-media {
+    width: 140px;
+    aspect-ratio: 1 / 1;
+    flex-shrink: 0;
+  }
+}</pre>
+          </div>
+
+          <p>
+            You can generate both standard media queries and advanced container query syntax effortlessly with WebDevWorker's <a href="/tools/css-media-query-generator.html">CSS Media &amp; Container Query Generator</a>.
+          </p>
+
+          <h2 id="section-4">4. Achieving Zero Cumulative Layout Shift (CLS = 0.00)</h2>
+          <p>
+            Google's Core Web Vitals heavily penalize websites with unstable visual layouts. <strong>Cumulative Layout Shift (CLS)</strong> measures the burst of unexpected layout movements during page load. Common triggers include:
+          </p>
+          <ul>
+            <li><strong>Missing image and canvas dimensions:</strong> When an image downloads, the browser suddenly expands its height from <code>0px</code> to <code>400px</code>, pushing all content downward.</li>
+            <li><strong>Stepped media query reflows:</strong> When CSS breakpoints snap during mobile address bar expansion or viewport orientation changes.</li>
+            <li><strong>Font swapping (FOUT):</strong> When a custom webfont swaps in and has different character glyph metrics than the fallback font.</li>
+          </ul>
+          <p>
+            To eliminate CLS entirely:
+          </p>
+          <ol>
+            <li><strong>Enforce Modern Aspect Ratios:</strong> Use the CSS <code>aspect-ratio: 16 / 9;</code> property or use WebDevWorker's <a href="/tools/css-aspect-ratio-calculator.html">CSS Aspect Ratio Calculator</a> to ensure placeholder boxes reserve exact pixel dimensions prior to media hydration.</li>
+            <li><strong>Pair clamp() Line Heights:</strong> Ensure <code>line-height</code> is unitless (e.g., <code>line-height: 1.25;</code>) or scaled proportionally with font-size clamp expressions to prevent multiline text wrapping shifts.</li>
+            <li><strong>CSS Grid Fractional Units:</strong> Utilize <code>grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));</code> to avoid rigid column snapping.</li>
+          </ol>
+
+          <h2 id="section-5">5. Modern Dynamic Viewport Units: dvh, lvh, and svh</h2>
+          <p>
+            For years, mobile web developers suffered under the tyranny of <code>height: 100vh;</code>. On iOS Safari and Android Chrome, the browser's dynamic URL address bar and bottom navigation toolbar retract when scrolling down and expand when scrolling up. A container set to <code>100vh</code> rendered behind the browser controls, hiding primary buttons.
+          </p>
+          <p>
+            Modern CSS solves this with three specialized viewport units:
+          </p>
+          <ul>
+            <li><strong>svh (Small Viewport Height):</strong> Represents the viewport height when the browser address bars are fully expanded (the smallest possible visible space). Ideal for critical dialog modals and cookie consent banners.</li>
+            <li><strong>lvh (Large Viewport Height):</strong> Represents the viewport height when the browser address bars are retracted (the largest visible space).</li>
+            <li><strong>dvh (Dynamic Viewport Height):</strong> Actively tracks and dynamically interpolates with the address bar's expansion/collapse animation. Ideal for full-screen hero sections.</li>
+          </ul>
+
+          <div class="blog-code-block">
+<pre>/* Bulletproof Fullscreen Layout for Mobile & Desktop */
+.hero-fullscreen {
+  min-height: 100vh; /* Fallback for legacy browsers */
+  min-height: 100dvh; /* Modern dynamic viewport tracking */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}</pre>
+          </div>
+
+          <h2 id="section-6">6. Architectural Comparison: Responsive Layout Techniques</h2>
+          <p>
+            Evaluate the three responsive mechanisms to determine the right tool for each UI requirement:
+          </p>
+
+          <div class="blog-table-wrap">
+            <table class="blog-table">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Evaluation Scope</th>
+                  <th>Primary Advantage</th>
+                  <th>Best Used For</th>
+                  <th>CLS Risk</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>CSS clamp()</strong></td>
+                  <td>Continuous Viewport Function</td>
+                  <td>Zero breakpoint jarring; smooth linear interpolation</td>
+                  <td>Typography, margins, paddings, gap spacing</td>
+                  <td>Zero (Smooth continuous scaling)</td>
+                </tr>
+                <tr>
+                  <td><strong>@container Queries</strong></td>
+                  <td>Parent Container Dimensions</td>
+                  <td>True component encapsulation and reusability</td>
+                  <td>Card widgets, navigation bars, data tables</td>
+                  <td>Low (Self-contained in parent box)</td>
+                </tr>
+                <tr>
+                  <td><strong>@media Queries</strong></td>
+                  <td>Global Window Viewport</td>
+                  <td>Hardware feature detection, high-level page framing</td>
+                  <td>Dark mode, print styles, app shell transitions</td>
+                  <td>Moderate (Reflow occurs at snap points)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 id="section-7">7. Frequently Asked Engineering Questions</h2>
+          <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+            <details open>
+              <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer;">
+                Does using complex CSS clamp() equations hurt browser rendering performance?
+              </summary>
+              <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+                No. Modern browser engines (Blink, Gecko, WebKit) compile CSS <code>clamp()</code> and <code>calc()</code> into highly optimized floating-point machine instructions during the style calculation phase. In fact, <code>clamp()</code> reduces rendering overhead because the browser does not need to parse, match, and swap multiple discrete <code>@media</code> stylesheets.
+              </p>
+            </details>
+          </div>
+
+          <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+            <details>
+              <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer;">
+                Can CSS container queries be used with Flexbox and Grid?
+              </summary>
+              <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+                Yes! Container queries synergize perfectly with CSS Grid and Flexbox. A common pattern is applying <code>container-type: inline-size</code> on grid child items, allowing inner sub-components to react dynamically to whatever column width the CSS Grid assigns to them.
+              </p>
+            </details>
+          </div>
+
+          <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+            <details>
+              <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer;">
+                How does accessibility zooming (WCAG 2.1 SC 1.4.4) interact with CSS clamp()?
+              </summary>
+              <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+                To comply with WCAG 2.1 Level AA (Resize Text up to 200%), your <code>clamp()</code> preferred value must always include a relative unit like <code>rem</code> in its linear equation (e.g., <code>1.125rem + 3.5vw</code>). If you only use viewport units (e.g., <code>clamp(16px, 4vw, 32px)</code>), browser text-zoom features will fail to scale the text, violating accessibility guidelines.
+              </p>
+            </details>
+          </div>
+
+          <!-- Explore More Utilities Banner -->
+          <div style="background: linear-gradient(135deg, rgba(234, 179, 8, 0.12) 0%, rgba(56, 189, 248, 0.08) 100%); border: 1px solid rgba(234, 179, 8, 0.3); border-radius: 16px; padding: 28px; margin-top: 40px; text-align: center;">
+            <h3 style="margin-top: 0; font-size: 1.3rem; color: var(--text-main);">Master Modern CSS with WebDevWorker</h3>
+            <p style="font-size: 0.92rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 20px auto;">
+              Generate mathematical fluid typography equations, container queries, flexbox layouts, and box shadows in seconds.
+            </p>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+              <a href="/tools/css-clamp-calculator.html" class="btn btn-primary" style="font-size: 0.9rem; padding: 10px 20px;">Fluid clamp() Calculator &rarr;</a>
+              <a href="/tools/css-media-query-generator.html" class="btn btn-secondary" style="font-size: 0.9rem; padding: 10px 20px;">Media &amp; Container Query Builder &rarr;</a>
+            </div>
+          </div>
+
+          <!-- Author Bio -->
+          <div class="blog-author-card">
+            <div class="blog-author-avatar">Z</div>
+            <div class="blog-author-info">
+              <h4>Authored by Zaviyan</h4>
+              <p>
+                Chief Architect &amp; Founder at <strong>Zaviyan LLC</strong>. Author of high-performance CSS utilities, zero-telemetry developer infrastructure, and responsive design systems. Inquiries and feedback: <a href="mailto:business@zaviyanll.com" style="color: var(--brand-primary); text-decoration: none; font-weight: 600;">business@zaviyanll.com</a>.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </article>
+
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>85+ professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanll.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanll.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">CSS &amp; Visual UI</div>
+              <ul class="footer-col-links">
+                <li><a href="/tools/tailwind-to-css-converter.html">Tailwind to CSS</a></li>
+                <li><a href="/tools/css-box-shadow-generator.html">Box Shadow Studio</a></li>
+                <li><a href="/tools/css-gradient-generator.html">Gradient Generator</a></li>
+                <li><a href="/tools/css-flexbox-generator.html">Flexbox Builder</a></li>
+                <li><a href="/tools/css-clamp-calculator.html">Fluid Typography</a></li>
+              </ul>
+            </div>
+            <div>
+              <div class="footer-col-title">Code &amp; APIs</div>
+              <ul class="footer-col-links">
+                <li><a href="/tools/sql-to-typescript-prisma-converter.html">SQL to Prisma</a></li>
+                <li><a href="/tools/json-formatter-validator.html">JSON Formatter</a></li>
+                <li><a href="/tools/json-to-zod-schema.html">JSON to Zod</a></li>
+                <li><a href="/tools/curl-to-code-converter.html">cURL to Code</a></li>
+                <li><a href="/tools/base64-encoder-decoder.html">Base64 Converter</a></li>
+              </ul>
+            </div>
+            <div>
+              <div class="footer-col-title">Security &amp; DevOps</div>
+              <ul class="footer-col-links">
+                <li><a href="/tools/aes-encryption-decryption-tool.html">AES-256 Crypto</a></li>
+                <li><a href="/tools/subresource-integrity-hash-generator.html">SRI Hash Builder</a></li>
+                <li><a href="/tools/content-security-policy-generator.html">CSP Generator</a></li>
+                <li><a href="/tools/dockerfile-compose-generator.html">Dockerfile Studio</a></li>
+                <li><a href="/tools/nginx-config-generator.html">Nginx Server Block</a></li>
+              </ul>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Legal</div>
+              <ul class="footer-col-links">
+                <li><a href="/blog/index.html" style="color: var(--brand-primary); font-weight: 700;">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/contact.html">Contact Engineering</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v36" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v36" defer></script>
+</body>
+</html>

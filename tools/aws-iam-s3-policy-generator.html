@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html data-theme="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>AWS IAM & S3 Bucket Policy Generator — Online Developer Tool 2026 | WebDevWorker</title>
+  <meta content="Visually generate secure, production-ready AWS IAM and S3 Bucket JSON policies. Configure least-privilege permissions, cross-account access, CloudFront OAC, and IP restrictions with zero syntax errors." name="description"/>
+  <meta content="aws iam policy generator, s3 bucket policy builder, aws json policy generator 2026, least privilege iam generator, s3 bucket security policy, cloudfront oac policy, aws iam permission generator" name="keywords"/>
+  <link href="https://webdevworker.com/tools/aws-iam-s3-policy-generator.html" rel="canonical"/>
+  <meta content="WebDevWorker" name="author"/>
+  <meta content="index, follow" name="robots"/>
+  <meta content="AWS IAM & S3 Bucket Policy Generator | WebDevWorker" property="og:title"/>
+  <meta content="Visually generate secure, production-ready AWS IAM and S3 Bucket JSON policies with least-privilege permissions and CloudFront OAC." property="og:description"/>
+  <meta content="https://webdevworker.com/tools/aws-iam-s3-policy-generator.html" property="og:url"/>
+  <meta content="website" property="og:type"/>
+  <meta content="https://webdevworker.com/assets/logo.png" property="og:image"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="AWS IAM & S3 Bucket Policy Generator | WebDevWorker"/>
+  <meta name="twitter:description" content="Visually generate secure, production-ready AWS IAM and S3 Bucket JSON policies with least-privilege permissions and CloudFront OAC."/>
+  <meta name="twitter:image" content="https://webdevworker.com/assets/logo.png"/>
+  <link href="/assets/favicon.png" rel="icon" type="image/png"/>
+  <link rel="manifest" href="/manifest.json"/>
+
+  <!-- Google AdSense -->
+  <script async crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384"></script>
+  <!-- Google tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-G718R5DYYR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-G718R5DYYR');
+  </script>
+
+  <link href="/css/webdevworker.css?v=2026-wdw-v35" rel="stylesheet"/>
+  <link href="/css/ai-widget.css?v=2026-wdw-v35" rel="stylesheet"/>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "AWS IAM & S3 Bucket Policy Generator",
+      "url": "https://webdevworker.com/tools/aws-iam-s3-policy-generator.html",
+      "description": "Visually generate secure, production-ready AWS IAM and S3 Bucket JSON policies. Configure least-privilege permissions, cross-account access, CloudFront OAC, and IP restrictions with zero syntax errors.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://webdevworker.com",
+        "founder": "Zaviyan"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "DevOps & Webmaster",
+          "item": "https://webdevworker.com/#categories"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "AWS Policy Generator",
+          "item": "https://webdevworker.com/tools/aws-iam-s3-policy-generator.html"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the difference between an IAM Policy and an S3 Bucket Policy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An IAM policy is an identity-based policy attached to an IAM user, group, or role defining what that identity can do. An S3 bucket policy is a resource-based policy attached directly to an S3 bucket controlling who (which accounts or users) can access that specific bucket."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does s3:ListBucket require the bucket ARN without /*?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "s3:ListBucket is a bucket-level action that operates on the container itself (arn:aws:s3:::bucket-name). In contrast, s3:GetObject and s3:PutObject operate on individual objects within the bucket and require the wildcard suffix (arn:aws:s3:::bucket-name/*)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does CloudFront Origin Access Control (OAC) replace OAI?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "CloudFront OAC is the modern AWS standard replacing deprecated Origin Access Identity (OAI). It supports all S3 buckets in all regions, encrypted S3 transfers, and dynamic request signing using AWS SigV4."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can an explicit Deny in an S3 Bucket Policy override an IAM Allow?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. In the AWS policy evaluation logic, an explicit Deny always trumps any number of explicit Allows, regardless of whether the Allow was defined on an IAM identity or a resource policy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I require all S3 traffic to be encrypted in transit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Add a Statement with Effect Deny, Action s3:*, and a Condition block using Bool: { aws:SecureTransport: false }. This immediately blocks all unencrypted HTTP requests."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this generator transmit my AWS bucket ARNs to a remote server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. WebDevWorker runs completely inside your client browser memory sandbox. Zero network telemetry is generated, and your ARNs never leave your local machine."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><a href="/"><img alt="WebDevWorker Logo" src="/assets/webdevworker-logo-horizontal.svg"/></a></div>
+    <div class="sidebar-nav"><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Overview</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/" class="nav-item" title="Dashboard" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Dashboard</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">CSS &amp; Visual UI</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/tailwind-to-css-converter.html" class="nav-item" title="Tailwind to CSS Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Tailwind to CSS Converter</span></a></li><li><a href="/tools/css-box-shadow-generator.html" class="nav-item" title="CSS Box Shadow Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Box Shadow Generator</span></a></li><li><a href="/tools/css-gradient-generator.html" class="nav-item" title="CSS Gradient Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌈</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Gradient Generator</span></a></li><li><a href="/tools/css-glassmorphism-generator.html" class="nav-item" title="CSS Glassmorphism Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Glassmorphism Builder</span></a></li><li><a href="/tools/css-border-radius-generator.html" class="nav-item" title="Border Radius &amp; Blob Shaper" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🟣</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Border Radius &amp; Blob Shaper</span></a></li><li><a href="/tools/color-converter-contrast.html" class="nav-item" title="Color Contrast &amp; WCAG Tester" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎭</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Color Contrast &amp; WCAG Tester</span></a></li><li><a href="/tools/css-flexbox-generator.html" class="nav-item" title="CSS Flexbox Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Flexbox Builder</span></a></li><li><a href="/tools/css-grid-generator.html" class="nav-item" title="CSS Grid 2D Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Grid 2D Builder</span></a></li><li><a href="/tools/css-clamp-calculator.html" class="nav-item" title="CSS clamp() Fluid Typography" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔤</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS clamp() Fluid Typography</span></a></li><li><a href="/tools/css-cubic-bezier-generator.html" class="nav-item" title="CSS Cubic-Bezier Visualizer" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Cubic-Bezier Visualizer</span></a></li><li><a href="/tools/css-clip-path-generator.html" class="nav-item" title="CSS Clip-Path Polygon Shaper" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">✂️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Clip-Path Polygon Shaper</span></a></li><li><a href="/tools/css-keyframes-animation-generator.html" class="nav-item" title="CSS @keyframes Animation Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎬</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS @keyframes Animation Studio</span></a></li><li><a href="/tools/css-triangle-generator.html" class="nav-item" title="CSS Triangle &amp; Tooltip Arrow" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">▲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Triangle &amp; Tooltip Arrow</span></a></li><li><a href="/tools/svg-to-data-uri-converter.html" class="nav-item" title="SVG to CSS Data URI Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🖼️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG to CSS Data URI Converter</span></a></li><li><a href="/tools/css-text-shadow-generator.html" class="nav-item" title="CSS Text Shadow &amp; Neon Glow" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">✨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Text Shadow &amp; Neon Glow</span></a></li><li><a href="/tools/color-palette-harmonies-generator.html" class="nav-item" title="Color Palette &amp; Harmonies" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Color Palette &amp; Harmonies</span></a></li><li><a href="/tools/css-filter-effects-generator.html" class="nav-item" title="CSS Filter Effects Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎭</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Filter Effects Studio</span></a></li><li><a href="/tools/css-neumorphism-generator.html" class="nav-item" title="CSS Neumorphism (Soft UI)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔘</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Neumorphism (Soft UI)</span></a></li><li><a href="/tools/css-unit-converter.html" class="nav-item" title="CSS Unit Converter (PX/REM/VW)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Unit Converter (PX/REM/VW)</span></a></li><li><a href="/tools/css-specificity-calculator.html" class="nav-item" title="CSS Specificity Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎯</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Specificity Calculator</span></a></li><li><a href="/tools/css-transform-3d-matrix-calculator.html" class="nav-item" title="CSS 3D Transform &amp; Matrix3d" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS 3D Transform &amp; Matrix3d</span></a></li><li><a href="/tools/css-aspect-ratio-calculator.html" class="nav-item" title="CSS Aspect Ratio Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📺</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Aspect Ratio Calculator</span></a></li><li><a href="/tools/css-gradient-mesh-generator.html" class="nav-item" title="CSS Mesh Gradient Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌌</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Mesh Gradient Generator</span></a></li><li><a href="/tools/css-media-query-generator.html" class="nav-item" title="CSS Media &amp; Container Query" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Media &amp; Container Query</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Code, Data &amp; APIs</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/sql-to-typescript-prisma-converter.html" class="nav-item" title="SQL to TypeScript &amp; Prisma" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔷</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SQL to TypeScript &amp; Prisma</span></a></li><li><a href="/tools/json-formatter-validator.html" class="nav-item" title="JSON Formatter &amp; Validator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📋</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON Formatter &amp; Validator</span></a></li><li><a href="/tools/curl-to-code-converter.html" class="nav-item" title="cURL to Code Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">💻</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">cURL to Code Converter</span></a></li><li><a href="/tools/json-to-typescript-generator.html" class="nav-item" title="JSON to TypeScript Interface" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔷</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to TypeScript Interface</span></a></li><li><a href="/tools/mock-data-generator.html" class="nav-item" title="Mock Data Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Mock Data Generator</span></a></li><li><a href="/tools/code-beautifier-minifier.html" class="nav-item" title="Code Beautifier &amp; Minifier" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧹</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Code Beautifier &amp; Minifier</span></a></li><li><a href="/tools/sql-formatter.html" class="nav-item" title="SQL Query Formatter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🗄️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SQL Query Formatter</span></a></li><li><a href="/tools/base64-encoder-decoder.html" class="nav-item" title="Base64 Image &amp; Text Tool" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔤</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Base64 Image &amp; Text Tool</span></a></li><li><a href="/tools/url-encoder-decoder.html" class="nav-item" title="URL Encoder &amp; Decoder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔗</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">URL Encoder &amp; Decoder</span></a></li><li><a href="/tools/markdown-html-converter.html" class="nav-item" title="Markdown to HTML Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📝</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Markdown to HTML Converter</span></a></li><li><a href="/tools/lorem-ipsum-generator.html" class="nav-item" title="Lorem Ipsum &amp; Text Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📄</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Lorem Ipsum &amp; Text Generator</span></a></li><li><a href="/tools/html-table-to-json-converter.html" class="nav-item" title="HTML Table to JSON &amp; CSV" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML Table to JSON &amp; CSV</span></a></li><li><a href="/tools/yaml-to-json-converter.html" class="nav-item" title="YAML to JSON Configuration" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📜</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">YAML to JSON Configuration</span></a></li><li><a href="/tools/json-schema-generator.html" class="nav-item" title="JSON Schema Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON Schema Generator</span></a></li><li><a href="/tools/webhook-payload-formatter.html" class="nav-item" title="Webhook Payload &amp; Verifier" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Webhook Payload &amp; Verifier</span></a></li><li><a href="/tools/json-to-go-struct-converter.html" class="nav-item" title="JSON to Go Struct Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐹</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Go Struct Generator</span></a></li><li><a href="/tools/json-to-rust-struct-converter.html" class="nav-item" title="JSON to Rust Struct (Serde)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🦀</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Rust Struct (Serde)</span></a></li><li><a href="/tools/json-to-python-pydantic-converter.html" class="nav-item" title="JSON to Python Pydantic" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Python Pydantic</span></a></li><li><a href="/tools/json-to-yaml-converter.html" class="nav-item" title="JSON to YAML Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📑</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to YAML Converter</span></a></li><li><a href="/tools/json-to-csv-converter.html" class="nav-item" title="JSON to CSV / Excel Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to CSV / Excel Converter</span></a></li><li><a href="/tools/xml-formatter-json-converter.html" class="nav-item" title="XML Formatter &amp; JSON Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🏷️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">XML Formatter &amp; JSON Converter</span></a></li><li><a href="/tools/string-case-converter.html" class="nav-item" title="String Case Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔠</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">String Case Converter</span></a></li><li><a href="/tools/html-entity-encoder-decoder.html" class="nav-item" title="HTML Entity Encoder &amp; Decoder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML Entity Encoder &amp; Decoder</span></a></li><li><a href="/tools/unix-timestamp-converter.html" class="nav-item" title="Unix Timestamp Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⏱️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Unix Timestamp Converter</span></a></li><li><a href="/tools/number-base-converter.html" class="nav-item" title="Number Base Converter (Bin/Hex)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔢</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Number Base Converter (Bin/Hex)</span></a></li><li><a href="/tools/html-to-jsx-converter.html" class="nav-item" title="HTML to JSX / React Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚛️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML to JSX / React Converter</span></a></li><li><a href="/tools/json-to-zod-schema.html" class="nav-item" title="JSON to Zod Schema Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Zod Schema Generator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Security &amp; Cryptography</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/openssl-command-generator.html" class="nav-item" title="OpenSSL Command Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔒</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">OpenSSL Command Generator</span></a></li><li><a href="/tools/hash-generator.html" class="nav-item" title="SHA Hash &amp; Checksum" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔒</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SHA Hash &amp; Checksum</span></a></li><li><a href="/tools/uuid-generator.html" class="nav-item" title="UUID / GUID v4 Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🆔</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">UUID / GUID v4 Generator</span></a></li><li><a href="/tools/password-generator.html" class="nav-item" title="Strong Password Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔑</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Strong Password Generator</span></a></li><li><a href="/tools/jwt-decoder.html" class="nav-item" title="JWT Token Inspector" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JWT Token Inspector</span></a></li><li><a href="/tools/subresource-integrity-hash-generator.html" class="nav-item" title="Subresource Integrity (SRI)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Subresource Integrity (SRI)</span></a></li><li><a href="/tools/content-security-policy-generator.html" class="nav-item" title="Content Security Policy (CSP)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Content Security Policy (CSP)</span></a></li><li><a href="/tools/hmac-hash-generator.html" class="nav-item" title="HMAC Hash &amp; Key Signature" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HMAC Hash &amp; Key Signature</span></a></li><li><a href="/tools/aes-encryption-decryption-tool.html" class="nav-item" title="AES-GCM Encryption / Decryption" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🗝️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">AES-GCM Encryption / Decryption</span></a></li><li><a href="/tools/ulid-nanoid-generator.html" class="nav-item" title="ULID &amp; NanoID Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🆔</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">ULID &amp; NanoID Generator</span></a></li><li><a href="/tools/bcrypt-hash-cost-calculator.html" class="nav-item" title="Bcrypt Hash &amp; Cost Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧮</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Bcrypt Hash &amp; Cost Calculator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">DevOps &amp; Webmaster</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/aws-iam-s3-policy-generator.html" class="nav-item active" title="AWS IAM &amp; S3 Policy Generator" style="display:flex;align-items:center;gap:10px;padding:9px 12px;text-decoration:none;font-size:0.85rem;border-radius:8px;margin:2px 4px;font-weight:700;transition:all 0.15s ease;background:linear-gradient(90deg, rgba(234,179,8,0.22) 0%, rgba(234,179,8,0.06) 100%) !important;color:#eab308 !important;border-left:4px solid #eab308 !important;box-shadow:inset 0 0 14px rgba(234,179,8,0.12) !important;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">☁️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;color:#eab308 !important;font-weight:700;">AWS IAM &amp; S3 Policy Generator</span><span style="width:8px;height:8px;border-radius:50%;background:#eab308;box-shadow:0 0 10px #eab308;margin-left:auto;flex-shrink:0;"></span></a></li><li><a href="/tools/dockerfile-compose-generator.html" class="nav-item" title="Dockerfile &amp; Compose Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐳</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Dockerfile &amp; Compose Generator</span></a></li><li><a href="/tools/seo-keyword-density-analyzer.html" class="nav-item" title="SEO Keyword Density &amp; N-Gram" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SEO Keyword Density &amp; N-Gram</span></a></li><li><a href="/tools/cron-expression-generator.html" class="nav-item" title="Cron Expression Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⏰</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Cron Expression Builder</span></a></li><li><a href="/tools/chmod-permissions-calculator.html" class="nav-item" title="Linux Chmod Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Linux Chmod Calculator</span></a></li><li><a href="/tools/http-status-codes-inspector.html" class="nav-item" title="HTTP Status Codes Spec" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTTP Status Codes Spec</span></a></li><li><a href="/tools/javascript-keycode-tester.html" class="nav-item" title="JS KeyCode Event Tester" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⌨️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JS KeyCode Event Tester</span></a></li><li><a href="/tools/htaccess-generator.html" class="nav-item" title=".htaccess Rule Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚙️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">.htaccess Rule Builder</span></a></li><li><a href="/tools/meta-tag-generator.html" class="nav-item" title="Meta Tags &amp; Open Graph" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🏷️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Meta Tags &amp; Open Graph</span></a></li><li><a href="/tools/regex-tester.html" class="nav-item" title="Regex Tester &amp; Explainer" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Regex Tester &amp; Explainer</span></a></li><li><a href="/tools/text-diff-checker.html" class="nav-item" title="Code Diff &amp; Comparison" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚖️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Code Diff &amp; Comparison</span></a></li><li><a href="/tools/dns-record-lookup-generator.html" class="nav-item" title="DNS Zone &amp; SPF/DMARC" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">DNS Zone &amp; SPF/DMARC</span></a></li><li><a href="/tools/robots-txt-generator.html" class="nav-item" title="Robots.txt &amp; Crawler Rules" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🤖</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Robots.txt &amp; Crawler Rules</span></a></li><li><a href="/tools/user-agent-parser.html" class="nav-item" title="User-Agent &amp; Client Hints" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">User-Agent &amp; Client Hints</span></a></li><li><a href="/tools/cidr-subnet-calculator.html" class="nav-item" title="CIDR &amp; IP Subnet Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CIDR &amp; IP Subnet Calculator</span></a></li><li><a href="/tools/nginx-config-generator.html" class="nav-item" title="Nginx Server Block Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Nginx Server Block Generator</span></a></li><li><a href="/tools/websocket-client-tester.html" class="nav-item" title="WebSocket Client &amp; Debugger" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">WebSocket Client &amp; Debugger</span></a></li><li><a href="/tools/git-command-generator.html" class="nav-item" title="Git Command &amp; Workflow Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔀</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Git Command &amp; Workflow Generator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Media, Assets &amp; Viral</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/image-color-palette-extractor.html" class="nav-item" title="Image Palette &amp; Contrast" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Image Palette &amp; Contrast</span></a></li><li><a href="/tools/qr-code-generator.html" class="nav-item" title="Custom QR Code Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Custom QR Code Studio</span></a></li><li><a href="/tools/multi-favicon-pwa-generator.html" class="nav-item" title="Favicon &amp; App Icon Matrix" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📦</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Favicon &amp; App Icon Matrix</span></a></li><li><a href="/tools/svg-optimizer-converter.html" class="nav-item" title="SVG Optimizer &amp; Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG Optimizer &amp; Converter</span></a></li><li><a href="/tools/svg-path-visualizer.html" class="nav-item" title="SVG Path Visualizer &amp; Editor" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG Path Visualizer &amp; Editor</span></a></li></ul></div><div style="border-top:1px solid var(--border);margin:16px 6px;padding-top:10px;"><div style="font-size:0.72rem;text-transform:uppercase;color:var(--text-muted);letter-spacing:1px;padding:4px 14px;font-weight:700;">Legal &amp; Info</div><a href="/blog/index.html" style="display:block;padding:5px 14px;color:var(--brand-primary);font-size:0.8rem;text-decoration:none;font-weight:700;">📖 Engineering Blog</a><a href="/about.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">About WebDevWorker</a><a href="/contact.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Contact Engineering</a><a href="/privacy.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Privacy Policy</a><a href="/terms.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Terms of Service</a></div></div>
+  </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <div class="main-viewport">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Menu">☰</button>
+          <span class="topbar-title">⚡ ☁️ AWS Policy Generator</span>
+        </div>
+        <div class="topbar-right">
+          <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <!-- Tool Breadcrumbs -->
+        <nav style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px; display: flex; gap: 8px; align-items: center;">
+          <a href="/" style="color: var(--text-muted); text-decoration: none;">Dashboard</a>
+          <span>/</span>
+          <a href="/#categories" style="color: var(--text-muted); text-decoration: none;">DevOps & Webmaster</a>
+          <span>/</span>
+          <span style="color: var(--brand-primary); font-weight: 700;">AWS Policy Generator</span>
+        </nav>
+
+        <!-- Tool Header -->
+        <div class="tool-header-block" style="margin-bottom: 24px;">
+          <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--brand-primary); font-weight: 800; letter-spacing: 1px; margin-bottom: 6px;">
+            AWS CLOUD SUITE • 100% CLIENT-SIDE LEAST PRIVILEGE ENGINE
+          </div>
+          <h1 class="tool-header-title">
+            <span>☁️</span> AWS IAM &amp; S3 Bucket Policy Generator
+          </h1>
+          <p class="tool-header-desc">Visually generate secure, production-ready AWS IAM and S3 Bucket JSON policies. Configure least-privilege permissions, cross-account access, CloudFront OAC, and IP restrictions with zero syntax errors.</p>
+        </div>
+
+        <!-- Interactive Tool Card -->
+        <div class="tool-form-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; box-shadow: var(--shadow-card); margin-bottom: 40px;">
+          
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+          <span style="font-size: 0.84rem; font-weight: 700; color: var(--text-muted);">Quick Presets:</span>
+          <button class="btn btn-secondary" onclick="loadPreset('s3-read-only')" style="font-size: 0.78rem; padding: 6px 12px;">Public S3 Read</button>
+          <button class="btn btn-secondary" onclick="loadPreset('s3-write-only')" style="font-size: 0.78rem; padding: 6px 12px;">App Upload Role</button>
+          <button class="btn btn-secondary" onclick="loadPreset('cloudfront-oac')" style="font-size: 0.78rem; padding: 6px 12px;">CloudFront OAC</button>
+          <button class="btn btn-secondary" onclick="loadPreset('s3-ip-restricted')" style="font-size: 0.78rem; padding: 6px 12px;">IP Restricted</button>
+        </div>
+        <div style="display: flex; gap: 10px; font-size: 0.82rem; color: var(--text-dim);">
+          <span id="policySize" style="background: var(--bg-subtle); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border);">412 Bytes</span>
+          <span id="actionCount" style="background: var(--bg-subtle); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border);">2 Actions</span>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+        <!-- Configuration Column -->
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div class="form-group">
+            <label class="form-label">Statement ID (Sid)</label>
+            <input type="text" id="policySid" class="form-input" value="AllowPublicReadAndList" oninput="generatePolicy()" placeholder="e.g. AllowS3AppAccess">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label class="form-label">Effect</label>
+              <select id="policyEffect" class="form-select" onchange="generatePolicy()">
+                <option value="Allow">Allow</option>
+                <option value="Deny">Deny</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Principal</label>
+              <input type="text" id="policyPrincipal" class="form-input" value="*" oninput="generatePolicy()" placeholder="* or ARN">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Resource ARN</label>
+            <input type="text" id="policyResource" class="form-input" value="arn:aws:s3:::my-production-bucket/*" oninput="generatePolicy()" placeholder="arn:aws:s3:::bucket-name/*">
+            <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">For bucket-level permissions, include bucket name; for objects, append /*</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Optional IP Whitelist Condition</label>
+            <input type="text" id="policyConditionIp" class="form-input" value="" oninput="generatePolicy()" placeholder="e.g. 203.0.113.0/24 (Leave blank if none)">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Target Actions</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-height: 180px; overflow-y: auto; background: var(--bg-subtle); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--text-main); cursor: pointer;"><input type="checkbox" class="action-checkbox" value="s3:GetObject" checked onchange="generatePolicy()"> s3:GetObject</label>
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--text-main); cursor: pointer;"><input type="checkbox" class="action-checkbox" value="s3:ListBucket" checked onchange="generatePolicy()"> s3:ListBucket</label>
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--text-main); cursor: pointer;"><input type="checkbox" class="action-checkbox" value="s3:PutObject" onchange="generatePolicy()"> s3:PutObject</label>
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--text-main); cursor: pointer;"><input type="checkbox" class="action-checkbox" value="s3:DeleteObject" onchange="generatePolicy()"> s3:DeleteObject</label>
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--text-main); cursor: pointer;"><input type="checkbox" class="action-checkbox" value="s3:PutObjectAcl" onchange="generatePolicy()"> s3:PutObjectAcl</label>
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--text-main); cursor: pointer;"><input type="checkbox" class="action-checkbox" value="s3:GetBucketLocation" onchange="generatePolicy()"> s3:GetBucketLocation</label>
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--text-main); cursor: pointer;"><input type="checkbox" class="action-checkbox" value="s3:AbortMultipartUpload" onchange="generatePolicy()"> s3:AbortMultipart</label>
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--text-main); cursor: pointer;"><input type="checkbox" class="action-checkbox" value="s3:PutBucketPolicy" onchange="generatePolicy()"> s3:PutBucketPolicy</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generated JSON Column -->
+        <div style="display: flex; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <label class="form-label" style="margin: 0;">Compiled AWS IAM Policy (JSON)</label>
+            <button class="btn btn-primary" onclick="copyCode('policyOutput', this)" style="padding: 6px 14px; font-size: 0.82rem;"><span>📋</span> Copy Policy</button>
+          </div>
+          <pre id="policyOutput" class="code-output-box" style="flex: 1; min-height: 380px; margin: 0; padding: 18px; font-family: var(--font-mono); font-size: 0.86rem; line-height: 1.55; border-radius: 12px; overflow: auto;"></pre>
+        </div>
+      </div>
+    
+        </div>
+
+        <!-- High-Value 6-Card Technical SEO Suite -->
+        <section class="seo-content-suite" style="display: flex; flex-direction: column; gap: 32px; margin-top: 48px;">
+          <!-- Card 1: Architectural Overview -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>🛡️</span> Architectural Overview: AWS IAM & S3 Security Architecture
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.94rem;">
+              AWS Identity and Access Management (IAM) and Amazon S3 Bucket Policies represent the foundation of public cloud infrastructure security. In modern cloud engineering, misconfigured IAM permissions are the single leading cause of accidental cloud data breaches. An S3 bucket policy is a resource-based policy written in JavaScript Object Notation (JSON) that grants or restricts access permissions to the bucket and objects stored within it. WebDevWorker's AWS IAM &amp; S3 Policy Builder enforces strict syntax adherence to the official AWS 2012-10-17 policy grammar, preventing invalid actions, malformed wildcards, and unquoted ARNs. Client-side evaluation ensures your enterprise infrastructure credentials, account numbers, and bucket topologies remain isolated in your local browser sandbox.
+            </div>
+          </article>
+
+          <!-- Card 2: Mathematical / Algorithmic Models -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>📐</span> Formal Mathematical Grammar & IAM Evaluation Logic
+            </h2>
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; padding: 20px; font-family: var(--font-mono); font-size: 0.85rem; color: #38bdf8; line-height: 1.6; overflow-x: auto; white-space: pre-wrap;">
+AWS Policy Evaluation Algorithm:
+Decision = DefaultDeny 
+  ∧ (ExplicitDeny ? Deny : (ExplicitAllow ? Allow : Deny))
+
+Grammar Specification:
+Policy := { "Version": "2012-10-17", "Statement": [ Statement+ ] }
+Statement := {
+  "Sid"?: String,
+  "Effect": "Allow" | "Deny",
+  "Principal": "*" | { "AWS"|"Service"|"Federated": String | String[] },
+  "Action": String | String[],
+  "Resource": ARN | ARN[],
+  "Condition"?: { Operator: { ContextKey: Value } }
+}
+            </div>
+          </article>
+
+          <!-- Card 3: Production Code Implementation -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>💻</span> Production Python (Boto3) & Terraform Policy Attachment
+            </h2>
+            <pre class="code-output-box" style="padding: 20px; border-radius: 10px; font-family: var(--font-mono); font-size: 0.84rem; line-height: 1.6; overflow-x: auto; color: #f8fafc;"># 1. Terraform S3 Bucket Policy Resource
+resource "aws_s3_bucket_policy" "production_policy" {
+  bucket = aws_s3_bucket.main.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "AllowCloudFrontServicePrincipalReadOnly"
+        Effect    = "Allow"
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        }
+        Action   = "s3:GetObject"
+        Resource = "${aws_s3_bucket.main.arn}/*"
+      }
+    ]
+  })
+}
+
+# 2. Python Boto3 Client Policy Deployment
+import boto3, json
+
+s3_client = boto3.client('s3')
+policy_document = {
+    "Version": "2012-10-17",
+    "Statement": [{
+        "Sid": "EnforceTLSRequestsOnly",
+        "Effect": "Deny",
+        "Principal": "*",
+        "Action": "s3:*",
+        "Resource": ["arn:aws:s3:::my-bucket", "arn:aws:s3:::my-bucket/*"],
+        "Condition": {"Bool": {"aws:SecureTransport": "false"}}
+    }]
+}
+s3_client.put_bucket_policy(Bucket='my-bucket', Policy=json.dumps(policy_document))</pre>
+          </article>
+
+          <!-- Card 4: Step-by-Step Workflow Guide -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>📋</span> Step-by-Step Enterprise AWS Deployment Guide
+            </h2>
+            <ol style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem; padding-left: 20px;">
+              
+    <li style="margin-bottom: 10px;">
+      <strong style="color: var(--text-main);">Step 1:</strong> Select your required permission template (e.g. Read-Only Static Site, App Upload Worker, or CloudFront OAC).
+    </li>
+  
+    <li style="margin-bottom: 10px;">
+      <strong style="color: var(--text-main);">Step 2:</strong> Replace the placeholder bucket name with your verified AWS S3 bucket ARN (e.g., arn:aws:s3:::company-asset-production).
+    </li>
+  
+    <li style="margin-bottom: 10px;">
+      <strong style="color: var(--text-main);">Step 3:</strong> Toggle specific required actions (such as s3:GetObject or s3:PutObject) while avoiding hazardous wildcards like s3:*.
+    </li>
+  
+    <li style="margin-bottom: 10px;">
+      <strong style="color: var(--text-main);">Step 4:</strong> Configure optional CIDR IP whitelists to ensure admin operations originate strictly from your corporate VPN or office network.
+    </li>
+  
+    <li style="margin-bottom: 10px;">
+      <strong style="color: var(--text-main);">Step 5:</strong> Click Copy Policy and paste into the AWS Management Console (S3 -> Permissions -> Bucket Policy) or your Terraform configuration pipeline.
+    </li>
+  
+            </ol>
+          </article>
+
+          <!-- Card 5: Interactive FAQ Section -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+              <span>❓</span> Frequently Asked Questions (FAQ)
+            </h2>
+            <div class="faq-container">
+              
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details>
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          What is the difference between an IAM Policy and an S3 Bucket Policy?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          An IAM policy is an identity-based policy attached to an IAM user, group, or role defining what that identity can do. An S3 bucket policy is a resource-based policy attached directly to an S3 bucket controlling who (which accounts or users) can access that specific bucket.
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details>
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          Why does s3:ListBucket require the bucket ARN without /*?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          s3:ListBucket is a bucket-level action that operates on the container itself (arn:aws:s3:::bucket-name). In contrast, s3:GetObject and s3:PutObject operate on individual objects within the bucket and require the wildcard suffix (arn:aws:s3:::bucket-name/*).
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details>
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          How does CloudFront Origin Access Control (OAC) replace OAI?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          CloudFront OAC is the modern AWS standard replacing deprecated Origin Access Identity (OAI). It supports all S3 buckets in all regions, encrypted S3 transfers, and dynamic request signing using AWS SigV4.
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details>
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          Can an explicit Deny in an S3 Bucket Policy override an IAM Allow?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          Yes. In the AWS policy evaluation logic, an explicit Deny always trumps any number of explicit Allows, regardless of whether the Allow was defined on an IAM identity or a resource policy.
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details>
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          How can I require all S3 traffic to be encrypted in transit?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          Add a Statement with Effect Deny, Action s3:*, and a Condition block using Bool: { aws:SecureTransport: false }. This immediately blocks all unencrypted HTTP requests.
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details>
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          Does this generator transmit my AWS bucket ARNs to a remote server?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          No. WebDevWorker runs completely inside your client browser memory sandbox. Zero network telemetry is generated, and your ARNs never leave your local machine.
+        </p>
+      </details>
+    </div>
+  
+            </div>
+          </article>
+
+          <!-- Card 6: Best Practices & Pitfalls -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>⚠️</span> Production Best Practices &amp; Security Anti-Patterns
+            </h2>
+            <ul style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem; padding-left: 20px; display: flex; flex-direction: column; gap: 10px;">
+              
+    <li><strong style="color: var(--text-main);">1.</strong> Adhere strictly to the Principle of Least Privilege: Never assign s3:* or AdministratorAccess to public-facing roles.</li>
+  
+    <li><strong style="color: var(--text-main);">2.</strong> Always enforce HTTPS via aws:SecureTransport: false Deny statements to comply with SOC2, HIPAA, and PCI-DSS.</li>
+  
+    <li><strong style="color: var(--text-main);">3.</strong> Use specific Resource ARNs rather than wildcard * to prevent accidental exposure of neighboring production buckets.</li>
+  
+            </ul>
+          </article>
+        </section>
+
+        <!-- Enterprise Footer -->
+        <footer class="enterprise-footer" style="margin-top: 56px; border-top: 1px solid var(--border); padding-top: 48px; background: var(--bg-surface);">
+          <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; margin-bottom: 40px;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+                  <img src="/assets/webdevworker-icon.svg" alt="WebDevWorker" width="32" height="32" style="border-radius: 8px;">
+                  <span style="font-weight: 800; font-size: 1.2rem; color: var(--text-main);">WebDevWorker</span>
+                </div>
+                <p style="font-size: 0.86rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px;">
+                  High-precision, device-local web developer workstation. 58 client-side utilities engineered with zero server logging and instant execution.
+                </p>
+                <div style="font-size: 0.82rem; color: var(--brand-primary); font-weight: 700;">
+                  Founded by Zaviyan &bull; Operated by Zaviyan LLC
+                </div>
+                <div style="font-size: 0.78rem; color: var(--text-dim); margin-top: 4px;">
+                  Direct Support: <a href="mailto:business@zaviyanll.com" style="color: var(--text-muted);">business@zaviyanll.com</a>
+                </div>
+              </div>
+              <div>
+                <div style="font-size: 0.84rem; font-weight: 700; text-transform: uppercase; color: var(--text-main); letter-spacing: 0.05em; margin-bottom: 14px;">CSS & Visual UI</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.86rem;">
+                  <li><a href="/tools/tailwind-to-css-converter.html" style="color: var(--text-muted); text-decoration: none;">Tailwind to CSS Converter</a></li>
+                  <li><a href="/tools/css-clamp-calculator.html" style="color: var(--text-muted); text-decoration: none;">CSS clamp() Calculator</a></li>
+                  <li><a href="/tools/css-box-shadow-generator.html" style="color: var(--text-muted); text-decoration: none;">Box Shadow Generator</a></li>
+                  <li><a href="/tools/css-flexbox-generator.html" style="color: var(--text-muted); text-decoration: none;">Flexbox Builder</a></li>
+                  <li><a href="/tools/css-grid-generator.html" style="color: var(--text-muted); text-decoration: none;">CSS Grid Builder</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size: 0.84rem; font-weight: 700; text-transform: uppercase; color: var(--text-main); letter-spacing: 0.05em; margin-bottom: 14px;">Code & Cloud</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.86rem;">
+                  <li><a href="/tools/aws-iam-s3-policy-generator.html" style="color: var(--text-muted); text-decoration: none;">AWS IAM & S3 Policy Generator</a></li>
+                  <li><a href="/tools/dockerfile-compose-generator.html" style="color: var(--text-muted); text-decoration: none;">Dockerfile & Compose Generator</a></li>
+                  <li><a href="/tools/sql-to-typescript-prisma-converter.html" style="color: var(--text-muted); text-decoration: none;">SQL to TypeScript & Prisma</a></li>
+                  <li><a href="/tools/openssl-command-generator.html" style="color: var(--text-muted); text-decoration: none;">OpenSSL Command Generator</a></li>
+                  <li><a href="/tools/json-formatter-validator.html" style="color: var(--text-muted); text-decoration: none;">JSON Formatter</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size: 0.84rem; font-weight: 700; text-transform: uppercase; color: var(--text-main); letter-spacing: 0.05em; margin-bottom: 14px;">Company & Legal</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.86rem;">
+                  <li><a href="/about.html" style="color: var(--text-muted); text-decoration: none;">About WebDevWorker</a></li>
+                  <li><a href="/contact.html" style="color: var(--text-muted); text-decoration: none;">Contact Engineering</a></li>
+                  <li><a href="/privacy.html" style="color: var(--text-muted); text-decoration: none;">Privacy Policy</a></li>
+                  <li><a href="/terms.html" style="color: var(--text-muted); text-decoration: none;">Terms of Service</a></li>
+                  <li><a href="https://calcworker.com" target="_blank" rel="noopener" style="color: var(--brand-primary); text-decoration: none;">CalcWorker (Sister Suite)</a></li>
+                </ul>
+              </div>
+            </div>
+            <div style="border-top: 1px solid var(--border); padding: 24px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; font-size: 0.82rem; color: var(--text-dim);">
+              <div>© 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+              <div style="display: flex; gap: 16px;">
+                <span>🔒 100% Client-Side Sandbox</span>
+                <span>⚡ Zero Telemetry</span>
+                <span>📲 Offline PWA Capable</span>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/webdevworker-common.js?v=2026-wdw-v35" defer></script>
+  <script src="/js/ai-widget.js?v=2026-wdw-v35" defer></script>
+  <script>
+
+      const presets = {
+        's3-read-only': {
+          effect: 'Allow',
+          principal: '*',
+          actions: ['s3:GetObject', 's3:ListBucket'],
+          resource: 'arn:aws:s3:::my-production-bucket',
+          conditionIp: ''
+        },
+        's3-write-only': {
+          effect: 'Allow',
+          principal: 'arn:aws:iam::123456789012:role/AppUploadRole',
+          actions: ['s3:PutObject', 's3:PutObjectAcl', 's3:AbortMultipartUpload'],
+          resource: 'arn:aws:s3:::my-production-bucket/uploads/*',
+          conditionIp: ''
+        },
+        's3-ip-restricted': {
+          effect: 'Allow',
+          principal: '*',
+          actions: ['s3:GetObject'],
+          resource: 'arn:aws:s3:::my-production-bucket/*',
+          conditionIp: '198.51.100.0/24'
+        },
+        'cloudfront-oac': {
+          effect: 'Allow',
+          principal: 'Service: cloudfront.amazonaws.com',
+          actions: ['s3:GetObject'],
+          resource: 'arn:aws:s3:::my-production-bucket/*',
+          conditionIp: ''
+        },
+        'deny-unencrypted': {
+          effect: 'Deny',
+          principal: '*',
+          actions: ['s3:PutObject'],
+          resource: 'arn:aws:s3:::my-production-bucket/*',
+          conditionIp: ''
+        }
+      };
+
+      function loadPreset(key) {
+        const p = presets[key];
+        if (!p) return;
+        document.getElementById('policyEffect').value = p.effect;
+        document.getElementById('policyPrincipal').value = p.principal;
+        document.getElementById('policyResource').value = p.resource;
+        document.getElementById('policyConditionIp').value = p.conditionIp;
+        
+        const actionCheckboxes = document.querySelectorAll('.action-checkbox');
+        actionCheckboxes.forEach(cb => {
+          cb.checked = p.actions.includes(cb.value);
+        });
+        generatePolicy();
+      }
+
+      function generatePolicy() {
+        const sid = document.getElementById('policySid').value.trim() || 'AllowSpecificS3Actions';
+        const effect = document.getElementById('policyEffect').value;
+        const principalVal = document.getElementById('policyPrincipal').value.trim();
+        const resourceVal = document.getElementById('policyResource').value.trim();
+        const conditionIp = document.getElementById('policyConditionIp').value.trim();
+
+        const selectedActions = [];
+        document.querySelectorAll('.action-checkbox:checked').forEach(cb => {
+          selectedActions.push(cb.value);
+        });
+
+        if (selectedActions.length === 0) {
+          selectedActions.push('s3:GetObject');
+        }
+
+        let principal = {};
+        if (principalVal === '*' || principalVal === '') {
+          principal = '*';
+        } else if (principalVal.startsWith('Service:')) {
+          principal = { "Service": principalVal.replace('Service:', '').trim() };
+        } else if (principalVal.startsWith('arn:')) {
+          principal = { "AWS": principalVal };
+        } else {
+          principal = { "AWS": principalVal };
+        }
+
+        let resource = [resourceVal];
+        if (selectedActions.includes('s3:ListBucket') && !resourceVal.endsWith('/*')) {
+          resource = [resourceVal, resourceVal + '/*'];
+        }
+
+        const statement = {
+          "Sid": sid,
+          "Effect": effect,
+          "Principal": principal,
+          "Action": selectedActions.length === 1 ? selectedActions[0] : selectedActions,
+          "Resource": resource.length === 1 ? resource[0] : resource
+        };
+
+        if (conditionIp) {
+          statement["Condition"] = {
+            "IpAddress": {
+              "aws:SourceIp": conditionIp
+            }
+          };
+        }
+
+        const policy = {
+          "Version": "2012-10-17",
+          "Statement": [statement]
+        };
+
+        const jsonStr = JSON.stringify(policy, null, 2);
+        document.getElementById('policyOutput').textContent = jsonStr;
+        document.getElementById('policySize').textContent = new Blob([jsonStr]).size + ' Bytes';
+        document.getElementById('actionCount').textContent = selectedActions.length + ' Actions';
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        generatePolicy();
+      });
+    
+  </script>
+</body>
+</html>

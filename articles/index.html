@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Developer &amp; Webmaster Guides Hub (2026) | WebDevWorker</title>
+  <meta name="description" content="Explore 85+ in-depth, expert-reviewed developer guides covering CSS, APIs, cryptography, DevOps, Docker, and frontend architecture with interactive sandbox tools."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://webdevworker.com/articles/"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="WebDevWorker Guides &amp; Tutorials Hub (2026)"/>
+  <meta property="og:description" content="85+ in-depth web developer, CSS, API, and DevOps guides with interactive client-side sandbox tools."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://webdevworker.com/articles/"/>
+  <meta property="og:image" content="https://webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v36"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v36"/>
+
+  <style>
+    .hub-container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .hub-hero {
+      margin-bottom: 36px;
+    }
+    .hub-title {
+      font-size: clamp(2.2rem, 4vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+    .hub-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 820px;
+    }
+    .search-filter-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .live-search-input {
+      width: 100%;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 18px 12px 42px;
+      color: var(--text-main);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .live-search-input:focus {
+      border-color: var(--brand-primary);
+    }
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .filter-chip {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--bg-subtle);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .filter-chip:hover, .filter-chip.active {
+      background: var(--brand-primary);
+      border-color: #ca8a04;
+      color: #0f172a;
+      font-weight: 700;
+    }
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+    .article-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .article-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--brand-primary);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+    .card-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--brand-primary);
+      background: rgba(234, 179, 8, 0.1);
+      padding: 3px 8px;
+      border-radius: 6px;
+      align-self: flex-start;
+      margin-bottom: 12px;
+    }
+    .article-card h2 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+    .article-card h2 a {
+      color: var(--text-main);
+      text-decoration: none;
+    }
+    .article-card h2 a:hover {
+      color: var(--brand-primary);
+    }
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+    }
+    .btn-read {
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-decoration: none;
+      transition: filter 0.15s ease;
+    }
+    .btn-read:hover {
+      filter: brightness(1.1);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides Hub</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 85+ tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <div class="hub-container">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Guides Hub</span>
+        </nav>
+
+        <header class="hub-hero">
+          <h1 class="hub-title">Web Developer Guides &amp; Tutorials (2026)</h1>
+          <p class="hub-subtitle">
+            Explore 85+ comprehensive, mathematically verified developer guides covering CSS layout, API design, Web Cryptography, containerized DevOps, and media optimization with embedded interactive sandbox tools.
+          </p>
+        </header>
+
+        <!-- Live Search and Category Filter -->
+        <div class="search-filter-box">
+          <div style="position: relative;">
+            <span style="position: absolute; left: 14px; top: 12px; font-size: 1.1rem; color: var(--text-muted);">🔍</span>
+            <input type="text" id="articleSearchInput" class="live-search-input" placeholder="Search all 85 developer guides (e.g. tailwind, jwt, clamp, docker, zod, bcrypt)..." autocomplete="off" spellcheck="false"/>
+          </div>
+          <div class="filter-chips" id="filterChips">
+            <button class="filter-chip active" data-filter="all">All Guides (85)</button>
+            <button class="filter-chip" data-filter="CSS & Visual UI">CSS &amp; Visual UI (24)</button>
+            <button class="filter-chip" data-filter="Code, Data & APIs">Code, Data &amp; APIs (27)</button>
+            <button class="filter-chip" data-filter="Security & Cryptography">Security &amp; Cryptography (11)</button>
+            <button class="filter-chip" data-filter="DevOps & Webmaster">DevOps &amp; Webmaster (18)</button>
+            <button class="filter-chip" data-filter="Media, Assets & Viral">Media, Assets &amp; Viral (5)</button>
+          </div>
+        </div>
+
+        <!-- Articles Grid -->
+        <div class="articles-grid" id="articlesGrid">
+          
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">⚙️ DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/htaccess-generator-guide-2026.html">How to Use .htaccess Rule Builder &amp; Config Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate battle-tested Apache .htaccess configuration rules online. SSL force redirect, clean URLs, browser caching, gzip compression, and security headers.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/htaccess-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Security &amp; Cryptography">
+          <span class="card-tag">🗝️ Security &amp; Cryptography</span>
+          <h2><a href="/articles/aes-encryption-decryption-tool-guide-2026.html">How to Use AES-GCM Authenticated Encryption &amp; Decryption Studio (2026 Guide)</a></h2>
+          <p class="card-desc">Encrypt and decrypt text client-side using AES-GCM (Galois/Counter Mode) authenticated cryptography with PBKDF2 key derivation (100,000 iterations) and 12-byte IV.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/aes-encryption-decryption-tool-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">☁️ DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/aws-iam-s3-policy-generator-guide-2026.html">How to Use AWS IAM &amp; S3 Bucket Policy Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Visually generate secure, production-ready AWS IAM and S3 Bucket JSON policies. Configure least-privilege permissions, cross-account access, CloudFront OAC, and IP restrictions with zero syntax errors.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/aws-iam-s3-policy-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🔢 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/number-base-converter-guide-2026.html">How to Use Arbitrary Number Base Converter (Binary, Octal, Decimal, Hex) (2026 Guide)</a></h2>
+          <p class="card-desc">Convert numbers across Binary (Base 2), Octal (Base 8), Decimal (Base 10), Hexadecimal (Base 16), and arbitrary Radix (Base 2-36). BigInt support for 128-bit numbers.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/number-base-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🔤 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/base64-encoder-decoder-guide-2026.html">How to Use Base64 Encoder &amp; Decoder (2026 Guide)</a></h2>
+          <p class="card-desc">Encode and decode Base64 text, binary strings, and image files to Data URIs. Fast, client-side RFC 4648 compliant converter.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/base64-encoder-decoder-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Security &amp; Cryptography">
+          <span class="card-tag">🧮 Security &amp; Cryptography</span>
+          <h2><a href="/articles/bcrypt-hash-cost-calculator-guide-2026.html">How to Use Bcrypt Hash &amp; Work Factor Cost Calculator (2026 Guide)</a></h2>
+          <p class="card-desc">Inspect bcrypt hash anatomy ($2a$, $2b$, cost factor, salt, hash), benchmark client CPU hashing latency, and determine optimal work factor rounds for production authentication.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/bcrypt-hash-cost-calculator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">🌐 DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/cidr-subnet-calculator-guide-2026.html">How to Use CIDR &amp; IPv4 Subnet Calculator (IP Matrix) (2026 Guide)</a></h2>
+          <p class="card-desc">Calculate IPv4 subnet masks, wildcard masks, network and broadcast addresses, usable host IP ranges, and 32-bit binary representation from CIDR prefix notations.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/cidr-subnet-calculator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🧊 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-transform-3d-matrix-calculator-guide-2026.html">How to Use CSS 3D Transform &amp; Matrix3d Studio (2026 Guide)</a></h2>
+          <p class="card-desc">Interactive 3D CSS transformation visualizer and 4x4 matrix3d composition engine. Manipulate perspective, rotation, translation, and scale with real-time GPU preview.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-transform-3d-matrix-calculator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">📺 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-aspect-ratio-calculator-guide-2026.html">How to Use CSS Aspect Ratio Calculator &amp; Dimensions Studio (2026 Guide)</a></h2>
+          <p class="card-desc">Calculate proportional dimensions, simplified ratios, modern CSS aspect-ratio properties, and legacy padding-top percentages. Eliminate Cumulative Layout Shift (CLS).</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-aspect-ratio-calculator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🟣 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-border-radius-generator-guide-2026.html">How to Use CSS Border Radius &amp; Organic Blob Shaper (2026 Guide)</a></h2>
+          <p class="card-desc">Generate 8-point asymmetric CSS border-radius and fluid organic morphing blob shapes. Free visual CSS code builder with instant 1-click copy.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-border-radius-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🎨 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-box-shadow-generator-guide-2026.html">How to Use CSS Box Shadow Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate multi-layer realistic CSS box-shadows with blur, spread, inset lighting, and smooth elevation curves. Free online CSS shadow code generator.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-box-shadow-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">✂️ CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-clip-path-generator-guide-2026.html">How to Use CSS Clip-Path Polygon Shaper (2026 Guide)</a></h2>
+          <p class="card-desc">Visually cut organic polygons, stars, hexagons, triangles, and angled banners using CSS clip-path. Free online polygon coordinate generator.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-clip-path-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">⚡ CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-cubic-bezier-generator-guide-2026.html">How to Use CSS Cubic-Bezier Easing Visualizer (2026 Guide)</a></h2>
+          <p class="card-desc">Visually craft custom CSS transition cubic-bezier easing curves. Test ease-in, ease-out, spring bounce, and overshoot physics with live preview.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-cubic-bezier-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🎭 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-filter-effects-generator-guide-2026.html">How to Use CSS Filter Effects Studio (2026 Guide)</a></h2>
+          <p class="card-desc">Visually apply and combine CSS3 image filter effects: blur, brightness, contrast, grayscale, hue-rotate, invert, saturate, and sepia with instant code.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-filter-effects-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">📐 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-flexbox-generator-guide-2026.html">How to Use CSS Flexbox Interactive Builder (2026 Guide)</a></h2>
+          <p class="card-desc">Visually design 1D responsive layouts with CSS Flexbox. Adjust justify-content, align-items, flex-direction, gap, and flex-wrap with instant code output.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-flexbox-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🧊 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-glassmorphism-generator-guide-2026.html">How to Use CSS Glassmorphism Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Design modern frosted glass UI cards with backdrop-filter blur, border glow, transparency, and background saturation. Free online glassmorphism generator.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-glassmorphism-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🌈 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-gradient-generator-guide-2026.html">How to Use CSS Gradient Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Create beautiful linear, radial, and conic CSS gradients with multi-stop color pickers, angle controls, and 1-click CSS code export.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-gradient-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🔲 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-grid-generator-guide-2026.html">How to Use CSS Grid 2D Visual Builder (2026 Guide)</a></h2>
+          <p class="card-desc">Visually create responsive 2D CSS Grid layouts. Design rows, columns, fractional fr units, auto-fit, minmax(), and grid areas with live CSS code.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-grid-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🎬 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-keyframes-animation-generator-guide-2026.html">How to Use CSS Keyframes Animation Studio (2026 Guide)</a></h2>
+          <p class="card-desc">Visually generate CSS @keyframes animations with timing, duration, easing, iterations, and transform controls. Free CSS animation builder.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-keyframes-animation-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">📱 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-media-query-generator-guide-2026.html">How to Use CSS Media &amp; Container Query Builder (2026 Guide)</a></h2>
+          <p class="card-desc">Visually construct responsive CSS media queries, modern range syntax queries, CSS Container Queries, dark mode preferences, print rules, and Tailwind breakpoint configurations.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-media-query-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🌌 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-gradient-mesh-generator-guide-2026.html">How to Use CSS Mesh Gradient Generator &amp; Fluid Canvas Studio (2026 Guide)</a></h2>
+          <p class="card-desc">Generate modern, multi-point fluid CSS mesh gradients. Compose multi-layered radial gradient focal points with custom blur, opacity, and blend modes for ultra-modern SaaS backdrops.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-gradient-mesh-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🔘 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-neumorphism-generator-guide-2026.html">How to Use CSS Neumorphism (Soft UI) Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Design modern neumorphic tactile Soft UI components with light-angle physics, extruded convex surfaces, and inset pressed states.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-neumorphism-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🎯 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-specificity-calculator-guide-2026.html">How to Use CSS Selector Specificity Calculator &amp; Conflict Resolver (2026 Guide)</a></h2>
+          <p class="card-desc">Calculate CSS selector specificity tuples (Inline, IDs, Classes/Attributes, Elements) conforming to W3C Selectors Level 4. Compare selectors side-by-side to debug cascade conflicts.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-specificity-calculator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">✨ CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-text-shadow-generator-guide-2026.html">How to Use CSS Text Shadow &amp; Neon Glow Studio (2026 Guide)</a></h2>
+          <p class="card-desc">Create multi-layer CSS text-shadow effects, 3D extruded lettering, and vibrant neon typography glows with instant CSS code export.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-text-shadow-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">▲ CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-triangle-generator-guide-2026.html">How to Use CSS Triangle &amp; Tooltip Arrow Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate pure CSS geometric triangles and tooltip arrows using border modeling. Zero image files, zero SVGs, instant copy-paste CSS code.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-triangle-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">📐 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-unit-converter-guide-2026.html">How to Use CSS Unit Converter (PX, REM, EM, VW, VH, PT, PC, IN, CM, MM) (2026 Guide)</a></h2>
+          <p class="card-desc">High-precision bidirectional CSS unit calculator. Convert between PX, REM, EM, VW, VH, PT, PC, IN, CM, and MM with custom root base font size and viewport dimensions.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-unit-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🔤 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/css-clamp-calculator-guide-2026.html">How to Use CSS clamp() Fluid Typography Calculator (2026 Guide)</a></h2>
+          <p class="card-desc">Calculate mathematical CSS clamp() fluid font sizes and margins without media queries. Free responsive fluid typography calculator with WCAG accessibility support.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/css-clamp-calculator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🎭 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/color-converter-contrast-guide-2026.html">How to Use Color Converter &amp; WCAG Contrast Tester (2026 Guide)</a></h2>
+          <p class="card-desc">Convert colors between HEX, RGB, HSL, and HSV while evaluating WCAG 2.1 Level AA and AAA color contrast ratios. Free accessibility testing utility.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/color-converter-contrast-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🎨 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/color-palette-harmonies-generator-guide-2026.html">How to Use Color Palette Harmonies &amp; Theory Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate balanced color palettes using classical color theory: complementary, triadic, analogous, and split-complementary harmonies with CSS export.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/color-palette-harmonies-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Security &amp; Cryptography">
+          <span class="card-tag">🛡️ Security &amp; Cryptography</span>
+          <h2><a href="/articles/content-security-policy-generator-guide-2026.html">How to Use Content Security Policy (CSP) Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Visually build robust Content Security Policy (CSP) Level 3 HTTP response headers. Defend against Cross-Site Scripting (XSS), data theft, and clickjacking.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/content-security-policy-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">⏰ DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/cron-expression-generator-guide-2026.html">How to Use Cron Expression Generator &amp; Human Translator (2026 Guide)</a></h2>
+          <p class="card-desc">Visually generate, test, and translate POSIX crontab schedules into plain-English human descriptions. Supports Linux cron, AWS EventBridge, and Quartz.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/cron-expression-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Media, Assets &amp; Viral">
+          <span class="card-tag">📱 Media, Assets &amp; Viral</span>
+          <h2><a href="/articles/qr-code-generator-guide-2026.html">How to Use Custom QR Code Generator Pro (2026 Guide)</a></h2>
+          <p class="card-desc">Generate customized high-resolution QR codes with color control, error correction levels (L, M, Q, H), and instant PNG/SVG downloads. 100% free &amp; private.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/qr-code-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">🌐 DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/dns-record-lookup-generator-guide-2026.html">How to Use DNS Record Generator &amp; SPF/DMARC Builder (2026 Guide)</a></h2>
+          <p class="card-desc">Generate BIND-compliant DNS zone records online. Build SPF email authorization, DKIM records, DMARC security policies, A records, and CNAME aliases.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/dns-record-lookup-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🔠 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/string-case-converter-guide-2026.html">How to Use Developer String Case Converter &amp; Text Formatter (2026 Guide)</a></h2>
+          <p class="card-desc">Transform strings between camelCase, PascalCase, snake_case, CONSTANT_CASE, kebab-case, Title Case, Sentence case, dot.notation, and path/case with live text statistics.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/string-case-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">🐳 DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/dockerfile-compose-generator-guide-2026.html">How to Use Dockerfile &amp; Docker Compose Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Instantly generate hardened, multi-stage production Dockerfiles and docker-compose.yml files. Optimized for Node.js, Python, Go, Rust, and PHP with non-root user security and minimal image size.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/dockerfile-compose-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">🔀 DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/git-command-generator-guide-2026.html">How to Use Git Command &amp; Workflow Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate precise, safe Git terminal commands for interactive rebasing, undoing commits, cherry-picking, stashing, branch renaming, and disaster recovery with step-by-step safety guides.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/git-command-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Security &amp; Cryptography">
+          <span class="card-tag">🔐 Security &amp; Cryptography</span>
+          <h2><a href="/articles/hmac-hash-generator-guide-2026.html">How to Use HMAC Hash &amp; Keyed Signature Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate keyed-hash message authentication codes (HMAC-SHA256, HMAC-SHA512, HMAC-SHA384) using the browser native Web Crypto API. Webhook signature verification.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/hmac-hash-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🔡 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/html-entity-encoder-decoder-guide-2026.html">How to Use HTML Entity Encoder &amp; Decoder (XSS Sanitizer) (2026 Guide)</a></h2>
+          <p class="card-desc">Encode and decode HTML special characters to prevent Cross-Site Scripting (XSS). Supports Named Entities (&amp;amp;), Decimal (&amp;#38;), and Hexadecimal (&amp;#x26;) notations.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/html-entity-encoder-decoder-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">📊 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/html-table-to-json-converter-guide-2026.html">How to Use HTML Table to JSON &amp; CSV Converter (2026 Guide)</a></h2>
+          <p class="card-desc">Parse and convert HTML &lt;table&gt; markup into clean, structured JSON objects and CSV spreadsheets. Free online web scraping and data extraction tool.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/html-table-to-json-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">⚛️ Code, Data &amp; APIs</span>
+          <h2><a href="/articles/html-to-jsx-converter-guide-2026.html">How to Use HTML to JSX / React Component Converter (2026 Guide)</a></h2>
+          <p class="card-desc">Transform raw HTML templates into clean, idiomatic React JSX with automatic attribute camelCasing, inline style object parsing, self-closing tags, and TypeScript component wrapping.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/html-to-jsx-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">🌐 DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/http-status-codes-inspector-guide-2026.html">How to Use HTTP Status Codes Reference &amp; Diagnostic Guide (2026 Guide)</a></h2>
+          <p class="card-desc">Comprehensive reference of all HTTP response status codes. Search, filter, and diagnose 200 OK, 301 Redirect, 400, 401, 403, 404, 500, and 502 errors.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/http-status-codes-inspector-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Security &amp; Cryptography">
+          <span class="card-tag">🔒 Security &amp; Cryptography</span>
+          <h2><a href="/articles/hash-generator-guide-2026.html">How to Use Hash &amp; Checksum Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate cryptographic hash digests (SHA-256, SHA-512, SHA-384, SHA-1, MD5) online using native Web Crypto API. Fast, secure, client-side checksums.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/hash-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Media, Assets &amp; Viral">
+          <span class="card-tag">🎨 Media, Assets &amp; Viral</span>
+          <h2><a href="/articles/image-color-palette-extractor-guide-2026.html">How to Use Image Color Palette Extractor (2026 Guide)</a></h2>
+          <p class="card-desc">Extract dominant color palettes and CSS design tokens from any uploaded image or photograph. Instant HEX, RGB, and HSL copy with color quantization.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/image-color-palette-extractor-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">📋 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/json-formatter-validator-guide-2026.html">How to Use JSON Formatter, Validator &amp; Minifier (2026 Guide)</a></h2>
+          <p class="card-desc">Format, validate, beautify, and minify JSON online. Instant syntax error detection with line and column highlighting, tree navigation, and 1-click copy.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/json-formatter-validator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🛡️ Code, Data &amp; APIs</span>
+          <h2><a href="/articles/json-schema-generator-guide-2026.html">How to Use JSON Schema Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Automatically generate compliant JSON Schema definitions from sample JSON payloads. Supports Draft-07, Draft 2020-12, required fields, and nested validation.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/json-schema-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">📊 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/json-to-csv-converter-guide-2026.html">How to Use JSON to CSV &amp; Excel Converter (Nested Key Flattener) (2026 Guide)</a></h2>
+          <p class="card-desc">Convert JSON arrays of objects into RFC 4180 compliant CSV files with nested key dot-notation flattening, custom delimiters (comma, semicolon, tab), and instant file export.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/json-to-csv-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🐹 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/json-to-go-struct-converter-guide-2026.html">How to Use JSON to Go Struct Generator &amp; Type Inferencer (2026 Guide)</a></h2>
+          <p class="card-desc">Convert arbitrary JSON payloads into idiomatic Golang structs with json struct tags, nested type resolution, pointer options, and inline unmarshaling tests.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/json-to-go-struct-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🐍 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/json-to-python-pydantic-converter-guide-2026.html">How to Use JSON to Python Pydantic v2 Model Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Convert JSON payloads into type-annotated Python Pydantic v2 BaseModel classes. Includes Optional[T], List[T], Field aliases, and FastAPI validation schemas.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/json-to-python-pydantic-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🦀 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/json-to-rust-struct-converter-guide-2026.html">How to Use JSON to Rust Struct (Serde) Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate memory-safe, idiomatic Rust structs with Serde derive macros, Option&lt;T&gt; nullable wrapping, rename attributes, and snake_case field normalization.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/json-to-rust-struct-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🔷 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/json-to-typescript-generator-guide-2026.html">How to Use JSON to TypeScript Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate strict TypeScript interfaces and type aliases from raw JSON payloads. Supports nested objects, array types, optional fields, and 1-click export.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/json-to-typescript-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">📑 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/json-to-yaml-converter-guide-2026.html">How to Use JSON to YAML Converter &amp; Bi-Directional Formatter (2026 Guide)</a></h2>
+          <p class="card-desc">Bi-directional JSON &lt;-&gt; YAML converter with customizable indentation, flow style control, Kubernetes manifest validation, and zero external transmission.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/json-to-yaml-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🛡️ Code, Data &amp; APIs</span>
+          <h2><a href="/articles/json-to-zod-schema-guide-2026.html">How to Use JSON to Zod Schema Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate production-ready Zod runtime validation schemas from arbitrary JSON payloads with recursive type inference, optional and nullable fields, datetime checks, and inferred TypeScript types.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/json-to-zod-schema-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Security &amp; Cryptography">
+          <span class="card-tag">🛡️ Security &amp; Cryptography</span>
+          <h2><a href="/articles/jwt-decoder-guide-2026.html">How to Use JWT Token Inspector &amp; Decoder (2026 Guide)</a></h2>
+          <p class="card-desc">Decode and inspect JSON Web Tokens (JWT) headers and payload claims locally. Evaluate expiration timestamps, subject, issuer, and signature algorithms.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/jwt-decoder-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">⌨️ DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/javascript-keycode-tester-guide-2026.html">How to Use JavaScript KeyCode &amp; Keyboard Event Tester (2026 Guide)</a></h2>
+          <p class="card-desc">Test keyboard events in real time. Inspect event.key, event.code, event.which, modifier keys (Shift, Ctrl, Alt, Meta), and location for web game and shortcut development.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/javascript-keycode-tester-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">🛡️ DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/chmod-permissions-calculator-guide-2026.html">How to Use Linux Chmod Permissions Calculator (2026 Guide)</a></h2>
+          <p class="card-desc">Calculate Linux and Unix chmod file permissions. Interactive visual checkbox matrix for User, Group, and Other with instant octal (755, 644) and symbolic code.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/chmod-permissions-calculator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">📄 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/lorem-ipsum-generator-guide-2026.html">How to Use Lorem Ipsum Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate customizable dummy placeholder text by paragraphs, sentences, or words. Classic Cicero Latin text with HTML tag wrapping and 1-click copy.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/lorem-ipsum-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">📝 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/markdown-html-converter-guide-2026.html">How to Use Markdown to HTML Converter (2026 Guide)</a></h2>
+          <p class="card-desc">Convert GitHub Flavored Markdown (GFM) to clean semantic HTML5 markup. Real-time live split-pane editor with 1-click HTML and Markdown copy.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/markdown-html-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🎲 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/mock-data-generator-guide-2026.html">How to Use Mock Data Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate realistic mock datasets in JSON, CSV, and SQL formats. Custom schemas with names, emails, UUIDs, dates, addresses, and currency fields.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/mock-data-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🧹 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/code-beautifier-minifier-guide-2026.html">How to Use Multi-Language Code Formatter &amp; Minifier (2026 Guide)</a></h2>
+          <p class="card-desc">Format, indent, beautify, and minify HTML, CSS, JavaScript, and JSON code online. Clean whitespace, fix indentation, and compress files for production.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/code-beautifier-minifier-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Media, Assets &amp; Viral">
+          <span class="card-tag">📦 Media, Assets &amp; Viral</span>
+          <h2><a href="/articles/multi-favicon-pwa-generator-guide-2026.html">How to Use Multi-Resolution Favicon &amp; PWA Icon Sizer (2026 Guide)</a></h2>
+          <p class="card-desc">Generate all web, iOS, Android, and PWA favicon sizes from a single master image. Outputs 16x16, 32x32, 180x180 Apple Touch, 192x192, and 512x512 icons.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/multi-favicon-pwa-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">⚡ DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/nginx-config-generator-guide-2026.html">How to Use Nginx Server Block &amp; Reverse Proxy Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Interactive Nginx server block studio: reverse proxy upstream, Let&#x27;s Encrypt SSL/TLS, HTTP/2, SPA routing fallback (try_files), security headers, and gzip compression.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/nginx-config-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Security &amp; Cryptography">
+          <span class="card-tag">🔒 Security &amp; Cryptography</span>
+          <h2><a href="/articles/openssl-command-generator-guide-2026.html">How to Use OpenSSL Command &amp; CSR / Certificate Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Construct verified OpenSSL CLI commands for Certificate Signing Requests (CSR), self-signed TLS certificates, Subject Alternative Names (SAN), and PKCS#12 bundle conversions.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/openssl-command-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">🔍 DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/regex-tester-guide-2026.html">How to Use Regex Tester &amp; Expression Explainer (2026 Guide)</a></h2>
+          <p class="card-desc">Test and debug regular expressions online with real-time match highlighting, capture group extraction, substitution replacement, and plain-English explanations.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/regex-tester-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">🤖 DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/robots-txt-generator-guide-2026.html">How to Use Robots.txt &amp; Search Crawler Builder (2026 Guide)</a></h2>
+          <p class="card-desc">Generate validated robots.txt files for Googlebot, Bingbot, GPTBot, and ClaudeBot. Control crawl budgets, allow/disallow paths, and declare XML sitemaps.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/robots-txt-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">🏷️ DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/meta-tag-generator-guide-2026.html">How to Use SEO &amp; Social Meta Tag Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate complete HTML5 SEO meta tags, Open Graph (og:title, og:image) and Twitter Cards online. Optimize social sharing previews and search rankings.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/meta-tag-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">🔍 DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/seo-keyword-density-analyzer-guide-2026.html">How to Use SEO Keyword Density &amp; N-Gram Analyzer (2026 Guide)</a></h2>
+          <p class="card-desc">Analyze content for keyword density percentage, word frequencies, and 1-word, 2-word, and 3-word n-grams. Prevent Google keyword stuffing penalties.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/seo-keyword-density-analyzer-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🗄️ Code, Data &amp; APIs</span>
+          <h2><a href="/articles/sql-formatter-guide-2026.html">How to Use SQL Query Formatter &amp; Indenter (2026 Guide)</a></h2>
+          <p class="card-desc">Format, beautify, and indent complex SQL queries online. Standardize SELECT, JOIN, WHERE, GROUP BY, and subqueries across PostgreSQL, MySQL, and T-SQL.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/sql-formatter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🔷 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/sql-to-typescript-prisma-converter-guide-2026.html">How to Use SQL to TypeScript Interface &amp; Prisma / Drizzle Converter (2026 Guide)</a></h2>
+          <p class="card-desc">Transform SQL CREATE TABLE statements into strongly typed TypeScript interfaces, Prisma ORM models, Drizzle schemas, and Zod validation objects instantly in your browser.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/sql-to-typescript-prisma-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Media, Assets &amp; Viral">
+          <span class="card-tag">⚡ Media, Assets &amp; Viral</span>
+          <h2><a href="/articles/svg-optimizer-converter-guide-2026.html">How to Use SVG Optimizer &amp; Clean Vector Converter (2026 Guide)</a></h2>
+          <p class="card-desc">Optimize, clean, and minify SVG vector graphics online. Remove bloated metadata, unused namespaces, and convert SVGs to React JSX or CSS Data URIs.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/svg-optimizer-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Media, Assets &amp; Viral">
+          <span class="card-tag">📐 Media, Assets &amp; Viral</span>
+          <h2><a href="/articles/svg-path-visualizer-guide-2026.html">How to Use SVG Path Visualizer &amp; Anchor Editor (2026 Guide)</a></h2>
+          <p class="card-desc">Visualize, inspect, scale, and edit SVG path d=&quot;&quot; strings with interactive anchor points, bezier control handles, bounding box metrics, and instant React component export.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/svg-path-visualizer-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🖼️ CSS &amp; Visual UI</span>
+          <h2><a href="/articles/svg-to-data-uri-converter-guide-2026.html">How to Use SVG to CSS Data URI Converter (2026 Guide)</a></h2>
+          <p class="card-desc">Convert raw SVG vector markup into URL-encoded or Base64 CSS Data URIs. Perfect for background-image, mask-image, and standalone CSS icons.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/svg-to-data-uri-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Security &amp; Cryptography">
+          <span class="card-tag">🔑 Security &amp; Cryptography</span>
+          <h2><a href="/articles/password-generator-guide-2026.html">How to Use Strong Password Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate uncrackable, cryptographically secure passwords and passphrases with custom length, symbols, numbers, and NIST entropy scoring.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/password-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Security &amp; Cryptography">
+          <span class="card-tag">🌐 Security &amp; Cryptography</span>
+          <h2><a href="/articles/subresource-integrity-hash-generator-guide-2026.html">How to Use Subresource Integrity (SRI) Hash Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate W3C Subresource Integrity (SRI) script and stylesheet hash tags. Protect your website from compromised CDN supply-chain attacks.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/subresource-integrity-hash-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="CSS &amp; Visual UI">
+          <span class="card-tag">🎨 CSS &amp; Visual UI</span>
+          <h2><a href="/articles/tailwind-to-css-converter-guide-2026.html">How to Use Tailwind CSS to Pure CSS &amp; Inline Style Converter (2026 Guide)</a></h2>
+          <p class="card-desc">Convert Tailwind CSS utility classes into clean, standard vanilla CSS and inline styles. Perfect for HTML email templates, CSS modules, legacy migrations, and zero-dependency components.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/tailwind-to-css-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">⚖️ DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/text-diff-checker-guide-2026.html">How to Use Text &amp; Code Diff Checker (2026 Guide)</a></h2>
+          <p class="card-desc">Compare two text files or code snippets online with side-by-side line diffing, character highlights, additions, and deletions. Fast, private comparison.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/text-diff-checker-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Security &amp; Cryptography">
+          <span class="card-tag">🆔 Security &amp; Cryptography</span>
+          <h2><a href="/articles/ulid-nanoid-generator-guide-2026.html">How to Use ULID &amp; NanoID Cryptographic Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate Universally Unique Lexicographically Sortable Identifiers (ULID) and NanoID tokens using crypto.getRandomValues(). Inspect timestamps and customize alphabet sets.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/ulid-nanoid-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🔗 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/url-encoder-decoder-guide-2026.html">How to Use URL Encoder &amp; Decoder (2026 Guide)</a></h2>
+          <p class="card-desc">Encode and decode URLs, query parameters, and URI components. Free online tool supporting encodeURI and encodeURIComponent RFC 3986 percent encoding.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/url-encoder-decoder-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Security &amp; Cryptography">
+          <span class="card-tag">🆔 Security &amp; Cryptography</span>
+          <h2><a href="/articles/uuid-generator-guide-2026.html">How to Use UUID / GUID v4 Bulk Generator (2026 Guide)</a></h2>
+          <p class="card-desc">Generate cryptographically secure RFC 4122 Version 4 UUIDs (GUIDs) online. Bulk generation, custom casing, hyphens, and 1-click clipboard export.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/uuid-generator-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">⏱️ Code, Data &amp; APIs</span>
+          <h2><a href="/articles/unix-timestamp-converter-guide-2026.html">How to Use Unix Epoch Timestamp Converter &amp; Timezone Studio (2026 Guide)</a></h2>
+          <p class="card-desc">Bi-directional Unix epoch timestamp converter. Convert between epoch seconds, milliseconds, microseconds, UTC ISO 8601, RFC 2822, and local time with live epoch ticker.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/unix-timestamp-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">📱 DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/user-agent-parser-guide-2026.html">How to Use User-Agent Parser &amp; Device Inspector (2026 Guide)</a></h2>
+          <p class="card-desc">Parse and analyze HTTP User-Agent strings and Client Hints (UA-CH) online. Detect browser engine, operating system, device hardware, and bot crawler identity.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/user-agent-parser-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="DevOps &amp; Webmaster">
+          <span class="card-tag">📡 DevOps &amp; Webmaster</span>
+          <h2><a href="/articles/websocket-client-tester-guide-2026.html">How to Use WebSocket Client &amp; Real-Time Protocol Debugger (2026 Guide)</a></h2>
+          <p class="card-desc">Connect, inspect, and debug live WebSocket servers (ws:// and wss://). Real-time message logs with timestamps, JSON formatting, ping/pong latency tester, and zero telemetry.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/websocket-client-tester-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">⚡ Code, Data &amp; APIs</span>
+          <h2><a href="/articles/webhook-payload-formatter-guide-2026.html">How to Use Webhook Payload &amp; Signature Tester (2026 Guide)</a></h2>
+          <p class="card-desc">Format, inspect, and verify webhook JSON payloads and HMAC-SHA256 signatures for Stripe, GitHub, Shopify, and Slack webhooks online.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/webhook-payload-formatter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">🏷️ Code, Data &amp; APIs</span>
+          <h2><a href="/articles/xml-formatter-json-converter-guide-2026.html">How to Use XML Formatter, Validator &amp; Bi-Directional JSON Converter (2026 Guide)</a></h2>
+          <p class="card-desc">Format, beautify, syntax-validate, and convert XML documents to JSON and vice-versa. Built on the browser native DOMParser with zero external CDN dependencies.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/xml-formatter-json-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">📜 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/yaml-to-json-converter-guide-2026.html">How to Use YAML to JSON &amp; JSON to YAML Converter (2026 Guide)</a></h2>
+          <p class="card-desc">Convert YAML to JSON and JSON to YAML online with syntax validation. Essential tool for Kubernetes manifests, Docker Compose, CI/CD, and OpenAPI specs.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/yaml-to-json-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        <article class="article-card" data-category="Code, Data &amp; APIs">
+          <span class="card-tag">💻 Code, Data &amp; APIs</span>
+          <h2><a href="/articles/curl-to-code-converter-guide-2026.html">How to Use cURL to Code Converter (2026 Guide)</a></h2>
+          <p class="card-desc">Instantly convert cURL command lines into JavaScript fetch, Axios, Python Requests, PHP cURL, and Go. Free online API converter.</p>
+          <div class="card-footer">
+            <span>⏱️ 6 min read</span>
+            <a href="/articles/curl-to-code-converter-guide-2026.html" class="btn-read">Read Guide →</a>
+          </div>
+        </article>
+        </div>
+      </div>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>85+ professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanll.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanll.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub (85 Guides)</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v36" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v36" defer></script>
+
+<script>
+  // Client-Side Live Search & Category Filter
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('articleSearchInput');
+    const filterChips = document.querySelectorAll('.filter-chip');
+    const cards = document.querySelectorAll('.article-card');
+
+    let activeFilter = 'all';
+
+    function filterCards() {
+      const query = (searchInput.value || '').toLowerCase().trim();
+
+      cards.forEach(card => {
+        const category = card.getAttribute('data-category');
+        const text = card.innerText.toLowerCase();
+
+        const matchesCat = (activeFilter === 'all' || category === activeFilter);
+        const matchesQuery = (!query || text.includes(query));
+
+        if (matchesCat && matchesQuery) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    searchInput.addEventListener('input', filterCards);
+
+    filterChips.forEach(chip => {
+      chip.addEventListener('click', function() {
+        filterChips.forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        activeFilter = this.getAttribute('data-filter');
+        filterCards();
+      });
+    });
+  });
+</script>
+</body>
+</html>

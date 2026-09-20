@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 96" width="100%" height="100%">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#ca8a04"/>
+    </linearGradient>
+    <linearGradient id="silverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+    <linearGradient id="badgeBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Left Squircle Badge -->
+  <g transform="translate(10, 10)">
+    <rect width="76" height="76" rx="20" fill="url(#badgeBg)" stroke="#eab308" stroke-width="2"/>
+    <rect x="2" y="2" width="72" height="72" rx="18" fill="none" stroke="rgba(234,179,8,0.25)" stroke-width="1"/>
+    
+    <!-- Symmetrical Developer W -->
+    <path d="M 17 24 L 29 55 L 38 34 L 47 55 L 59 24" fill="none" stroke="url(#goldGrad)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 17 24 L 29 55" fill="none" stroke="url(#silverGrad)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Center tech dot -->
+    <circle cx="38" cy="22" r="3.5" fill="#38bdf8"/>
+  </g>
+
+  <!-- Brand Typography -->
+  <g transform="translate(104, 0)">
+    <text x="0" y="52" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="34" font-weight="900" fill="#ffffff" letter-spacing="-0.5px">WebDev<tspan fill="#eab308">Worker</tspan></text>
+    <text x="2" y="73" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#94a3b8" letter-spacing="1.8px" text-transform="uppercase">Developer &amp; CSS Utilities</text>
+  </g>
+</svg>

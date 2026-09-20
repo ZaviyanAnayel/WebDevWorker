@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html data-theme="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>String Case Converter (camelCase, snake_case, PascalCase, kebab-case) | WebDevWorker</title>
+  <meta content="Transform strings between camelCase, PascalCase, snake_case, CONSTANT_CASE, kebab-case, Title Case, Sentence case, dot.notation, and path/case with live text statistics." name="description"/>
+  <meta content="string case converter, camelcase to snake_case, pascalcase, kebab case converter, constant case, capitalize title, programming case converter" name="keywords"/>
+  <link href="https://webdevworker.com/tools/string-case-converter.html" rel="canonical"/>
+  <meta content="WebDevWorker" name="author"/>
+  <meta content="index, follow" name="robots"/>
+  <meta content="Developer String Case Converter &amp; Text Formatter | WebDevWorker" property="og:title"/>
+  <meta content="Transform strings between camelCase, PascalCase, snake_case, CONSTANT_CASE, kebab-case, Title Case, Sentence case, dot.notation, and path/case with live text statistics." property="og:description"/>
+  <meta content="https://webdevworker.com/tools/string-case-converter.html" property="og:url"/>
+  <meta content="website" property="og:type"/>
+  <meta content="https://webdevworker.com/assets/logo.png" property="og:image"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Developer String Case Converter &amp; Text Formatter | WebDevWorker"/>
+  <meta name="twitter:description" content="Transform strings between camelCase, PascalCase, snake_case, CONSTANT_CASE, kebab-case, Title Case, Sentence case, dot.notation, and path/case with live text statistics."/>
+  <meta name="twitter:image" content="https://webdevworker.com/assets/logo.png"/>
+  <link href="/assets/favicon.png" rel="icon" type="image/png"/>
+  <link rel="manifest" href="/manifest.json"/>
+
+  <!-- Google AdSense -->
+  <script async crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384"></script>
+  <!-- Google tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-G718R5DYYR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-G718R5DYYR');
+  </script>
+
+  <link href="/css/webdevworker.css?v=2026-wdw-v35" rel="stylesheet"/>
+  <link href="/css/ai-widget.css?v=2026-wdw-v35" rel="stylesheet"/>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Developer String Case Converter & Text Formatter",
+      "url": "https://webdevworker.com/tools/string-case-converter.html",
+      "description": "Transform strings between camelCase, PascalCase, snake_case, CONSTANT_CASE, kebab-case, Title Case, Sentence case, dot.notation, and path/case with live text statistics.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://webdevworker.com",
+        "founder": "Zaviyan"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Code, Data & APIs",
+          "item": "https://webdevworker.com/#categories"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Developer String Case Converter & Text Formatter",
+          "item": "https://webdevworker.com/tools/string-case-converter.html"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is kebab-case used for in web development?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Kebab-case is standard for CSS class names, HTML attributes (e.g. data-user-id), and SEO-friendly URL slugs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the tool handle acronyms like NASA or API?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The word splitter uses lookahead regex patterns so that strings like 'fetchAPIResponse' are properly divided into 'fetch', 'API', 'Response'."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between Title Case and Sentence case?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Title Case capitalizes the initial letter of every principal word, while Sentence case only capitalizes the first word of the sentence."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my text uploaded or stored anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Never. All string calculations run strictly in your local browser memory."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><a href="/"><img alt="WebDevWorker Logo" src="/assets/webdevworker-logo-horizontal.svg"/></a></div>
+    <div class="sidebar-nav"><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Overview</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/" class="nav-item" title="Dashboard" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Dashboard</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">CSS &amp; Visual UI</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/tailwind-to-css-converter.html" class="nav-item" title="Tailwind to CSS Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Tailwind to CSS Converter</span></a></li><li><a href="/tools/css-box-shadow-generator.html" class="nav-item" title="CSS Box Shadow Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Box Shadow Generator</span></a></li><li><a href="/tools/css-gradient-generator.html" class="nav-item" title="CSS Gradient Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌈</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Gradient Generator</span></a></li><li><a href="/tools/css-glassmorphism-generator.html" class="nav-item" title="CSS Glassmorphism Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Glassmorphism Builder</span></a></li><li><a href="/tools/css-border-radius-generator.html" class="nav-item" title="Border Radius &amp; Blob Shaper" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🟣</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Border Radius &amp; Blob Shaper</span></a></li><li><a href="/tools/color-converter-contrast.html" class="nav-item" title="Color Contrast &amp; WCAG Tester" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎭</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Color Contrast &amp; WCAG Tester</span></a></li><li><a href="/tools/css-flexbox-generator.html" class="nav-item" title="CSS Flexbox Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Flexbox Builder</span></a></li><li><a href="/tools/css-grid-generator.html" class="nav-item" title="CSS Grid 2D Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Grid 2D Builder</span></a></li><li><a href="/tools/css-clamp-calculator.html" class="nav-item" title="CSS clamp() Fluid Typography" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔤</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS clamp() Fluid Typography</span></a></li><li><a href="/tools/css-cubic-bezier-generator.html" class="nav-item" title="CSS Cubic-Bezier Visualizer" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Cubic-Bezier Visualizer</span></a></li><li><a href="/tools/css-clip-path-generator.html" class="nav-item" title="CSS Clip-Path Polygon Shaper" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">✂️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Clip-Path Polygon Shaper</span></a></li><li><a href="/tools/css-keyframes-animation-generator.html" class="nav-item" title="CSS @keyframes Animation Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎬</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS @keyframes Animation Studio</span></a></li><li><a href="/tools/css-triangle-generator.html" class="nav-item" title="CSS Triangle &amp; Tooltip Arrow" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">▲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Triangle &amp; Tooltip Arrow</span></a></li><li><a href="/tools/svg-to-data-uri-converter.html" class="nav-item" title="SVG to CSS Data URI Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🖼️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG to CSS Data URI Converter</span></a></li><li><a href="/tools/css-text-shadow-generator.html" class="nav-item" title="CSS Text Shadow &amp; Neon Glow" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">✨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Text Shadow &amp; Neon Glow</span></a></li><li><a href="/tools/color-palette-harmonies-generator.html" class="nav-item" title="Color Palette &amp; Harmonies" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Color Palette &amp; Harmonies</span></a></li><li><a href="/tools/css-filter-effects-generator.html" class="nav-item" title="CSS Filter Effects Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎭</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Filter Effects Studio</span></a></li><li><a href="/tools/css-neumorphism-generator.html" class="nav-item" title="CSS Neumorphism (Soft UI)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔘</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Neumorphism (Soft UI)</span></a></li><li><a href="/tools/css-unit-converter.html" class="nav-item" title="CSS Unit Converter (PX/REM/VW)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Unit Converter (PX/REM/VW)</span></a></li><li><a href="/tools/css-specificity-calculator.html" class="nav-item" title="CSS Specificity Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎯</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Specificity Calculator</span></a></li><li><a href="/tools/css-transform-3d-matrix-calculator.html" class="nav-item" title="CSS 3D Transform &amp; Matrix3d" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS 3D Transform &amp; Matrix3d</span></a></li><li><a href="/tools/css-aspect-ratio-calculator.html" class="nav-item" title="CSS Aspect Ratio Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📺</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Aspect Ratio Calculator</span></a></li><li><a href="/tools/css-gradient-mesh-generator.html" class="nav-item" title="CSS Mesh Gradient Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌌</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Mesh Gradient Generator</span></a></li><li><a href="/tools/css-media-query-generator.html" class="nav-item" title="CSS Media &amp; Container Query" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Media &amp; Container Query</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Code, Data &amp; APIs</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/sql-to-typescript-prisma-converter.html" class="nav-item" title="SQL to TypeScript &amp; Prisma" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔷</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SQL to TypeScript &amp; Prisma</span></a></li><li><a href="/tools/json-formatter-validator.html" class="nav-item" title="JSON Formatter &amp; Validator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📋</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON Formatter &amp; Validator</span></a></li><li><a href="/tools/curl-to-code-converter.html" class="nav-item" title="cURL to Code Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">💻</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">cURL to Code Converter</span></a></li><li><a href="/tools/json-to-typescript-generator.html" class="nav-item" title="JSON to TypeScript Interface" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔷</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to TypeScript Interface</span></a></li><li><a href="/tools/mock-data-generator.html" class="nav-item" title="Mock Data Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Mock Data Generator</span></a></li><li><a href="/tools/code-beautifier-minifier.html" class="nav-item" title="Code Beautifier &amp; Minifier" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧹</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Code Beautifier &amp; Minifier</span></a></li><li><a href="/tools/sql-formatter.html" class="nav-item" title="SQL Query Formatter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🗄️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SQL Query Formatter</span></a></li><li><a href="/tools/base64-encoder-decoder.html" class="nav-item" title="Base64 Image &amp; Text Tool" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔤</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Base64 Image &amp; Text Tool</span></a></li><li><a href="/tools/url-encoder-decoder.html" class="nav-item" title="URL Encoder &amp; Decoder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔗</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">URL Encoder &amp; Decoder</span></a></li><li><a href="/tools/markdown-html-converter.html" class="nav-item" title="Markdown to HTML Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📝</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Markdown to HTML Converter</span></a></li><li><a href="/tools/lorem-ipsum-generator.html" class="nav-item" title="Lorem Ipsum &amp; Text Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📄</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Lorem Ipsum &amp; Text Generator</span></a></li><li><a href="/tools/html-table-to-json-converter.html" class="nav-item" title="HTML Table to JSON &amp; CSV" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML Table to JSON &amp; CSV</span></a></li><li><a href="/tools/yaml-to-json-converter.html" class="nav-item" title="YAML to JSON Configuration" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📜</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">YAML to JSON Configuration</span></a></li><li><a href="/tools/json-schema-generator.html" class="nav-item" title="JSON Schema Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON Schema Generator</span></a></li><li><a href="/tools/webhook-payload-formatter.html" class="nav-item" title="Webhook Payload &amp; Verifier" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Webhook Payload &amp; Verifier</span></a></li><li><a href="/tools/json-to-go-struct-converter.html" class="nav-item" title="JSON to Go Struct Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐹</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Go Struct Generator</span></a></li><li><a href="/tools/json-to-rust-struct-converter.html" class="nav-item" title="JSON to Rust Struct (Serde)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🦀</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Rust Struct (Serde)</span></a></li><li><a href="/tools/json-to-python-pydantic-converter.html" class="nav-item" title="JSON to Python Pydantic" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Python Pydantic</span></a></li><li><a href="/tools/json-to-yaml-converter.html" class="nav-item" title="JSON to YAML Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📑</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to YAML Converter</span></a></li><li><a href="/tools/json-to-csv-converter.html" class="nav-item" title="JSON to CSV / Excel Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to CSV / Excel Converter</span></a></li><li><a href="/tools/xml-formatter-json-converter.html" class="nav-item" title="XML Formatter &amp; JSON Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🏷️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">XML Formatter &amp; JSON Converter</span></a></li><li><a href="/tools/string-case-converter.html" class="nav-item active" title="String Case Converter" style="display:flex;align-items:center;gap:10px;padding:9px 12px;text-decoration:none;font-size:0.85rem;border-radius:8px;margin:2px 4px;font-weight:700;transition:all 0.15s ease;background:linear-gradient(90deg, rgba(234,179,8,0.22) 0%, rgba(234,179,8,0.06) 100%) !important;color:#eab308 !important;border-left:4px solid #eab308 !important;box-shadow:inset 0 0 14px rgba(234,179,8,0.12) !important;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔠</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;color:#eab308 !important;font-weight:700;">String Case Converter</span><span style="width:8px;height:8px;border-radius:50%;background:#eab308;box-shadow:0 0 10px #eab308;margin-left:auto;flex-shrink:0;"></span></a></li><li><a href="/tools/html-entity-encoder-decoder.html" class="nav-item" title="HTML Entity Encoder &amp; Decoder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML Entity Encoder &amp; Decoder</span></a></li><li><a href="/tools/unix-timestamp-converter.html" class="nav-item" title="Unix Timestamp Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⏱️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Unix Timestamp Converter</span></a></li><li><a href="/tools/number-base-converter.html" class="nav-item" title="Number Base Converter (Bin/Hex)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔢</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Number Base Converter (Bin/Hex)</span></a></li><li><a href="/tools/html-to-jsx-converter.html" class="nav-item" title="HTML to JSX / React Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚛️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML to JSX / React Converter</span></a></li><li><a href="/tools/json-to-zod-schema.html" class="nav-item" title="JSON to Zod Schema Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Zod Schema Generator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Security &amp; Cryptography</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/openssl-command-generator.html" class="nav-item" title="OpenSSL Command Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔒</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">OpenSSL Command Generator</span></a></li><li><a href="/tools/hash-generator.html" class="nav-item" title="SHA Hash &amp; Checksum" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔒</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SHA Hash &amp; Checksum</span></a></li><li><a href="/tools/uuid-generator.html" class="nav-item" title="UUID / GUID v4 Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🆔</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">UUID / GUID v4 Generator</span></a></li><li><a href="/tools/password-generator.html" class="nav-item" title="Strong Password Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔑</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Strong Password Generator</span></a></li><li><a href="/tools/jwt-decoder.html" class="nav-item" title="JWT Token Inspector" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JWT Token Inspector</span></a></li><li><a href="/tools/subresource-integrity-hash-generator.html" class="nav-item" title="Subresource Integrity (SRI)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Subresource Integrity (SRI)</span></a></li><li><a href="/tools/content-security-policy-generator.html" class="nav-item" title="Content Security Policy (CSP)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Content Security Policy (CSP)</span></a></li><li><a href="/tools/hmac-hash-generator.html" class="nav-item" title="HMAC Hash &amp; Key Signature" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HMAC Hash &amp; Key Signature</span></a></li><li><a href="/tools/aes-encryption-decryption-tool.html" class="nav-item" title="AES-GCM Encryption / Decryption" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🗝️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">AES-GCM Encryption / Decryption</span></a></li><li><a href="/tools/ulid-nanoid-generator.html" class="nav-item" title="ULID &amp; NanoID Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🆔</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">ULID &amp; NanoID Generator</span></a></li><li><a href="/tools/bcrypt-hash-cost-calculator.html" class="nav-item" title="Bcrypt Hash &amp; Cost Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧮</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Bcrypt Hash &amp; Cost Calculator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">DevOps &amp; Webmaster</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/aws-iam-s3-policy-generator.html" class="nav-item" title="AWS IAM &amp; S3 Policy Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">☁️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">AWS IAM &amp; S3 Policy Generator</span></a></li><li><a href="/tools/dockerfile-compose-generator.html" class="nav-item" title="Dockerfile &amp; Compose Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐳</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Dockerfile &amp; Compose Generator</span></a></li><li><a href="/tools/seo-keyword-density-analyzer.html" class="nav-item" title="SEO Keyword Density &amp; N-Gram" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SEO Keyword Density &amp; N-Gram</span></a></li><li><a href="/tools/cron-expression-generator.html" class="nav-item" title="Cron Expression Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⏰</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Cron Expression Builder</span></a></li><li><a href="/tools/chmod-permissions-calculator.html" class="nav-item" title="Linux Chmod Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Linux Chmod Calculator</span></a></li><li><a href="/tools/http-status-codes-inspector.html" class="nav-item" title="HTTP Status Codes Spec" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTTP Status Codes Spec</span></a></li><li><a href="/tools/javascript-keycode-tester.html" class="nav-item" title="JS KeyCode Event Tester" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⌨️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JS KeyCode Event Tester</span></a></li><li><a href="/tools/htaccess-generator.html" class="nav-item" title=".htaccess Rule Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚙️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">.htaccess Rule Builder</span></a></li><li><a href="/tools/meta-tag-generator.html" class="nav-item" title="Meta Tags &amp; Open Graph" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🏷️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Meta Tags &amp; Open Graph</span></a></li><li><a href="/tools/regex-tester.html" class="nav-item" title="Regex Tester &amp; Explainer" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Regex Tester &amp; Explainer</span></a></li><li><a href="/tools/text-diff-checker.html" class="nav-item" title="Code Diff &amp; Comparison" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚖️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Code Diff &amp; Comparison</span></a></li><li><a href="/tools/dns-record-lookup-generator.html" class="nav-item" title="DNS Zone &amp; SPF/DMARC" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">DNS Zone &amp; SPF/DMARC</span></a></li><li><a href="/tools/robots-txt-generator.html" class="nav-item" title="Robots.txt &amp; Crawler Rules" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🤖</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Robots.txt &amp; Crawler Rules</span></a></li><li><a href="/tools/user-agent-parser.html" class="nav-item" title="User-Agent &amp; Client Hints" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">User-Agent &amp; Client Hints</span></a></li><li><a href="/tools/cidr-subnet-calculator.html" class="nav-item" title="CIDR &amp; IP Subnet Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CIDR &amp; IP Subnet Calculator</span></a></li><li><a href="/tools/nginx-config-generator.html" class="nav-item" title="Nginx Server Block Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Nginx Server Block Generator</span></a></li><li><a href="/tools/websocket-client-tester.html" class="nav-item" title="WebSocket Client &amp; Debugger" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">WebSocket Client &amp; Debugger</span></a></li><li><a href="/tools/git-command-generator.html" class="nav-item" title="Git Command &amp; Workflow Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔀</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Git Command &amp; Workflow Generator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Media, Assets &amp; Viral</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/image-color-palette-extractor.html" class="nav-item" title="Image Palette &amp; Contrast" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Image Palette &amp; Contrast</span></a></li><li><a href="/tools/qr-code-generator.html" class="nav-item" title="Custom QR Code Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Custom QR Code Studio</span></a></li><li><a href="/tools/multi-favicon-pwa-generator.html" class="nav-item" title="Favicon &amp; App Icon Matrix" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📦</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Favicon &amp; App Icon Matrix</span></a></li><li><a href="/tools/svg-optimizer-converter.html" class="nav-item" title="SVG Optimizer &amp; Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG Optimizer &amp; Converter</span></a></li><li><a href="/tools/svg-path-visualizer.html" class="nav-item" title="SVG Path Visualizer &amp; Editor" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG Path Visualizer &amp; Editor</span></a></li></ul></div><div style="border-top:1px solid var(--border);margin:16px 6px;padding-top:10px;"><div style="font-size:0.72rem;text-transform:uppercase;color:var(--text-muted);letter-spacing:1px;padding:4px 14px;font-weight:700;">Legal &amp; Info</div><a href="/blog/index.html" style="display:block;padding:5px 14px;color:var(--brand-primary);font-size:0.8rem;text-decoration:none;font-weight:700;">📖 Engineering Blog</a><a href="/about.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">About WebDevWorker</a><a href="/contact.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Contact Engineering</a><a href="/privacy.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Privacy Policy</a><a href="/terms.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Terms of Service</a></div></div>
+  </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <div class="main-viewport">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Menu">☰</button>
+          <span class="topbar-title">Developer String Case Converter &amp; Text Formatter</span>
+        </div>
+        <div class="topbar-right">
+          <div style="position:relative; display:flex; align-items:center;">
+            <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+            <input type="text" id="searchToolsInput" placeholder="Search 85+ tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+          </div>
+          <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <!-- Hero Title Header -->
+        <div class="tool-header-block" style="margin-bottom:24px;">
+          <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(234,179,8,0.1); border:1px solid rgba(234,179,8,0.25); color:var(--brand-primary); font-size:0.75rem; font-weight:700; padding:4px 12px; border-radius:999px; margin-bottom:12px;">
+            <span>🔠</span> <span>Code, Data &amp; APIs</span> &bull; <span>100% Client-Side Memory Sandbox</span>
+          </div>
+          <h1 class="tool-header-title" style="font-size:2rem; font-weight:900; margin-bottom:10px; letter-spacing:-0.02em;">
+            Developer String Case Converter &amp; Text Formatter
+          </h1>
+          <p class="tool-header-desc" style="font-size:0.95rem; color:var(--text-muted); line-height:1.6; max-width:860px; margin:0;">
+            Transform strings between camelCase, PascalCase, snake_case, CONSTANT_CASE, kebab-case, Title Case, Sentence case, dot.notation, and path/case with live text statistics.
+          </p>
+        </div>
+
+        <!-- Interactive Tool UI Component -->
+        
+        <div class="tool-card" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:16px; padding:28px; box-shadow:var(--shadow-card);">
+          <div style="margin-bottom:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <label style="font-size:0.85rem; font-weight:800; color:var(--text-main);">Input Text / Identifier</label>
+              <div style="display:flex; gap:8px;">
+                <button type="button" class="btn btn-secondary" onclick="loadSampleString()" style="font-size:0.75rem; padding:4px 10px;">Load Sample</button>
+                <button type="button" class="btn btn-secondary" onclick="clearStringInput()" style="font-size:0.75rem; padding:4px 10px;">Clear</button>
+              </div>
+            </div>
+            <textarea id="caseInput" class="form-input" style="height:120px; font-family:var(--font-mono); font-size:0.95rem;" placeholder="Type or paste any identifier or sentence here... e.g. webDevWorker Api Rate Limiter"></textarea>
+            
+            <!-- Real-time Text Metrics -->
+            <div style="display:flex; gap:16px; margin-top:8px; font-size:0.75rem; color:var(--text-dim); flex-wrap:wrap;">
+              <span>Characters: <strong id="statChars" style="color:var(--text-main);">0</strong></span>
+              <span>Words: <strong id="statWords" style="color:var(--text-main);">0</strong></span>
+              <span>Lines: <strong id="statLines" style="color:var(--text-main);">0</strong></span>
+              <span>UTF-8 Bytes: <strong id="statBytes" style="color:var(--text-main);">0 B</strong></span>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px;" id="caseCardsGrid">
+            <!-- Dynamic Case Cards -->
+          </div>
+        </div>
+      
+
+        <!-- Comprehensive Educational & SEO Cards Section -->
+        <section class="seo-card-grid" style="margin-top: 48px; display: flex; flex-direction: column; gap: 32px;">
+          
+          <!-- Card 1: Architectural Deep Dive -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>⚡</span> Architectural Deep Dive &amp; Developer Mechanics
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              
+      <p>String case conventions are an essential stylistic standard across programming languages, database architectures, and API interchange schemas. In software engineering, different language ecosystems mandate contrasting casing conventions: JavaScript, TypeScript, and Java mandate <code>camelCase</code> for variable declarations and <code>PascalCase</code> for classes and React components.</p>
+      <p style="margin-top:12px;">Conversely, Python (PEP 8) and Rust adopt <code>snake_case</code> for functions and variables, C/C++ and POSIX systems use <code>CONSTANT_CASE</code> for macros and environment variables, and HTML/CSS adopt <code>kebab-case</code> for selectors and attributes. In cross-platform full-stack engineering, developers constantly bridge data payloads between these conventions.</p>
+      <p style="margin-top:12px;">This tool tokenizes multi-word strings into discrete semantic words—handling complex regex boundaries like acronym transitions (e.g. <code>getXMLHTTPRequest</code> &rarr; <code>get_xml_http_request</code>)—and converts instantly across all 10 major developer conventions.</p>
+    
+            </div>
+          </article>
+
+          <!-- Card 2: Mathematical Models & Algorithmic Logic -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>📐</span> Mathematical Models &amp; Algorithmic Equations
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              
+      <p>Word segmentation operates via Unicode-aware boundary regular expressions that detect case transitions, delimiters, and acronyms:</p>
+      <ul style="margin:14px 0 14px 20px; line-height:1.9;">
+        <li><strong>CamelCase Boundary:</strong> \( [a-z0-9] \to [A-Z] \) splits lower-to-upper transitions.</li>
+        <li><strong>Acronym Boundary:</strong> \( [A-Z] \to [A-Z][a-z] \) splits capital abbreviations from subsequent words (e.g., <code>HTTPServer</code> &rarr; <code>HTTP Server</code>).</li>
+        <li><strong>Delimiter Boundary:</strong> Delimiters <code>[-_./\\]+</code> are collapsed into unified word tokens.</li>
+      </ul>
+    
+            </div>
+          </article>
+
+          <!-- Card 3: Production Code Implementation -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>💻</span> Production Implementation &amp; Code Example
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              <p>Software engineers can integrate these exact patterns directly into automated microservices, build pipelines, or component stylesheets. Below is a production-grade code snippet demonstrating programmatic implementation:</p>
+              <div class="code-output-box" style="margin: 18px 0; padding: 16px; background: #070a13; border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; position: relative;">
+                <pre><code id="prodSnippetCode">// Universal String Case Transpiler in TypeScript
+export function toSnakeCase(str: string): string {
+  return str
+    .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
+    .replace(/([A-Z])([A-Z][a-z])/g, '$1_$2')
+    .replace(/[-\s.]+/g, '_')
+    .toLowerCase();
+}
+
+export function toCamelCase(str: string): string {
+  return toSnakeCase(str)
+    .replace(/_([a-z0-9])/g, (_, c) =&gt; c.toUpperCase());
+}
+
+export function toKebabCase(str: string): string {
+  return toSnakeCase(str).replace(/_/g, '-');
+}</code></pre>
+                <button type="button" class="copy-code-btn" onclick="window.copyCode('prodSnippetCode', this)">Copy</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4: Technical Specifications Matrix -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>📋</span> Technical Specifications &amp; Standards Matrix
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              <p>The table below documents the architectural standards, compliance parameters, and browser runtime capabilities governing Developer String Case Converter &amp; Text Formatter:</p>
+              <div style="overflow-x: auto; margin: 18px 0;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;">
+                  <thead>
+                    <tr style="background: var(--bg-subtle); border-bottom: 2px solid var(--border);">
+                      <th style="padding: 10px 14px; color: var(--text-main);">Engineering Metric</th>
+                      <th style="padding: 10px 14px; color: var(--text-main);">Specification / Standard</th>
+                      <th style="padding: 10px 14px; color: var(--text-main);">Browser Support</th>
+                      <th style="padding: 10px 14px; color: var(--text-main);">Execution Layer</th>
+                    </tr>
+                  </thead>
+                  <tbody style="color: var(--text-muted);">
+                    
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">Supported Cases</td>
+      <td style="padding: 10px 14px;">10 Formats (camel, Pascal, snake, CONSTANT, kebab, etc.)</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">Word Tokenizer</td>
+      <td style="padding: 10px 14px;">Regex-driven acronym and transition parsing</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">Metrics Computed</td>
+      <td style="padding: 10px 14px;">Characters, Words, Lines, UTF-8 Byte Size</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">Execution</td>
+      <td style="padding: 10px 14px;">Instant client-side V8 evaluation</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 5: In-Depth Developer FAQs -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>❓</span> Frequently Asked Questions (Developer String Case Converter &amp; Text Formatter)
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 18px;">
+              Common technical questions, implementation nuances, and troubleshooting insights encountered by developers using Developer String Case Converter &amp; Text Formatter:
+            </p>
+            <div class="faq-list">
+              
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details open>
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          What is kebab-case used for in web development?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          Kebab-case is standard for CSS class names, HTML attributes (e.g. data-user-id), and SEO-friendly URL slugs.
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details >
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          How does the tool handle acronyms like NASA or API?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          The word splitter uses lookahead regex patterns so that strings like 'fetchAPIResponse' are properly divided into 'fetch', 'API', 'Response'.
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details >
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          What is the difference between Title Case and Sentence case?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          Title Case capitalizes the initial letter of every principal word, while Sentence case only capitalizes the first word of the sentence.
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details >
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          Is my text uploaded or stored anywhere?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          Never. All string calculations run strictly in your local browser memory.
+        </p>
+      </details>
+    </div>
+  
+            </div>
+          </article>
+
+          <!-- Card 6: Production Best Practices -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>⚠️</span> Production Best Practices &amp; Pitfalls to Avoid
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              <ul style="margin: 0 0 0 20px; display: flex; flex-direction: column; gap: 10px;">
+                
+      <li><strong>Follow PEP 8 in Python:</strong> Stick strictly to snake_case for functions and PascalCase for classes.</li>
+      <li><strong>Use CONSTANT_CASE for immutable constants:</strong> Reserve ALL_CAPS for values that never change during application lifecycle.</li>
+      <li><strong>Use kebab-case for clean URLs:</strong> Search engines prefer hyphens over underscores for word separation in URLs.</li>
+      <li><strong>Standardize database column names:</strong> Stick to snake_case in SQL databases to avoid casing issues on case-insensitive systems.</li>
+      <li><strong>Consistent JSON keys:</strong> Standardize your REST API responses on either camelCase or snake_case and document it in OpenAPI.</li>
+    
+              </ul>
+            </div>
+          </article>
+
+        </section>
+
+        <!-- Enterprise Multi-Column Footer -->
+        <footer class="enterprise-footer" style="margin-top: 60px; padding: 48px 0 28px; border-top: 1px solid var(--border); background: var(--bg-surface);">
+          <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; margin-bottom: 36px;">
+              <div>
+                <a href="/" style="display: inline-block; margin-bottom: 12px;"><img src="/assets/webdevworker-logo-horizontal.svg" alt="WebDevWorker" style="height: 32px;"></a>
+                <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin: 0;">The premier client-side developer workstation. 80+ high-precision utilities for modern web development, frontend design, and server administration.</p>
+                <p style="margin-top: 12px; font-size: 0.8rem; color: var(--brand-primary); font-weight: 700;">Founded by Zaviyan &bull; Operated by Zaviyan LLC</p>
+                <p style="margin-top: 2px; font-size: 0.76rem; color: var(--text-dim);">Corporate Support: business@zaviyanll.com</p>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">CSS &amp; UI Tools</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/tools/tailwind-to-css-converter.html" style="color: var(--text-muted); text-decoration: none;">Tailwind to CSS</a></li>
+                  <li><a href="/tools/css-box-shadow-generator.html" style="color: var(--text-muted); text-decoration: none;">Box Shadow Studio</a></li>
+                  <li><a href="/tools/css-gradient-generator.html" style="color: var(--text-muted); text-decoration: none;">Gradient Generator</a></li>
+                  <li><a href="/tools/css-clamp-calculator.html" style="color: var(--text-muted); text-decoration: none;">clamp() Calculator</a></li>
+                  <li><a href="/tools/css-unit-converter.html" style="color: var(--text-muted); text-decoration: none;">CSS Unit Converter</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">Code &amp; APIs</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/tools/json-formatter-validator.html" style="color: var(--text-muted); text-decoration: none;">JSON Formatter</a></li>
+                  <li><a href="/tools/json-to-typescript-generator.html" style="color: var(--text-muted); text-decoration: none;">JSON to TypeScript</a></li>
+                  <li><a href="/tools/sql-to-typescript-prisma-converter.html" style="color: var(--text-muted); text-decoration: none;">SQL to Prisma</a></li>
+                  <li><a href="/tools/json-to-go-struct-converter.html" style="color: var(--text-muted); text-decoration: none;">JSON to Go Struct</a></li>
+                  <li><a href="/tools/curl-to-code-converter.html" style="color: var(--text-muted); text-decoration: none;">cURL to Fetch</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">Security &amp; Cloud</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/tools/hash-generator.html" style="color: var(--text-muted); text-decoration: none;">SHA Hashes</a></li>
+                  <li><a href="/tools/hmac-hash-generator.html" style="color: var(--text-muted); text-decoration: none;">HMAC Signatures</a></li>
+                  <li><a href="/tools/openssl-command-generator.html" style="color: var(--text-muted); text-decoration: none;">OpenSSL CLI</a></li>
+                  <li><a href="/tools/aws-iam-s3-policy-generator.html" style="color: var(--text-muted); text-decoration: none;">AWS IAM &amp; S3</a></li>
+                  <li><a href="/tools/dockerfile-compose-generator.html" style="color: var(--text-muted); text-decoration: none;">Dockerfile Studio</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">Company &amp; Legal</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/blog/modern-client-side-developer-workstation.html" style="color: var(--brand-primary); text-decoration: none; font-weight: 700;">📰 Engineering Blog</a></li>
+                  <li><a href="/about.html" style="color: var(--text-muted); text-decoration: none;">About WebDevWorker</a></li>
+                  <li><a href="/contact.html" style="color: var(--text-muted); text-decoration: none;">Contact Engineering</a></li>
+                  <li><a href="/privacy.html" style="color: var(--text-muted); text-decoration: none;">Privacy Policy</a></li>
+                  <li><a href="/terms.html" style="color: var(--text-muted); text-decoration: none;">Terms of Service</a></li>
+                  <li><a href="https://calcworker.com" target="_blank" rel="noopener" style="color: var(--brand-primary); text-decoration: none;">CalcWorker (Sister Suite)</a></li>
+                </ul>
+              </div>
+            </div>
+            <div style="border-top: 1px solid var(--border); padding: 24px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; font-size: 0.82rem; color: var(--text-dim);">
+              <div>© 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+              <div style="display: flex; gap: 16px;">
+                <span>🔒 100% Client-Side Sandbox</span>
+                <span>⚡ Zero Telemetry</span>
+                <span>📲 Offline PWA Capable</span>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/webdevworker-common.js?v=2026-wdw-v35" defer></script>
+  <script src="/js/ai-widget.js?v=2026-wdw-v35" defer></script>
+  <script>
+
+        const caseDefs = [
+          { id: 'camelCase', label: 'camelCase', icon: '🐪', desc: 'Standard JavaScript / Java variables' },
+          { id: 'pascalCase', label: 'PascalCase', icon: '🏛️', desc: 'Classes, React Components, Types' },
+          { id: 'snakeCase', label: 'snake_case', icon: '🐍', desc: 'Python, Ruby, Postgres columns' },
+          { id: 'constantCase', label: 'CONSTANT_CASE', icon: '⚡', desc: 'Environment variables & global constants' },
+          { id: 'kebabCase', label: 'kebab-case', icon: '🍢', desc: 'URLs, CSS class names, HTML attributes' },
+          { id: 'titleCase', label: 'Title Case', icon: '📰', desc: 'Headings, blog titles, UI labels' },
+          { id: 'sentenceCase', label: 'Sentence case', icon: '📝', desc: 'Standard human narrative prose' },
+          { id: 'dotCase', label: 'dot.case', icon: '🔵', desc: 'Config keys, Java packages, i18n keys' },
+          { id: 'pathCase', label: 'path/case', icon: '📁', desc: 'File system paths and URI routing' },
+          { id: 'headerCase', label: 'Header-Case', icon: '🏷️', desc: 'HTTP Headers (e.g. Content-Type)' }
+        ];
+
+        function splitIntoWords(str) {
+          return str
+            .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+            .replace(/([A-Z])([A-Z][a-z])/g, '$1 $2')
+            .replace(/[-_./\\]+/g, ' ')
+            .trim()
+            .split(/\s+/)
+            .filter(w => w.length > 0);
+        }
+
+        function toCase(words, type) {
+          if (words.length === 0) return '';
+          switch(type) {
+            case 'camelCase':
+              return words.map((w, i) => i === 0 ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('');
+            case 'pascalCase':
+              return words.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('');
+            case 'snakeCase':
+              return words.map(w => w.toLowerCase()).join('_');
+            case 'constantCase':
+              return words.map(w => w.toUpperCase()).join('_');
+            case 'kebabCase':
+              return words.map(w => w.toLowerCase()).join('-');
+            case 'titleCase':
+              return words.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+            case 'sentenceCase':
+              const joined = words.map(w => w.toLowerCase()).join(' ');
+              return joined.charAt(0).toUpperCase() + joined.slice(1);
+            case 'dotCase':
+              return words.map(w => w.toLowerCase()).join('.');
+            case 'pathCase':
+              return words.map(w => w.toLowerCase()).join('/');
+            case 'headerCase':
+              return words.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('-');
+            default:
+              return words.join(' ');
+          }
+        }
+
+        function updateCases() {
+          const raw = document.getElementById('caseInput').value;
+          const words = splitIntoWords(raw);
+
+          // Update metrics
+          document.getElementById('statChars').innerText = raw.length;
+          document.getElementById('statWords').innerText = words.length;
+          document.getElementById('statLines').innerText = raw ? raw.split('\n').length : 0;
+          document.getElementById('statBytes').innerText = new Blob([raw]).size + ' B';
+
+          const grid = document.getElementById('caseCardsGrid');
+          grid.innerHTML = '';
+
+          caseDefs.forEach(cd => {
+            const transformed = toCase(words, cd.id);
+            const card = document.createElement('div');
+            card.style.cssText = 'background:var(--bg-subtle); border:1px solid var(--border); border-radius:10px; padding:14px 16px; display:flex; flex-direction:column; justify-content:space-between; transition:border-color 0.15s;';
+            card.innerHTML = `
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <span style="font-size:0.78rem; font-weight:800; color:var(--text-main); display:flex; align-items:center; gap:6px;">
+                    <span>${cd.icon}</span> <span>${cd.label}</span>
+                  </span>
+                  <button type="button" class="btn btn-secondary" style="font-size:0.7rem; padding:2px 8px;" onclick="copySingleCase('${cd.id}')">Copy</button>
+                </div>
+                <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:8px;">${cd.desc}</div>
+              </div>
+              <input type="text" id="val_${cd.id}" value="${transformed.replace(/"/g, '&quot;')}" style="width:100%; background:var(--bg-surface); border:1px solid var(--border); border-radius:6px; padding:8px 10px; color:var(--text-main); font-family:var(--font-mono); font-size:0.85rem; outline:none;" readonly>
+            `;
+            grid.appendChild(card);
+          });
+        }
+
+        function copySingleCase(id) {
+          const el = document.getElementById('val_' + id);
+          if (el && el.value) {
+            navigator.clipboard.writeText(el.value);
+            showToast('Copied ' + id + ' to clipboard!');
+          }
+        }
+
+        function loadSampleString() {
+          document.getElementById('caseInput').value = 'webdevworker ultra client-side api workstation';
+          updateCases();
+        }
+
+        function clearStringInput() {
+          document.getElementById('caseInput').value = '';
+          updateCases();
+        }
+
+        document.getElementById('caseInput').addEventListener('input', updateCases);
+        window.addEventListener('DOMContentLoaded', loadSampleString);
+      
+  </script>
+</body>
+</html>

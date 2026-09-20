@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html data-theme="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Nginx Configuration Studio &amp; Reverse Proxy Generator | WebDevWorker</title>
+  <meta content="Interactive Nginx server block studio: reverse proxy upstream, Let's Encrypt SSL/TLS, HTTP/2, SPA routing fallback (try_files), security headers, and gzip compression." name="description"/>
+  <meta content="nginx config generator, nginx reverse proxy, nginx ssl config, try_files spa, certbot nginx, security headers nginx, proxy_pass, devops server config" name="keywords"/>
+  <link href="https://webdevworker.com/tools/nginx-config-generator.html" rel="canonical"/>
+  <meta content="WebDevWorker" name="author"/>
+  <meta content="index, follow" name="robots"/>
+  <meta content="Nginx Server Block &amp; Reverse Proxy Generator | WebDevWorker" property="og:title"/>
+  <meta content="Interactive Nginx server block studio: reverse proxy upstream, Let's Encrypt SSL/TLS, HTTP/2, SPA routing fallback (try_files), security headers, and gzip compression." property="og:description"/>
+  <meta content="https://webdevworker.com/tools/nginx-config-generator.html" property="og:url"/>
+  <meta content="website" property="og:type"/>
+  <meta content="https://webdevworker.com/assets/logo.png" property="og:image"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Nginx Server Block &amp; Reverse Proxy Generator | WebDevWorker"/>
+  <meta name="twitter:description" content="Interactive Nginx server block studio: reverse proxy upstream, Let's Encrypt SSL/TLS, HTTP/2, SPA routing fallback (try_files), security headers, and gzip compression."/>
+  <meta name="twitter:image" content="https://webdevworker.com/assets/logo.png"/>
+  <link href="/assets/favicon.png" rel="icon" type="image/png"/>
+  <link rel="manifest" href="/manifest.json"/>
+
+  <!-- Google AdSense -->
+  <script async crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384"></script>
+  <!-- Google tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-G718R5DYYR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-G718R5DYYR');
+  </script>
+
+  <link href="/css/webdevworker.css?v=2026-wdw-v35" rel="stylesheet"/>
+  <link href="/css/ai-widget.css?v=2026-wdw-v35" rel="stylesheet"/>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Nginx Server Block & Reverse Proxy Generator",
+      "url": "https://webdevworker.com/tools/nginx-config-generator.html",
+      "description": "Interactive Nginx server block studio: reverse proxy upstream, Let's Encrypt SSL/TLS, HTTP/2, SPA routing fallback (try_files), security headers, and gzip compression.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://webdevworker.com",
+        "founder": "Zaviyan"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "DevOps & Webmaster",
+          "item": "https://webdevworker.com/#categories"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Nginx Server Block & Reverse Proxy Generator",
+          "item": "https://webdevworker.com/tools/nginx-config-generator.html"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why do my React/Vue routes return 404 on page refresh?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Client-side routers (React Router, Vue Router) simulate URL routing in JavaScript. When refreshed, Nginx looks for a physical directory on disk and fails. Adding 'try_files $uri $uri/ /index.html;' directs Nginx to serve the SPA index."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does proxy_set_header Upgrade do?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "These headers allow Nginx to pass WebSocket handshake upgrade requests through the reverse proxy to backend Node.js or Python servers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I test my Nginx config before reloading?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Always run 'sudo nginx -t' to verify configuration syntax before reloading the systemd daemon."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the benefit of HTTP/2 in Nginx?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "HTTP/2 introduces request multiplexing over a single TCP connection, HPACK header compression, and binary framing, drastically cutting page load latency."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><a href="/"><img alt="WebDevWorker Logo" src="/assets/webdevworker-logo-horizontal.svg"/></a></div>
+    <div class="sidebar-nav"><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Overview</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/" class="nav-item" title="Dashboard" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Dashboard</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">CSS &amp; Visual UI</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/tailwind-to-css-converter.html" class="nav-item" title="Tailwind to CSS Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Tailwind to CSS Converter</span></a></li><li><a href="/tools/css-box-shadow-generator.html" class="nav-item" title="CSS Box Shadow Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Box Shadow Generator</span></a></li><li><a href="/tools/css-gradient-generator.html" class="nav-item" title="CSS Gradient Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌈</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Gradient Generator</span></a></li><li><a href="/tools/css-glassmorphism-generator.html" class="nav-item" title="CSS Glassmorphism Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Glassmorphism Builder</span></a></li><li><a href="/tools/css-border-radius-generator.html" class="nav-item" title="Border Radius &amp; Blob Shaper" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🟣</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Border Radius &amp; Blob Shaper</span></a></li><li><a href="/tools/color-converter-contrast.html" class="nav-item" title="Color Contrast &amp; WCAG Tester" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎭</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Color Contrast &amp; WCAG Tester</span></a></li><li><a href="/tools/css-flexbox-generator.html" class="nav-item" title="CSS Flexbox Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Flexbox Builder</span></a></li><li><a href="/tools/css-grid-generator.html" class="nav-item" title="CSS Grid 2D Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Grid 2D Builder</span></a></li><li><a href="/tools/css-clamp-calculator.html" class="nav-item" title="CSS clamp() Fluid Typography" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔤</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS clamp() Fluid Typography</span></a></li><li><a href="/tools/css-cubic-bezier-generator.html" class="nav-item" title="CSS Cubic-Bezier Visualizer" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Cubic-Bezier Visualizer</span></a></li><li><a href="/tools/css-clip-path-generator.html" class="nav-item" title="CSS Clip-Path Polygon Shaper" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">✂️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Clip-Path Polygon Shaper</span></a></li><li><a href="/tools/css-keyframes-animation-generator.html" class="nav-item" title="CSS @keyframes Animation Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎬</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS @keyframes Animation Studio</span></a></li><li><a href="/tools/css-triangle-generator.html" class="nav-item" title="CSS Triangle &amp; Tooltip Arrow" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">▲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Triangle &amp; Tooltip Arrow</span></a></li><li><a href="/tools/svg-to-data-uri-converter.html" class="nav-item" title="SVG to CSS Data URI Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🖼️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG to CSS Data URI Converter</span></a></li><li><a href="/tools/css-text-shadow-generator.html" class="nav-item" title="CSS Text Shadow &amp; Neon Glow" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">✨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Text Shadow &amp; Neon Glow</span></a></li><li><a href="/tools/color-palette-harmonies-generator.html" class="nav-item" title="Color Palette &amp; Harmonies" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Color Palette &amp; Harmonies</span></a></li><li><a href="/tools/css-filter-effects-generator.html" class="nav-item" title="CSS Filter Effects Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎭</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Filter Effects Studio</span></a></li><li><a href="/tools/css-neumorphism-generator.html" class="nav-item" title="CSS Neumorphism (Soft UI)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔘</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Neumorphism (Soft UI)</span></a></li><li><a href="/tools/css-unit-converter.html" class="nav-item" title="CSS Unit Converter (PX/REM/VW)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Unit Converter (PX/REM/VW)</span></a></li><li><a href="/tools/css-specificity-calculator.html" class="nav-item" title="CSS Specificity Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎯</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Specificity Calculator</span></a></li><li><a href="/tools/css-transform-3d-matrix-calculator.html" class="nav-item" title="CSS 3D Transform &amp; Matrix3d" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS 3D Transform &amp; Matrix3d</span></a></li><li><a href="/tools/css-aspect-ratio-calculator.html" class="nav-item" title="CSS Aspect Ratio Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📺</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Aspect Ratio Calculator</span></a></li><li><a href="/tools/css-gradient-mesh-generator.html" class="nav-item" title="CSS Mesh Gradient Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌌</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Mesh Gradient Generator</span></a></li><li><a href="/tools/css-media-query-generator.html" class="nav-item" title="CSS Media &amp; Container Query" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Media &amp; Container Query</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Code, Data &amp; APIs</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/sql-to-typescript-prisma-converter.html" class="nav-item" title="SQL to TypeScript &amp; Prisma" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔷</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SQL to TypeScript &amp; Prisma</span></a></li><li><a href="/tools/json-formatter-validator.html" class="nav-item" title="JSON Formatter &amp; Validator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📋</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON Formatter &amp; Validator</span></a></li><li><a href="/tools/curl-to-code-converter.html" class="nav-item" title="cURL to Code Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">💻</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">cURL to Code Converter</span></a></li><li><a href="/tools/json-to-typescript-generator.html" class="nav-item" title="JSON to TypeScript Interface" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔷</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to TypeScript Interface</span></a></li><li><a href="/tools/mock-data-generator.html" class="nav-item" title="Mock Data Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Mock Data Generator</span></a></li><li><a href="/tools/code-beautifier-minifier.html" class="nav-item" title="Code Beautifier &amp; Minifier" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧹</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Code Beautifier &amp; Minifier</span></a></li><li><a href="/tools/sql-formatter.html" class="nav-item" title="SQL Query Formatter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🗄️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SQL Query Formatter</span></a></li><li><a href="/tools/base64-encoder-decoder.html" class="nav-item" title="Base64 Image &amp; Text Tool" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔤</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Base64 Image &amp; Text Tool</span></a></li><li><a href="/tools/url-encoder-decoder.html" class="nav-item" title="URL Encoder &amp; Decoder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔗</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">URL Encoder &amp; Decoder</span></a></li><li><a href="/tools/markdown-html-converter.html" class="nav-item" title="Markdown to HTML Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📝</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Markdown to HTML Converter</span></a></li><li><a href="/tools/lorem-ipsum-generator.html" class="nav-item" title="Lorem Ipsum &amp; Text Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📄</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Lorem Ipsum &amp; Text Generator</span></a></li><li><a href="/tools/html-table-to-json-converter.html" class="nav-item" title="HTML Table to JSON &amp; CSV" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML Table to JSON &amp; CSV</span></a></li><li><a href="/tools/yaml-to-json-converter.html" class="nav-item" title="YAML to JSON Configuration" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📜</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">YAML to JSON Configuration</span></a></li><li><a href="/tools/json-schema-generator.html" class="nav-item" title="JSON Schema Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON Schema Generator</span></a></li><li><a href="/tools/webhook-payload-formatter.html" class="nav-item" title="Webhook Payload &amp; Verifier" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Webhook Payload &amp; Verifier</span></a></li><li><a href="/tools/json-to-go-struct-converter.html" class="nav-item" title="JSON to Go Struct Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐹</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Go Struct Generator</span></a></li><li><a href="/tools/json-to-rust-struct-converter.html" class="nav-item" title="JSON to Rust Struct (Serde)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🦀</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Rust Struct (Serde)</span></a></li><li><a href="/tools/json-to-python-pydantic-converter.html" class="nav-item" title="JSON to Python Pydantic" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Python Pydantic</span></a></li><li><a href="/tools/json-to-yaml-converter.html" class="nav-item" title="JSON to YAML Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📑</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to YAML Converter</span></a></li><li><a href="/tools/json-to-csv-converter.html" class="nav-item" title="JSON to CSV / Excel Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to CSV / Excel Converter</span></a></li><li><a href="/tools/xml-formatter-json-converter.html" class="nav-item" title="XML Formatter &amp; JSON Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🏷️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">XML Formatter &amp; JSON Converter</span></a></li><li><a href="/tools/string-case-converter.html" class="nav-item" title="String Case Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔠</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">String Case Converter</span></a></li><li><a href="/tools/html-entity-encoder-decoder.html" class="nav-item" title="HTML Entity Encoder &amp; Decoder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML Entity Encoder &amp; Decoder</span></a></li><li><a href="/tools/unix-timestamp-converter.html" class="nav-item" title="Unix Timestamp Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⏱️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Unix Timestamp Converter</span></a></li><li><a href="/tools/number-base-converter.html" class="nav-item" title="Number Base Converter (Bin/Hex)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔢</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Number Base Converter (Bin/Hex)</span></a></li><li><a href="/tools/html-to-jsx-converter.html" class="nav-item" title="HTML to JSX / React Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚛️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML to JSX / React Converter</span></a></li><li><a href="/tools/json-to-zod-schema.html" class="nav-item" title="JSON to Zod Schema Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Zod Schema Generator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Security &amp; Cryptography</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/openssl-command-generator.html" class="nav-item" title="OpenSSL Command Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔒</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">OpenSSL Command Generator</span></a></li><li><a href="/tools/hash-generator.html" class="nav-item" title="SHA Hash &amp; Checksum" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔒</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SHA Hash &amp; Checksum</span></a></li><li><a href="/tools/uuid-generator.html" class="nav-item" title="UUID / GUID v4 Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🆔</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">UUID / GUID v4 Generator</span></a></li><li><a href="/tools/password-generator.html" class="nav-item" title="Strong Password Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔑</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Strong Password Generator</span></a></li><li><a href="/tools/jwt-decoder.html" class="nav-item" title="JWT Token Inspector" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JWT Token Inspector</span></a></li><li><a href="/tools/subresource-integrity-hash-generator.html" class="nav-item" title="Subresource Integrity (SRI)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Subresource Integrity (SRI)</span></a></li><li><a href="/tools/content-security-policy-generator.html" class="nav-item" title="Content Security Policy (CSP)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Content Security Policy (CSP)</span></a></li><li><a href="/tools/hmac-hash-generator.html" class="nav-item" title="HMAC Hash &amp; Key Signature" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HMAC Hash &amp; Key Signature</span></a></li><li><a href="/tools/aes-encryption-decryption-tool.html" class="nav-item" title="AES-GCM Encryption / Decryption" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🗝️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">AES-GCM Encryption / Decryption</span></a></li><li><a href="/tools/ulid-nanoid-generator.html" class="nav-item" title="ULID &amp; NanoID Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🆔</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">ULID &amp; NanoID Generator</span></a></li><li><a href="/tools/bcrypt-hash-cost-calculator.html" class="nav-item" title="Bcrypt Hash &amp; Cost Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧮</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Bcrypt Hash &amp; Cost Calculator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">DevOps &amp; Webmaster</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/aws-iam-s3-policy-generator.html" class="nav-item" title="AWS IAM &amp; S3 Policy Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">☁️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">AWS IAM &amp; S3 Policy Generator</span></a></li><li><a href="/tools/dockerfile-compose-generator.html" class="nav-item" title="Dockerfile &amp; Compose Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐳</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Dockerfile &amp; Compose Generator</span></a></li><li><a href="/tools/seo-keyword-density-analyzer.html" class="nav-item" title="SEO Keyword Density &amp; N-Gram" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SEO Keyword Density &amp; N-Gram</span></a></li><li><a href="/tools/cron-expression-generator.html" class="nav-item" title="Cron Expression Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⏰</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Cron Expression Builder</span></a></li><li><a href="/tools/chmod-permissions-calculator.html" class="nav-item" title="Linux Chmod Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Linux Chmod Calculator</span></a></li><li><a href="/tools/http-status-codes-inspector.html" class="nav-item" title="HTTP Status Codes Spec" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTTP Status Codes Spec</span></a></li><li><a href="/tools/javascript-keycode-tester.html" class="nav-item" title="JS KeyCode Event Tester" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⌨️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JS KeyCode Event Tester</span></a></li><li><a href="/tools/htaccess-generator.html" class="nav-item" title=".htaccess Rule Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚙️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">.htaccess Rule Builder</span></a></li><li><a href="/tools/meta-tag-generator.html" class="nav-item" title="Meta Tags &amp; Open Graph" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🏷️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Meta Tags &amp; Open Graph</span></a></li><li><a href="/tools/regex-tester.html" class="nav-item" title="Regex Tester &amp; Explainer" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Regex Tester &amp; Explainer</span></a></li><li><a href="/tools/text-diff-checker.html" class="nav-item" title="Code Diff &amp; Comparison" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚖️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Code Diff &amp; Comparison</span></a></li><li><a href="/tools/dns-record-lookup-generator.html" class="nav-item" title="DNS Zone &amp; SPF/DMARC" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">DNS Zone &amp; SPF/DMARC</span></a></li><li><a href="/tools/robots-txt-generator.html" class="nav-item" title="Robots.txt &amp; Crawler Rules" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🤖</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Robots.txt &amp; Crawler Rules</span></a></li><li><a href="/tools/user-agent-parser.html" class="nav-item" title="User-Agent &amp; Client Hints" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">User-Agent &amp; Client Hints</span></a></li><li><a href="/tools/cidr-subnet-calculator.html" class="nav-item" title="CIDR &amp; IP Subnet Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CIDR &amp; IP Subnet Calculator</span></a></li><li><a href="/tools/nginx-config-generator.html" class="nav-item active" title="Nginx Server Block Generator" style="display:flex;align-items:center;gap:10px;padding:9px 12px;text-decoration:none;font-size:0.85rem;border-radius:8px;margin:2px 4px;font-weight:700;transition:all 0.15s ease;background:linear-gradient(90deg, rgba(234,179,8,0.22) 0%, rgba(234,179,8,0.06) 100%) !important;color:#eab308 !important;border-left:4px solid #eab308 !important;box-shadow:inset 0 0 14px rgba(234,179,8,0.12) !important;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;color:#eab308 !important;font-weight:700;">Nginx Server Block Generator</span><span style="width:8px;height:8px;border-radius:50%;background:#eab308;box-shadow:0 0 10px #eab308;margin-left:auto;flex-shrink:0;"></span></a></li><li><a href="/tools/websocket-client-tester.html" class="nav-item" title="WebSocket Client &amp; Debugger" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">WebSocket Client &amp; Debugger</span></a></li><li><a href="/tools/git-command-generator.html" class="nav-item" title="Git Command &amp; Workflow Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔀</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Git Command &amp; Workflow Generator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Media, Assets &amp; Viral</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/image-color-palette-extractor.html" class="nav-item" title="Image Palette &amp; Contrast" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Image Palette &amp; Contrast</span></a></li><li><a href="/tools/qr-code-generator.html" class="nav-item" title="Custom QR Code Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Custom QR Code Studio</span></a></li><li><a href="/tools/multi-favicon-pwa-generator.html" class="nav-item" title="Favicon &amp; App Icon Matrix" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📦</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Favicon &amp; App Icon Matrix</span></a></li><li><a href="/tools/svg-optimizer-converter.html" class="nav-item" title="SVG Optimizer &amp; Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG Optimizer &amp; Converter</span></a></li><li><a href="/tools/svg-path-visualizer.html" class="nav-item" title="SVG Path Visualizer &amp; Editor" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG Path Visualizer &amp; Editor</span></a></li></ul></div><div style="border-top:1px solid var(--border);margin:16px 6px;padding-top:10px;"><div style="font-size:0.72rem;text-transform:uppercase;color:var(--text-muted);letter-spacing:1px;padding:4px 14px;font-weight:700;">Legal &amp; Info</div><a href="/blog/index.html" style="display:block;padding:5px 14px;color:var(--brand-primary);font-size:0.8rem;text-decoration:none;font-weight:700;">📖 Engineering Blog</a><a href="/about.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">About WebDevWorker</a><a href="/contact.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Contact Engineering</a><a href="/privacy.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Privacy Policy</a><a href="/terms.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Terms of Service</a></div></div>
+  </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <div class="main-viewport">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Menu">☰</button>
+          <span class="topbar-title">Nginx Server Block &amp; Reverse Proxy Generator</span>
+        </div>
+        <div class="topbar-right">
+          <div style="position:relative; display:flex; align-items:center;">
+            <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+            <input type="text" id="searchToolsInput" placeholder="Search 85+ tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+          </div>
+          <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <!-- Hero Title Header -->
+        <div class="tool-header-block" style="margin-bottom:24px;">
+          <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(234,179,8,0.1); border:1px solid rgba(234,179,8,0.25); color:var(--brand-primary); font-size:0.75rem; font-weight:700; padding:4px 12px; border-radius:999px; margin-bottom:12px;">
+            <span>⚡</span> <span>DevOps &amp; Webmaster</span> &bull; <span>100% Client-Side Memory Sandbox</span>
+          </div>
+          <h1 class="tool-header-title" style="font-size:2rem; font-weight:900; margin-bottom:10px; letter-spacing:-0.02em;">
+            Nginx Server Block &amp; Reverse Proxy Generator
+          </h1>
+          <p class="tool-header-desc" style="font-size:0.95rem; color:var(--text-muted); line-height:1.6; max-width:860px; margin:0;">
+            Interactive Nginx server block studio: reverse proxy upstream, Let's Encrypt SSL/TLS, HTTP/2, SPA routing fallback (try_files), security headers, and gzip compression.
+          </p>
+        </div>
+
+        <!-- Interactive Tool UI Component -->
+        
+        <div class="tool-card" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:16px; padding:28px; box-shadow:var(--shadow-card);">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;" id="nginxGrid">
+            
+            <!-- Settings Column -->
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              
+              <!-- Domain & Port -->
+              <div style="background:var(--bg-subtle); padding:16px; border-radius:10px; border:1px solid var(--border);">
+                <label style="font-size:0.82rem; font-weight:800; color:var(--text-main); margin-bottom:8px; display:block;">Server Domain &amp; Port</label>
+                <div style="display:flex; gap:10px;">
+                  <input type="text" id="ngDomain" value="api.webdevworker.com" style="flex:2; background:var(--bg-surface); border:1px solid var(--border); border-radius:6px; padding:8px 12px; color:var(--text-main); font-family:var(--font-mono); font-size:0.85rem; outline:none;" placeholder="example.com">
+                  <input type="number" id="ngPort" value="443" style="width:75px; background:var(--bg-surface); border:1px solid var(--border); border-radius:6px; padding:8px 10px; color:var(--text-main); font-weight:700; font-size:0.85rem; outline:none;">
+                </div>
+              </div>
+
+              <!-- Mode Selection -->
+              <div style="background:var(--bg-subtle); padding:16px; border-radius:10px; border:1px solid var(--border);">
+                <label style="font-size:0.82rem; font-weight:800; color:var(--text-main); margin-bottom:8px; display:block;">Routing Mode</label>
+                <select id="ngMode" style="width:100%; background:var(--bg-surface); border:1px solid var(--border); border-radius:6px; padding:8px 12px; color:var(--text-main); font-size:0.85rem; font-weight:700; outline:none;">
+                  <option value="proxy" selected>Reverse Proxy (Node, Python, Go backend)</option>
+                  <option value="spa">Single Page App (React, Vue, Vite static)</option>
+                  <option value="static">Static HTML / File Server</option>
+                </select>
+                <div id="proxyTargetBlock" style="margin-top:10px;">
+                  <span style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:4px;">Upstream Target (proxy_pass)</span>
+                  <input type="text" id="ngProxyPass" value="http://127.0.0.1:3000" style="width:100%; background:var(--bg-surface); border:1px solid var(--border); border-radius:6px; padding:8px 12px; color:var(--text-main); font-family:var(--font-mono); font-size:0.82rem; outline:none;">
+                </div>
+              </div>
+
+              <!-- Features Toggles -->
+              <div style="background:var(--bg-subtle); padding:16px; border-radius:10px; border:1px solid var(--border); font-size:0.82rem; display:flex; flex-direction:column; gap:10px;">
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                  <input type="checkbox" id="ngSsl" checked> Enable SSL/TLS with Let's Encrypt certificates
+                </label>
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                  <input type="checkbox" id="ngHttp2" checked> HTTP/2 Protocol support
+                </label>
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                  <input type="checkbox" id="ngSecHeaders" checked> OWASP Security Headers (HSTS, X-Frame, X-Content)
+                </label>
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                  <input type="checkbox" id="ngGzip" checked> Gzip Compression for JSON, CSS, and JS
+                </label>
+              </div>
+            </div>
+
+            <!-- Output Column -->
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-size:0.82rem; font-weight:800; color:var(--text-main);">Generated nginx.conf</span>
+                <button type="button" class="btn btn-primary" onclick="copyNginxConfig()" style="font-size:0.75rem; padding:4px 12px;">Copy Nginx Config</button>
+              </div>
+              <textarea id="nginxOutput" class="form-input" style="height:440px; font-family:var(--font-mono); font-size:0.82rem; background:#070a13; color:#38bdf8;" readonly></textarea>
+            </div>
+          </div>
+        </div>
+      
+
+        <!-- Comprehensive Educational & SEO Cards Section -->
+        <section class="seo-card-grid" style="margin-top: 48px; display: flex; flex-direction: column; gap: 32px;">
+          
+          <!-- Card 1: Architectural Deep Dive -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>⚡</span> Architectural Deep Dive &amp; Developer Mechanics
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              
+      <p>Nginx is the world's most ubiquitous high-performance HTTP web server and reverse proxy, handling high-concurrency traffic with an asynchronous, event-driven architecture. Unlike Apache's process-per-request model, Nginx can service tens of thousands of simultaneous connections with minimal memory footprints.</p>
+      <p style="margin-top:12px;">However, misconfiguring Nginx server blocks is a leading cause of production outages, broken Single Page Application (SPA) client-side routes, and security header leakage. Forgetting WebSocket connection upgrades (<code>Upgrade $http_upgrade</code>) breaks real-time sockets, and omitting <code>try_files $uri /index.html</code> causes hard 404 errors when refreshing React or Vue routes.</p>
+      <p style="margin-top:12px;">This studio generates production-grade, hardened Nginx server blocks preconfigured with modern TLS 1.3 ciphers, Let's Encrypt certificates, gzip compression, and OWASP security headers.</p>
+    
+            </div>
+          </article>
+
+          <!-- Card 2: Mathematical Models & Algorithmic Logic -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>📐</span> Mathematical Models &amp; Algorithmic Equations
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              
+      <p>Nginx routing directives operate via specific request processing pipelines:</p>
+      <ul style="margin:14px 0 14px 20px; line-height:1.9;">
+        <li><strong>try_files Directives:</strong> Evaluates file existence sequentially: <code>try_files $uri $uri/ /index.html;</code> checks the requested URI on disk, then directory index, then gracefully delegates routing to the SPA root index.</li>
+        <li><strong>Reverse Proxy Headers:</strong> Pass real client IP and protocol details across internal reverse proxies using standard headers (<code>X-Forwarded-For</code>, <code>X-Forwarded-Proto</code>).</li>
+        <li><strong>HSTS Header:</strong> <code>Strict-Transport-Security: max-age=31536000; includeSubDomains; preload</code> forces user agents to communicate exclusively over HTTPS for 1 full year.</li>
+      </ul>
+    
+            </div>
+          </article>
+
+          <!-- Card 3: Production Code Implementation -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>💻</span> Production Implementation &amp; Code Example
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              <p>Software engineers can integrate these exact patterns directly into automated microservices, build pipelines, or component stylesheets. Below is a production-grade code snippet demonstrating programmatic implementation:</p>
+              <div class="code-output-box" style="margin: 18px 0; padding: 16px; background: #070a13; border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; position: relative;">
+                <pre><code id="prodSnippetCode"># Test and Reload Nginx on Ubuntu / Debian Linux
+# 1. Test configuration syntax for errors
+sudo nginx -t
+
+# 2. Reload Nginx gracefully without dropping active connections
+sudo systemctl reload nginx
+
+# 3. Check status and error logs
+sudo tail -f /var/log/nginx/error.log</code></pre>
+                <button type="button" class="copy-code-btn" onclick="window.copyCode('prodSnippetCode', this)">Copy</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4: Technical Specifications Matrix -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>📋</span> Technical Specifications &amp; Standards Matrix
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              <p>The table below documents the architectural standards, compliance parameters, and browser runtime capabilities governing Nginx Server Block &amp; Reverse Proxy Generator:</p>
+              <div style="overflow-x: auto; margin: 18px 0;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;">
+                  <thead>
+                    <tr style="background: var(--bg-subtle); border-bottom: 2px solid var(--border);">
+                      <th style="padding: 10px 14px; color: var(--text-main);">Engineering Metric</th>
+                      <th style="padding: 10px 14px; color: var(--text-main);">Specification / Standard</th>
+                      <th style="padding: 10px 14px; color: var(--text-main);">Browser Support</th>
+                      <th style="padding: 10px 14px; color: var(--text-main);">Execution Layer</th>
+                    </tr>
+                  </thead>
+                  <tbody style="color: var(--text-muted);">
+                    
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">Server Version</td>
+      <td style="padding: 10px 14px;">Nginx 1.18+ / 1.24+ mainline</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">Protocols Supported</td>
+      <td style="padding: 10px 14px;">HTTP/1.1, HTTP/2, WebSocket (RFC 6455)</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">SSL Protocols</td>
+      <td style="padding: 10px 14px;">TLSv1.2 &amp; TLSv1.3 (NIST SP 800-52 compliant)</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">SPA Routing</td>
+      <td style="padding: 10px 14px;">HTML5 History API fallback (try_files)</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 5: In-Depth Developer FAQs -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>❓</span> Frequently Asked Questions (Nginx Server Block &amp; Reverse Proxy Generator)
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 18px;">
+              Common technical questions, implementation nuances, and troubleshooting insights encountered by developers using Nginx Server Block &amp; Reverse Proxy Generator:
+            </p>
+            <div class="faq-list">
+              
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details open>
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          Why do my React/Vue routes return 404 on page refresh?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          Client-side routers (React Router, Vue Router) simulate URL routing in JavaScript. When refreshed, Nginx looks for a physical directory on disk and fails. Adding 'try_files $uri $uri/ /index.html;' directs Nginx to serve the SPA index.
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details >
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          What does proxy_set_header Upgrade do?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          These headers allow Nginx to pass WebSocket handshake upgrade requests through the reverse proxy to backend Node.js or Python servers.
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details >
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          How do I test my Nginx config before reloading?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          Always run 'sudo nginx -t' to verify configuration syntax before reloading the systemd daemon.
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details >
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          What is the benefit of HTTP/2 in Nginx?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          HTTP/2 introduces request multiplexing over a single TCP connection, HPACK header compression, and binary framing, drastically cutting page load latency.
+        </p>
+      </details>
+    </div>
+  
+            </div>
+          </article>
+
+          <!-- Card 6: Production Best Practices -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>⚠️</span> Production Best Practices &amp; Pitfalls to Avoid
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              <ul style="margin: 0 0 0 20px; display: flex; flex-direction: column; gap: 10px;">
+                
+      <li><strong>Always run nginx -t before reloading:</strong> Testing syntax prevents taking down production servers with typo errors.</li>
+      <li><strong>Enable HSTS with care:</strong> Once enabled with preload, browsers refuse to connect over HTTP even for development subdomains.</li>
+      <li><strong>Turn on Gzip compression:</strong> Compressing text, CSS, and JSON assets reduces bandwidth transfer by up to 70%.</li>
+      <li><strong>Hide Nginx version:</strong> Add server_tokens off; inside the http block to hide server version information from potential attackers.</li>
+      <li><strong>Configure client_max_body_size:</strong> Set client_max_body_size 20M; to prevent 413 Payload Too Large errors when users upload files.</li>
+    
+              </ul>
+            </div>
+          </article>
+
+        </section>
+
+        <!-- Enterprise Multi-Column Footer -->
+        <footer class="enterprise-footer" style="margin-top: 60px; padding: 48px 0 28px; border-top: 1px solid var(--border); background: var(--bg-surface);">
+          <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; margin-bottom: 36px;">
+              <div>
+                <a href="/" style="display: inline-block; margin-bottom: 12px;"><img src="/assets/webdevworker-logo-horizontal.svg" alt="WebDevWorker" style="height: 32px;"></a>
+                <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin: 0;">The premier client-side developer workstation. 80+ high-precision utilities for modern web development, frontend design, and server administration.</p>
+                <p style="margin-top: 12px; font-size: 0.8rem; color: var(--brand-primary); font-weight: 700;">Founded by Zaviyan &bull; Operated by Zaviyan LLC</p>
+                <p style="margin-top: 2px; font-size: 0.76rem; color: var(--text-dim);">Corporate Support: business@zaviyanll.com</p>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">CSS &amp; UI Tools</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/tools/tailwind-to-css-converter.html" style="color: var(--text-muted); text-decoration: none;">Tailwind to CSS</a></li>
+                  <li><a href="/tools/css-box-shadow-generator.html" style="color: var(--text-muted); text-decoration: none;">Box Shadow Studio</a></li>
+                  <li><a href="/tools/css-gradient-generator.html" style="color: var(--text-muted); text-decoration: none;">Gradient Generator</a></li>
+                  <li><a href="/tools/css-clamp-calculator.html" style="color: var(--text-muted); text-decoration: none;">clamp() Calculator</a></li>
+                  <li><a href="/tools/css-unit-converter.html" style="color: var(--text-muted); text-decoration: none;">CSS Unit Converter</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">Code &amp; APIs</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/tools/json-formatter-validator.html" style="color: var(--text-muted); text-decoration: none;">JSON Formatter</a></li>
+                  <li><a href="/tools/json-to-typescript-generator.html" style="color: var(--text-muted); text-decoration: none;">JSON to TypeScript</a></li>
+                  <li><a href="/tools/sql-to-typescript-prisma-converter.html" style="color: var(--text-muted); text-decoration: none;">SQL to Prisma</a></li>
+                  <li><a href="/tools/json-to-go-struct-converter.html" style="color: var(--text-muted); text-decoration: none;">JSON to Go Struct</a></li>
+                  <li><a href="/tools/curl-to-code-converter.html" style="color: var(--text-muted); text-decoration: none;">cURL to Fetch</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">Security &amp; Cloud</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/tools/hash-generator.html" style="color: var(--text-muted); text-decoration: none;">SHA Hashes</a></li>
+                  <li><a href="/tools/hmac-hash-generator.html" style="color: var(--text-muted); text-decoration: none;">HMAC Signatures</a></li>
+                  <li><a href="/tools/openssl-command-generator.html" style="color: var(--text-muted); text-decoration: none;">OpenSSL CLI</a></li>
+                  <li><a href="/tools/aws-iam-s3-policy-generator.html" style="color: var(--text-muted); text-decoration: none;">AWS IAM &amp; S3</a></li>
+                  <li><a href="/tools/dockerfile-compose-generator.html" style="color: var(--text-muted); text-decoration: none;">Dockerfile Studio</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">Company &amp; Legal</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/blog/modern-client-side-developer-workstation.html" style="color: var(--brand-primary); text-decoration: none; font-weight: 700;">📰 Engineering Blog</a></li>
+                  <li><a href="/about.html" style="color: var(--text-muted); text-decoration: none;">About WebDevWorker</a></li>
+                  <li><a href="/contact.html" style="color: var(--text-muted); text-decoration: none;">Contact Engineering</a></li>
+                  <li><a href="/privacy.html" style="color: var(--text-muted); text-decoration: none;">Privacy Policy</a></li>
+                  <li><a href="/terms.html" style="color: var(--text-muted); text-decoration: none;">Terms of Service</a></li>
+                  <li><a href="https://calcworker.com" target="_blank" rel="noopener" style="color: var(--brand-primary); text-decoration: none;">CalcWorker (Sister Suite)</a></li>
+                </ul>
+              </div>
+            </div>
+            <div style="border-top: 1px solid var(--border); padding: 24px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; font-size: 0.82rem; color: var(--text-dim);">
+              <div>© 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+              <div style="display: flex; gap: 16px;">
+                <span>🔒 100% Client-Side Sandbox</span>
+                <span>⚡ Zero Telemetry</span>
+                <span>📲 Offline PWA Capable</span>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/webdevworker-common.js?v=2026-wdw-v35" defer></script>
+  <script src="/js/ai-widget.js?v=2026-wdw-v35" defer></script>
+  <script>
+
+        function generateNginx() {
+          const domain = document.getElementById('ngDomain').value.trim() || 'example.com';
+          const port = document.getElementById('ngPort').value;
+          const mode = document.getElementById('ngMode').value;
+          const proxyTarget = document.getElementById('ngProxyPass').value.trim() || 'http://127.0.0.1:3000';
+          const ssl = document.getElementById('ngSsl').checked;
+          const h2 = document.getElementById('ngHttp2').checked;
+          const sec = document.getElementById('ngSecHeaders').checked;
+          const gzip = document.getElementById('ngGzip').checked;
+
+          let conf = '';
+
+          // Redirect HTTP to HTTPS
+          if (ssl) {
+            conf += `server {\n    listen 80;\n    listen [::]:80;\n    server_name ${domain};\n    return 301 https://\$host\$request_uri;\n}\n\n`;
+          }
+
+          conf += `server {\n`;
+          if (ssl) {
+            conf += `    listen ${port} ssl${h2 ? ' http2' : ''};\n    listen [::]:${port} ssl${h2 ? ' http2' : ''};\n`;
+            conf += `    server_name ${domain};\n\n`;
+            conf += `    # SSL/TLS Certificates\n`;
+            conf += `    ssl_certificate /etc/letsencrypt/live/${domain}/fullchain.pem;\n`;
+            conf += `    ssl_certificate_key /etc/letsencrypt/live/${domain}/privkey.pem;\n`;
+            conf += `    ssl_protocols TLSv1.2 TLSv1.3;\n    ssl_prefer_server_ciphers on;\n    ssl_ciphers HIGH:!aNULL:!MD5;\n\n`;
+          } else {
+            conf += `    listen ${port};\n    listen [::]:${port};\n    server_name ${domain};\n\n`;
+          }
+
+          if (sec) {
+            conf += `    # Security Headers\n`;
+            if (ssl) conf += `    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;\n`;
+            conf += `    add_header X-Content-Type-Options "nosniff" always;\n`;
+            conf += `    add_header X-Frame-Options "SAMEORIGIN" always;\n`;
+            conf += `    add_header X-XSS-Protection "1; mode=block" always;\n    add_header Referrer-Policy "strict-origin-when-cross-origin" always;\n\n`;
+          }
+
+          if (gzip) {
+            conf += `    # Gzip Compression\n`;
+            conf += `    gzip on;\n    gzip_vary on;\n    gzip_min_length 1024;\n    gzip_proxied any;\n    gzip_types text/plain text/css application/json application/javascript text/xml application/xml+rss image/svg+xml;\n\n`;
+          }
+
+          if (mode === 'proxy') {
+            conf += `    location / {\n`;
+            conf += `        proxy_pass ${proxyTarget};\n`;
+            conf += `        proxy_http_version 1.1;\n`;
+            conf += `        proxy_set_header Upgrade \$http_upgrade;\n`;
+            conf += `        proxy_set_header Connection "upgrade";\n`;
+            conf += `        proxy_set_header Host \$host;\n`;
+            conf += `        proxy_set_header X-Real-IP \$remote_addr;\n`;
+            conf += `        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;\n`;
+            conf += `        proxy_set_header X-Forwarded-Proto \$scheme;\n`;
+            conf += `    }\n`;
+          } else if (mode === 'spa') {
+            conf += `    root /var/www/${domain}/dist;\n    index index.html;\n\n`;
+            conf += `    location / {\n`;
+            conf += `        try_files \$uri \$uri/ /index.html;\n`;
+            conf += `    }\n`;
+          } else {
+            conf += `    root /var/www/${domain};\n    index index.html index.htm;\n\n`;
+            conf += `    location / {\n`;
+            conf += `        try_files \$uri \$uri/ =404;\n`;
+            conf += `    }\n`;
+          }
+
+          conf += `}`;
+          document.getElementById('nginxOutput').value = conf;
+        }
+
+        function copyNginxConfig() {
+          navigator.clipboard.writeText(document.getElementById('nginxOutput').value);
+          showToast('Copied Nginx configuration to clipboard!');
+        }
+
+        ['ngDomain', 'ngPort', 'ngMode', 'ngProxyPass', 'ngSsl', 'ngHttp2', 'ngSecHeaders', 'ngGzip'].forEach(id => {
+          document.getElementById(id).addEventListener('input', generateNginx);
+          document.getElementById(id).addEventListener('change', generateNginx);
+        });
+
+        window.addEventListener('DOMContentLoaded', generateNginx);
+      
+  </script>
+</body>
+</html>

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html data-theme="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>HTML to JSX Converter (React &amp; Next.js Formatter) | WebDevWorker</title>
+  <meta content="Transform raw HTML templates into clean, idiomatic React JSX with automatic attribute camelCasing, inline style object parsing, self-closing tags, and TypeScript component wrapping." name="description"/>
+  <meta content="html to jsx converter, react component generator, html to react, class to classname, inline styles to jsx, nextjs jsx converter, self closing tags, frontend developer tools" name="keywords"/>
+  <link href="https://webdevworker.com/tools/html-to-jsx-converter.html" rel="canonical"/>
+  <meta content="WebDevWorker" name="author"/>
+  <meta content="index, follow" name="robots"/>
+  <meta content="HTML to JSX / React Component Converter | WebDevWorker" property="og:title"/>
+  <meta content="Transform raw HTML templates into clean, idiomatic React JSX with automatic attribute camelCasing, inline style object parsing, self-closing tags, and TypeScript component wrapping." property="og:description"/>
+  <meta content="https://webdevworker.com/tools/html-to-jsx-converter.html" property="og:url"/>
+  <meta content="website" property="og:type"/>
+  <meta content="https://webdevworker.com/assets/logo.png" property="og:image"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="HTML to JSX / React Component Converter | WebDevWorker"/>
+  <meta name="twitter:description" content="Transform raw HTML templates into clean, idiomatic React JSX with automatic attribute camelCasing, inline style object parsing, self-closing tags, and TypeScript component wrapping."/>
+  <meta name="twitter:image" content="https://webdevworker.com/assets/logo.png"/>
+  <link href="/assets/favicon.png" rel="icon" type="image/png"/>
+  <link rel="manifest" href="/manifest.json"/>
+
+  <!-- Google AdSense -->
+  <script async crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384"></script>
+  <!-- Google tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-G718R5DYYR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-G718R5DYYR');
+  </script>
+
+  <link href="/css/webdevworker.css?v=2026-wdw-v35" rel="stylesheet"/>
+  <link href="/css/ai-widget.css?v=2026-wdw-v35" rel="stylesheet"/>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "HTML to JSX / React Component Converter",
+      "url": "https://webdevworker.com/tools/html-to-jsx-converter.html",
+      "description": "Transform raw HTML templates into clean, idiomatic React JSX with automatic attribute camelCasing, inline style object parsing, self-closing tags, and TypeScript component wrapping.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://webdevworker.com",
+        "founder": "Zaviyan"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Code, Data & APIs",
+          "item": "https://webdevworker.com/#categories"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "HTML to JSX / React Component Converter",
+          "item": "https://webdevworker.com/tools/html-to-jsx-converter.html"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why does React require className instead of class?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In JavaScript, class is a reserved language keyword used to declare object-oriented classes. Because JSX is transformed into JavaScript function calls, React uses className to avoid syntax collisions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How are inline styles handled differently in JSX?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In standard HTML, styles are passed as string literals (e.g. style='color: red; margin-top: 10px;'). In JSX, the style attribute expects a JavaScript object with camelCased property keys (e.g. style={{ color: 'red', marginTop: '10px' }})."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why must tags like <img> and <input> be self-closing in JSX?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "JSX follows strict XML syntax rules rather than HTML5 parsing quirks. Every element without children must be explicitly self-closed with a trailing slash (e.g. <img src='...' />), or the compiler will throw an unclosed tag syntax error."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this tool work with Tailwind CSS classes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. All Tailwind CSS classes in your HTML class attributes are automatically preserved and cleanly migrated into className attributes."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><a href="/"><img alt="WebDevWorker Logo" src="/assets/webdevworker-logo-horizontal.svg"/></a></div>
+    <div class="sidebar-nav"><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Overview</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/" class="nav-item" title="Dashboard" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Dashboard</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">CSS &amp; Visual UI</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/tailwind-to-css-converter.html" class="nav-item" title="Tailwind to CSS Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Tailwind to CSS Converter</span></a></li><li><a href="/tools/css-box-shadow-generator.html" class="nav-item" title="CSS Box Shadow Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Box Shadow Generator</span></a></li><li><a href="/tools/css-gradient-generator.html" class="nav-item" title="CSS Gradient Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌈</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Gradient Generator</span></a></li><li><a href="/tools/css-glassmorphism-generator.html" class="nav-item" title="CSS Glassmorphism Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Glassmorphism Builder</span></a></li><li><a href="/tools/css-border-radius-generator.html" class="nav-item" title="Border Radius &amp; Blob Shaper" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🟣</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Border Radius &amp; Blob Shaper</span></a></li><li><a href="/tools/color-converter-contrast.html" class="nav-item" title="Color Contrast &amp; WCAG Tester" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎭</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Color Contrast &amp; WCAG Tester</span></a></li><li><a href="/tools/css-flexbox-generator.html" class="nav-item" title="CSS Flexbox Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Flexbox Builder</span></a></li><li><a href="/tools/css-grid-generator.html" class="nav-item" title="CSS Grid 2D Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Grid 2D Builder</span></a></li><li><a href="/tools/css-clamp-calculator.html" class="nav-item" title="CSS clamp() Fluid Typography" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔤</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS clamp() Fluid Typography</span></a></li><li><a href="/tools/css-cubic-bezier-generator.html" class="nav-item" title="CSS Cubic-Bezier Visualizer" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Cubic-Bezier Visualizer</span></a></li><li><a href="/tools/css-clip-path-generator.html" class="nav-item" title="CSS Clip-Path Polygon Shaper" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">✂️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Clip-Path Polygon Shaper</span></a></li><li><a href="/tools/css-keyframes-animation-generator.html" class="nav-item" title="CSS @keyframes Animation Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎬</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS @keyframes Animation Studio</span></a></li><li><a href="/tools/css-triangle-generator.html" class="nav-item" title="CSS Triangle &amp; Tooltip Arrow" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">▲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Triangle &amp; Tooltip Arrow</span></a></li><li><a href="/tools/svg-to-data-uri-converter.html" class="nav-item" title="SVG to CSS Data URI Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🖼️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG to CSS Data URI Converter</span></a></li><li><a href="/tools/css-text-shadow-generator.html" class="nav-item" title="CSS Text Shadow &amp; Neon Glow" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">✨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Text Shadow &amp; Neon Glow</span></a></li><li><a href="/tools/color-palette-harmonies-generator.html" class="nav-item" title="Color Palette &amp; Harmonies" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Color Palette &amp; Harmonies</span></a></li><li><a href="/tools/css-filter-effects-generator.html" class="nav-item" title="CSS Filter Effects Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎭</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Filter Effects Studio</span></a></li><li><a href="/tools/css-neumorphism-generator.html" class="nav-item" title="CSS Neumorphism (Soft UI)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔘</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Neumorphism (Soft UI)</span></a></li><li><a href="/tools/css-unit-converter.html" class="nav-item" title="CSS Unit Converter (PX/REM/VW)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Unit Converter (PX/REM/VW)</span></a></li><li><a href="/tools/css-specificity-calculator.html" class="nav-item" title="CSS Specificity Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎯</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Specificity Calculator</span></a></li><li><a href="/tools/css-transform-3d-matrix-calculator.html" class="nav-item" title="CSS 3D Transform &amp; Matrix3d" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS 3D Transform &amp; Matrix3d</span></a></li><li><a href="/tools/css-aspect-ratio-calculator.html" class="nav-item" title="CSS Aspect Ratio Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📺</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Aspect Ratio Calculator</span></a></li><li><a href="/tools/css-gradient-mesh-generator.html" class="nav-item" title="CSS Mesh Gradient Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌌</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Mesh Gradient Generator</span></a></li><li><a href="/tools/css-media-query-generator.html" class="nav-item" title="CSS Media &amp; Container Query" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Media &amp; Container Query</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Code, Data &amp; APIs</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/sql-to-typescript-prisma-converter.html" class="nav-item" title="SQL to TypeScript &amp; Prisma" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔷</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SQL to TypeScript &amp; Prisma</span></a></li><li><a href="/tools/json-formatter-validator.html" class="nav-item" title="JSON Formatter &amp; Validator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📋</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON Formatter &amp; Validator</span></a></li><li><a href="/tools/curl-to-code-converter.html" class="nav-item" title="cURL to Code Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">💻</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">cURL to Code Converter</span></a></li><li><a href="/tools/json-to-typescript-generator.html" class="nav-item" title="JSON to TypeScript Interface" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔷</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to TypeScript Interface</span></a></li><li><a href="/tools/mock-data-generator.html" class="nav-item" title="Mock Data Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Mock Data Generator</span></a></li><li><a href="/tools/code-beautifier-minifier.html" class="nav-item" title="Code Beautifier &amp; Minifier" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧹</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Code Beautifier &amp; Minifier</span></a></li><li><a href="/tools/sql-formatter.html" class="nav-item" title="SQL Query Formatter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🗄️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SQL Query Formatter</span></a></li><li><a href="/tools/base64-encoder-decoder.html" class="nav-item" title="Base64 Image &amp; Text Tool" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔤</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Base64 Image &amp; Text Tool</span></a></li><li><a href="/tools/url-encoder-decoder.html" class="nav-item" title="URL Encoder &amp; Decoder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔗</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">URL Encoder &amp; Decoder</span></a></li><li><a href="/tools/markdown-html-converter.html" class="nav-item" title="Markdown to HTML Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📝</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Markdown to HTML Converter</span></a></li><li><a href="/tools/lorem-ipsum-generator.html" class="nav-item" title="Lorem Ipsum &amp; Text Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📄</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Lorem Ipsum &amp; Text Generator</span></a></li><li><a href="/tools/html-table-to-json-converter.html" class="nav-item" title="HTML Table to JSON &amp; CSV" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML Table to JSON &amp; CSV</span></a></li><li><a href="/tools/yaml-to-json-converter.html" class="nav-item" title="YAML to JSON Configuration" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📜</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">YAML to JSON Configuration</span></a></li><li><a href="/tools/json-schema-generator.html" class="nav-item" title="JSON Schema Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON Schema Generator</span></a></li><li><a href="/tools/webhook-payload-formatter.html" class="nav-item" title="Webhook Payload &amp; Verifier" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Webhook Payload &amp; Verifier</span></a></li><li><a href="/tools/json-to-go-struct-converter.html" class="nav-item" title="JSON to Go Struct Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐹</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Go Struct Generator</span></a></li><li><a href="/tools/json-to-rust-struct-converter.html" class="nav-item" title="JSON to Rust Struct (Serde)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🦀</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Rust Struct (Serde)</span></a></li><li><a href="/tools/json-to-python-pydantic-converter.html" class="nav-item" title="JSON to Python Pydantic" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Python Pydantic</span></a></li><li><a href="/tools/json-to-yaml-converter.html" class="nav-item" title="JSON to YAML Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📑</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to YAML Converter</span></a></li><li><a href="/tools/json-to-csv-converter.html" class="nav-item" title="JSON to CSV / Excel Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to CSV / Excel Converter</span></a></li><li><a href="/tools/xml-formatter-json-converter.html" class="nav-item" title="XML Formatter &amp; JSON Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🏷️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">XML Formatter &amp; JSON Converter</span></a></li><li><a href="/tools/string-case-converter.html" class="nav-item" title="String Case Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔠</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">String Case Converter</span></a></li><li><a href="/tools/html-entity-encoder-decoder.html" class="nav-item" title="HTML Entity Encoder &amp; Decoder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML Entity Encoder &amp; Decoder</span></a></li><li><a href="/tools/unix-timestamp-converter.html" class="nav-item" title="Unix Timestamp Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⏱️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Unix Timestamp Converter</span></a></li><li><a href="/tools/number-base-converter.html" class="nav-item" title="Number Base Converter (Bin/Hex)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔢</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Number Base Converter (Bin/Hex)</span></a></li><li><a href="/tools/html-to-jsx-converter.html" class="nav-item active" title="HTML to JSX / React Converter" style="display:flex;align-items:center;gap:10px;padding:9px 12px;text-decoration:none;font-size:0.85rem;border-radius:8px;margin:2px 4px;font-weight:700;transition:all 0.15s ease;background:linear-gradient(90deg, rgba(234,179,8,0.22) 0%, rgba(234,179,8,0.06) 100%) !important;color:#eab308 !important;border-left:4px solid #eab308 !important;box-shadow:inset 0 0 14px rgba(234,179,8,0.12) !important;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚛️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;color:#eab308 !important;font-weight:700;">HTML to JSX / React Converter</span><span style="width:8px;height:8px;border-radius:50%;background:#eab308;box-shadow:0 0 10px #eab308;margin-left:auto;flex-shrink:0;"></span></a></li><li><a href="/tools/json-to-zod-schema.html" class="nav-item" title="JSON to Zod Schema Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Zod Schema Generator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Security &amp; Cryptography</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/openssl-command-generator.html" class="nav-item" title="OpenSSL Command Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔒</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">OpenSSL Command Generator</span></a></li><li><a href="/tools/hash-generator.html" class="nav-item" title="SHA Hash &amp; Checksum" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔒</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SHA Hash &amp; Checksum</span></a></li><li><a href="/tools/uuid-generator.html" class="nav-item" title="UUID / GUID v4 Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🆔</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">UUID / GUID v4 Generator</span></a></li><li><a href="/tools/password-generator.html" class="nav-item" title="Strong Password Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔑</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Strong Password Generator</span></a></li><li><a href="/tools/jwt-decoder.html" class="nav-item" title="JWT Token Inspector" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JWT Token Inspector</span></a></li><li><a href="/tools/subresource-integrity-hash-generator.html" class="nav-item" title="Subresource Integrity (SRI)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Subresource Integrity (SRI)</span></a></li><li><a href="/tools/content-security-policy-generator.html" class="nav-item" title="Content Security Policy (CSP)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Content Security Policy (CSP)</span></a></li><li><a href="/tools/hmac-hash-generator.html" class="nav-item" title="HMAC Hash &amp; Key Signature" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HMAC Hash &amp; Key Signature</span></a></li><li><a href="/tools/aes-encryption-decryption-tool.html" class="nav-item" title="AES-GCM Encryption / Decryption" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🗝️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">AES-GCM Encryption / Decryption</span></a></li><li><a href="/tools/ulid-nanoid-generator.html" class="nav-item" title="ULID &amp; NanoID Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🆔</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">ULID &amp; NanoID Generator</span></a></li><li><a href="/tools/bcrypt-hash-cost-calculator.html" class="nav-item" title="Bcrypt Hash &amp; Cost Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧮</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Bcrypt Hash &amp; Cost Calculator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">DevOps &amp; Webmaster</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/aws-iam-s3-policy-generator.html" class="nav-item" title="AWS IAM &amp; S3 Policy Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">☁️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">AWS IAM &amp; S3 Policy Generator</span></a></li><li><a href="/tools/dockerfile-compose-generator.html" class="nav-item" title="Dockerfile &amp; Compose Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐳</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Dockerfile &amp; Compose Generator</span></a></li><li><a href="/tools/seo-keyword-density-analyzer.html" class="nav-item" title="SEO Keyword Density &amp; N-Gram" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SEO Keyword Density &amp; N-Gram</span></a></li><li><a href="/tools/cron-expression-generator.html" class="nav-item" title="Cron Expression Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⏰</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Cron Expression Builder</span></a></li><li><a href="/tools/chmod-permissions-calculator.html" class="nav-item" title="Linux Chmod Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Linux Chmod Calculator</span></a></li><li><a href="/tools/http-status-codes-inspector.html" class="nav-item" title="HTTP Status Codes Spec" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTTP Status Codes Spec</span></a></li><li><a href="/tools/javascript-keycode-tester.html" class="nav-item" title="JS KeyCode Event Tester" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⌨️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JS KeyCode Event Tester</span></a></li><li><a href="/tools/htaccess-generator.html" class="nav-item" title=".htaccess Rule Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚙️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">.htaccess Rule Builder</span></a></li><li><a href="/tools/meta-tag-generator.html" class="nav-item" title="Meta Tags &amp; Open Graph" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🏷️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Meta Tags &amp; Open Graph</span></a></li><li><a href="/tools/regex-tester.html" class="nav-item" title="Regex Tester &amp; Explainer" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Regex Tester &amp; Explainer</span></a></li><li><a href="/tools/text-diff-checker.html" class="nav-item" title="Code Diff &amp; Comparison" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚖️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Code Diff &amp; Comparison</span></a></li><li><a href="/tools/dns-record-lookup-generator.html" class="nav-item" title="DNS Zone &amp; SPF/DMARC" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">DNS Zone &amp; SPF/DMARC</span></a></li><li><a href="/tools/robots-txt-generator.html" class="nav-item" title="Robots.txt &amp; Crawler Rules" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🤖</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Robots.txt &amp; Crawler Rules</span></a></li><li><a href="/tools/user-agent-parser.html" class="nav-item" title="User-Agent &amp; Client Hints" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">User-Agent &amp; Client Hints</span></a></li><li><a href="/tools/cidr-subnet-calculator.html" class="nav-item" title="CIDR &amp; IP Subnet Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CIDR &amp; IP Subnet Calculator</span></a></li><li><a href="/tools/nginx-config-generator.html" class="nav-item" title="Nginx Server Block Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Nginx Server Block Generator</span></a></li><li><a href="/tools/websocket-client-tester.html" class="nav-item" title="WebSocket Client &amp; Debugger" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">WebSocket Client &amp; Debugger</span></a></li><li><a href="/tools/git-command-generator.html" class="nav-item" title="Git Command &amp; Workflow Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔀</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Git Command &amp; Workflow Generator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Media, Assets &amp; Viral</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/image-color-palette-extractor.html" class="nav-item" title="Image Palette &amp; Contrast" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Image Palette &amp; Contrast</span></a></li><li><a href="/tools/qr-code-generator.html" class="nav-item" title="Custom QR Code Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Custom QR Code Studio</span></a></li><li><a href="/tools/multi-favicon-pwa-generator.html" class="nav-item" title="Favicon &amp; App Icon Matrix" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📦</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Favicon &amp; App Icon Matrix</span></a></li><li><a href="/tools/svg-optimizer-converter.html" class="nav-item" title="SVG Optimizer &amp; Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG Optimizer &amp; Converter</span></a></li><li><a href="/tools/svg-path-visualizer.html" class="nav-item" title="SVG Path Visualizer &amp; Editor" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG Path Visualizer &amp; Editor</span></a></li></ul></div><div style="border-top:1px solid var(--border);margin:16px 6px;padding-top:10px;"><div style="font-size:0.72rem;text-transform:uppercase;color:var(--text-muted);letter-spacing:1px;padding:4px 14px;font-weight:700;">Legal &amp; Info</div><a href="/blog/index.html" style="display:block;padding:5px 14px;color:var(--brand-primary);font-size:0.8rem;text-decoration:none;font-weight:700;">📖 Engineering Blog</a><a href="/about.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">About WebDevWorker</a><a href="/contact.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Contact Engineering</a><a href="/privacy.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Privacy Policy</a><a href="/terms.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Terms of Service</a></div></div>
+  </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <div class="main-viewport">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Menu">☰</button>
+          <span class="topbar-title">HTML to JSX / React Component Converter</span>
+        </div>
+        <div class="topbar-right">
+          <div style="position:relative; display:flex; align-items:center;">
+            <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+            <input type="text" id="searchToolsInput" placeholder="Search 85+ tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+          </div>
+          <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <!-- Hero Title Header -->
+        <div class="tool-header-block" style="margin-bottom:24px;">
+          <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(234,179,8,0.1); border:1px solid rgba(234,179,8,0.25); color:var(--brand-primary); font-size:0.75rem; font-weight:700; padding:4px 12px; border-radius:999px; margin-bottom:12px;">
+            <span>⚛️</span> <span>Code, Data &amp; APIs</span> &bull; <span>100% Client-Side Memory Sandbox</span>
+          </div>
+          <h1 class="tool-header-title" style="font-size:2rem; font-weight:900; margin-bottom:10px; letter-spacing:-0.02em;">
+            HTML to JSX / React Component Converter
+          </h1>
+          <p class="tool-header-desc" style="font-size:0.95rem; color:var(--text-muted); line-height:1.6; max-width:860px; margin:0;">
+            Transform raw HTML templates into clean, idiomatic React JSX with automatic attribute camelCasing, inline style object parsing, self-closing tags, and TypeScript component wrapping.
+          </p>
+        </div>
+
+        <!-- Interactive Tool UI Component -->
+        
+        <div class="tool-card" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:16px; padding:28px; box-shadow:var(--shadow-card);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:0.85rem; font-weight:700; color:var(--text-main);">Component Name:</span>
+              <input type="text" id="jsxCompName" value="FeatureCard" style="background:var(--bg-subtle); border:1px solid var(--border); border-radius:6px; padding:6px 12px; color:var(--text-main); font-weight:700; font-size:0.85rem; outline:none; width:160px;">
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="btn btn-secondary" onclick="loadSampleHtmlToJsx()" style="font-size:0.75rem; padding:6px 12px;">Load Sample HTML</button>
+              <button type="button" class="btn btn-secondary" onclick="clearHtmlToJsx()" style="font-size:0.75rem; padding:6px 12px;">Clear</button>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;" id="jsxGrid">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <label style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">Raw HTML Template</label>
+                <span id="htmlStats" style="font-size:0.75rem; color:var(--text-dim);">0 chars</span>
+              </div>
+              <textarea id="htmlInput" class="form-input" style="height:400px; font-family:var(--font-mono); font-size:0.85rem; line-height:1.5;" placeholder='<div class="card" style="margin-top: 20px; background-color: #1e293b;">&#10;  <img src="/hero.jpg" alt="Hero" class="rounded-lg">&#10;  <label for="username">Username:</label>&#10;  <input type="text" id="username" tabindex="1" autofocus>&#10;</div>'></textarea>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <label style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">Transpiled React JSX</label>
+                <button type="button" class="btn btn-primary" onclick="copyJsxCode()" style="font-size:0.75rem; padding:4px 12px;">Copy JSX Code</button>
+              </div>
+              <textarea id="jsxOutput" class="form-input" style="height:400px; font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; background:#070a13; color:#38bdf8;" readonly></textarea>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:16px; flex-wrap:wrap; background:var(--bg-subtle); padding:14px 18px; border-radius:10px; border:1px solid var(--border); font-size:0.82rem;">
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+              <input type="checkbox" id="wrapReactComp" checked> Wrap in React Component
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+              <input type="checkbox" id="useTypeScript" checked> Include TypeScript Props
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+              <input type="checkbox" id="selfCloseVoid" checked> Self-close Void Tags (<code>&lt;img /&gt;</code>)
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+              <input type="checkbox" id="parseInlineStyles" checked> Parse Inline <code>style=""</code> into Objects
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+              <input type="checkbox" id="convertSvgAttrs" checked> CamelCase SVG Attributes
+            </label>
+          </div>
+        </div>
+      
+
+        <!-- Comprehensive Educational & SEO Cards Section -->
+        <section class="seo-card-grid" style="margin-top: 48px; display: flex; flex-direction: column; gap: 32px;">
+          
+          <!-- Card 1: Architectural Deep Dive -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>⚡</span> Architectural Deep Dive &amp; Developer Mechanics
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              
+      <p>React and Next.js utilize JSX (JavaScript XML), an ECMAScript syntax extension that allows developers to write declarative UI markup inside JavaScript and TypeScript files. While JSX appears visually identical to standard HTML, it compiles directly into underlying <code>React.createElement()</code> function calls or the modern JSX runtime (<code>_jsx()</code>).</p>
+      <p style="margin-top:12px;">Because JSX is parsed by JavaScript compilers (Babel, SWC, esbuild), standard HTML attributes clash with reserved JavaScript keywords. For instance, the HTML <code>class</code> attribute conflicts with ES6 class definitions and must be written as <code>className</code>. Similarly, the <code>for</code> attribute on form labels conflicts with <code>for</code> loops and requires <code>htmlFor</code>.</p>
+      <p style="margin-top:12px;">This tool performs in-browser lexical AST normalization. It translates HTML attributes into camelCased React properties, parses inline CSS text into structured JavaScript objects, and converts HTML void elements into valid self-closing XML tags without sending code to remote servers.</p>
+    
+            </div>
+          </article>
+
+          <!-- Card 2: Mathematical Models & Algorithmic Logic -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>📐</span> Mathematical Models &amp; Algorithmic Equations
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              
+      <p>The transformation pipeline parses and tokenizes raw HTML markup using deterministic regular expression grammar and DOM string normalization:</p>
+      <ul style="margin:14px 0 14px 20px; line-height:1.9;">
+        <li><strong>Style Object Transpilation:</strong> Inline CSS strings \( S = \{k_i: v_i\} \) are split by semicolons, transformed from kebab-case \( k_{\text{kebab}} \) to camelCase \( k_{\text{camel}} \), and mapped into a key-value object: <code>style={{ backgroundColor: "#1e293b", marginTop: 20 }}</code>.</li>
+        <li><strong>Void Element Self-Closing Rule:</strong> HTML5 allows unclosed void tags (\( \text{tag} \in \{\text{img}, \text{input}, \text{br}, \text{hr}, \dots\} \)), but JSX requires strict XML well-formedness: <code>&lt;img src="..." /&gt;</code>.</li>
+        <li><strong>SVG Attribute Normalization:</strong> Hyphenated SVG attributes (<code>stroke-width</code>, <code>fill-rule</code>, <code>clip-path</code>) are mapped to their React synthetic camelCase equivalents (<code>strokeWidth</code>, <code>fillRule</code>, <code>clipPath</code>).</li>
+      </ul>
+    
+            </div>
+          </article>
+
+          <!-- Card 3: Production Code Implementation -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>💻</span> Production Implementation &amp; Code Example
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              <p>Software engineers can integrate these exact patterns directly into automated microservices, build pipelines, or component stylesheets. Below is a production-grade code snippet demonstrating programmatic implementation:</p>
+              <div class="code-output-box" style="margin: 18px 0; padding: 16px; background: #070a13; border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; position: relative;">
+                <pre><code id="prodSnippetCode">// Production Next.js 14 / React 19 Component Example
+import React from &quot;react&quot;;
+
+interface FeatureCardProps {
+  title?: string;
+  description?: string;
+  className?: string;
+}
+
+export default function FeatureCard({
+  title = &quot;Zero-Telemetry Workstation&quot;,
+  description = &quot;Execute developer utilities with local browser memory isolation.&quot;,
+  className = &quot;&quot;
+}: FeatureCardProps) {
+  return (
+    &lt;div
+      className={`max-w-md mx-auto bg-slate-900 rounded-xl p-6 border border-slate-800 ${className}`}
+      style={{ marginTop: 24, boxShadow: &quot;0 10px 25px -5px rgba(0, 0, 0, 0.3)&quot; }}
+    &gt;
+      &lt;h3 className=&quot;text-lg font-bold text-white tracking-tight&quot;&gt;{title}&lt;/h3&gt;
+      &lt;p className=&quot;mt-2 text-sm text-slate-400 leading-relaxed&quot;&gt;{description}&lt;/p&gt;
+      &lt;label htmlFor=&quot;userEmail&quot; className=&quot;block mt-4 text-xs font-semibold text-slate-300&quot;&gt;
+        Work Email
+      &lt;/label&gt;
+      &lt;input
+        type=&quot;email&quot;
+        id=&quot;userEmail&quot;
+        className=&quot;mt-1 block w-full rounded-md bg-slate-800 text-white px-3 py-2 text-sm&quot;
+        placeholder=&quot;dev@company.com&quot;
+        tabIndex={1}
+        autoFocus
+      /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+                <button type="button" class="copy-code-btn" onclick="window.copyCode('prodSnippetCode', this)">Copy</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4: Technical Specifications Matrix -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>📋</span> Technical Specifications &amp; Standards Matrix
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              <p>The table below documents the architectural standards, compliance parameters, and browser runtime capabilities governing HTML to JSX / React Component Converter:</p>
+              <div style="overflow-x: auto; margin: 18px 0;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;">
+                  <thead>
+                    <tr style="background: var(--bg-subtle); border-bottom: 2px solid var(--border);">
+                      <th style="padding: 10px 14px; color: var(--text-main);">Engineering Metric</th>
+                      <th style="padding: 10px 14px; color: var(--text-main);">Specification / Standard</th>
+                      <th style="padding: 10px 14px; color: var(--text-main);">Browser Support</th>
+                      <th style="padding: 10px 14px; color: var(--text-main);">Execution Layer</th>
+                    </tr>
+                  </thead>
+                  <tbody style="color: var(--text-muted);">
+                    
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">React Compatibility</td>
+      <td style="padding: 10px 14px;">React 16.8+ (Hooks), React 18, React 19, Next.js 13/14/15</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">Language Targets</td>
+      <td style="padding: 10px 14px;">JSX, TSX (TypeScript React), Preact, SolidJS</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">Style Conversion</td>
+      <td style="padding: 10px 14px;">Automatic kebab-to-camelCase inline style object parsing</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">Data Privacy</td>
+      <td style="padding: 10px 14px;">100% Client-Side memory execution, zero remote telemetry</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 5: In-Depth Developer FAQs -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>❓</span> Frequently Asked Questions (HTML to JSX / React Component Converter)
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 18px;">
+              Common technical questions, implementation nuances, and troubleshooting insights encountered by developers using HTML to JSX / React Component Converter:
+            </p>
+            <div class="faq-list">
+              
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details open>
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          Why does React require className instead of class?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          In JavaScript, class is a reserved language keyword used to declare object-oriented classes. Because JSX is transformed into JavaScript function calls, React uses className to avoid syntax collisions.
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details >
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          How are inline styles handled differently in JSX?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          In standard HTML, styles are passed as string literals (e.g. style='color: red; margin-top: 10px;'). In JSX, the style attribute expects a JavaScript object with camelCased property keys (e.g. style={{ color: 'red', marginTop: '10px' }}).
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details >
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          Why must tags like &lt;img&gt; and &lt;input&gt; be self-closing in JSX?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          JSX follows strict XML syntax rules rather than HTML5 parsing quirks. Every element without children must be explicitly self-closed with a trailing slash (e.g. &lt;img src='...' /&gt;), or the compiler will throw an unclosed tag syntax error.
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details >
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          Does this tool work with Tailwind CSS classes?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          Yes. All Tailwind CSS classes in your HTML class attributes are automatically preserved and cleanly migrated into className attributes.
+        </p>
+      </details>
+    </div>
+  
+            </div>
+          </article>
+
+          <!-- Card 6: Production Best Practices -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>⚠️</span> Production Best Practices &amp; Pitfalls to Avoid
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              <ul style="margin: 0 0 0 20px; display: flex; flex-direction: column; gap: 10px;">
+                
+      <li><strong>Prefer CSS Modules or Tailwind Over Inline Styles:</strong> While JSX supports inline style objects, dynamic styles trigger unnecessary React re-renders unless memoized. Prefer static Tailwind classes or CSS modules for optimal V8 performance.</li>
+      <li><strong>Always Provide htmlFor on Form Labels:</strong> Ensuring form labels link to input elements via <code>htmlFor="inputId"</code> preserves keyboard focus navigation and screen reader accessibility (WCAG 2.1 Criterion 1.3.1).</li>
+      <li><strong>Verify SVG Namespace Properties:</strong> When embedding SVGs directly into React, ensure attributes like <code>xlink:href</code> are converted to <code>xlinkHref</code> and <code>clip-path</code> to <code>clipPath</code>.</li>
+      <li><strong>Extract Reusable Atomic Components:</strong> Decompose large HTML blocks into smaller, isolated React functional components to maximize maintainability and testability.</li>
+    
+              </ul>
+            </div>
+          </article>
+
+        </section>
+
+        <!-- Enterprise Multi-Column Footer -->
+        <footer class="enterprise-footer" style="margin-top: 60px; padding: 48px 0 28px; border-top: 1px solid var(--border); background: var(--bg-surface);">
+          <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; margin-bottom: 36px;">
+              <div>
+                <a href="/" style="display: inline-block; margin-bottom: 12px;"><img src="/assets/webdevworker-logo-horizontal.svg" alt="WebDevWorker" style="height: 32px;"></a>
+                <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin: 0;">The premier client-side developer workstation. 85+ high-precision utilities for modern web development, frontend design, and server administration.</p>
+                <p style="margin-top: 12px; font-size: 0.8rem; color: var(--brand-primary); font-weight: 700;">Founded by Zaviyan &bull; Operated by Zaviyan LLC</p>
+                <p style="margin-top: 2px; font-size: 0.76rem; color: var(--text-dim);">Corporate Support: business@zaviyanll.com</p>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">CSS &amp; UI Tools</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/tools/tailwind-to-css-converter.html" style="color: var(--text-muted); text-decoration: none;">Tailwind to CSS</a></li>
+                  <li><a href="/tools/css-box-shadow-generator.html" style="color: var(--text-muted); text-decoration: none;">Box Shadow Studio</a></li>
+                  <li><a href="/tools/css-gradient-generator.html" style="color: var(--text-muted); text-decoration: none;">Gradient Generator</a></li>
+                  <li><a href="/tools/css-clamp-calculator.html" style="color: var(--text-muted); text-decoration: none;">clamp() Calculator</a></li>
+                  <li><a href="/tools/css-unit-converter.html" style="color: var(--text-muted); text-decoration: none;">CSS Unit Converter</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">Code &amp; APIs</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/tools/json-formatter-validator.html" style="color: var(--text-muted); text-decoration: none;">JSON Formatter</a></li>
+                  <li><a href="/tools/json-to-typescript-generator.html" style="color: var(--text-muted); text-decoration: none;">JSON to TypeScript</a></li>
+                  <li><a href="/tools/sql-to-typescript-prisma-converter.html" style="color: var(--text-muted); text-decoration: none;">SQL to Prisma</a></li>
+                  <li><a href="/tools/json-to-go-struct-converter.html" style="color: var(--text-muted); text-decoration: none;">JSON to Go Struct</a></li>
+                  <li><a href="/tools/curl-to-code-converter.html" style="color: var(--text-muted); text-decoration: none;">cURL to Fetch</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">Security &amp; Cloud</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/tools/hash-generator.html" style="color: var(--text-muted); text-decoration: none;">SHA Hashes</a></li>
+                  <li><a href="/tools/hmac-hash-generator.html" style="color: var(--text-muted); text-decoration: none;">HMAC Signatures</a></li>
+                  <li><a href="/tools/openssl-command-generator.html" style="color: var(--text-muted); text-decoration: none;">OpenSSL CLI</a></li>
+                  <li><a href="/tools/aws-iam-s3-policy-generator.html" style="color: var(--text-muted); text-decoration: none;">AWS IAM &amp; S3</a></li>
+                  <li><a href="/tools/dockerfile-compose-generator.html" style="color: var(--text-muted); text-decoration: none;">Dockerfile Studio</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">Company &amp; Legal</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/blog/modern-client-side-developer-workstation.html" style="color: var(--brand-primary); text-decoration: none; font-weight: 700;">📰 Engineering Blog</a></li>
+                  <li><a href="/about.html" style="color: var(--text-muted); text-decoration: none;">About WebDevWorker</a></li>
+                  <li><a href="/contact.html" style="color: var(--text-muted); text-decoration: none;">Contact Engineering</a></li>
+                  <li><a href="/privacy.html" style="color: var(--text-muted); text-decoration: none;">Privacy Policy</a></li>
+                  <li><a href="/terms.html" style="color: var(--text-muted); text-decoration: none;">Terms of Service</a></li>
+                  <li><a href="https://calcworker.com" target="_blank" rel="noopener" style="color: var(--brand-primary); text-decoration: none;">CalcWorker (Sister Suite)</a></li>
+                </ul>
+              </div>
+            </div>
+            <div style="border-top: 1px solid var(--border); padding: 24px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; font-size: 0.82rem; color: var(--text-dim);">
+              <div>© 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+              <div style="display: flex; gap: 16px;">
+                <span>🔒 100% Client-Side Sandbox</span>
+                <span>⚡ Zero Telemetry</span>
+                <span>📲 Offline PWA Capable</span>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/webdevworker-common.js?v=2026-wdw-v35" defer></script>
+  <script src="/js/ai-widget.js?v=2026-wdw-v35" defer></script>
+  <script>
+
+        const HTML_ATTR_MAP = {
+          'class': 'className',
+          'for': 'htmlFor',
+          'tabindex': 'tabIndex',
+          'autocomplete': 'autoComplete',
+          'autofocus': 'autoFocus',
+          'contenteditable': 'contentEditable',
+          'crossorigin': 'crossOrigin',
+          'enctype': 'encType',
+          'frameborder': 'frameBorder',
+          'novalidate': 'noValidate',
+          'readonly': 'readOnly',
+          'rowspan': 'rowSpan',
+          'colspan': 'colSpan',
+          'usemap': 'useMap',
+          'cellpadding': 'cellPadding',
+          'cellspacing': 'cellSpacing',
+          'maxlength': 'maxLength',
+          'minlength': 'minLength',
+          'inputmode': 'inputMode'
+        };
+
+        const SVG_ATTR_MAP = {
+          'stroke-width': 'strokeWidth',
+          'stroke-linecap': 'strokeLinecap',
+          'stroke-linejoin': 'strokeLinejoin',
+          'stroke-miterlimit': 'strokeMiterlimit',
+          'stroke-dasharray': 'strokeDasharray',
+          'stroke-dashoffset': 'strokeDashoffset',
+          'clip-path': 'clipPath',
+          'clip-rule': 'clipRule',
+          'fill-rule': 'fillRule',
+          'fill-opacity': 'fillOpacity',
+          'stop-color': 'stopColor',
+          'stop-opacity': 'stopOpacity'
+        };
+
+        function styleStringToJsxObject(styleStr) {
+          const rules = styleStr.split(';').map(s => s.trim()).filter(Boolean);
+          const objRules = [];
+          for (const rule of rules) {
+            const idx = rule.indexOf(':');
+            if (idx === -1) continue;
+            let prop = rule.substring(0, idx).trim();
+            let val = rule.substring(idx + 1).trim();
+            
+            // convert kebab-case to camelCase
+            prop = prop.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+            
+            // quote string values unless purely numeric or css variable
+            if (!isNaN(val) && val !== '') {
+              objRules.push(`${prop}: ${val}`);
+            } else {
+              objRules.push(`${prop}: "${val.replace(/"/g, '\\"')}"`);
+            }
+          }
+          return '{ ' + objRules.join(', ') + ' }';
+        }
+
+        function transpileHtmlToJsx() {
+          const raw = document.getElementById('htmlInput').value;
+          const compName = (document.getElementById('jsxCompName').value.trim() || 'Component').replace(/[^a-zA-Z0-9_]/g, '');
+          const wrapComp = document.getElementById('wrapReactComp').checked;
+          const useTs = document.getElementById('useTypeScript').checked;
+          const selfClose = document.getElementById('selfCloseVoid').checked;
+          const parseStyles = document.getElementById('parseInlineStyles').checked;
+          const handleSvg = document.getElementById('convertSvgAttrs').checked;
+
+          document.getElementById('htmlStats').textContent = raw.length + ' chars';
+
+          if (!raw.trim()) {
+            document.getElementById('jsxOutput').value = '// Paste raw HTML on the left to transpile into clean React JSX.';
+            return;
+          }
+
+          let jsx = raw;
+
+          // 1. Convert HTML comments <!-- ... --> to {/* ... */}
+          jsx = jsx.replace(/<!--([\s\S]*?)-->/g, '{/*$1*/}');
+
+          // 2. Parse inline styles style="..." -> style={{ ... }}
+          if (parseStyles) {
+            jsx = jsx.replace(/\bstyle="([^"]*)"/gi, (match, styleVal) => {
+              return `style={${styleStringToJsxObject(styleVal)}}`;
+            });
+            jsx = jsx.replace(/\bstyle='([^']*)'/gi, (match, styleVal) => {
+              return `style={${styleStringToJsxObject(styleVal)}}`;
+            });
+          }
+
+          // 3. Replace HTML standard attributes
+          for (const [attr, jsxAttr] of Object.entries(HTML_ATTR_MAP)) {
+            const regex = new RegExp(`\\b${attr}=([\"\'][^\"\']*[\"\'])`, 'gi');
+            jsx = jsx.replace(regex, `${jsxAttr}=$1`);
+          }
+
+          // 4. Replace SVG attributes if enabled
+          if (handleSvg) {
+            for (const [attr, jsxAttr] of Object.entries(SVG_ATTR_MAP)) {
+              const regex = new RegExp(`\\b${attr}=([\"\'][^\"\']*[\"\'])`, 'gi');
+              jsx = jsx.replace(regex, `${jsxAttr}=$1`);
+            }
+          }
+
+          // 5. Self-close void tags: area, base, br, col, embed, hr, img, input, link, meta, param, source, track, wbr
+          if (selfClose) {
+            const voidTags = ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
+            for (const tag of voidTags) {
+              const voidRegex = new RegExp(`<(${tag})([^>]*?)(?<!/)>\s*(?!<\/\1>)`, 'gi');
+              jsx = jsx.replace(voidRegex, '<$1$2 />');
+            }
+          }
+
+          // 6. Wrap in React Component if selected
+          if (wrapComp) {
+            const tsProps = useTs ? 'interface ' + compName + 'Props {\n  className?: string;\n}\n\n' : '';
+            const param = useTs ? '({ className = "" }: ' + compName + 'Props)' : '({ className = "" })';
+            const wrapped = `import React from "react";\n\n${tsProps}export default function ${compName}${param} {\n  return (\n${jsx.split('\n').map(line => '    ' + line).join('\n')}\n  );\n}`;
+            document.getElementById('jsxOutput').value = wrapped;
+          } else {
+            document.getElementById('jsxOutput').value = jsx;
+          }
+        }
+
+        function loadSampleHtmlToJsx() {
+          document.getElementById('htmlInput').value = `<div class="max-w-md mx-auto bg-slate-900 rounded-xl shadow-md overflow-hidden" style="margin-top: 30px; border: 1px solid rgba(255,255,255,0.1);">\n  <div class="p-6">\n    <div class="uppercase tracking-wide text-sm text-indigo-400 font-semibold">WebDevWorker</div>\n    <h3 class="block mt-1 text-lg leading-tight font-medium text-white hover:underline">Modern Zero-Telemetry Workstation</h3>\n    <p class="mt-2 text-slate-400" style="font-size: 0.9rem; line-height: 1.6;">\n      Execute 85+ developer utilities locally inside your browser V8 sandbox.\n    </p>\n    <form class="mt-4" onsubmit="return false;">\n      <label for="emailInput" class="block text-xs text-slate-300 font-medium">Developer Work Email</label>\n      <input type="email" id="emailInput" class="mt-1 block w-full rounded-md bg-slate-800 text-white" placeholder="you@company.com" tabindex="1" autofocus>\n      <button type="submit" class="mt-3 px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-bold" style="cursor: pointer;">\n        Activate Toolchain\n      </button>\n    </form>\n  </div>\n</div>`;
+          transpileHtmlToJsx();
+        }
+
+        function clearHtmlToJsx() {
+          document.getElementById('htmlInput').value = '';
+          transpileHtmlToJsx();
+        }
+
+        function copyJsxCode() {
+          navigator.clipboard.writeText(document.getElementById('jsxOutput').value);
+          showToast('Copied JSX Code to clipboard!');
+        }
+
+        ['htmlInput', 'jsxCompName', 'wrapReactComp', 'useTypeScript', 'selfCloseVoid', 'parseInlineStyles', 'convertSvgAttrs'].forEach(id => {
+          document.getElementById(id).addEventListener('input', transpileHtmlToJsx);
+          document.getElementById(id).addEventListener('change', transpileHtmlToJsx);
+        });
+
+        window.addEventListener('DOMContentLoaded', loadSampleHtmlToJsx);
+      
+  </script>
+</body>
+</html>

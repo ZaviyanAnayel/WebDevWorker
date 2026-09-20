@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html data-theme="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Git Command Generator (Workflows, Rebase &amp; Recovery) | WebDevWorker</title>
+  <meta content="Generate precise, safe Git terminal commands for interactive rebasing, undoing commits, cherry-picking, stashing, branch renaming, and disaster recovery with step-by-step safety guides." name="description"/>
+  <meta content="git command generator, git cheatsheet, git undo commit, git rebase interactive, git cherry pick, git stash, git reflog recovery, devops tools" name="keywords"/>
+  <link href="https://webdevworker.com/tools/git-command-generator.html" rel="canonical"/>
+  <meta content="WebDevWorker" name="author"/>
+  <meta content="index, follow" name="robots"/>
+  <meta content="Git Command &amp; Workflow Generator | WebDevWorker" property="og:title"/>
+  <meta content="Generate precise, safe Git terminal commands for interactive rebasing, undoing commits, cherry-picking, stashing, branch renaming, and disaster recovery with step-by-step safety guides." property="og:description"/>
+  <meta content="https://webdevworker.com/tools/git-command-generator.html" property="og:url"/>
+  <meta content="website" property="og:type"/>
+  <meta content="https://webdevworker.com/assets/logo.png" property="og:image"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Git Command &amp; Workflow Generator | WebDevWorker"/>
+  <meta name="twitter:description" content="Generate precise, safe Git terminal commands for interactive rebasing, undoing commits, cherry-picking, stashing, branch renaming, and disaster recovery with step-by-step safety guides."/>
+  <meta name="twitter:image" content="https://webdevworker.com/assets/logo.png"/>
+  <link href="/assets/favicon.png" rel="icon" type="image/png"/>
+  <link rel="manifest" href="/manifest.json"/>
+
+  <!-- Google AdSense -->
+  <script async crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384"></script>
+  <!-- Google tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-G718R5DYYR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-G718R5DYYR');
+  </script>
+
+  <link href="/css/webdevworker.css?v=2026-wdw-v35" rel="stylesheet"/>
+  <link href="/css/ai-widget.css?v=2026-wdw-v35" rel="stylesheet"/>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Git Command & Workflow Generator",
+      "url": "https://webdevworker.com/tools/git-command-generator.html",
+      "description": "Generate precise, safe Git terminal commands for interactive rebasing, undoing commits, cherry-picking, stashing, branch renaming, and disaster recovery with step-by-step safety guides.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://webdevworker.com",
+        "founder": "Zaviyan"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "DevOps & Webmaster",
+          "item": "https://webdevworker.com/#categories"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Git Command & Workflow Generator",
+          "item": "https://webdevworker.com/tools/git-command-generator.html"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the difference between git reset --soft and git reset --hard?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "git reset --soft rolls back the commit history but leaves your changed files staged in the index. git reset --hard rolls back the commit history AND permanently overwrites your working files on disk."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is --force-with-lease safer than git push --force?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "--force blindly overwrites the remote branch even if another developer pushed new commits in the interim. --force-with-lease refuses to push if the remote branch reference has changed since your last fetch, preventing accidental destruction of peer work."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I recover a commit that was deleted via hard reset?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Run git reflog to locate the commit's SHA hash from your recent HEAD movement history. Then run git checkout -b recovery-branch <SHA> to restore your code into a new branch."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I safely squash multiple commits before a pull request?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Run git rebase -i HEAD~N (where N is the number of commits). In the interactive editor, leave the first commit as 'pick' and change subsequent commits to 'squash' or 's'."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><a href="/"><img alt="WebDevWorker Logo" src="/assets/webdevworker-logo-horizontal.svg"/></a></div>
+    <div class="sidebar-nav"><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Overview</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/" class="nav-item" title="Dashboard" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Dashboard</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">CSS &amp; Visual UI</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/tailwind-to-css-converter.html" class="nav-item" title="Tailwind to CSS Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Tailwind to CSS Converter</span></a></li><li><a href="/tools/css-box-shadow-generator.html" class="nav-item" title="CSS Box Shadow Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Box Shadow Generator</span></a></li><li><a href="/tools/css-gradient-generator.html" class="nav-item" title="CSS Gradient Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌈</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Gradient Generator</span></a></li><li><a href="/tools/css-glassmorphism-generator.html" class="nav-item" title="CSS Glassmorphism Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Glassmorphism Builder</span></a></li><li><a href="/tools/css-border-radius-generator.html" class="nav-item" title="Border Radius &amp; Blob Shaper" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🟣</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Border Radius &amp; Blob Shaper</span></a></li><li><a href="/tools/color-converter-contrast.html" class="nav-item" title="Color Contrast &amp; WCAG Tester" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎭</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Color Contrast &amp; WCAG Tester</span></a></li><li><a href="/tools/css-flexbox-generator.html" class="nav-item" title="CSS Flexbox Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Flexbox Builder</span></a></li><li><a href="/tools/css-grid-generator.html" class="nav-item" title="CSS Grid 2D Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Grid 2D Builder</span></a></li><li><a href="/tools/css-clamp-calculator.html" class="nav-item" title="CSS clamp() Fluid Typography" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔤</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS clamp() Fluid Typography</span></a></li><li><a href="/tools/css-cubic-bezier-generator.html" class="nav-item" title="CSS Cubic-Bezier Visualizer" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Cubic-Bezier Visualizer</span></a></li><li><a href="/tools/css-clip-path-generator.html" class="nav-item" title="CSS Clip-Path Polygon Shaper" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">✂️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Clip-Path Polygon Shaper</span></a></li><li><a href="/tools/css-keyframes-animation-generator.html" class="nav-item" title="CSS @keyframes Animation Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎬</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS @keyframes Animation Studio</span></a></li><li><a href="/tools/css-triangle-generator.html" class="nav-item" title="CSS Triangle &amp; Tooltip Arrow" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">▲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Triangle &amp; Tooltip Arrow</span></a></li><li><a href="/tools/svg-to-data-uri-converter.html" class="nav-item" title="SVG to CSS Data URI Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🖼️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG to CSS Data URI Converter</span></a></li><li><a href="/tools/css-text-shadow-generator.html" class="nav-item" title="CSS Text Shadow &amp; Neon Glow" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">✨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Text Shadow &amp; Neon Glow</span></a></li><li><a href="/tools/color-palette-harmonies-generator.html" class="nav-item" title="Color Palette &amp; Harmonies" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Color Palette &amp; Harmonies</span></a></li><li><a href="/tools/css-filter-effects-generator.html" class="nav-item" title="CSS Filter Effects Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎭</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Filter Effects Studio</span></a></li><li><a href="/tools/css-neumorphism-generator.html" class="nav-item" title="CSS Neumorphism (Soft UI)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔘</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Neumorphism (Soft UI)</span></a></li><li><a href="/tools/css-unit-converter.html" class="nav-item" title="CSS Unit Converter (PX/REM/VW)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Unit Converter (PX/REM/VW)</span></a></li><li><a href="/tools/css-specificity-calculator.html" class="nav-item" title="CSS Specificity Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎯</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Specificity Calculator</span></a></li><li><a href="/tools/css-transform-3d-matrix-calculator.html" class="nav-item" title="CSS 3D Transform &amp; Matrix3d" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS 3D Transform &amp; Matrix3d</span></a></li><li><a href="/tools/css-aspect-ratio-calculator.html" class="nav-item" title="CSS Aspect Ratio Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📺</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Aspect Ratio Calculator</span></a></li><li><a href="/tools/css-gradient-mesh-generator.html" class="nav-item" title="CSS Mesh Gradient Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌌</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Mesh Gradient Generator</span></a></li><li><a href="/tools/css-media-query-generator.html" class="nav-item" title="CSS Media &amp; Container Query" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CSS Media &amp; Container Query</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Code, Data &amp; APIs</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/sql-to-typescript-prisma-converter.html" class="nav-item" title="SQL to TypeScript &amp; Prisma" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔷</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SQL to TypeScript &amp; Prisma</span></a></li><li><a href="/tools/json-formatter-validator.html" class="nav-item" title="JSON Formatter &amp; Validator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📋</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON Formatter &amp; Validator</span></a></li><li><a href="/tools/curl-to-code-converter.html" class="nav-item" title="cURL to Code Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">💻</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">cURL to Code Converter</span></a></li><li><a href="/tools/json-to-typescript-generator.html" class="nav-item" title="JSON to TypeScript Interface" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔷</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to TypeScript Interface</span></a></li><li><a href="/tools/mock-data-generator.html" class="nav-item" title="Mock Data Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎲</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Mock Data Generator</span></a></li><li><a href="/tools/code-beautifier-minifier.html" class="nav-item" title="Code Beautifier &amp; Minifier" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧹</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Code Beautifier &amp; Minifier</span></a></li><li><a href="/tools/sql-formatter.html" class="nav-item" title="SQL Query Formatter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🗄️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SQL Query Formatter</span></a></li><li><a href="/tools/base64-encoder-decoder.html" class="nav-item" title="Base64 Image &amp; Text Tool" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔤</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Base64 Image &amp; Text Tool</span></a></li><li><a href="/tools/url-encoder-decoder.html" class="nav-item" title="URL Encoder &amp; Decoder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔗</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">URL Encoder &amp; Decoder</span></a></li><li><a href="/tools/markdown-html-converter.html" class="nav-item" title="Markdown to HTML Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📝</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Markdown to HTML Converter</span></a></li><li><a href="/tools/lorem-ipsum-generator.html" class="nav-item" title="Lorem Ipsum &amp; Text Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📄</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Lorem Ipsum &amp; Text Generator</span></a></li><li><a href="/tools/html-table-to-json-converter.html" class="nav-item" title="HTML Table to JSON &amp; CSV" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML Table to JSON &amp; CSV</span></a></li><li><a href="/tools/yaml-to-json-converter.html" class="nav-item" title="YAML to JSON Configuration" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📜</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">YAML to JSON Configuration</span></a></li><li><a href="/tools/json-schema-generator.html" class="nav-item" title="JSON Schema Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON Schema Generator</span></a></li><li><a href="/tools/webhook-payload-formatter.html" class="nav-item" title="Webhook Payload &amp; Verifier" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Webhook Payload &amp; Verifier</span></a></li><li><a href="/tools/json-to-go-struct-converter.html" class="nav-item" title="JSON to Go Struct Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐹</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Go Struct Generator</span></a></li><li><a href="/tools/json-to-rust-struct-converter.html" class="nav-item" title="JSON to Rust Struct (Serde)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🦀</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Rust Struct (Serde)</span></a></li><li><a href="/tools/json-to-python-pydantic-converter.html" class="nav-item" title="JSON to Python Pydantic" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Python Pydantic</span></a></li><li><a href="/tools/json-to-yaml-converter.html" class="nav-item" title="JSON to YAML Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📑</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to YAML Converter</span></a></li><li><a href="/tools/json-to-csv-converter.html" class="nav-item" title="JSON to CSV / Excel Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📊</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to CSV / Excel Converter</span></a></li><li><a href="/tools/xml-formatter-json-converter.html" class="nav-item" title="XML Formatter &amp; JSON Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🏷️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">XML Formatter &amp; JSON Converter</span></a></li><li><a href="/tools/string-case-converter.html" class="nav-item" title="String Case Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔠</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">String Case Converter</span></a></li><li><a href="/tools/html-entity-encoder-decoder.html" class="nav-item" title="HTML Entity Encoder &amp; Decoder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML Entity Encoder &amp; Decoder</span></a></li><li><a href="/tools/unix-timestamp-converter.html" class="nav-item" title="Unix Timestamp Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⏱️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Unix Timestamp Converter</span></a></li><li><a href="/tools/number-base-converter.html" class="nav-item" title="Number Base Converter (Bin/Hex)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔢</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Number Base Converter (Bin/Hex)</span></a></li><li><a href="/tools/html-to-jsx-converter.html" class="nav-item" title="HTML to JSX / React Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚛️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTML to JSX / React Converter</span></a></li><li><a href="/tools/json-to-zod-schema.html" class="nav-item" title="JSON to Zod Schema Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JSON to Zod Schema Generator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Security &amp; Cryptography</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/openssl-command-generator.html" class="nav-item" title="OpenSSL Command Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔒</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">OpenSSL Command Generator</span></a></li><li><a href="/tools/hash-generator.html" class="nav-item" title="SHA Hash &amp; Checksum" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔒</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SHA Hash &amp; Checksum</span></a></li><li><a href="/tools/uuid-generator.html" class="nav-item" title="UUID / GUID v4 Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🆔</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">UUID / GUID v4 Generator</span></a></li><li><a href="/tools/password-generator.html" class="nav-item" title="Strong Password Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔑</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Strong Password Generator</span></a></li><li><a href="/tools/jwt-decoder.html" class="nav-item" title="JWT Token Inspector" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JWT Token Inspector</span></a></li><li><a href="/tools/subresource-integrity-hash-generator.html" class="nav-item" title="Subresource Integrity (SRI)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Subresource Integrity (SRI)</span></a></li><li><a href="/tools/content-security-policy-generator.html" class="nav-item" title="Content Security Policy (CSP)" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Content Security Policy (CSP)</span></a></li><li><a href="/tools/hmac-hash-generator.html" class="nav-item" title="HMAC Hash &amp; Key Signature" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HMAC Hash &amp; Key Signature</span></a></li><li><a href="/tools/aes-encryption-decryption-tool.html" class="nav-item" title="AES-GCM Encryption / Decryption" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🗝️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">AES-GCM Encryption / Decryption</span></a></li><li><a href="/tools/ulid-nanoid-generator.html" class="nav-item" title="ULID &amp; NanoID Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🆔</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">ULID &amp; NanoID Generator</span></a></li><li><a href="/tools/bcrypt-hash-cost-calculator.html" class="nav-item" title="Bcrypt Hash &amp; Cost Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🧮</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Bcrypt Hash &amp; Cost Calculator</span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">DevOps &amp; Webmaster</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/aws-iam-s3-policy-generator.html" class="nav-item" title="AWS IAM &amp; S3 Policy Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">☁️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">AWS IAM &amp; S3 Policy Generator</span></a></li><li><a href="/tools/dockerfile-compose-generator.html" class="nav-item" title="Dockerfile &amp; Compose Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🐳</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Dockerfile &amp; Compose Generator</span></a></li><li><a href="/tools/seo-keyword-density-analyzer.html" class="nav-item" title="SEO Keyword Density &amp; N-Gram" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SEO Keyword Density &amp; N-Gram</span></a></li><li><a href="/tools/cron-expression-generator.html" class="nav-item" title="Cron Expression Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⏰</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Cron Expression Builder</span></a></li><li><a href="/tools/chmod-permissions-calculator.html" class="nav-item" title="Linux Chmod Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🛡️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Linux Chmod Calculator</span></a></li><li><a href="/tools/http-status-codes-inspector.html" class="nav-item" title="HTTP Status Codes Spec" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">HTTP Status Codes Spec</span></a></li><li><a href="/tools/javascript-keycode-tester.html" class="nav-item" title="JS KeyCode Event Tester" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⌨️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">JS KeyCode Event Tester</span></a></li><li><a href="/tools/htaccess-generator.html" class="nav-item" title=".htaccess Rule Builder" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚙️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">.htaccess Rule Builder</span></a></li><li><a href="/tools/meta-tag-generator.html" class="nav-item" title="Meta Tags &amp; Open Graph" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🏷️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Meta Tags &amp; Open Graph</span></a></li><li><a href="/tools/regex-tester.html" class="nav-item" title="Regex Tester &amp; Explainer" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔍</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Regex Tester &amp; Explainer</span></a></li><li><a href="/tools/text-diff-checker.html" class="nav-item" title="Code Diff &amp; Comparison" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚖️</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Code Diff &amp; Comparison</span></a></li><li><a href="/tools/dns-record-lookup-generator.html" class="nav-item" title="DNS Zone &amp; SPF/DMARC" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">DNS Zone &amp; SPF/DMARC</span></a></li><li><a href="/tools/robots-txt-generator.html" class="nav-item" title="Robots.txt &amp; Crawler Rules" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🤖</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Robots.txt &amp; Crawler Rules</span></a></li><li><a href="/tools/user-agent-parser.html" class="nav-item" title="User-Agent &amp; Client Hints" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">User-Agent &amp; Client Hints</span></a></li><li><a href="/tools/cidr-subnet-calculator.html" class="nav-item" title="CIDR &amp; IP Subnet Calculator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🌐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">CIDR &amp; IP Subnet Calculator</span></a></li><li><a href="/tools/nginx-config-generator.html" class="nav-item" title="Nginx Server Block Generator" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Nginx Server Block Generator</span></a></li><li><a href="/tools/websocket-client-tester.html" class="nav-item" title="WebSocket Client &amp; Debugger" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">WebSocket Client &amp; Debugger</span></a></li><li><a href="/tools/git-command-generator.html" class="nav-item active" title="Git Command &amp; Workflow Generator" style="display:flex;align-items:center;gap:10px;padding:9px 12px;text-decoration:none;font-size:0.85rem;border-radius:8px;margin:2px 4px;font-weight:700;transition:all 0.15s ease;background:linear-gradient(90deg, rgba(234,179,8,0.22) 0%, rgba(234,179,8,0.06) 100%) !important;color:#eab308 !important;border-left:4px solid #eab308 !important;box-shadow:inset 0 0 14px rgba(234,179,8,0.12) !important;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🔀</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;color:#eab308 !important;font-weight:700;">Git Command &amp; Workflow Generator</span><span style="width:8px;height:8px;border-radius:50%;background:#eab308;box-shadow:0 0 10px #eab308;margin-left:auto;flex-shrink:0;"></span></a></li></ul></div><div class="nav-group-wrapper" style="margin-bottom:14px;"><div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Media, Assets &amp; Viral</div><ul style="list-style:none;margin:0;padding:0;"><li><a href="/tools/image-color-palette-extractor.html" class="nav-item" title="Image Palette &amp; Contrast" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">🎨</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Image Palette &amp; Contrast</span></a></li><li><a href="/tools/qr-code-generator.html" class="nav-item" title="Custom QR Code Studio" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📱</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Custom QR Code Studio</span></a></li><li><a href="/tools/multi-favicon-pwa-generator.html" class="nav-item" title="Favicon &amp; App Icon Matrix" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📦</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">Favicon &amp; App Icon Matrix</span></a></li><li><a href="/tools/svg-optimizer-converter.html" class="nav-item" title="SVG Optimizer &amp; Converter" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">⚡</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG Optimizer &amp; Converter</span></a></li><li><a href="/tools/svg-path-visualizer.html" class="nav-item" title="SVG Path Visualizer &amp; Editor" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:var(--radius-sm);margin:1px 4px;font-weight:600;transition:all 0.15s ease;"><span style="font-size:1.05rem;flex-shrink:0;width:20px;text-align:center;">📐</span><span class="nav-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;">SVG Path Visualizer &amp; Editor</span></a></li></ul></div><div style="border-top:1px solid var(--border);margin:16px 6px;padding-top:10px;"><div style="font-size:0.72rem;text-transform:uppercase;color:var(--text-muted);letter-spacing:1px;padding:4px 14px;font-weight:700;">Legal &amp; Info</div><a href="/blog/index.html" style="display:block;padding:5px 14px;color:var(--brand-primary);font-size:0.8rem;text-decoration:none;font-weight:700;">📖 Engineering Blog</a><a href="/about.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">About WebDevWorker</a><a href="/contact.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Contact Engineering</a><a href="/privacy.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Privacy Policy</a><a href="/terms.html" style="display:block;padding:5px 14px;color:var(--text-muted);font-size:0.8rem;text-decoration:none;">Terms of Service</a></div></div>
+  </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <div class="main-viewport">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Menu">☰</button>
+          <span class="topbar-title">Git Command &amp; Workflow Generator</span>
+        </div>
+        <div class="topbar-right">
+          <div style="position:relative; display:flex; align-items:center;">
+            <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+            <input type="text" id="searchToolsInput" placeholder="Search 85+ tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+          </div>
+          <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <!-- Hero Title Header -->
+        <div class="tool-header-block" style="margin-bottom:24px;">
+          <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(234,179,8,0.1); border:1px solid rgba(234,179,8,0.25); color:var(--brand-primary); font-size:0.75rem; font-weight:700; padding:4px 12px; border-radius:999px; margin-bottom:12px;">
+            <span>🔀</span> <span>DevOps &amp; Webmaster</span> &bull; <span>100% Client-Side Memory Sandbox</span>
+          </div>
+          <h1 class="tool-header-title" style="font-size:2rem; font-weight:900; margin-bottom:10px; letter-spacing:-0.02em;">
+            Git Command &amp; Workflow Generator
+          </h1>
+          <p class="tool-header-desc" style="font-size:0.95rem; color:var(--text-muted); line-height:1.6; max-width:860px; margin:0;">
+            Generate precise, safe Git terminal commands for interactive rebasing, undoing commits, cherry-picking, stashing, branch renaming, and disaster recovery with step-by-step safety guides.
+          </p>
+        </div>
+
+        <!-- Interactive Tool UI Component -->
+        
+        <div class="tool-card" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:16px; padding:28px; box-shadow:var(--shadow-card);">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:20px;" id="gitGrid">
+            <div>
+              <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:8px;">Select Git Task / Scenario</label>
+              <select id="gitScenario" class="form-input" style="font-weight:700; font-size:0.9rem; padding:10px 14px;">
+                <optgroup label="⏪ Undo & History Correction">
+                  <option value="undo-soft">Undo last commit (keep changes staged)</option>
+                  <option value="undo-mixed">Undo last commit (keep changes unstaged)</option>
+                  <option value="undo-hard">Discard last commit completely (Hard Reset)</option>
+                  <option value="amend-msg">Amend last commit message</option>
+                  <option value="rebase-i">Interactive rebase last N commits</option>
+                </optgroup>
+                <optgroup label="🌿 Branch & Remote Management">
+                  <option value="rename-branch">Rename local &amp; remote branch</option>
+                  <option value="delete-branch">Delete branch (local &amp; remote)</option>
+                  <option value="prune-remote">Prune deleted remote tracking branches</option>
+                  <option value="sync-upstream">Sync fork with upstream main</option>
+                </optgroup>
+                <optgroup label="📦 Stashing & Workspaces">
+                  <option value="stash-named">Stash changes with descriptive message</option>
+                  <option value="stash-apply">Apply and drop specific stash</option>
+                  <option value="stash-staged">Stash only staged changes</option>
+                </optgroup>
+                <optgroup label="🍒 Cherry-Pick & Conflict Resolution">
+                  <option value="cherry-pick">Cherry-pick a specific commit hash</option>
+                  <option value="squash-merge">Squash merge feature branch into main</option>
+                </optgroup>
+                <optgroup label="🚨 Disaster Recovery & Forensics">
+                  <option value="reflog-recover">Find &amp; recover lost commit using reflog</option>
+                  <option value="purge-file">Purge sensitive file from entire Git history</option>
+                </optgroup>
+              </select>
+
+              <!-- Dynamic Parameter Inputs -->
+              <div id="gitParamsBox" style="margin-top:20px; display:flex; flex-direction:column; gap:14px;">
+                <div id="param1Wrapper">
+                  <label id="param1Label" style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Parameter 1</label>
+                  <input type="text" id="param1Input" class="form-input" style="font-size:0.85rem;" value="HEAD~1">
+                </div>
+                <div id="param2Wrapper" style="display:none;">
+                  <label id="param2Label" style="display:block; font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Parameter 2</label>
+                  <input type="text" id="param2Input" class="form-input" style="font-size:0.85rem;" value="">
+                </div>
+              </div>
+
+              <!-- Safety Badge -->
+              <div id="safetyBadge" style="margin-top:20px; padding:12px 16px; border-radius:8px; font-size:0.84rem; display:flex; align-items:center; gap:10px; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.25); color:#10b981;">
+                <span>🟢</span> <span><strong>Safe Operation:</strong> Preserves all working directory edits.</span>
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <label style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">Generated Bash / Terminal Command</label>
+                <button type="button" class="btn btn-primary" onclick="copyGitCmd()" style="font-size:0.75rem; padding:4px 12px;">Copy Command</button>
+              </div>
+              <textarea id="gitCommandOutput" class="form-input" style="height:200px; font-family:var(--font-mono); font-size:0.88rem; background:#070a13; color:#38bdf8; line-height:1.5;" readonly></textarea>
+
+              <div style="margin-top:14px; background:var(--bg-subtle); padding:16px; border-radius:10px; border:1px solid var(--border);">
+                <div style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:800; letter-spacing:0.05em; margin-bottom:6px;">What this command does:</div>
+                <p id="gitExplanation" style="font-size:0.85rem; color:var(--text-muted); line-height:1.6; margin:0;">
+                  Moves the HEAD pointer back by 1 commit while leaving your modified files staged in the index ready for recommit.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+
+        <!-- Comprehensive Educational & SEO Cards Section -->
+        <section class="seo-card-grid" style="margin-top: 48px; display: flex; flex-direction: column; gap: 32px;">
+          
+          <!-- Card 1: Architectural Deep Dive -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>⚡</span> Architectural Deep Dive &amp; Developer Mechanics
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              
+      <p>Git is the ubiquitous distributed version control system (DVCS) underpinning modern software engineering. While daily workflows frequently revolve around standard commands like <code>git add</code>, <code>git commit</code>, and <code>git push</code>, production software development inevitably presents complex operational scenarios: accidental commits, dirty stash states, merge conflicts, interactive rebases, and leaked credentials.</p>
+      <p style="margin-top:12px;">Navigating advanced Git terminal flags without clear visual guidance risks accidental data loss—particularly commands involving <code>git reset --hard</code> or force pushes (<code>--force</code> vs. <code>--force-with-lease</code>). Understanding Git's underlying directed acyclic graph (DAG) object model is essential for writing clean, auditable commit histories.</p>
+      <p style="margin-top:12px;">This tool visualizes and generates battle-tested, production-grade Git terminal workflows directly in client memory, complete with safety risk ratings and failure recovery strategies.</p>
+    
+            </div>
+          </article>
+
+          <!-- Card 2: Mathematical Models & Algorithmic Logic -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>📐</span> Mathematical Models &amp; Algorithmic Equations
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              
+      <p>Git's architecture is structured as a content-addressable storage system governed by cryptographic hashing and tree references:</p>
+      <ul style="margin:14px 0 14px 20px; line-height:1.9;">
+        <li><strong>Commit Anatomy:</strong> Each commit \( C \) is identified by \( \text{SHA-1}(M) \) or modern \( \text{SHA-256} \), encapsulating a root tree pointer, parent commit pointers \( P_1, \dots, P_k \), author timestamp, and commit message.</li>
+        <li><strong>HEAD Pointer Mechanics:</strong> A soft reset (<code>--soft</code>) mutates only the branch pointer \( B \to C_{\text{target}} \). A mixed reset updates the branch pointer and the staging index. A hard reset synchronizes the working tree with \( C_{\text{target}} \), dropping uncommitted modifications.</li>
+        <li><strong>Reflog Retention:</strong> Git maintains an append-only reference log (reflog) recording every update to local branch references for a default expiration period of 90 days (\( t \le 90\text{d} \)), making accidental resets recoverable.</li>
+      </ul>
+    
+            </div>
+          </article>
+
+          <!-- Card 3: Production Code Implementation -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>💻</span> Production Implementation &amp; Code Example
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              <p>Software engineers can integrate these exact patterns directly into automated microservices, build pipelines, or component stylesheets. Below is a production-grade code snippet demonstrating programmatic implementation:</p>
+              <div class="code-output-box" style="margin: 18px 0; padding: 16px; background: #070a13; border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; position: relative;">
+                <pre><code id="prodSnippetCode">// Production Safe History Rewrite &amp; Push Script
+#!/usr/bin/env bash
+set -euo pipefail
+
+BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+
+echo &quot;Starting interactive rebase for branch: $BRANCH_NAME&quot;
+# Clean working tree check
+if ! git diff-index --quiet HEAD --; then
+  echo &quot;Error: Working directory contains uncommitted modifications. Please stash or commit.&quot;
+  exit 1
+fi
+
+# Rebase against upstream target
+git fetch origin main:main
+git rebase -i main
+
+echo &quot;Rebase complete. Always use --force-with-lease to protect remote collaborator commits.&quot;
+echo &quot;Command: git push --force-with-lease origin $BRANCH_NAME&quot;</code></pre>
+                <button type="button" class="copy-code-btn" onclick="window.copyCode('prodSnippetCode', this)">Copy</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4: Technical Specifications Matrix -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>📋</span> Technical Specifications &amp; Standards Matrix
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              <p>The table below documents the architectural standards, compliance parameters, and browser runtime capabilities governing Git Command &amp; Workflow Generator:</p>
+              <div style="overflow-x: auto; margin: 18px 0;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;">
+                  <thead>
+                    <tr style="background: var(--bg-subtle); border-bottom: 2px solid var(--border);">
+                      <th style="padding: 10px 14px; color: var(--text-main);">Engineering Metric</th>
+                      <th style="padding: 10px 14px; color: var(--text-main);">Specification / Standard</th>
+                      <th style="padding: 10px 14px; color: var(--text-main);">Browser Support</th>
+                      <th style="padding: 10px 14px; color: var(--text-main);">Execution Layer</th>
+                    </tr>
+                  </thead>
+                  <tbody style="color: var(--text-muted);">
+                    
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">Git Compatibility</td>
+      <td style="padding: 10px 14px;">Git 2.20+ (supports --staged stash, --force-with-lease)</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">Storage Model</td>
+      <td style="padding: 10px 14px;">Directed Acyclic Graph (DAG) with SHA-1 / SHA-256 blobs</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">Execution Context</td>
+      <td style="padding: 10px 14px;">Local terminal client (Bash, Zsh, PowerShell, Fish)</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 10px 14px; font-weight: 700; color: var(--text-main);">Data Privacy</td>
+      <td style="padding: 10px 14px;">100% Client-Side memory execution, zero external telemetry</td>
+      <td style="padding: 10px 14px;">All Modern Browsers (Chrome, Safari, Firefox, Edge)</td>
+      <td style="padding: 10px 14px;">Client-Side Sandbox (V8 / WebCrypto)</td>
+    </tr>
+  
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 5: In-Depth Developer FAQs -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>❓</span> Frequently Asked Questions (Git Command &amp; Workflow Generator)
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 18px;">
+              Common technical questions, implementation nuances, and troubleshooting insights encountered by developers using Git Command &amp; Workflow Generator:
+            </p>
+            <div class="faq-list">
+              
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details open>
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          What is the difference between git reset --soft and git reset --hard?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          git reset --soft rolls back the commit history but leaves your changed files staged in the index. git reset --hard rolls back the commit history AND permanently overwrites your working files on disk.
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details >
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          Why is --force-with-lease safer than git push --force?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          --force blindly overwrites the remote branch even if another developer pushed new commits in the interim. --force-with-lease refuses to push if the remote branch reference has changed since your last fetch, preventing accidental destruction of peer work.
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details >
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          How can I recover a commit that was deleted via hard reset?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          Run git reflog to locate the commit's SHA hash from your recent HEAD movement history. Then run git checkout -b recovery-branch &lt;SHA&gt; to restore your code into a new branch.
+        </p>
+      </details>
+    </div>
+  
+    <div class="faq-item" style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden;">
+      <details >
+        <summary style="padding: 14px 18px; font-weight: 700; font-size: 0.94rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          How do I safely squash multiple commits before a pull request?
+        </summary>
+        <p style="padding: 0 18px 16px 18px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0;">
+          Run git rebase -i HEAD~N (where N is the number of commits). In the interactive editor, leave the first commit as 'pick' and change subsequent commits to 'squash' or 's'.
+        </p>
+      </details>
+    </div>
+  
+            </div>
+          </article>
+
+          <!-- Card 6: Production Best Practices -->
+          <article class="seo-card" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+              <span>⚠️</span> Production Best Practices &amp; Pitfalls to Avoid
+            </h2>
+            <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.93rem;">
+              <ul style="margin: 0 0 0 20px; display: flex; flex-direction: column; gap: 10px;">
+                
+      <li><strong>Always Prefer --force-with-lease:</strong> Never use destructive <code>git push --force</code> in team repositories; <code>--force-with-lease</code> guards against overwriting teammates' remote commits.</li>
+      <li><strong>Check Working Tree Before Rebasing:</strong> Always ensure <code>git status</code> is clean or run <code>git stash</code> before initiating an interactive rebase or branch switch.</li>
+      <li><strong>Keep Commits Atomic and Descriptive:</strong> Structure commits around single logical changes following Conventional Commits format (<code>feat:</code>, <code>fix:</code>, <code>refactor:</code>) for automated changelog generation.</li>
+      <li><strong>Utilize .gitignore Proactively:</strong> Never commit secrets, environment variables (<code>.env</code>), or build artifacts (<code>node_modules/</code>, <code>dist/</code>). If leaked, purge them using <code>git filter-repo</code>.</li>
+    
+              </ul>
+            </div>
+          </article>
+
+        </section>
+
+        <!-- Enterprise Multi-Column Footer -->
+        <footer class="enterprise-footer" style="margin-top: 60px; padding: 48px 0 28px; border-top: 1px solid var(--border); background: var(--bg-surface);">
+          <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; margin-bottom: 36px;">
+              <div>
+                <a href="/" style="display: inline-block; margin-bottom: 12px;"><img src="/assets/webdevworker-logo-horizontal.svg" alt="WebDevWorker" style="height: 32px;"></a>
+                <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin: 0;">The premier client-side developer workstation. 85+ high-precision utilities for modern web development, frontend design, and server administration.</p>
+                <p style="margin-top: 12px; font-size: 0.8rem; color: var(--brand-primary); font-weight: 700;">Founded by Zaviyan &bull; Operated by Zaviyan LLC</p>
+                <p style="margin-top: 2px; font-size: 0.76rem; color: var(--text-dim);">Corporate Support: business@zaviyanll.com</p>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">CSS &amp; UI Tools</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/tools/tailwind-to-css-converter.html" style="color: var(--text-muted); text-decoration: none;">Tailwind to CSS</a></li>
+                  <li><a href="/tools/css-box-shadow-generator.html" style="color: var(--text-muted); text-decoration: none;">Box Shadow Studio</a></li>
+                  <li><a href="/tools/css-gradient-generator.html" style="color: var(--text-muted); text-decoration: none;">Gradient Generator</a></li>
+                  <li><a href="/tools/css-clamp-calculator.html" style="color: var(--text-muted); text-decoration: none;">clamp() Calculator</a></li>
+                  <li><a href="/tools/css-unit-converter.html" style="color: var(--text-muted); text-decoration: none;">CSS Unit Converter</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">Code &amp; APIs</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/tools/json-formatter-validator.html" style="color: var(--text-muted); text-decoration: none;">JSON Formatter</a></li>
+                  <li><a href="/tools/json-to-typescript-generator.html" style="color: var(--text-muted); text-decoration: none;">JSON to TypeScript</a></li>
+                  <li><a href="/tools/sql-to-typescript-prisma-converter.html" style="color: var(--text-muted); text-decoration: none;">SQL to Prisma</a></li>
+                  <li><a href="/tools/json-to-go-struct-converter.html" style="color: var(--text-muted); text-decoration: none;">JSON to Go Struct</a></li>
+                  <li><a href="/tools/curl-to-code-converter.html" style="color: var(--text-muted); text-decoration: none;">cURL to Fetch</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">Security &amp; Cloud</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/tools/hash-generator.html" style="color: var(--text-muted); text-decoration: none;">SHA Hashes</a></li>
+                  <li><a href="/tools/hmac-hash-generator.html" style="color: var(--text-muted); text-decoration: none;">HMAC Signatures</a></li>
+                  <li><a href="/tools/openssl-command-generator.html" style="color: var(--text-muted); text-decoration: none;">OpenSSL CLI</a></li>
+                  <li><a href="/tools/aws-iam-s3-policy-generator.html" style="color: var(--text-muted); text-decoration: none;">AWS IAM &amp; S3</a></li>
+                  <li><a href="/tools/dockerfile-compose-generator.html" style="color: var(--text-muted); text-decoration: none;">Dockerfile Studio</a></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-main); margin-bottom: 14px;">Company &amp; Legal</div>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem;">
+                  <li><a href="/blog/modern-client-side-developer-workstation.html" style="color: var(--brand-primary); text-decoration: none; font-weight: 700;">📰 Engineering Blog</a></li>
+                  <li><a href="/about.html" style="color: var(--text-muted); text-decoration: none;">About WebDevWorker</a></li>
+                  <li><a href="/contact.html" style="color: var(--text-muted); text-decoration: none;">Contact Engineering</a></li>
+                  <li><a href="/privacy.html" style="color: var(--text-muted); text-decoration: none;">Privacy Policy</a></li>
+                  <li><a href="/terms.html" style="color: var(--text-muted); text-decoration: none;">Terms of Service</a></li>
+                  <li><a href="https://calcworker.com" target="_blank" rel="noopener" style="color: var(--brand-primary); text-decoration: none;">CalcWorker (Sister Suite)</a></li>
+                </ul>
+              </div>
+            </div>
+            <div style="border-top: 1px solid var(--border); padding: 24px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; font-size: 0.82rem; color: var(--text-dim);">
+              <div>© 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+              <div style="display: flex; gap: 16px;">
+                <span>🔒 100% Client-Side Sandbox</span>
+                <span>⚡ Zero Telemetry</span>
+                <span>📲 Offline PWA Capable</span>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/webdevworker-common.js?v=2026-wdw-v35" defer></script>
+  <script src="/js/ai-widget.js?v=2026-wdw-v35" defer></script>
+  <script>
+
+        const SCENARIOS = {
+          'undo-soft': {
+            label1: 'Number of Commits to Rewind',
+            val1: '1',
+            p2: false,
+            safety: 'safe',
+            safetyText: 'Safe Operation: Keeps your working directory and staged index untouched.',
+            build: (p1) => `git reset --soft HEAD~${p1}`,
+            desc: 'Moves the branch HEAD pointer back without altering your index or working directory. Your code changes remain staged and ready to be re-committed.'
+          },
+          'undo-mixed': {
+            label1: 'Number of Commits to Rewind',
+            val1: '1',
+            p2: false,
+            safety: 'safe',
+            safetyText: 'Safe Operation: Keeps working directory files intact, unmarking them from staging.',
+            build: (p1) => `git reset HEAD~${p1}`,
+            desc: 'Resets the staging area and HEAD pointer back. Your modified files remain on disk in your working tree, but are unstaged.'
+          },
+          'undo-hard': {
+            label1: 'Number of Commits to Discard',
+            val1: '1',
+            p2: false,
+            safety: 'danger',
+            safetyText: '⚠️ Destructive: Permanently discards uncommitted changes and commit snapshots.',
+            build: (p1) => `git reset --hard HEAD~${p1}`,
+            desc: 'Discards all working directory modifications and rolls back the commit tree. Uncommitted work cannot be recovered via standard git checkout.'
+          },
+          'amend-msg': {
+            label1: 'New Commit Message',
+            val1: 'feat(auth): add OAuth2 PKCE callback handler',
+            p2: false,
+            safety: 'safe',
+            safetyText: 'Safe locally; requires force-push if commit was already pushed to remote.',
+            build: (p1) => `git commit --amend -m "${p1}"`,
+            desc: 'Replaces the most recent commit on the current branch with a new commit containing your updated message and any newly staged files.'
+          },
+          'rebase-i': {
+            label1: 'Number of Commits to Inspect (N)',
+            val1: '3',
+            p2: false,
+            safety: 'warning',
+            safetyText: 'History Rewrite: Modifies commit SHA-1 hashes in your local branch.',
+            build: (p1) => `git rebase -i HEAD~${p1}`,
+            desc: 'Opens an interactive editor allowing you to reorder, squash (combine), edit, or drop the last N commits before opening a pull request.'
+          },
+          'rename-branch': {
+            label1: 'Old Branch Name',
+            val1: 'feature/login',
+            p2: true,
+            label2: 'New Branch Name',
+            val2: 'feat/auth-login',
+            safety: 'warning',
+            safetyText: 'Updates local branch and deletes old tracking reference on remote.',
+            build: (p1, p2) => `git branch -m ${p1} ${p2}\ngit push origin -u ${p2}\ngit push origin --delete ${p1}`,
+            desc: 'Renames the branch locally, pushes the newly named branch upstream with tracking, and deletes the obsolete branch from the remote repository.'
+          },
+          'delete-branch': {
+            label1: 'Branch to Delete',
+            val1: 'feature/temp-experiment',
+            p2: false,
+            safety: 'danger',
+            safetyText: 'Permanently deletes branch locally and on remote origin.',
+            build: (p1) => `git branch -d ${p1}\ngit push origin --delete ${p1}`,
+            desc: 'Safely deletes the specified branch from your local workstation (checking for merged status) and deletes the remote branch from origin.'
+          },
+          'prune-remote': {
+            label1: 'Remote Name',
+            val1: 'origin',
+            p2: false,
+            safety: 'safe',
+            safetyText: 'Safe Cleanup: Cleans stale remote-tracking branches.',
+            build: (p1) => `git fetch ${p1} --prune`,
+            desc: 'Removes local references to remote branches that have already been deleted on GitHub, GitLab, or Bitbucket.'
+          },
+          'sync-upstream': {
+            label1: 'Upstream Branch',
+            val1: 'main',
+            p2: false,
+            safety: 'safe',
+            safetyText: 'Safe Fetch & Merge: Brings fork up-to-date with upstream.',
+            build: (p1) => `git fetch upstream\ngit checkout ${p1}\ngit merge upstream/${p1}`,
+            desc: 'Fetches the latest commits from the original upstream repository and merges them cleanly into your local branch.'
+          },
+          'stash-named': {
+            label1: 'Descriptive Stash Message',
+            val1: 'WIP: stripe webhook integration draft',
+            p2: false,
+            safety: 'safe',
+            safetyText: 'Safe: Temporarily shelves dirty working tree state.',
+            build: (p1) => `git stash push -m "${p1}"`,
+            desc: 'Saves your uncommitted modifications (staged and unstaged) to the stash list with an identifiable custom label, leaving a clean working tree.'
+          },
+          'stash-apply': {
+            label1: 'Stash Identifier (e.g. stash@{0})',
+            val1: 'stash@{0}',
+            p2: false,
+            safety: 'safe',
+            safetyText: 'Safe: Re-applies modifications to working tree.',
+            build: (p1) => `git stash pop ${p1}`,
+            desc: 'Restores the modifications from the specified stash entry and immediately deletes that entry from the stash list.'
+          },
+          'stash-staged': {
+            label1: 'Stash Message',
+            val1: 'staged changes only',
+            p2: false,
+            safety: 'safe',
+            safetyText: 'Safe: Stashes only files marked with git add.',
+            build: (p1) => `git stash push --staged -m "${p1}"`,
+            desc: 'Git 2.35+ feature that isolates and stashes only staged index files while preserving un-staged modifications in your working tree.'
+          },
+          'cherry-pick': {
+            label1: 'Commit SHA Hash',
+            val1: 'a1b2c3d',
+            p2: false,
+            safety: 'safe',
+            safetyText: 'Applies targeted commit snapshot to current branch.',
+            build: (p1) => `git cherry-pick ${p1}`,
+            desc: 'Applies the changes introduced by a specific commit on another branch directly onto your current branch, creating a new commit.'
+          },
+          'squash-merge': {
+            label1: 'Source Feature Branch',
+            val1: 'feature/auth-v2',
+            p2: false,
+            safety: 'safe',
+            safetyText: 'Safe: Combines all feature commits into 1 single staged diff.',
+            build: (p1) => `git merge --squash ${p1}\ngit commit -m "feat: complete ${p1} implementation"`,
+            desc: 'Condenses all individual commits from a feature branch into a single cohesive commit on your target branch, keeping Git history clean.'
+          },
+          'reflog-recover': {
+            label1: 'Commit SHA found via git reflog',
+            val1: 'c7d8e9f',
+            p2: true,
+            label2: 'Recovery Branch Name',
+            val2: 'recovered-work',
+            safety: 'safe',
+            safetyText: 'Safe Forensics: Recovers commits lost via hard reset or rebase.',
+            build: (p1, p2) => `git reflog\n# Review reflog output for commit SHA\ngit checkout -b ${p2} ${p1}`,
+            desc: 'Queries Git\'s reference log (which tracks every HEAD movement) and spawns a new branch anchored to a previously orphaned or deleted commit.'
+          },
+          'purge-file': {
+            label1: 'Path to Sensitive File (e.g. .env, secrets.json)',
+            val1: '.env',
+            p2: false,
+            safety: 'danger',
+            safetyText: '⚠️ Major History Rewrite: Requires git-filter-repo and force push.',
+            build: (p1) => `# Recommended modern tool (fast, safe):\ngit filter-repo --path ${p1} --invert-paths\ngit push origin --force --all`,
+            desc: 'Completely strips a leaked password or API token file from all past commits and blobs throughout the entire repository history.'
+          }
+        };
+
+        function updateGitCommand() {
+          const key = document.getElementById('gitScenario').value;
+          const scn = SCENARIOS[key] || SCENARIOS['undo-soft'];
+
+          document.getElementById('param1Label').textContent = scn.label1;
+          document.getElementById('param1Input').value = scn.val1;
+
+          if (scn.p2) {
+            document.getElementById('param2Wrapper').style.display = 'block';
+            document.getElementById('param2Label').textContent = scn.label2;
+            document.getElementById('param2Input').value = scn.val2;
+          } else {
+            document.getElementById('param2Wrapper').style.display = 'none';
+          }
+
+          const badge = document.getElementById('safetyBadge');
+          if (scn.safety === 'safe') {
+            badge.style.background = 'rgba(16,185,129,0.1)';
+            badge.style.borderColor = 'rgba(16,185,129,0.25)';
+            badge.style.color = '#10b981';
+            badge.innerHTML = '<span>🟢</span> <span>' + scn.safetyText + '</span>';
+          } else if (scn.safety === 'warning') {
+            badge.style.background = 'rgba(234,179,8,0.1)';
+            badge.style.borderColor = 'rgba(234,179,8,0.25)';
+            badge.style.color = '#eab308';
+            badge.innerHTML = '<span>🟡</span> <span>' + scn.safetyText + '</span>';
+          } else {
+            badge.style.background = 'rgba(239,68,68,0.1)';
+            badge.style.borderColor = 'rgba(239,68,68,0.25)';
+            badge.style.color = '#ef4444';
+            badge.innerHTML = '<span>🔴</span> <span>' + scn.safetyText + '</span>';
+          }
+
+          const p1 = document.getElementById('param1Input').value.trim();
+          const p2 = document.getElementById('param2Input').value.trim();
+          document.getElementById('gitCommandOutput').value = scn.build(p1, p2);
+          document.getElementById('gitExplanation').textContent = scn.desc;
+        }
+
+        function copyGitCmd() {
+          navigator.clipboard.writeText(document.getElementById('gitCommandOutput').value);
+          showToast('Copied Git Command to clipboard!');
+        }
+
+        document.getElementById('gitScenario').addEventListener('change', updateGitCommand);
+        document.getElementById('param1Input').addEventListener('input', () => {
+          const key = document.getElementById('gitScenario').value;
+          const scn = SCENARIOS[key];
+          const p1 = document.getElementById('param1Input').value.trim();
+          const p2 = document.getElementById('param2Input').value.trim();
+          document.getElementById('gitCommandOutput').value = scn.build(p1, p2);
+        });
+        document.getElementById('param2Input').addEventListener('input', () => {
+          const key = document.getElementById('gitScenario').value;
+          const scn = SCENARIOS[key];
+          const p1 = document.getElementById('param1Input').value.trim();
+          const p2 = document.getElementById('param2Input').value.trim();
+          document.getElementById('gitCommandOutput').value = scn.build(p1, p2);
+        });
+
+        window.addEventListener('DOMContentLoaded', updateGitCommand);
+      
+  </script>
+</body>
+</html>

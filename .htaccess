@@ -1,0 +1,25 @@
+RewriteEngine On
+
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Universal redirect for index.html to root
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /.*index(\.html?|\.php)?\s HTTP/ [NC]
+RewriteRule ^(.*)index(\.html?|\.php)?$ / [R=301,L]
+
+# Serve clean URLs
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.html -f
+RewriteRule ^(.*)$ $1.html [L]
+
+# Correct MIME type for Web App Manifest
+AddType application/manifest+json .json
+AddType application/manifest+json .webmanifest
+
+# Ensure Service Worker updates immediately
+<Files "sw.js">
+  Header set Cache-Control "no-cache, no-store, must-revalidate"
+  Header set Pragma "no-cache"
+  Header set Expires 0
+</Files>

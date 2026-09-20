@@ -1,0 +1,16 @@
+node_modules/
+.DS_Store
+Thumbs.db
+__pycache__/
+*.py[cod]
+staging_*/
+temp_*/
+*.log
+.vercel/
+
+# Legacy PHP backend files (Vercel is static/edge; protects API secrets)
+*.php
+cgi-bin/
+tool_builder/
+README_WEBDEVWORKER_SETUP.md
+WEBDEVWORKER_SaaS_REDESIGN_DOCS.md
