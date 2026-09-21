@@ -2873,16 +2873,81 @@
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
+    // ---- WebDevWorker Live AI (server) with offline fallback ----------------
+    var aiLiveMode = "unknown"; // "unknown" | "on" | "off"
+    var aiToolSlug = (function () {
+      try {
+        var m = location.pathname.match(/\/tools\/([a-z0-9-]+)\.html/i);
+        return m ? m[1] : "developer-tools";
+      } catch (e) { return "developer-tools"; }
+    })();
+
+    function setAiLiveDot() {
+      var dot = root.querySelector(".cw-ai-status-dot");
+      if (dot) dot.setAttribute("title", aiLiveMode === "on" ? "Live AI connected" : "Offline engine ready");
+    }
+
+    function escapeLiveHtml(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
+    }
+
+    function showTyping() {
+      var t = document.createElement("div");
+      t.className = "cw-msg bot cw-ai-typing";
+      t.innerHTML = '<span style="opacity:.75">\u26a1 Thinking\u2026</span>';
+      messagesEl.appendChild(t);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      return t;
+    }
+
+    function answerOffline(cleanQ, typingEl, note) {
+      if (typingEl) typingEl.remove();
+      var botResponse = resolveKnowledge(cleanQ);
+      if (note) botResponse += '<br><br><span style="opacity:.65;font-size:.85em">' + note + "</span>";
+      appendMessage(botResponse, "bot");
+    }
+
+    function tryLiveAnswer(cleanQ, typingEl) {
+      var ctrl = new AbortController();
+      var timer = setTimeout(function () { ctrl.abort(); }, 15000);
+      fetch("/api/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tool: aiToolSlug, question: cleanQ.slice(0, 600) }),
+        signal: ctrl.signal,
+      })
+        .then(function (r) {
+          clearTimeout(timer);
+          if (!r.ok) throw new Error("http_" + r.status);
+          return r.json();
+        })
+        .then(function (data) {
+          if (!data || !data.answer) throw new Error("empty");
+          aiLiveMode = "on";
+          setAiLiveDot();
+          if (typingEl) typingEl.remove();
+          appendMessage(escapeLiveHtml(data.answer), "bot");
+        })
+        .catch(function () {
+          aiLiveMode = "off"; // session fallback: stay offline from here on
+          setAiLiveDot();
+          answerOffline(cleanQ, typingEl, "Live AI unavailable \u2014 showing offline help.");
+        });
+    }
+
     function handleUserQuery(q) {
       if (!q || !q.trim()) return;
       const cleanQ = q.trim();
       appendMessage(cleanQ.replace(/</g, "&lt;").replace(/>/g, "&gt;"), "user");
       input.value = "";
 
-      setTimeout(() => {
-        const botResponse = resolveKnowledge(cleanQ);
-        appendMessage(botResponse, "bot");
-      }, 60);
+      var offlineOnly = aiLiveMode === "off" || (typeof navigator !== "undefined" && navigator.onLine === false);
+      if (offlineOnly) {
+        setTimeout(function () { answerOffline(cleanQ, null, null); }, 60);
+        return;
+      }
+      var typingEl = showTyping();
+      tryLiveAnswer(cleanQ, typingEl);
     }
 
     form.addEventListener("submit", (e) => {
