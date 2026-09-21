@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>How to Decode a JWT Token: Complete Tutorial (2026) | WebDevWorker</title>
+  <meta name="description" content="Learn how to decode a JWT token step-by-step in 2026. Understand header, payload &amp; signature, verify tokens in 5 languages, and avoid the 7 most common JWT security pitfalls."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://webdevworker.com/articles/how-to-decode-jwt-token-tutorial.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="How to Decode a JWT Token: Complete Tutorial (2026) | WebDevWorker"/>
+  <meta property="og:description" content="Learn how to decode a JWT token step-by-step in 2026. Understand header, payload &amp; signature, verify tokens in 5 languages, and avoid the 7 most common JWT security pitfalls."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://webdevworker.com/articles/how-to-decode-jwt-token-tutorial.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "How to Decode a JWT Token: Complete Tutorial (2026)",
+      "description": "Learn how to decode a JWT token step-by-step in 2026. Understand header, payload & signature, verify tokens in 5 languages, and avoid the 7 most common JWT security pitfalls.",
+      "mainEntityOfPage": "https://webdevworker.com/articles/how-to-decode-jwt-token-tutorial.html",
+      "datePublished": "2026-09-21",
+      "dateModified": "2026-09-21",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://webdevworker.com",
+        "logo": "https://webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I decode a JWT without the secret key?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The header and payload are only Base64URL‑encoded, so anyone can decode them without a secret. However, verifying the signature requires the secret (for HMAC) or the public key (for RSA/ECDSA). Use the WebDevWorker JWT Decoder to safely view claims client‑side."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I check if a JWT token is expired?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Inspect the exp claim, which is a Unix timestamp. Convert it with the timestamp converter or compare it to Date.now()/1000 in code. The WebDevWorker decoder highlights expired tokens automatically."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it safe to paste a JWT into an online decoder?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Only if the tool runs entirely in the browser. WebDevWorker’s decoder is 100% client‑side, meaning the token never leaves your device, which makes it safe for sensitive tokens."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between iat and nbf?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "iat (Issued At) marks when the token was created. nbf (Not Before) defines the earliest time the token is considered valid. Both are Unix timestamps; use them together to enforce strict time windows."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can I verify a JWT signed with RSA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Load the RSA public key (PEM format) into your verification library and specify the algorithm (e.g., RS256). The signature is verified using the public key; the secret is never needed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why should I avoid using alg=none?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "alg=none disables signature verification, allowing anyone to forge a token. Most libraries reject it by default; always enforce a strong algorithm like HS256 or RS256."
+      }
+    }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Base64 Encoder & Decoder",
+          "item": "https://webdevworker.com/articles/base64-encoder-decoder-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v36"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v36"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head></head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 85+ tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Decode JWT Token Tutorial</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🔐 Security & Auth</div>
+          <h1 class="guide-title">How to Decode a JWT Token: Complete Tutorial (2026)</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated September 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ 100% Client-Side Sandbox</span>
+            <span>⏱️ 10 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3><span>🔐</span> Live Developer Workstation</h3>
+          <p>Paste any JWT and instantly see its decoded header and payload, check expiry, and inspect claims — 100% client-side, your tokens never leave the browser.</p>
+          <a href="/tools/jwt-decoder.html" class="tool-launch-btn">Launch JWT Decoder in Live Sandbox →</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#overview" style="color:var(--brand-primary);">1. What Is a JWT and Why You Need to Decode It</a></li>
+            <li><a href="#syntax" style="color:var(--brand-primary);">2. JWT Anatomy: The Header.Payload.Signature Formula</a></li>
+            <li><a href="#workflow" style="color:var(--brand-primary);">3. Step-by-Step: Decode Any JWT in 30 Seconds</a></li>
+            <li><a href="#code" style="color:var(--brand-primary);">4. Decode and Verify JWTs in Code: 5 Languages</a></li>
+            <li><a href="#benchmarks" style="color:var(--brand-primary);">5. Security Checklist: 7 Attacks That Target JWTs</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+<section id="overview" class="guide-section">
+<h2>1. What Is a JWT and Why You Need to Decode It</h2>
+<p>A JSON Web Token (JWT) is a compact, URL‑safe means of representing claims between two parties. It consists of three Base64URL‑encoded parts: a header that describes the token type and signing algorithm, a payload that carries the claims, and a signature that guarantees integrity. Decoding a JWT lets developers inspect the claims, verify expiration, and confirm that the token was signed with the expected secret or public key. In modern APIs, single‑page applications, and micro‑services, JWTs replace session cookies, so understanding their structure is essential for debugging authentication flows, troubleshooting authorization errors, and ensuring security compliance.</p>
+<p>Because JWTs travel over the wire in plain text, any misconfiguration—such as using a weak signing secret or forgetting to set an <code>exp</code> claim—can expose your application to replay attacks or token forgery. By decoding the token with a trusted client‑side tool like the <a href="/tools/jwt-decoder.html">WebDevWorker JWT Decoder</a>, you keep the token inside the browser, guaranteeing that sensitive data never leaves the user’s device. This guide walks you through the anatomy, a quick workflow, code examples in five languages, and a security checklist to keep your implementation robust.</p>
+</section>
+
+<section id="syntax" class="guide-section">
+<h2>2. JWT Anatomy: The Header.Payload.Signature Formula</h2>
+<p>The JWT format follows the <code>header.payload.signature</code> pattern, where each segment is Base64URL‑encoded. Below is a real‑world example token (line‑breaks added for readability):</p>
+<pre><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+.
+eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ikpv
+aG4gRG9lIiwiaWF0IjoxNjkxMjM0NTY3LCJleHAi
+OjE2OTEyNzA1Njd9
+.
+dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk</code></pre>
+<p><strong>Header (first part)</strong> – declares the token type (<code>JWT</code>) and the signing algorithm (<code>HS256</code>). Decoded JSON:</p>
+<pre><code>{
+  "alg": "HS256",
+  "typ": "JWT"
+}</code></pre>
+<p><strong>Payload (second part)</strong> – contains the claims. Decoded JSON:</p>
+<pre><code>{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "iat": 1691234567,
+  "exp": 1691270567
+}</code></pre>
+<p><strong>Signature (third part)</strong> – HMAC‑SHA256 of <code>base64url(header) + "." + base64url(payload)</code> signed with the secret key. The signature ensures that any alteration to the header or payload invalidates the token.</p>
+<p>Standard registered claim names are listed in the table below. Understanding each claim helps you decide which ones to validate in your application.</p>
+<table>
+<thead>
+<tr><th>Claim</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>iss</code></td><td>Issuer – identifies the principal that issued the JWT.</td></tr>
+<tr><td><code>sub</code></td><td>Subject – identifies the principal that is the subject of the JWT.</td></tr>
+<tr><td><code>aud</code></td><td>Audience – intended recipients; verification ensures the token is for your service.</td></tr>
+<tr><td><code>exp</code></td><td>Expiration Time – Unix timestamp after which the token MUST NOT be accepted.</td></tr>
+<tr><td><code>nbf</code></td><td>Not Before – Unix timestamp before which the token MUST NOT be accepted.</td></tr>
+<tr><td><code>iat</code></td><td>Issued At – Unix timestamp when the token was issued.</td></tr>
+<tr><td><code>jti</code></td><td>JWT ID – unique identifier for the token, useful for replay detection.</td></tr>
+</tbody>
+</table>
+<p>Remember that the header and payload are merely Base64URL strings; you can decode them with any <a href="/tools/base64-encoder-decoder.html">Base64 decoder</a>. For time‑based claims like <code>exp</code> or <code>iat</code>, the <a href="/tools/unix-timestamp-converter.html">timestamp converter</a> is handy.</p>
+</section>
+
+<section id="workflow" class="guide-section">
+<h2>3. Step-by-Step: Decode Any JWT in 30 Seconds</h2>
+<ol>
+<li><strong>Open the tool</strong> – Navigate to the <a href="/tools/jwt-decoder.html">WebDevWorker JWT Decoder</a>. The interface runs 100% client‑side, so your token never leaves the browser.</li>
+<li><strong>Paste the token</strong> – Copy the entire JWT string (including the two dots) into the input box.</li>
+<li><strong>Read the header</strong> – The decoder instantly shows the decoded JSON header. Verify the <code>alg</code> matches your expected algorithm (e.g., <code>HS256</code> or <code>RS256</code>).</li>
+<li><strong>Inspect the payload</strong> – Claims appear in a formatted view. Look for <code>exp</code>, <code>nbf</code>, and <code>iat</code>. Use the linked <a href="/tools/unix-timestamp-converter.html">timestamp converter</a> if you need human‑readable dates.</li>
+<li><strong>Check expiration</strong> – If <code>exp</code> is present, compare it to the current time. The tool highlights expired tokens in red.</li>
+<li><strong>Verify the signature</strong> – Enter the secret key (for HMAC) or the public key (for RSA/ECDSA) in the verification field. The decoder recalculates the signature using the <a href="/tools/hash-generator.html">HMAC</a> utility and confirms a match.</li>
+<li><strong>Review warnings</strong> – The UI flags common misconfigurations such as missing <code>exp</code>, use of <code>alg=none</code>, or weak key lengths.</li>
+</ol>
+<p>Following these steps ensures you quickly validate both the integrity and the temporal validity of any JWT without writing a single line of code.</p>
+</section>
+
+<section id="code" class="guide-section">
+<h2>4. Decode and Verify JWTs in Code: 5 Languages</h2>
+<p>Below are ready‑to‑copy snippets that decode a JWT and verify its signature. Replace <code>YOUR_TOKEN</code> and <code>YOUR_SECRET</code> (or public key) with your actual values.</p>
+
+<h3>JavaScript (Node.js) – jsonwebtoken</h3>
+<pre><code>const jwt = require('jsonwebtoken');
+const token = 'YOUR_TOKEN';
+const secret = 'YOUR_SECRET';
+
+try {
+  const decoded = jwt.verify(token, secret, { algorithms: ['HS256'] });
+  console.log('Header:', decoded.header);
+  console.log('Payload:', decoded);
+} catch (err) {
+  console.error('Invalid token:', err.message);
+}</code></pre>
+
+<h3>Python – PyJWT</h3>
+<pre><code>import jwt
+token = 'YOUR_TOKEN'
+secret = 'YOUR_SECRET'
+
+try:
+    decoded = jwt.decode(token, secret, algorithms=['HS256'])
+    print('Payload:', decoded)
+except jwt.ExpiredSignatureError:
+    print('Token has expired')
+except jwt.InvalidTokenError as e:
+    print('Invalid token:', e)</code></pre>
+
+<h3>Go – golang-jwt</h3>
+<pre><code>package main
+
+import (
+    "fmt"
+    "github.com/golang-jwt/jwt/v5"
+)
+
+func main() {
+    tokenString := "YOUR_TOKEN"
+    secret := []byte("YOUR_SECRET")
+
+    token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
+        if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+            return nil, fmt.Errorf("unexpected signing method")
+        }
+        return secret, nil
+    })
+    if err != nil || !token.Valid {
+        fmt.Println("Invalid token:", err)
+        return
+    }
+    fmt.Printf("Claims: %+v\n", token.Claims)
+}</code></pre>
+
+<h3>Rust – jsonwebtoken crate</h3>
+<pre><code>use jsonwebtoken::{decode, Algorithm, DecodingKey, Validation};
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Serialize, Deserialize)]
+struct Claims {
+    sub: String,
+    exp: usize,
+    // add other fields as needed
+}
+
+fn main() {
+    let token = "YOUR_TOKEN";
+    let secret = "YOUR_SECRET";
+
+    let validation = Validation::new(Algorithm::HS256);
+    match decode::<Claims>(token, &DecodingKey::from_secret(secret.as_ref()), &validation) {
+        Ok(data) => println!("Claims: {:?}", data.claims),
+        Err(err) => eprintln!("Invalid token: {}", err),
+    }
+}
+</code></pre>
+
+<h3>cURL (verify signature with HMAC) & PHP</h3>
+<pre><code># cURL – using OpenSSL to verify HMAC (requires base64url conversion)
+TOKEN="YOUR_TOKEN"
+SECRET="YOUR_SECRET"
+HEADER=$(echo "$TOKEN" | cut -d. -f1)
+PAYLOAD=$(echo "$TOKEN" | cut -d. -f2)
+SIGNATURE=$(echo "$TOKEN" | cut -d. -f3)
+EXPECTED=$(echo -n "$HEADER.$PAYLOAD" | openssl dgst -sha256 -hmac "$SECRET" -binary | base64 | tr '+/' '-_' | tr -d '=')
+if [ "$EXPECTED" = "$SIGNATURE" ]; then echo "Signature valid"; else echo "Invalid signature"; fi
+
+# PHP example
+<?php
+require 'vendor/autoload.php';
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+$jwt = 'YOUR_TOKEN';
+$secret = 'YOUR_SECRET';
+
+try {
+    $decoded = JWT::decode($jwt, new Key($secret, 'HS256'));
+    print_r($decoded);
+} catch (Exception $e) {
+    echo 'Invalid token: ', $e->getMessage();
+}
+?>
+</code></pre>
+
+<p>These snippets cover the most common environments. For RSA/ECDSA signatures, swap the HMAC secret for a PEM‑encoded public key and adjust the algorithm name accordingly.</p>
+</section>
+
+<section id="benchmarks" class="guide-section">
+<h2>5. Security Checklist: 7 Attacks That Target JWTs</h2>
+<table>
+<thead>
+<tr><th>Attack Vector</th><th>How to Prevent</th></tr>
+</thead>
+<tbody>
+<tr><td><code>alg=none</code> misuse</td><td>Reject tokens where <code>alg</code> is <code>none</code> unless explicitly allowed. Enforce algorithm whitelist on the server.</td></tr>
+<tr><td>Weak secret / brute‑force</td><td>Use a secret of at least 256 bits for HMAC, rotate regularly, and store it in a secret manager.</td></tr>
+<tr><td>Missing <code>exp</code> claim</td><td>Always include an expiration time and reject tokens without it.</td></tr>
+<tr><td><code>kid</code> injection</td><td>Validate the <code>kid</code> against a known list of keys; never fetch keys from untrusted URLs.</td></tr>
+<tr><td>XSS token theft</td><td>Store JWTs in httpOnly cookies or secure storage; never expose them to JavaScript unless necessary.</td></tr>
+<tr><td>Replay attacks</td><td>Implement token revocation lists or short‑lived access tokens combined with refresh tokens.</td></tr>
+<tr><td>Algorithm downgrade</td><td>Hard‑code the expected algorithm on verification; never trust the token‑provided <code>alg</code> value alone.</td></tr>
+</tbody>
+</table>
+<p>By following this checklist you mitigate the most common vulnerabilities. For deeper analysis, refer to the full guide <a href="/articles/jwt-decoder-guide-2026.html">How to Decode a JWT Token: Complete Tutorial (2026)</a>.</p>
+</section>
+
+<section id="faqs" class="guide-section">
+<h2>6. Frequently Asked Questions (FAQs)</h2>
+<div class="faq-list">
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can I decode a JWT without the secret key?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes. The header and payload are only Base64URL‑encoded, so anyone can decode them without a secret. However, verifying the signature requires the secret (for HMAC) or the public key (for RSA/ECDSA). Use the <a href="/tools/jwt-decoder.html">WebDevWorker JWT Decoder</a> to safely view claims client‑side.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I check if a JWT token is expired?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Inspect the <code>exp</code> claim, which is a Unix timestamp. Convert it with the <a href="/tools/unix-timestamp-converter.html">timestamp converter</a> or compare it to <code>Date.now()/1000</code> in code. The WebDevWorker decoder highlights expired tokens automatically.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Is it safe to paste a JWT into an online decoder?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Only if the tool runs entirely in the browser. WebDevWorker’s decoder is 100% client‑side, meaning the token never leaves your device, which makes it safe for sensitive tokens.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between <code>iat</code> and <code>nbf</code>?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;"><code>iat</code> (Issued At) marks when the token was created. <code>nbf</code> (Not Before) defines the earliest time the token is considered valid. Both are Unix timestamps; use them together to enforce strict time windows.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How can I verify a JWT signed with RSA?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Load the RSA public key (PEM format) into your verification library and specify the algorithm (e.g., <code>RS256</code>). The signature is verified using the public key; the secret is never needed.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Why should I avoid using <code>alg=none</code>?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;"><code>alg=none</code> disables signature verification, allowing anyone to forge a token. Most libraries reject it by default; always enforce a strong algorithm like <code>HS256</code> or <code>RS256</code>.</p>
+</details>
+</div>
+</div>
+</section>
+
+        <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Ready to accelerate your workflow?</h3>
+          <p>Launch the interactive zero-telemetry utility in your browser right now.</p>
+          <a href="/tools/jwt-decoder.html" class="tool-launch-btn">Launch JWT Decoder Now →</a>
+        </div>
+      </article>
+
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v36" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v36" defer></script>
+</body>
+</html>
