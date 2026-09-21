@@ -218,12 +218,212 @@
     updateCount(total, '');
   }
 
+  // 6. Premium micro-interactions: toast, ripple, robust global copy
+  function initMicroInteractions() {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // --- Global toast ---
+    function ensureToastWrap() {
+      let wrap = document.getElementById('wwToastWrap');
+      if (!wrap) {
+        wrap = document.createElement('div');
+        wrap.id = 'wwToastWrap';
+        wrap.setAttribute('aria-live', 'polite');
+        document.body.appendChild(wrap);
+      }
+      return wrap;
+    }
+    window.wdwToast = function (message, type) {
+      try {
+        const wrap = ensureToastWrap();
+        const el = document.createElement('div');
+        el.className = 'ww-toast' + (type === 'success' ? ' ww-toast-success' : type === 'error' ? ' ww-toast-error' : '');
+        el.setAttribute('role', 'status');
+        const icon = document.createElement('span');
+        icon.className = 'ww-toast-icon';
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = type === 'success' ? '✓' : type === 'error' ? '⚠' : 'ℹ';
+        const label = document.createElement('span');
+        label.textContent = String(message == null ? '' : message);
+        el.appendChild(icon);
+        el.appendChild(label);
+        wrap.appendChild(el);
+        while (wrap.children.length > 3) wrap.removeChild(wrap.firstChild);
+        setTimeout(function () {
+          el.classList.add('ww-toast-out');
+          setTimeout(function () { el.remove(); }, 320);
+        }, 2400);
+      } catch (e) {}
+    };
+
+    // --- Click ripple (delegated; host class is temporary) ---
+    if (!reduceMotion) {
+      document.addEventListener('pointerdown', function (e) {
+        const t = e.target;
+        if (!t || !t.closest) return;
+        const btn = t.closest('button, .btn, input[type="button"], input[type="submit"], input[type="reset"], [role="button"]');
+        if (!btn || btn.disabled) return;
+        try {
+          const rect = btn.getBoundingClientRect();
+          if (!rect || rect.width === 0) return;
+          const size = Math.max(rect.width, rect.height);
+          const s = document.createElement('span');
+          s.className = 'ww-ripple';
+          s.style.width = s.style.height = Math.ceil(size) + 'px';
+          s.style.left = Math.round(e.clientX - rect.left - size / 2) + 'px';
+          s.style.top = Math.round(e.clientY - rect.top - size / 2) + 'px';
+          btn.classList.add('ww-ripple-host');
+          btn.appendChild(s);
+          setTimeout(function () {
+            s.remove();
+            if (!btn.querySelector('.ww-ripple')) btn.classList.remove('ww-ripple-host');
+          }, 650);
+        } catch (err) {}
+      }, { passive: true });
+    }
+
+    // --- Robust global copy (also repairs self-delegating stub pages) ---
+    function copyTextRaw(text) {
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        return navigator.clipboard.writeText(text).then(function () { return true; }, function () {
+          return fallbackCopy(text);
+        });
+      }
+      return Promise.resolve(fallbackCopy(text));
+    }
+    function fallbackCopy(text) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, ta.value.length);
+        const ok = document.execCommand('copy');
+        ta.remove();
+        return !!ok;
+      } catch (e) {
+        return false;
+      }
+    }
+    function resolveBtn(ref) {
+      try {
+        if (!ref) return null;
+        if (ref instanceof Element) return ref;
+        if (typeof ref === 'string' && ref) return document.getElementById(ref);
+      } catch (e) {}
+      return null;
+    }
+    function copyFeedback(btn, ok) {
+      if (ok) {
+        window.wdwToast('Copied to clipboard ✓', 'success');
+        if (btn && btn instanceof Element) {
+          try {
+            if (btn.__wwOrigHtml === undefined) btn.__wwOrigHtml = btn.innerHTML;
+            btn.classList.add('ww-copy-success');
+            const label = (btn.textContent || '').trim().toLowerCase();
+            if (label === 'copy' || label.indexOf('copy ') === 0) btn.textContent = '✓ Copied';
+            setTimeout(function () {
+              btn.classList.remove('ww-copy-success');
+              if (btn.__wwOrigHtml !== undefined && btn.__wwOrigHtml !== null) {
+                btn.innerHTML = btn.__wwOrigHtml;
+              }
+              btn.__wwOrigHtml = undefined;
+            }, 1500);
+          } catch (e) {}
+        }
+      } else {
+        window.wdwToast('Copy failed — please select the text manually', 'error');
+      }
+    }
+    function robustCopyCode(targetId, btnRef) {
+      let text = '';
+      try {
+        const target = (typeof targetId === 'string' && targetId) ? document.getElementById(targetId) : null;
+        if (target) {
+          text = (typeof target.value === 'string' && target.value !== '') ? target.value
+            : (target.innerText || target.textContent || '');
+        } else if (typeof targetId === 'string' && /[\s\n]/.test(targetId)) {
+          text = targetId; // literal text passed instead of an element id
+        }
+      } catch (e) {}
+      if (!text) {
+        window.wdwToast('Nothing to copy', 'error');
+        return Promise.resolve(false);
+      }
+      const btn = resolveBtn(btnRef);
+      return copyTextRaw(text).then(function (ok) {
+        copyFeedback(btn, ok);
+        return ok;
+      });
+    }
+    try {
+      const existing = window.copyCode;
+      const src = (typeof existing === 'function') ? Function.prototype.toString.call(existing) : '';
+      const isStub = /typeof window\.copyCode/.test(src) || /window\.copyCode\s*\(/.test(src);
+      if (typeof existing !== 'function' || isStub) {
+        window.copyCode = robustCopyCode; // repair broken stub / missing impl
+      } else if (!existing.__wwWrapped) {
+        window.copyCode = function (targetId, btnRef) { // wrap real impl, add feedback
+          let r;
+          try {
+            r = existing.apply(this, arguments);
+          } catch (err) {
+            window.wdwToast('Copy failed', 'error');
+            throw err;
+          }
+          const btn = resolveBtn(btnRef);
+          if (r && typeof r.then === 'function') {
+            return r.then(function (v) { copyFeedback(btn, true); return v; },
+                         function (e) { copyFeedback(btn, false); throw e; });
+          }
+          copyFeedback(btn, true);
+          return r;
+        };
+        window.copyCode.__wwWrapped = true;
+      }
+    } catch (e) {}
+  }
+
+  // 7. Cookie consent banner (notice + stored choice; ad code untouched)
+  function initCookieBanner() {
+    let choice = null;
+    try { choice = localStorage.getItem('wdw_cookie_consent'); } catch (e) {}
+    if (choice === 'accepted' || choice === 'declined') return;
+    try {
+      const bar = document.createElement('div');
+      bar.id = 'wwCookieBanner';
+      bar.setAttribute('role', 'dialog');
+      bar.setAttribute('aria-label', 'Cookie consent');
+      bar.innerHTML =
+        '<div class="ww-cookie-text"><strong>🍪 We value your privacy</strong><br>' +
+        'We use cookies to improve your experience and to show personalized ads via Google AdSense. ' +
+        'Read our <a href="/privacy.html">Privacy Policy</a>.</div>' +
+        '<div class="ww-cookie-actions">' +
+        '<button type="button" class="ww-cookie-decline">Decline</button>' +
+        '<button type="button" class="ww-cookie-accept">Accept</button>' +
+        '</div>';
+      document.body.appendChild(bar);
+      const done = function (v) {
+        try { localStorage.setItem('wdw_cookie_consent', v); } catch (e) {}
+        bar.classList.remove('ww-show');
+        setTimeout(function () { bar.remove(); }, 550);
+      };
+      bar.querySelector('.ww-cookie-accept').addEventListener('click', function () { done('accepted'); });
+      bar.querySelector('.ww-cookie-decline').addEventListener('click', function () { done('declined'); });
+      setTimeout(function () { bar.classList.add('ww-show'); }, 1200);
+    } catch (e) {}
+  }
+
   function runAll() {
     syncTheme();
     injectGuides();
     initSidebar();
     initMobileDrawer();
     initSearch();
+    initMicroInteractions();
+    initCookieBanner();
   }
 
   if (document.readyState === 'loading') {
