@@ -294,6 +294,10 @@
         }, 2400);
       } catch (e) {}
     };
+    // Legacy alias: 24 tool pages call showToast(...) but never defined it.
+    if (typeof window.showToast !== 'function') {
+      window.showToast = window.wdwToast;
+    }
 
     // --- Click ripple (delegated; host class is temporary) ---
     if (!reduceMotion) {

@@ -32,8 +32,8 @@
     gtag('config', 'G-G718R5DYYR');
   </script>
 
-  <link href="/css/webdevworker.css?v=2026-wdw-v37" rel="stylesheet"/>
-  <link href="/css/ai-widget.css?v=2026-wdw-v35" rel="stylesheet"/>
+  <link href="/css/webdevworker.css?v=2026-wdw-v38" rel="stylesheet"/>
+  <link href="/css/ai-widget.css?v=2026-wdw-v38" rel="stylesheet"/>
 
   <script type="application/ld+json">
 {
@@ -193,7 +193,7 @@
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                 <label style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">Generated Zod Schema &amp; Inferred Type</label>
-                <button type="button" class="btn btn-primary" onclick="copyZodCode()" style="font-size:0.75rem; padding:4px 12px;">Copy Zod Code</button>
+                <button type="button" class="btn btn-primary" onclick="copyZodCode(this)" style="font-size:0.75rem; padding:4px 12px;">Copy Zod Code</button>
               </div>
               <textarea id="zodCodeOutput" class="form-input" style="height:400px; font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; background:#070a13; color:#38bdf8;" readonly></textarea>
             </div>
@@ -489,8 +489,8 @@ export async function registerUserAction(formData: unknown) {
     </div>
   </div>
 
-  <script src="/js/webdevworker-common.js?v=2026-wdw-v35" defer></script>
-  <script src="/js/ai-widget.js?v=2026-wdw-v35" defer></script>
+  <script src="/js/webdevworker-common.js?v=2026-wdw-v38" defer></script>
+  <script src="/js/ai-widget.js?v=2026-wdw-v38" defer></script>
   <script>
 
         function generateZodSchema() {
@@ -582,9 +582,12 @@ export async function registerUserAction(formData: unknown) {
           generateZodSchema();
         }
 
-        function copyZodCode() {
-          navigator.clipboard.writeText(document.getElementById('zodCodeOutput').value);
-          showToast('Copied Zod Schema to clipboard!');
+        function copyZodCode(btn) {
+          if (typeof window.copyCode === 'function') {
+            window.copyCode('zodCodeOutput', btn || null); // robust global copy: clipboard + fallback + toast + button feedback
+          } else if (window.wdwToast) {
+            window.wdwToast('Copy unavailable — please select the text manually', 'error');
+          }
         }
 
         ['zodJsonInput', 'zodSchemaName', 'zodInferType', 'zodStrictMode', 'zodDetectDates', 'zodDetectEmails'].forEach(id => {
