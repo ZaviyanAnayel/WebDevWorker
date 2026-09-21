@@ -878,6 +878,7 @@ input[type="range"].form-input { padding: 0; border: none; background: transpare
   position: absolute;
   top: 10px;
   right: 10px;
+  min-width: 112px;
   padding: 7px 13px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-strong);
@@ -887,10 +888,15 @@ input[type="range"].form-input { padding: 0; border: none; background: transpare
   font-weight: 750;
   cursor: pointer;
   font-family: inherit;
-  transition: all 0.15s ease;
+  text-align: center;
+  white-space: nowrap;
+  /* Only animate paint properties — never layout/transform, so the button
+     never jumps or resizes when its label flips to "✓ Copied". */
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
   z-index: 2;
 }
 .copy-code-btn:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
+.copy-code-btn:active { box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.18); }
 
 /* In-header copy buttons (e.g. result-card header rows) stay in normal flow.
    Without this, .copy-code-btn's absolute positioning anchors to the viewport

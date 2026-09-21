@@ -499,7 +499,15 @@
           var tl = (t.t+' '+(t.c||'')).toLowerCase();
           // match from first character: substring or word-start
           return tl.indexOf(ql) !== -1;
-        }).slice(0,8);
+        });
+        /* Premium ranking: title-start matches first, then earliest hit, then A-Z.
+           No result cap — every matching tool appears in the scrollable dropdown. */
+        matches.sort(function(a,b){
+          var al = a.t.toLowerCase(), bl = b.t.toLowerCase();
+          var as = al.indexOf(ql), bs = bl.indexOf(ql);
+          if (as !== bs) return as - bs;
+          return al < bl ? -1 : (al > bl ? 1 : 0);
+        });
         currentList = matches; activeIdx = -1;
         if (!matches.length) {
           dd.innerHTML = '<div class="ww-search-dd-empty">No tools found for &ldquo;'+ql.replace(/</g,'&lt;')+'&rdquo;</div>';
