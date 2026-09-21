@@ -4,6 +4,7 @@
  */
 (function () {
   'use strict';
+  window.WDW_TOOLS=[{"t":"Tailwind to CSS Converter","u":"/tools/tailwind-to-css-converter.html","c":"css"},{"t":"SQL to TypeScript & Prisma","u":"/tools/sql-to-typescript-prisma-converter.html","c":"code"},{"t":"OpenSSL Command Generator","u":"/tools/openssl-command-generator.html","c":"security"},{"t":"AWS IAM & S3 Policy Generator","u":"/tools/aws-iam-s3-policy-generator.html","c":"devops"},{"t":"Dockerfile & Compose Generator","u":"/tools/dockerfile-compose-generator.html","c":"devops"},{"t":"CSS Box Shadow Generator","u":"/tools/css-box-shadow-generator.html","c":"css"},{"t":"CSS Gradient Generator","u":"/tools/css-gradient-generator.html","c":"css"},{"t":"CSS Glassmorphism Generator","u":"/tools/css-glassmorphism-generator.html","c":"css"},{"t":"Border Radius & Blob Shaper","u":"/tools/css-border-radius-generator.html","c":"css"},{"t":"Color Contrast & WCAG Tester","u":"/tools/color-converter-contrast.html","c":"css"},{"t":"CSS Flexbox Builder","u":"/tools/css-flexbox-generator.html","c":"css"},{"t":"CSS Grid 2D Builder","u":"/tools/css-grid-generator.html","c":"css"},{"t":"CSS clamp() Fluid Typography","u":"/tools/css-clamp-calculator.html","c":"css"},{"t":"CSS Cubic-Bezier Visualizer","u":"/tools/css-cubic-bezier-generator.html","c":"css"},{"t":"CSS Clip-Path Polygon Shaper","u":"/tools/css-clip-path-generator.html","c":"css"},{"t":"JSON Formatter & Validator","u":"/tools/json-formatter-validator.html","c":"code"},{"t":"Base64 Image & Text Tool","u":"/tools/base64-encoder-decoder.html","c":"code"},{"t":"URL Encoder & Decoder","u":"/tools/url-encoder-decoder.html","c":"code"},{"t":"Markdown to HTML Converter","u":"/tools/markdown-html-converter.html","c":"code"},{"t":"Lorem Ipsum &amp; Text Generator","u":"/tools/lorem-ipsum-generator.html","c":"code"},{"t":"cURL to Code Converter","u":"/tools/curl-to-code-converter.html","c":"code"},{"t":"JSON to TypeScript Interface","u":"/tools/json-to-typescript-generator.html","c":"code"},{"t":"Mock Data Generator","u":"/tools/mock-data-generator.html","c":"code"},{"t":"Code Beautifier & Minifier","u":"/tools/code-beautifier-minifier.html","c":"code"},{"t":"SQL Query Formatter","u":"/tools/sql-formatter.html","c":"code"},{"t":"SHA Hash & Checksum","u":"/tools/hash-generator.html","c":"security"},{"t":"UUID / GUID v4 Generator","u":"/tools/uuid-generator.html","c":"security"},{"t":"Strong Password Generator","u":"/tools/password-generator.html","c":"security"},{"t":"JWT Token Inspector","u":"/tools/jwt-decoder.html","c":"security"},{"t":".htaccess Rule Builder","u":"/tools/htaccess-generator.html","c":"devops"},{"t":"Meta Tags & Open Graph","u":"/tools/meta-tag-generator.html","c":"devops"},{"t":"Regex Tester & Explainer","u":"/tools/regex-tester.html","c":"devops"},{"t":"Code Diff & Comparison","u":"/tools/text-diff-checker.html","c":"devops"},{"t":"Cron Expression Builder","u":"/tools/cron-expression-generator.html","c":"devops"},{"t":"Linux Chmod Calculator","u":"/tools/chmod-permissions-calculator.html","c":"devops"},{"t":"HTTP Status Codes Spec","u":"/tools/http-status-codes-inspector.html","c":"devops"},{"t":"JS KeyCode Event Tester","u":"/tools/javascript-keycode-tester.html","c":"devops"},{"t":"QR Code Generator Pro","u":"/tools/qr-code-generator.html","c":"media"},{"t":"Image Palette Extractor","u":"/tools/image-color-palette-extractor.html","c":"media"},{"t":"Favicon & PWA Icon Sizer","u":"/tools/multi-favicon-pwa-generator.html","c":"media"},{"t":"SVG Optimizer & Converter","u":"/tools/svg-optimizer-converter.html","c":"media"},{"t":"SEO Keyword Density & N-Gram Extractor","u":"/tools/seo-keyword-density-analyzer.html","c":"devops"},{"t":"Subresource Integrity (SRI) Hash","u":"/tools/subresource-integrity-hash-generator.html","c":"security"},{"t":"Content Security Policy (CSP) Builder","u":"/tools/content-security-policy-generator.html","c":"security"},{"t":"Webhook Payload &amp; Signature Tester","u":"/tools/webhook-payload-formatter.html","c":"code"},{"t":"JSON Schema Generator (Draft-07)","u":"/tools/json-schema-generator.html","c":"code"},{"t":"HTML Table to JSON &amp; CSV Parser","u":"/tools/html-table-to-json-converter.html","c":"code"},{"t":"YAML to JSON Configuration Converter","u":"/tools/yaml-to-json-converter.html","c":"code"},{"t":"DNS Zone File &amp; SPF/DMARC Records","u":"/tools/dns-record-lookup-generator.html","c":"devops"},{"t":"Robots.txt &amp; Search Crawler Builder","u":"/tools/robots-txt-generator.html","c":"devops"},{"t":"User-Agent Header &amp; Device Inspector","u":"/tools/user-agent-parser.html","c":"devops"},{"t":"CSS @keyframes Animation Studio","u":"/tools/css-keyframes-animation-generator.html","c":"css"},{"t":"CSS Triangle &amp; Tooltip Arrow Generator","u":"/tools/css-triangle-generator.html","c":"css"},{"t":"SVG to CSS Data URI Background Converter","u":"/tools/svg-to-data-uri-converter.html","c":"css"},{"t":"CSS Text Shadow &amp; Neon Glow Generator","u":"/tools/css-text-shadow-generator.html","c":"css"},{"t":"Color Palette Harmonies &amp; Theory","u":"/tools/color-palette-harmonies-generator.html","c":"css"},{"t":"CSS Filter Effects Playground","u":"/tools/css-filter-effects-generator.html","c":"css"},{"t":"CSS Neumorphism (Soft UI) Generator","u":"/tools/css-neumorphism-generator.html","c":"css"},{"t":"CSS Unit Converter (PX/REM/VW)","u":"/tools/css-unit-converter.html","c":"css"},{"t":"CSS Specificity Calculator","u":"/tools/css-specificity-calculator.html","c":"css"},{"t":"CSS 3D Transform & Matrix3d Studio","u":"/tools/css-transform-3d-matrix-calculator.html","c":"css"},{"t":"CSS Aspect Ratio & Dimensions Studio","u":"/tools/css-aspect-ratio-calculator.html","c":"css"},{"t":"CSS Mesh Gradient Generator","u":"/tools/css-gradient-mesh-generator.html","c":"css"},{"t":"JSON to Go Struct Generator","u":"/tools/json-to-go-struct-converter.html","c":"code"},{"t":"JSON to Rust Struct (Serde)","u":"/tools/json-to-rust-struct-converter.html","c":"code"},{"t":"JSON to Python Pydantic Models","u":"/tools/json-to-python-pydantic-converter.html","c":"code"},{"t":"JSON to YAML Converter","u":"/tools/json-to-yaml-converter.html","c":"code"},{"t":"JSON to CSV & Excel Converter","u":"/tools/json-to-csv-converter.html","c":"code"},{"t":"XML Formatter & JSON Converter","u":"/tools/xml-formatter-json-converter.html","c":"code"},{"t":"String Case Converter & Formatter","u":"/tools/string-case-converter.html","c":"code"},{"t":"HTML Entity Encoder & Decoder","u":"/tools/html-entity-encoder-decoder.html","c":"code"},{"t":"Unix Timestamp Converter","u":"/tools/unix-timestamp-converter.html","c":"code"},{"t":"Arbitrary Number Base Converter","u":"/tools/number-base-converter.html","c":"code"},{"t":"HMAC Hash & Key Signature Studio","u":"/tools/hmac-hash-generator.html","c":"security"},{"t":"AES-GCM Encryption / Decryption","u":"/tools/aes-encryption-decryption-tool.html","c":"security"},{"t":"ULID & NanoID Generator","u":"/tools/ulid-nanoid-generator.html","c":"security"},{"t":"Bcrypt Hash & Cost Calculator","u":"/tools/bcrypt-hash-cost-calculator.html","c":"security"},{"t":"CIDR & IPv4 Subnet Calculator","u":"/tools/cidr-subnet-calculator.html","c":"devops"},{"t":"Nginx Server Block Generator","u":"/tools/nginx-config-generator.html","c":"devops"},{"t":"WebSocket Client & Debugger","u":"/tools/websocket-client-tester.html","c":"devops"},{"t":"HTML to JSX / React Converter","u":"/tools/html-to-jsx-converter.html","c":"code"},{"t":"JSON to Zod Schema Generator","u":"/tools/json-to-zod-schema.html","c":"code"},{"t":"SVG Path Visualizer & Editor","u":"/tools/svg-path-visualizer.html","c":"media"},{"t":"Git Command & Workflow Generator","u":"/tools/git-command-generator.html","c":"devops"},{"t":"CSS Media & Container Query Builder","u":"/tools/css-media-query-generator.html","c":"css"}];
 
   function normalize(path) {
     if (!path) return "/";
@@ -459,12 +460,92 @@
     } catch (e) {}
   }
 
+  // 5b. Global Search Dropdown — first character se options (header + hero, all pages)
+  function initGlobalSearchDropdown() {
+    var tools = window.WDW_TOOLS || [];
+    if (!tools.length) return;
+    var inputs = [document.getElementById('heroSearchInput'), document.getElementById('searchToolsInput')].filter(Boolean);
+    if (!inputs.length) return;
+    // inject dropdown styles once
+    if (!document.getElementById('wwSearchDDStyle')) {
+      var st = document.createElement('style');
+      st.id = 'wwSearchDDStyle';
+      st.textContent = '.ww-search-dd{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg-surface,#fff);border:1px solid var(--border,#e2e8f0);border-radius:12px;box-shadow:0 16px 40px rgba(0,0,0,.18);z-index:200;overflow:hidden;display:none;max-height:340px;overflow-y:auto}' +
+      '.ww-search-dd.open{display:block}' +
+      '.ww-search-dd-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;cursor:pointer;text-decoration:none;color:var(--text-main,#0f172a);font-size:.86rem;font-weight:600;border-bottom:1px solid var(--border,#f1f5f9)}' +
+      '.ww-search-dd-item:last-child{border-bottom:none}' +
+      '.ww-search-dd-item:hover,.ww-search-dd-item.active{background:var(--bg-subtle,#f1f5f9)}' +
+      '.ww-search-dd-cat{font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-primary,#ca8a04);background:var(--brand-light,rgba(202,138,4,.1));padding:2px 8px;border-radius:9999px;white-space:nowrap}' +
+      '.ww-search-dd-empty{padding:14px;text-align:center;color:var(--text-muted,#64748b);font-size:.84rem}' +
+      '[data-theme="dark"] .ww-search-dd{background:#0f172a;border-color:rgba(255,255,255,.12)}' +
+      '[data-theme="dark"] .ww-search-dd-item{color:#f8fafc;border-color:rgba(255,255,255,.06)}' +
+      '[data-theme="dark"] .ww-search-dd-item:hover,[data-theme="dark"] .ww-search-dd-item.active{background:#1e293b}';
+      document.head.appendChild(st);
+    }
+    inputs.forEach(function(inp){
+      // wrap in relative container if needed
+      var wrap = inp.parentElement;
+      if (wrap && getComputedStyle(wrap).position === 'static') wrap.style.position = 'relative';
+      var dd = document.createElement('div');
+      dd.className = 'ww-search-dd';
+      dd.setAttribute('role','listbox');
+      wrap.appendChild(dd);
+      var activeIdx = -1, currentList = [];
+      function close(){ dd.classList.remove('open'); dd.innerHTML=''; activeIdx=-1; currentList=[]; }
+      function render(q){
+        var ql = q.trim().toLowerCase();
+        if (!ql) { close(); return; }
+        var matches = tools.filter(function(t){
+          var tl = (t.t+' '+(t.c||'')).toLowerCase();
+          // match from first character: substring or word-start
+          return tl.indexOf(ql) !== -1;
+        }).slice(0,8);
+        currentList = matches; activeIdx = -1;
+        if (!matches.length) {
+          dd.innerHTML = '<div class="ww-search-dd-empty">No tools found for &ldquo;'+ql.replace(/</g,'&lt;')+'&rdquo;</div>';
+        } else {
+          dd.innerHTML = matches.map(function(m,i){
+            return '<a class="ww-search-dd-item" data-i="'+i+'" href="'+m.u+'"><span>'+m.t.replace(/</g,'&lt;')+'</span><span class="ww-search-dd-cat">'+(m.c||'tool')+'</span></a>';
+          }).join('');
+        }
+        dd.classList.add('open');
+      }
+      inp.addEventListener('input', function(){ render(inp.value); });
+      inp.addEventListener('focus', function(){ if (inp.value.trim()) render(inp.value); });
+      inp.addEventListener('keydown', function(e){
+        var items = dd.querySelectorAll('.ww-search-dd-item');
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          if (!items.length) return;
+          e.preventDefault();
+          activeIdx = e.key === 'ArrowDown' ? Math.min(activeIdx+1, items.length-1) : Math.max(activeIdx-1, 0);
+          items.forEach(function(it,i){ it.classList.toggle('active', i===activeIdx); });
+          if (items[activeIdx]) items[activeIdx].scrollIntoView({block:'nearest'});
+        } else if (e.key === 'Enter') {
+          if (dd.classList.contains('open') && currentList.length) {
+            e.preventDefault(); e.stopPropagation();
+            var pick = currentList[activeIdx >= 0 ? activeIdx : 0];
+            if (pick) window.location.href = pick.u;
+          }
+        } else if (e.key === 'Escape') { close(); inp.blur(); }
+      });
+      dd.addEventListener('mousedown', function(e){
+        var a = e.target.closest ? e.target.closest('.ww-search-dd-item') : null;
+        if (a) { e.preventDefault(); window.location.href = a.getAttribute('href'); }
+      });
+      document.addEventListener('click', function(e){
+        if (e.target !== inp && !dd.contains(e.target)) close();
+      });
+      inp.addEventListener('blur', function(){ setTimeout(close, 180); });
+    });
+  }
+
   function runAll() {
     syncTheme();
     injectGuides();
     initSidebar();
     initMobileDrawer();
     initSearch();
+    initGlobalSearchDropdown();
     initMicroInteractions();
     initCookieBanner();
   }
