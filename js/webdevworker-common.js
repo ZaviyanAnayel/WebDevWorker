@@ -105,11 +105,125 @@
     }
   }
 
+  // 5. Live Tool Search — wires #heroSearchInput & #searchToolsInput to card filtering
+  function initSearch() {
+    const heroInput = document.getElementById('heroSearchInput');
+    const headerInput = document.getElementById('searchToolsInput');
+    const grid = document.getElementById('toolsGrid');
+    if ((!heroInput && !headerInput) || !grid) return;
+
+    const cards = Array.prototype.slice.call(grid.querySelectorAll('.tool-card'));
+    if (cards.length === 0) return;
+    const total = cards.length;
+
+    const countEl = document.getElementById('filteredToolsCount');
+
+    // Build a lowercase search index per card (title + description + category)
+    const index = cards.map(function (card) {
+      const t = card.querySelector('.tool-card-title');
+      const d = card.querySelector('.tool-card-desc');
+      const b = card.querySelector('.tool-category-badge');
+      const parts = [
+        t ? t.textContent : '',
+        d ? d.textContent : '',
+        b ? b.textContent : '',
+        card.getAttribute('data-category') || '',
+        card.textContent || ''
+      ];
+      return parts.join(' ').toLowerCase();
+    });
+
+    // Friendly empty-state node (created once, hidden by default)
+    let emptyEl = document.getElementById('wwSearchEmpty');
+    if (!emptyEl) {
+      emptyEl = document.createElement('div');
+      emptyEl.id = 'wwSearchEmpty';
+      emptyEl.style.cssText = 'display:none; text-align:center; padding:48px 20px; color:var(--text-muted); grid-column:1/-1;';
+      grid.parentNode.insertBefore(emptyEl, grid.nextSibling);
+    }
+
+    function updateCount(visible, query) {
+      if (!countEl) return;
+      if (!query) {
+        countEl.textContent = total + (total === 1 ? ' tool' : ' tools');
+      } else {
+        countEl.textContent = visible + (visible === 1 ? ' tool found' : ' tools found');
+      }
+    }
+
+    function applyFilter(query, sourceInput) {
+      const q = (query || '').trim().toLowerCase();
+      let visible = 0;
+      cards.forEach(function (card, i) {
+        const show = !q || index[i].indexOf(q) !== -1;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      if (visible === 0 && q) {
+        emptyEl.style.display = '';
+        emptyEl.innerHTML = '<div style="font-size:2rem; margin-bottom:12px;">&#128269;</div>' +
+          '<div style="font-size:1.05rem; font-weight:700; margin-bottom:6px;">No tools found for &ldquo;' +
+          q.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '&rdquo;</div>' +
+          '<div style="font-size:0.9rem;">Try a different keyword, e.g. &ldquo;json&rdquo;, &ldquo;uuid&rdquo;, or &ldquo;qr&rdquo;.</div>';
+      } else {
+        emptyEl.style.display = 'none';
+      }
+
+      updateCount(visible, q);
+
+      // Keep both inputs in sync (setting .value does not re-fire input events)
+      [heroInput, headerInput].forEach(function (inp) {
+        if (inp && inp !== sourceInput && inp.value !== (query || '')) {
+          inp.value = query || '';
+        }
+      });
+    }
+
+    function jumpToFirstResult() {
+      const first = cards.find(function (card) { return card.style.display !== 'none'; });
+      if (first) {
+        first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        try { first.focus({ preventScroll: true }); } catch (e) {}
+      }
+    }
+
+    [heroInput, headerInput].forEach(function (inp) {
+      if (!inp) return;
+      inp.addEventListener('input', function () { applyFilter(inp.value, inp); });
+      inp.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          jumpToFirstResult();
+        } else if (e.key === 'Escape') {
+          inp.value = '';
+          applyFilter('', inp);
+          inp.blur();
+        }
+      });
+    });
+
+    // ⌘K / Ctrl+K focuses search
+    document.addEventListener('keydown', function (e) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        const target = heroInput || headerInput;
+        if (target && document.activeElement !== target) {
+          e.preventDefault();
+          target.focus();
+          target.select();
+        }
+      }
+    });
+
+    updateCount(total, '');
+  }
+
   function runAll() {
     syncTheme();
     injectGuides();
     initSidebar();
     initMobileDrawer();
+    initSearch();
   }
 
   if (document.readyState === 'loading') {
