@@ -15,33 +15,55 @@
 
   const currentPath = normalize(window.location.pathname);
 
-  // 1. Dynamic Theme Sync (Respects User Choice)
-  function syncTheme() {
-    const saved = localStorage.getItem('wdw_theme') || 
-                  localStorage.getItem('webdevworker_theme') || 
-                  localStorage.getItem('calcworker_theme') || 
-                  localStorage.getItem('theme') || 
-                  'dark';
-
-    document.documentElement.setAttribute('data-theme', saved);
-    if (document.body) document.body.setAttribute('data-theme', saved);
-
+  // 1. Dynamic Theme Sync — 4-theme cycle (dark / light / sepia / dim).
+  //    Respects the saved user choice permanently; unknown values normalize to dark.
+  const WDW_THEMES = [
+    { id: 'dark',  icon: '\uD83C\uDF19', label: 'Dark' },
+    { id: 'light', icon: '\u2600\uFE0F', label: 'Light' },
+    { id: 'sepia', icon: '\uD83D\uDCD6', label: 'Sepia' },
+    { id: 'dim',   icon: '\uD83C\uDF06', label: 'Dim' }
+  ];
+  function wdwThemeDef(id) {
+    for (let i = 0; i < WDW_THEMES.length; i++) {
+      if (WDW_THEMES[i].id === id) return WDW_THEMES[i];
+    }
+    return WDW_THEMES[0];
+  }
+  function wdwApplyTheme(id) {
+    const def = wdwThemeDef(id);
+    document.documentElement.setAttribute('data-theme', def.id);
+    if (document.body) document.body.setAttribute('data-theme', def.id);
+    try {
+      localStorage.setItem('wdw_theme', def.id);
+      localStorage.setItem('webdevworker_theme', def.id);
+      localStorage.setItem('calcworker_theme', def.id);
+      localStorage.setItem('theme', def.id);
+    } catch (err) {}
     const themeBtn = document.getElementById('themeToggleBtn');
     if (themeBtn) {
-      themeBtn.innerHTML = (saved === 'dark') ? '☀️ Light' : '🌙 Dark';
+      themeBtn.innerHTML = '<span>' + def.icon + '</span> ' + def.label;
+      themeBtn.setAttribute('title', 'Switch theme (current: ' + def.label + ')');
+    }
+    return def.id;
+  }
+  window.wdwSetTheme = wdwApplyTheme; // programmatic access (e.g. a future dropdown)
+  function syncTheme() {
+    const saved = localStorage.getItem('wdw_theme') ||
+                  localStorage.getItem('webdevworker_theme') ||
+                  localStorage.getItem('calcworker_theme') ||
+                  localStorage.getItem('theme') ||
+                  'dark';
+    wdwApplyTheme(saved); // also normalizes unknown stored values to dark
+    const themeBtn = document.getElementById('themeToggleBtn');
+    if (themeBtn) {
       themeBtn.onclick = function (e) {
         if (e) e.preventDefault();
         const cur = document.documentElement.getAttribute('data-theme') || 'dark';
-        const nxt = (cur === 'dark') ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', nxt);
-        if (document.body) document.body.setAttribute('data-theme', nxt);
-        try {
-          localStorage.setItem('wdw_theme', nxt);
-          localStorage.setItem('webdevworker_theme', nxt);
-          localStorage.setItem('calcworker_theme', nxt);
-          localStorage.setItem('theme', nxt);
-        } catch (err) {}
-        themeBtn.innerHTML = (nxt === 'dark') ? '☀️ Light' : '🌙 Dark';
+        let idx = 0;
+        for (let i = 0; i < WDW_THEMES.length; i++) {
+          if (WDW_THEMES[i].id === cur) { idx = i; break; }
+        }
+        wdwApplyTheme(WDW_THEMES[(idx + 1) % WDW_THEMES.length].id);
       };
     }
   }
