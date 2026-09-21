@@ -1,39 +1,62 @@
-name: 24/7 Autonomous AI SEO Agent
+name: Autonomous SEO Agent v2 (competitor-aware)
 
+# 24/7 SEO engine: monitors competitors, finds keyword gaps, publishes
+# template-locked guide articles, validates links/schema, updates sitemap,
+# pings search engines. Replaces the v1 daily agent (same single schedule).
 on:
   schedule:
-    # Runs daily at 06:00 UTC
-    - cron: '0 6 * * *'
-  workflow_dispatch: # Allows manual 1-click trigger from GitHub Actions tab
+    - cron: "0 6 * * *"   # daily at 06:00 UTC (single schedule)
+  workflow_dispatch:
+    inputs:
+      max_articles:
+        description: "Max articles to publish this run"
+        required: false
+        default: "2"
 
 permissions:
   contents: write
 
 jobs:
-  publish-seo-article:
+  seo-agent:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 1 }
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
 
-      - name: Run Autonomous SEO Agent
+      - name: Competitor sitemap watch + keyword gap detection
+        run: |
+          python3 .github/scripts/competitor_watch.py \
+            --out seo/gap_report.json \
+            --ledger seo/keywords.json
+
+      - name: Generate gap-targeted articles (template-locked)
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          MAX_ARTICLES: ${{ inputs.max_articles || '2' }}
         run: |
-          python scripts/autonomous_cron_agent.py
+          python3 .github/scripts/generate_articles.py \
+            --gaps seo/gap_report.json \
+            --ledger seo/keywords.json \
+            --max "$MAX_ARTICLES"
 
-      - name: Submit URLs to IndexNow
+      - name: Validate new articles (links, schema, depth)
         run: |
-          python scripts/indexnow_submit.py
+          python3 .github/scripts/validate_articles.py --strict
 
-      - name: Commit & Push New Articles and Sitemap
+      - name: Update sitemap + ping search engines
         run: |
-          git config --global user.name "WebDevWorker AI Agent"
-          git config --global user.email "bot@webdevworker.com"
-          git add articles/ sitemap.xml scripts/tools_db.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 [AI SEO] Auto-published high-intent developer guide & updated sitemap [skip ci]" && git push)
+          python3 .github/scripts/update_sitemap.py
+          python3 .github/scripts/submit_indexnow.py || true
+          curl -s "https://www.bing.com/ping?sitemap=https://www.webdevworker.com/sitemap.xml" > /dev/null || true
+
+      - name: Commit & push
+        run: |
+          git config user.name "seo-agent[bot]"
+          git config user.email "seo-agent[bot]@users.noreply.github.com"
+          git add articles/ sitemap.xml seo/
+          git diff --cached --quiet && echo "nothing to commit" || git commit -m "seo(agent): publish $(date -u +%F) gap-targeted guides"
+          git pull --rebase origin ${{ github.ref_name }} || true
+          git push
