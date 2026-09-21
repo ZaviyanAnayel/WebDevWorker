@@ -470,7 +470,9 @@
     if (!document.getElementById('wwSearchDDStyle')) {
       var st = document.createElement('style');
       st.id = 'wwSearchDDStyle';
-      st.textContent = '.ww-search-dd{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg-surface,#fff);border:1px solid var(--border,#e2e8f0);border-radius:12px;box-shadow:0 16px 40px rgba(0,0,0,.18);z-index:200;overflow:hidden;display:none;max-height:340px;overflow-y:auto}' +
+      /* position:fixed + body-level node: escapes every ancestor overflow:hidden
+         (e.g. .hero-wrapper), so the full suggestion list is always visible. */
+      st.textContent = '.ww-search-dd{position:fixed;background:var(--bg-surface,#fff);border:1px solid var(--border,#e2e8f0);border-radius:12px;box-shadow:0 16px 40px rgba(0,0,0,.18);z-index:1000;overflow:hidden;display:none;max-height:340px;overflow-y:auto}' +
       '.ww-search-dd.open{display:block}' +
       '.ww-search-dd-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;cursor:pointer;text-decoration:none;color:var(--text-main,#0f172a);font-size:.86rem;font-weight:600;border-bottom:1px solid var(--border,#f1f5f9)}' +
       '.ww-search-dd-item:last-child{border-bottom:none}' +
@@ -483,15 +485,21 @@
       document.head.appendChild(st);
     }
     inputs.forEach(function(inp){
-      // wrap in relative container if needed
-      var wrap = inp.parentElement;
-      if (wrap && getComputedStyle(wrap).position === 'static') wrap.style.position = 'relative';
+      // Body-level fixed dropdown: immune to ancestor overflow clipping.
       var dd = document.createElement('div');
       dd.className = 'ww-search-dd';
       dd.setAttribute('role','listbox');
-      wrap.appendChild(dd);
+      document.body.appendChild(dd);
       var activeIdx = -1, currentList = [];
       function close(){ dd.classList.remove('open'); dd.innerHTML=''; activeIdx=-1; currentList=[]; }
+      function place(){
+        var r = inp.getBoundingClientRect();
+        dd.style.left = Math.max(8, r.left) + 'px';
+        dd.style.width = Math.max(r.width, 240) + 'px';
+        dd.style.top = (r.bottom + 6) + 'px';
+        dd.style.bottom = 'auto';
+      }
+      function reposition(){ if (dd.classList.contains('open')) place(); }
       function render(q){
         var ql = q.trim().toLowerCase();
         if (!ql) { close(); return; }
@@ -516,10 +524,13 @@
             return '<a class="ww-search-dd-item" data-i="'+i+'" href="'+m.u+'"><span>'+m.t.replace(/</g,'&lt;')+'</span><span class="ww-search-dd-cat">'+(m.c||'tool')+'</span></a>';
           }).join('');
         }
+        place();
         dd.classList.add('open');
       }
       inp.addEventListener('input', function(){ render(inp.value); });
       inp.addEventListener('focus', function(){ if (inp.value.trim()) render(inp.value); });
+      window.addEventListener('scroll', reposition, true);
+      window.addEventListener('resize', reposition);
       inp.addEventListener('keydown', function(e){
         var items = dd.querySelectorAll('.ww-search-dd-item');
         if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
