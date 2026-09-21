@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HTTP Status Codes Cheat Sheet: Every Code Explained | WebDevWorker</title>
+  <meta name="description" content="The complete HTTP status codes cheat sheet: every 1xx–5xx code explained with meaning, cause and fix. Free interactive HTTP status code inspector included."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://webdevworker.com/articles/http-status-codes-cheat-sheet.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="HTTP Status Codes Cheat Sheet: Every Code Explained | WebDevWorker"/>
+  <meta property="og:description" content="The complete HTTP status codes cheat sheet: every 1xx–5xx code explained with meaning, cause and fix. Free interactive HTTP status code inspector included."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://webdevworker.com/articles/http-status-codes-cheat-sheet.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "HTTP Status Codes Cheat Sheet: Every Code Explained (1xx–5xx)",
+      "description": "The complete HTTP status codes cheat sheet: every 1xx–5xx code explained with meaning, cause and fix. Free interactive HTTP status code inspector included.",
+      "mainEntityOfPage": "https://webdevworker.com/articles/http-status-codes-cheat-sheet.html",
+      "datePublished": "2026-09-21",
+      "dateModified": "2026-09-21",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://webdevworker.com",
+        "logo": "https://webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Q: What’s the difference between 404 and 410?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A: 404 Not Found means the resource is currently unavailable but may return later. 410 Gone signals the resource is permanently removed, prompting search engines to de‑index it faster."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: When should I use 301 vs 302 vs 307?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A: Use 301 for permanent URL changes (SEO value passes). 302 is for temporary moves where the original URL will return. 307 preserves the original HTTP method (e.g., POST) on a temporary redirect."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: How do 401 and 403 differ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A: 401 Unauthorized indicates authentication is required or failed. 403 Forbidden means authentication succeeded but the client lacks permission to access the resource."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: What’s the distinction between 500, 502, and 503?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A: 500 is a generic server error. 502 Bad Gateway occurs when a server acting as a gateway receives an invalid response. 503 Service Unavailable means the server is overloaded or down for maintenance."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: How can I fix a 429 Too Many Requests error?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A: Implement exponential backoff, respect Retry-After headers, and consider rate‑limiting adjustments on the client side."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: What is the “I'm a teapot” 418 code?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A: 418 is an Easter‑egg from RFC 2324, originally a joke. Some APIs use it humorously to indicate an unexpected request."
+      }
+    }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Base64 Encoder & Decoder",
+          "item": "https://webdevworker.com/articles/base64-encoder-decoder-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v36"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v36"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head></head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 85+ tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">HTTP Status Codes Cheat Sheet</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🌐 Web Reference</div>
+          <h1 class="guide-title">HTTP Status Codes Cheat Sheet: Every Code Explained</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated September 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ 100% Client-Side Sandbox</span>
+            <span>⏱️ 14 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3><span>🌐</span> Live Developer Workstation</h3>
+          <p>Enter any HTTP status code and get its meaning, common causes and fixes instantly — the interactive companion to this cheat sheet.</p>
+          <a href="/tools/http-status-codes-inspector.html" class="tool-launch-btn">Launch HTTP Status Codes Inspector in Live Sandbox →</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#basics" style="color:var(--brand-primary);">1. HTTP Status Codes: The Basics</a></li>
+            <li><a href="#problem" style="color:var(--brand-primary);">2. The Core Problem This Cheat Sheet Solves</a></li>
+            <li><a href="#usecases" style="color:var(--brand-primary);">3. Common Use Cases</a></li>
+            <li><a href="#guide" style="color:var(--brand-primary);">4. Step-by-Step Guide: Using the HTTP Status Codes Inspector</a></li>
+            <li><a href="#reference" style="color:var(--brand-primary);">5. The Complete Cheat Sheet: Every Code, Grouped by Class</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+<h2>HTTP Status Codes Cheat Sheet: The Basics</h2>
+<p>HTTP status codes are three‑digit numbers returned by a web server to indicate the result of a client’s request. They are grouped into five classes:</p>
+<ul>
+<li><strong>1xx – Informational</strong>: Request received, continuing process.</li>
+<li><strong>2xx – Success</strong>: The request was successfully received, understood, and accepted.</li>
+<li><strong>3xx – Redirection</strong>: Further action must be taken to complete the request.</li>
+<li><strong>4xx – Client Error</strong>: The request contains bad syntax or cannot be fulfilled.</li>
+<li><strong>5xx – Server Error</strong>: The server failed to fulfill a valid request.</li>
+</ul>
+<p>These codes appear in HTTP response headers, browser developer tools, API logs, and SEO audit reports.</p>
+
+<h2>The Core Problem This Cheat Sheet Solves</h2>
+<p>Developers and SEOs often encounter cryptic codes like <code>422</code> vs <code>400</code> or <code>301</code> vs <code>302</code>. Misinterpreting them leads to broken APIs, lost traffic, and wasted debugging time. This cheat sheet consolidates meanings, typical causes, and actionable fixes so you can quickly diagnose why a request failed and apply the correct remedy.</p>
+
+<h2>Common Use Cases for an HTTP Status Codes Cheat Sheet</h2>
+<ul>
+<li><strong>API Development</strong>: Validate responses, map error handling, and document endpoints.</li>
+<li><strong>SEO Redirect Management</strong>: Ensure permanent (<code>301</code>) vs temporary (<code>302</code>) redirects are used correctly to preserve link equity.</li>
+<li><strong>Debugging Webhooks</strong>: Interpret webhook response codes (e.g., <code>200</code> vs <code>500</code>) to improve reliability.</li>
+<li><strong>Uptime Monitoring</strong>: Set alerts based on specific status thresholds (e.g., <code>5xx</code> spikes).</li>
+</ul>
+<p>For webhook debugging, pair this cheat sheet with our <a href="/tools/webhook-payload-formatter.html">Webhook Payload Formatter</a> tool.</p>
+
+<h2>Step-by-Step Guide: Using the HTTP Status Codes Inspector</h2>
+<ol>
+<li>Navigate to the <a href="/tools/http-status-codes-inspector.html">HTTP Status Codes Inspector</a> tool.</li>
+<li>Enter any three‑digit code (e.g., <code>404</code>) into the input field.</li>
+<li>The inspector instantly displays:
+    <ul>
+        <li><strong>Meaning</strong>: Human‑readable description.</li>
+        <li><strong>Typical Cause</strong>: Common scenarios that generate the code.</li>
+        <li><strong>Fix Guidance</strong>: Practical steps to resolve the issue.</li>
+    </ul>
+</li>
+<li>Use the “Related Tools” section to jump to the <a href="/tools/webhook-payload-formatter.html">Webhook Payload Formatter</a> if you’re troubleshooting a webhook response.</li>
+<li>Copy the suggested fix or curl command directly from the inspector for immediate testing.</li>
+</ol>
+
+<h2>Formulas and Technical Reference: The HTTP Status Codes Cheat Sheet</h2>
+<p>Below are the most frequently encountered codes, grouped by class. Each table lists the code, official name, and a concise meaning.</p>
+
+<table>
+<caption>1xx – Informational</caption>
+<thead>
+<tr><th>Code</th><th>Name</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>100</td><td>Continue</td><td>Client should continue with request body.</td></tr>
+<tr><td>101</td><td>Switching Protocols</td><td>Server switching to a different protocol.</td></tr>
+<tr><td>102</td><td>Processing</td><td>WebDAV; request is still being processed.</td></tr>
+</tbody>
+</table>
+
+<table>
+<caption>2xx – Success</caption>
+<thead>
+<tr><th>Code</th><th>Name</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>200</td><td>OK</td><td>Standard response for successful HTTP requests.</td></tr>
+<tr><td>201</td><td>Created</td><td>Resource successfully created.</td></tr>
+<tr><td>202</td><td>Accepted</td><td>Request accepted for processing, not completed.</td></tr>
+<tr><td>204</td><td>No Content</td><td>Request succeeded but no body returned.</td></tr>
+</tbody>
+</table>
+
+<table>
+<caption>3xx – Redirection</caption>
+<thead>
+<tr><th>Code</th><th>Name</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>301</td><td>Moved Permanently</td><td>Resource has a new permanent URI.</td></tr>
+<tr><td>302</td><td>Found</td><td>Resource temporarily at a different URI.</td></tr>
+<tr><td>303</td><td>See Other</td><td>Redirect with GET method.</td></tr>
+<tr><td>307</td><td>Temporary Redirect</td><td>Preserve request method on redirect.</td></tr>
+<tr><td>308</td><td>Permanent Redirect</td><td>Preserve method on permanent redirect.</td></tr>
+</tbody>
+</table>
+
+<table>
+<caption>4xx – Client Error</caption>
+<thead>
+<tr><th>Code</th><th>Name</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>400</td><td>Bad Request</td><td>Malformed request syntax.</td></tr>
+<tr><td>401</td><td>Unauthorized</td><td>Authentication required.</td></tr>
+<tr><td>403</td><td>Forbidden</td><td>Server refuses to fulfill.</td></tr>
+<tr><td>404</td><td>Not Found</td><td>Requested resource not found.</td></tr>
+<tr><td>410</td><td>Gone</td><td>Resource permanently removed.</td></tr>
+<tr><td>418</td><td>I'm a Teapot</td><td>April Fools' joke code.</td></tr>
+<tr><td>429</td><td>Too Many Requests</td><td>Rate limit exceeded.</td></tr>
+</tbody>
+</table>
+
+<table>
+<caption>5xx – Server Error</caption>
+<thead>
+<tr><th>Code</th><th>Name</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td>500</td><td>Internal Server Error</td><td>Generic server failure.</td></tr>
+<tr><td>502</td><td>Bad Gateway</td><td>Invalid response from upstream server.</td></tr>
+<tr><td>503</td><td>Service Unavailable</td><td>Server overloaded or down for maintenance.</td></tr>
+<tr><td>504</td><td>Gateway Timeout</td><td>Upstream server timed out.</td></tr>
+</tbody>
+</table>
+
+<p>Quick cURL example to test a status code:</p>
+<pre><code>curl -I https://example.com/nonexistent-page
+# Expected output includes: HTTP/1.1 404 Not Found
+</code></pre>
+
+<h2>Troubleshooting and FAQ: HTTP Status Codes Cheat Sheet Answers</h2>
+<div class="faq-item">
+<strong>Q: What’s the difference between 404 and 410?</strong>
+<p>A: <code>404 Not Found</code> means the resource is currently unavailable but may return later. <code>410 Gone</code> signals the resource is permanently removed, prompting search engines to de‑index it faster.</p>
+</div>
+
+<div class="faq-item">
+<strong>Q: When should I use 301 vs 302 vs 307?</strong>
+<p>A: Use <code>301</code> for permanent URL changes (SEO value passes). <code>302</code> is for temporary moves where the original URL will return. <code>307</code> preserves the original HTTP method (e.g., POST) on a temporary redirect.</p>
+</div>
+
+<div class="faq-item">
+<strong>Q: How do 401 and 403 differ?</strong>
+<p>A: <code>401 Unauthorized</code> indicates authentication is required or failed. <code>403 Forbidden</code> means authentication succeeded but the client lacks permission to access the resource.</p>
+</div>
+
+<div class="faq-item">
+<strong>Q: What’s the distinction between 500, 502, and 503?</strong>
+<p>A: <code>500</code> is a generic server error. <code>502 Bad Gateway</code> occurs when a server acting as a gateway receives an invalid response. <code>503 Service Unavailable</code> means the server is overloaded or down for maintenance.</p>
+</div>
+
+<div class="faq-item">
+<strong>Q: How can I fix a 429 Too Many Requests error?</strong>
+<p>A: Implement exponential backoff, respect <code>Retry-After</code> headers, and consider rate‑limiting adjustments on the client side.</p>
+</div>
+
+<div class="faq-item">
+<strong>Q: What is the “I'm a teapot” 418 code?</strong>
+<p>A: <code>418</code> is an Easter‑egg from RFC 2324, originally a joke. Some APIs use it humorously to indicate an unexpected request.</p>
+</div>
+
+        <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Ready to accelerate your workflow?</h3>
+          <p>Launch the interactive zero-telemetry utility in your browser right now.</p>
+          <a href="/tools/http-status-codes-inspector.html" class="tool-launch-btn">Launch HTTP Status Codes Inspector Now →</a>
+        </div>
+      </article>
+
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v36" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v36" defer></script>
+</body>
+</html>
