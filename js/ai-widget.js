@@ -2004,32 +2004,65 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
     }
 
-    /* Compact Floating Launcher (52px x 52px) */
+    /* Premium Pill Launcher — "Need help?" (indigo to violet) */
     .cw-ai-launcher {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #06b6d4, #2563eb);
-      border: 2px solid rgba(255, 255, 255, 0.28);
-      box-shadow: 0 6px 20px rgba(6, 182, 212, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 13px 22px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 55%, #a855f7 100%);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 8px 28px rgba(124, 58, 237, 0.45), 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+      color: #ffffff;
       cursor: pointer;
       position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease;
       overflow: hidden;
       user-select: none;
+      white-space: nowrap;
+      animation: cw-pill-pulse 3.4s ease-in-out infinite;
     }
 
     .cw-ai-launcher:hover {
-      transform: scale(1.08) translateY(-2px);
-      box-shadow: 0 10px 26px rgba(6, 182, 212, 0.6), 0 4px 10px rgba(0, 0, 0, 0.3);
-      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-3px) scale(1.045);
+      box-shadow: 0 14px 38px rgba(139, 92, 246, 0.62), 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      border-color: rgba(255, 255, 255, 0.6);
+      animation-play-state: paused;
     }
 
     .cw-ai-launcher:active {
-      transform: scale(0.95);
+      transform: translateY(-1px) scale(0.97);
+    }
+
+    @keyframes cw-pill-pulse {
+      0%, 100% {
+        box-shadow: 0 8px 28px rgba(124, 58, 237, 0.45), 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+      }
+      50% {
+        box-shadow: 0 8px 40px rgba(139, 92, 246, 0.75), 0 2px 10px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      }
+    }
+
+    .cw-ai-launcher-text {
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    }
+
+    .cw-ai-sparkle-svg {
+      width: 20px !important;
+      height: 20px !important;
+      display: block;
+      flex: 0 0 auto;
+      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.35));
+    }
+
+    @media (max-width: 480px) {
+      .cw-ai-launcher { padding: 11px 16px; }
+      .cw-ai-launcher-text { font-size: 0.88rem; }
     }
 
     /* 11-Second Shimmer Wave across Launcher */
@@ -2775,9 +2808,100 @@
     ];
   }
 
+  // 8. Per-Tool AI Agent Greeting — A-to-Z explainer for the current tool page
+  function escAgentHtml(s) {
+    return String(s || "")
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function cleanToolName(s) {
+    return String(s || "")
+      .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, "")
+      .replace(/\s{2,}/g, " ").trim();
+  }
+
+  function getToolPageInfo() {
+    try {
+      const path = (location.pathname || "").split("?")[0].split("#")[0];
+      if (!/\/tools\/[a-z0-9-]+\.html/i.test(path)) return null;
+
+      let name = "";
+      const h1 = document.querySelector("main h1, article h1, h1");
+      if (h1 && h1.textContent) name = h1.textContent;
+      if (!name) {
+        const t = document.title || "";
+        name = t.split("|")[0].split("—")[0].split("–")[0];
+      }
+      name = cleanToolName(name);
+      if (!name) return null;
+
+      let desc = "";
+      const meta = document.querySelector('meta[name="description"]');
+      if (meta) desc = meta.getAttribute("content") || "";
+      if (!desc) {
+        const p = document.querySelector("main p, article p, .tool-desc, .tool-description");
+        if (p && p.textContent) desc = p.textContent.trim().slice(0, 220);
+      }
+      desc = cleanToolName(desc);
+
+      // Harvest labeled controls + action buttons to ground the steps in the real UI
+      const chrome = /menu|theme|dark|light|sidebar|close|search|github|home|guides/i;
+      const labels = [];
+      document.querySelectorAll("main label, article label, .tool-container label, .tool-card label").forEach(function (el) {
+        const t = cleanToolName(el.textContent);
+        if (t && t.length > 1 && t.length < 60 && !chrome.test(t) && labels.indexOf(t) === -1 && labels.length < 6) labels.push(t);
+      });
+      const buttons = [];
+      document.querySelectorAll("main button, article button, .tool-container button").forEach(function (el) {
+        const t = cleanToolName(el.textContent || el.getAttribute("aria-label") || "");
+        if (t && t.length > 1 && t.length < 40 && !chrome.test(t) && buttons.indexOf(t) === -1 && buttons.length < 8) buttons.push(t);
+      });
+
+      return { path: path, name: name, desc: desc, labels: labels, buttons: buttons };
+    } catch (e) { return null; }
+  }
+
+  function buildAgentGreeting() {
+    const info = getToolPageInfo();
+    if (!info) {
+      return `\u{1F44B} <strong>Hi! I'm WebDevWorker AI</strong>, your 100% private developer &amp; DevOps assistant.<br><br>` +
+        `I can help you convert code (HTML to JSX, PX to REM), debug security tokens, generate Dockerfiles, or explain syntax across all <strong>85 tools</strong>.<br><br>` +
+        `<em>Zero server tracking. How can I help you code today?</em>`;
+    }
+
+    const guide = GUIDES_MAP[info.path];
+    const inLabel = info.labels[0] || "the input field";
+    const outLabel = info.labels[1] || info.labels[0] || "the result area";
+    const mainBtn = info.buttons[0] || "the main action button";
+    const copyBtn = info.buttons.filter(function (b) { return /copy|download|save|export/i.test(b); })[0];
+
+    let steps = `<strong>1.</strong> Enter your data in <strong>${escAgentHtml(inLabel)}</strong> — paste it, type it, or use a sample if the tool offers one.<br>` +
+      `<strong>2.</strong> Adjust any options the tool shows (formats, modes, or settings) to match your use case.<br>` +
+      `<strong>3.</strong> Click <strong>${escAgentHtml(mainBtn)}</strong> to process your input instantly.<br>` +
+      `<strong>4.</strong> Review the output in <strong>${escAgentHtml(outLabel)}</strong> and verify it looks right.`;
+    if (copyBtn) {
+      steps += `<br><strong>5.</strong> Use <strong>${escAgentHtml(copyBtn)}</strong> to take your result with you.`;
+    }
+
+    return `\u{2728} <strong>Welcome to the ${escAgentHtml(info.name)}!</strong><br><br>` +
+      (info.desc ? `${escAgentHtml(info.desc)}<br><br>` : "") +
+      `<strong>\u{1F4CC} What problem it solves:</strong> ` +
+      `It does the heavy lifting in your browser — no installs, no sign-ups, no waiting on a server, and your data never leaves this tab.<br><br>` +
+      `<strong>\u{1F9ED} How to use it (step by step):</strong><br>${steps}<br><br>` +
+      `<strong>\u{1F4A1} Pro tips:</strong><br>` +
+      `• Everything runs <strong>100% client-side</strong> — safe for secrets, tokens, and private code.<br>` +
+      `• Works <strong>offline</strong> once loaded, and most tools keep your last input if you reload.<br>` +
+      `• Stuck on syntax? Ask me anything below — I know all 85 tools.<br><br>` +
+      (guide ? `<a href="${escAgentHtml(guide.guide_url)}" class="cw-msg-btn">\u{1F4D6} Read the full guide: ${escAgentHtml(guide.title)}</a><br><br>` : "") +
+      `<em>Ask me anything about this tool — I'll walk you through it.</em>`;
+  }
+
   function initAIWidget() {
     const root = document.createElement("div");
     root.id = "cw-ai-root";
+
+    const toolGreeting = buildAgentGreeting();
 
     const chips = getContextChips();
     let chipsHtml = "";
@@ -2786,14 +2910,14 @@
     });
 
     root.innerHTML = `
-      <div class="cw-ai-launcher" id="cwAiLauncher" role="button" aria-label="Open WebDevWorker AI" tabindex="0">
-        <svg class="cw-ai-icon-svg" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="5" y="4" width="26" height="28" rx="6" fill="#0f172a" stroke="#06b6d4" stroke-width="1.8"/>
-          <path d="M12 14L8 18L12 22" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M24 14L28 18L24 22" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M19 12L17 24" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+      <div class="cw-ai-launcher" id="cwAiLauncher" role="button" aria-label="Open WebDevWorker AI assistant" tabindex="0">
+        <svg class="cw-ai-sparkle-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 2l1.9 5.7L19.6 9.6l-5.7 1.9L12 17.2l-1.9-5.7L4.4 9.6l5.7-1.9L12 2z" fill="#ffffff" opacity="0.95"/>
+          <path d="M19 14l.9 2.6 2.6.9-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9L19 14z" fill="#ffffff" opacity="0.75"/>
+          <path d="M5 15l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2z" fill="#ffffff" opacity="0.6"/>
         </svg>
-        <div class="cw-ai-tooltip">Ask WebDevWorker AI ✨</div>
+        <span class="cw-ai-launcher-text">Need help?</span>
+        <div class="cw-ai-tooltip">Ask WebDevWorker AI</div>
       </div>
 
       <div class="cw-ai-window" id="cwAiWindow" role="dialog" aria-modal="true">
@@ -2817,9 +2941,7 @@
 
         <div class="cw-ai-messages" id="cwAiMessages">
           <div class="cw-msg bot">
-            👋 <strong>Hi! I'm WebDevWorker AI</strong>, your 100% private developer &amp; DevOps assistant.<br><br>
-            I can help you convert code (HTML to JSX, PX to REM), debug security tokens, generate Dockerfiles, or explain syntax across all <strong>85 tools</strong>.<br><br>
-            <em>Zero server tracking. How can I help you code today?</em>
+            ${toolGreeting}
           </div>
         </div>
 
