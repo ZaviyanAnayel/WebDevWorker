@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unix Timestamp Converter: Epoch to Date Explained | WebDevWorker</title>
+  <meta name="description" content="Free Unix timestamp converter: turn epoch seconds into human-readable dates and back. Learn what Unix time is, milliseconds vs seconds, timezone pitfalls, and code examples in JavaScript, Python, PHP and SQL."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://webdevworker.com/articles/unix-timestamp-converter-explained.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Unix Timestamp Converter: Epoch to Date Explained | WebDevWorker"/>
+  <meta property="og:description" content="Free Unix timestamp converter: turn epoch seconds into human-readable dates and back. Learn what Unix time is, milliseconds vs seconds, timezone pitfalls, and code examples in JavaScript, Python, PHP and SQL."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://webdevworker.com/articles/unix-timestamp-converter-explained.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Unix Timestamp Converter: Epoch to Date Explained (+ Code Examples)",
+      "description": "Free Unix timestamp converter: turn epoch seconds into human-readable dates and back. Learn what Unix time is, milliseconds vs seconds, timezone pitfalls, and code examples in JavaScript, Python, PHP and SQL.",
+      "mainEntityOfPage": "https://webdevworker.com/articles/unix-timestamp-converter-explained.html",
+      "datePublished": "2026-09-21",
+      "dateModified": "2026-09-21",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://webdevworker.com",
+        "logo": "https://webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why does my timestamp show 1970‑01‑01?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "That date indicates the timestamp is zero (epoch start) or the value is too small. Check if you accidentally entered milliseconds as seconds."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can I tell if a value is seconds or milliseconds?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If the number has 13 or more digits, it’s likely milliseconds; 10 digits usually means seconds. The converter auto‑detects, but you can also compare against the current epoch (≈1.7 × 109 seconds)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "My converted date is in the wrong timezone. What gives?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Unix timestamps are always UTC. The displayed timezone depends on your browser or tool settings. Adjust the timezone selector in the Unix Timestamp Converter or apply an offset in code."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does a negative Unix timestamp mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Negative values represent dates before 1970‑01‑01 UTC. For example, -86400 equals 1969‑12‑31 00:00 UTC."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is “epoch 0”?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Epoch 0 is the reference point of Unix time: 00:00:00 UTC on 1 January 1970. All timestamps count seconds (or milliseconds) from this moment."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I avoid the Year 2038 overflow?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Store timestamps as 64‑bit integers or use milliseconds (which exceed the 2038 limit). Most modern languages and databases support 64‑bit types out of the box."
+      }
+    }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Base64 Encoder & Decoder",
+          "item": "https://webdevworker.com/articles/base64-encoder-decoder-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v36"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v36"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head></head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 85+ tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Unix Timestamp Converter</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">⏱️ Time & Dates</div>
+          <h1 class="guide-title">Unix Timestamp Converter: Epoch to Date Explained (+ Code)</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated September 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ 100% Client-Side Sandbox</span>
+            <span>⏱️ 10 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3><span>⏱️</span> Live Developer Workstation</h3>
+          <p>Paste any epoch timestamp and instantly see the human-readable date — auto-detects seconds vs milliseconds, handles timezones, and converts dates back to epoch.</p>
+          <a href="/tools/unix-timestamp-converter.html" class="tool-launch-btn">Launch Unix Timestamp Converter in Live Sandbox →</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#basics" style="color:var(--brand-primary);">1. Understanding Unix Time: The Basics</a></li>
+            <li><a href="#problem" style="color:var(--brand-primary);">2. The Core Problem This Solves</a></li>
+            <li><a href="#usecases" style="color:var(--brand-primary);">3. Common Use Cases</a></li>
+            <li><a href="#guide" style="color:var(--brand-primary);">4. Step-by-Step Guide: Using the Unix Timestamp Converter</a></li>
+            <li><a href="#reference" style="color:var(--brand-primary);">5. Formulas and Technical Reference</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+<h2>Understanding Unix Time: The Basics</h2>
+<p>Unix time, also known as <strong>epoch time</strong>, counts the number of seconds that have elapsed since 00:00:00 UTC on 1 January 1970. This single integer makes it easy for computers to store and compare dates without dealing with time zones or calendar quirks. For example, the Unix timestamp for 2024‑04‑01 12:00 UTC is <code>1711972800</code>. The same moment expressed in milliseconds would be <code>1711972800000</code>. Knowing the difference between seconds and milliseconds is essential when converting between epoch and human‑readable dates.</p>
+
+<h2>The Core Problem This Solves: Converting Epoch to Date</h2>
+<p>Raw timestamps are hard for humans to read. When debugging logs, inspecting API responses, or querying databases, you often see values like <code>1625097600</code> or <code>1625097600000</code>. Without conversion, you can’t tell whether the value represents 2021‑07‑01 00:00 UTC or a completely different moment. The confusion between seconds and milliseconds adds another layer of difficulty, leading to off‑by‑three‑orders‑of‑magnitude errors in logs and UI displays.</p>
+
+<h2>Common Use Cases for an Epoch to Date Converter</h2>
+<ul>
+<li>Debugging API responses that return timestamps in seconds or milliseconds.</li>
+<li>Viewing database fields that store Unix timestamps (e.g., MySQL <code>INT</code> columns).</li>
+<li>Interpreting JWT <code>exp</code> claims, which are expressed as seconds since the epoch.</li>
+<li>Scheduling jobs or cron tasks based on epoch values.</li>
+<li>Analyzing log files where each entry is prefixed with a Unix timestamp.</li>
+</ul>
+
+<h2>Step-by-Step Guide: Using the Unix Timestamp Converter</h2>
+<ol>
+<li>Paste your timestamp into the <a href="/tools/unix-timestamp-converter.html">Unix Timestamp Converter</a> input field.</li>
+<li>The tool automatically detects whether the value is in seconds or milliseconds (values > 10<sup>12</sup> are treated as milliseconds).</li>
+<li>Click “Convert” to see the human‑readable date in your local timezone and in UTC.</li>
+<li>Use the reverse conversion box to turn a formatted date back into a Unix timestamp (seconds or milliseconds as needed).</li>
+<li>Adjust the timezone dropdown if you need the output in a specific zone; the converter applies the offset correctly.</li>
+</ol>
+<p>For numeric base transformations, you can also jump to the <a href="/tools/number-base-converter.html">Number Base Converter</a> to switch between decimal, hex, or binary representations of epoch values.</p>
+
+<h2>Formulas and Technical Reference</h2>
+<p>Basic conversion formulas:</p>
+<table>
+<thead>
+<tr><th>Operation</th><th>Formula</th></tr>
+</thead>
+<tbody>
+<tr><td>Epoch (seconds) → Date</td><td><code>new Date(epoch * 1000)</code> (JavaScript)</td></tr>
+<tr><td>Epoch (milliseconds) → Date</td><td><code>new Date(epoch)</code> (JavaScript)</td></tr>
+<tr><td>Date → Epoch (seconds)</td><td><code>Math.floor(date.getTime() / 1000)</code></td></tr>
+<tr><td>Date → Epoch (milliseconds)</td><td><code>date.getTime()</code></td></tr>
+</tbody>
+</table>
+
+<p>Be aware of the <strong>Year 2038 problem</strong>: 32‑bit signed integers overflow after 03:14:07 UTC on 19 January 2038. Use 64‑bit integers or store timestamps in milliseconds to avoid this.</p>
+<p>Leap seconds are not counted in Unix time; they are ignored, so occasional one‑second jumps may appear when comparing to UTC‑based calendars.</p>
+
+<pre><code>// JavaScript: Convert epoch seconds to ISO string
+function epochToISO(seconds) {
+  return new Date(seconds * 1000).toISOString();
+}
+console.log(epochToISO(1711972800)); // 2024-04-01T12:00:00.000Z
+</code></pre>
+
+<pre><code># Python: Convert epoch milliseconds to datetime
+import datetime
+def epoch_ms_to_dt(ms):
+    return datetime.datetime.utcfromtimestamp(ms / 1000.0)
+print(epoch_ms_to_dt(1711972800000))
+# 2024-04-01 12:00:00
+</code></pre>
+
+<h2>Troubleshooting and FAQ</h2>
+<div class="faq-item">
+  <strong>Why does my timestamp show 1970‑01‑01?</strong>
+  <p>That date indicates the timestamp is zero (epoch start) or the value is too small. Check if you accidentally entered milliseconds as seconds.</p>
+</div>
+<div class="faq-item">
+  <strong>How can I tell if a value is seconds or milliseconds?</strong>
+  <p>If the number has 13 or more digits, it’s likely milliseconds; 10 digits usually means seconds. The converter auto‑detects, but you can also compare against the current epoch (≈1.7 × 10<sup>9</sup> seconds).</p>
+</div>
+<div class="faq-item">
+  <strong>My converted date is in the wrong timezone. What gives?</strong>
+  <p>Unix timestamps are always UTC. The displayed timezone depends on your browser or tool settings. Adjust the timezone selector in the <a href="/tools/unix-timestamp-converter.html">Unix Timestamp Converter</a> or apply an offset in code.</p>
+</div>
+<div class="faq-item">
+  <strong>What does a negative Unix timestamp mean?</strong>
+  <p>Negative values represent dates before 1970‑01‑01 UTC. For example, <code>-86400</code> equals 1969‑12‑31 00:00 UTC.</p>
+</div>
+<div class="faq-item">
+  <strong>What is “epoch 0”?</strong>
+  <p>Epoch 0 is the reference point of Unix time: 00:00:00 UTC on 1 January 1970. All timestamps count seconds (or milliseconds) from this moment.</p>
+</div>
+<div class="faq-item">
+  <strong>How do I avoid the Year 2038 overflow?</strong>
+  <p>Store timestamps as 64‑bit integers or use milliseconds (which exceed the 2038 limit). Most modern languages and databases support 64‑bit types out of the box.</p>
+</div>
+
+        <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Ready to accelerate your workflow?</h3>
+          <p>Launch the interactive zero-telemetry utility in your browser right now.</p>
+          <a href="/tools/unix-timestamp-converter.html" class="tool-launch-btn">Launch Unix Timestamp Converter Now →</a>
+        </div>
+      </article>
+
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v36" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v36" defer></script>
+</body>
+</html>
