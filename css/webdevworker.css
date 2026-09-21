@@ -51,20 +51,59 @@
 
 /* Light theme */
 [data-theme="light"] {
-  --bg-base: #f4f6fb;
+  --bg-base: #faf9f6;
   --bg-surface: #ffffff;
-  --bg-subtle: #eef1f7;
-  --bg-surface-elevated: #e7ecf5;
-  --text-main: #101828;
-  --text-muted: #475467;
-  --text-dim: #98a2b3;
-  --border: rgba(16, 24, 40, 0.1);
-  --border-strong: rgba(16, 24, 40, 0.2);
+  --bg-subtle: #f2efe8;
+  --bg-surface-elevated: #eae5d8;
+  --text-main: #201b14;
+  --text-muted: #6e6557;
+  --text-dim: #a29885;
+  --border: rgba(74, 61, 40, 0.12);
+  --border-strong: rgba(74, 61, 40, 0.24);
   --brand-primary: #b45309;
   --brand-primary-soft: rgba(180, 83, 9, 0.1);
-  --shadow-card: 0 12px 28px -14px rgba(16, 24, 40, 0.18);
-  --shadow-lift: 0 20px 40px -16px rgba(16, 24, 40, 0.22), 0 0 0 1px rgba(180, 83, 9, 0.18);
+  --shadow-card: 0 12px 28px -14px rgba(74, 61, 40, 0.2);
+  --shadow-lift: 0 20px 40px -16px rgba(74, 61, 40, 0.25), 0 0 0 1px rgba(180, 83, 9, 0.16);
   color-scheme: light;
+}
+
+/* Sepia — warm ebook-reader tint, easy on the eyes */
+[data-theme="sepia"] {
+  --bg-base: #efe3c8;
+  --bg-surface: #f7f0dc;
+  --bg-subtle: #e7d9b8;
+  --bg-surface-elevated: #dfcfa9;
+  --text-main: #3a2d1a;
+  --text-muted: #6d5c40;
+  --text-dim: #97835e;
+  --border: rgba(96, 74, 40, 0.18);
+  --border-strong: rgba(96, 74, 40, 0.32);
+  --brand-primary: #96600a;
+  --brand-primary-soft: rgba(150, 96, 10, 0.14);
+  --accent-emerald: #0e7a54;
+  --accent-blue: #2f5cc4;
+  --accent-rose: #c22744;
+  --shadow-card: 0 12px 28px -14px rgba(96, 74, 40, 0.3);
+  --shadow-lift: 0 20px 40px -16px rgba(96, 74, 40, 0.35), 0 0 0 1px rgba(150, 96, 10, 0.22);
+  color-scheme: light;
+}
+
+/* Dim — soft gray midpoint between dark and light */
+[data-theme="dim"] {
+  --bg-base: #222936;
+  --bg-surface: #2b3444;
+  --bg-subtle: #323c50;
+  --bg-surface-elevated: #3a455c;
+  --text-main: #dce3ef;
+  --text-muted: #a2acbf;
+  --text-dim: #7b8497;
+  --border: rgba(148, 163, 184, 0.16);
+  --border-strong: rgba(148, 163, 184, 0.3);
+  --brand-primary: #f0b429;
+  --brand-primary-soft: rgba(240, 180, 41, 0.12);
+  --shadow-card: 0 12px 32px -12px rgba(0, 0, 0, 0.5);
+  --shadow-lift: 0 20px 44px -12px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(240, 180, 41, 0.14);
+  color-scheme: dark;
 }
 
 /* ---------- 2. Base reset ---------- */
@@ -221,7 +260,9 @@ a:hover { color: var(--text-main); }
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
 }
-[data-theme="light"] .topbar { background: rgba(244, 246, 251, 0.85); }
+[data-theme="light"] .topbar { background: rgba(250, 249, 246, 0.85); }
+[data-theme="sepia"] .topbar { background: rgba(239, 227, 200, 0.88); }
+[data-theme="dim"] .topbar { background: rgba(34, 41, 54, 0.85); }
 
 .topbar-left,
 .topbar-right {
@@ -812,6 +853,7 @@ input[type="range"].form-input { padding: 0; border: none; background: transpare
   min-width: 0;
 }
 [data-theme="light"] .code-output-box { background: #0b1220; color: #d7e0ee; }
+[data-theme="sepia"] .code-output-box { background: #14100a; color: #e8dcc0; }
 .code-output-box pre {
   margin: 0;
   font-family: inherit;
@@ -1081,6 +1123,7 @@ details p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.7; marg
   white-space: normal;
 }
 [data-theme="light"] .guide-article-wrap :not(pre) > code { color: #92400e; }
+[data-theme="sepia"] .guide-article-wrap :not(pre) > code { color: #7c4a12; }
 
 /* Code blocks: chrome + scroll + mobile safety */
 .guide-article-wrap pre {
