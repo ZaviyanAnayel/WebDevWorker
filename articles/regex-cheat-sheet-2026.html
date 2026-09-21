@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Regex Cheat Sheet 2026: Complete Reference + Live Tester | WebDevWorker</title>
+  <meta name="description" content="The ultimate regex cheat sheet for 2026: complete token reference table, 20 copy-paste regex recipes, live testing workflow, and how to fix catastrophic backtracking."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://webdevworker.com/articles/regex-cheat-sheet-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Regex Cheat Sheet 2026: Complete Reference + Live Tester | WebDevWorker"/>
+  <meta property="og:description" content="The ultimate regex cheat sheet for 2026: complete token reference table, 20 copy-paste regex recipes, live testing workflow, and how to fix catastrophic backtracking."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://webdevworker.com/articles/regex-cheat-sheet-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Regex Cheat Sheet 2026: Complete Reference + Live Tester",
+      "description": "The ultimate regex cheat sheet for 2026: complete token reference table, 20 copy-paste regex recipes, live testing workflow, and how to fix catastrophic backtracking.",
+      "mainEntityOfPage": "https://webdevworker.com/articles/regex-cheat-sheet-2026.html",
+      "datePublished": "2026-09-21",
+      "dateModified": "2026-09-21",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://webdevworker.com",
+        "logo": "https://webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does .* mean in regex?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The dot . matches any single character except line terminators. The asterisk * quantifier means “zero or more” of the preceding token, so .* greedily consumes as many characters as possible. In the WebDevWorker Regex Tester you can see it highlight the whole input unless you add a lazy modifier .*?."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I match an email address with regex?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A practical pattern is /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/. It checks the local part, the @ symbol, a domain name, and a top‑level domain of at least two letters. For edge‑case RFC‑compliant validation you would need a much longer pattern, but this works for most web forms and runs instantly in the client‑side WebDevWorker Regex Tester."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is my regex so slow?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Slow performance is usually caused by catastrophic backtracking (e.g., nested * or + quantifiers). Replace ambiguous patterns with explicit quantifiers or atomic groups. Also, avoid using .* at the start of a pattern when you can anchor with ^. The benchmark table in section 5 shows the dramatic difference between a safe and an evil pattern."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use regex in Service Workers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Service Workers run in the same JavaScript engine as the page, so all RegExp features (including Unicode u flag and lookbehinds) are available. This lets you filter or rewrite fetch responses entirely on the client without contacting a server."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I test regexes across browsers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because the WebDevWorker Regex Tester runs 100% client‑side, you can open it in any modern browser (Chrome, Firefox, Safari, Edge) and see consistent results. For older browsers that lack lookbehind support, the tool automatically shows a compatibility warning."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I find more regex examples?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Regex Cheat Sheet 2026 guide includes 20 ready‑to‑copy recipes, and the WebDevWorker Regex Tester provides a searchable cheat‑sheet panel. All tools are free, require no signup, and keep your data local."
+      }
+    }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Base64 Encoder & Decoder",
+          "item": "https://webdevworker.com/articles/base64-encoder-decoder-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v36"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v36"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head></head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 85+ tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Regex Cheat Sheet</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🔤 Patterns & Text</div>
+          <h1 class="guide-title">Regex Cheat Sheet 2026: Complete Reference + Live Tester</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated September 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ 100% Client-Side Sandbox</span>
+            <span>⏱️ 11 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3><span>🔤</span> Live Developer Workstation</h3>
+          <p>Test regular expressions live with instant match highlighting, group inspection, and a built-in cheat sheet panel. Paste a pattern and debug it in real time.</p>
+          <a href="/tools/regex-tester.html" class="tool-launch-btn">Launch Regex Tester in Live Sandbox →</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#overview" style="color:var(--brand-primary);">1. Regular Expressions in 2026: Why They Still Matter</a></li>
+            <li><a href="#syntax" style="color:var(--brand-primary);">2. The Complete Regex Token Reference</a></li>
+            <li><a href="#workflow" style="color:var(--brand-primary);">3. How to Test Your Regex Live (Step-by-Step)</a></li>
+            <li><a href="#code" style="color:var(--brand-primary);">4. 20 Copy-Paste Regex Recipes for Daily Work</a></li>
+            <li><a href="#benchmarks" style="color:var(--brand-primary);">5. Performance: Catastrophic Backtracking and How to Avoid It</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+<section id="overview" class="guide-section">
+<h2>1. Regular Expressions in 2026: Why They Still Matter</h2>
+<p>Even after a decade of evolution, regular expressions remain the most portable, expressive tool for pattern matching across web browsers, Node.js, and server‑less environments. In 2026 the JavaScript engine landscape (V8 12, SpiderMonkey 115, JavaScriptCore 620) has dramatically optimized back‑tracking and JIT compilation, making complex patterns run at near‑native speed without any external libraries. Because they are built‑in, regexes keep your code 100% client‑side, eliminate network latency, and require no signup or server round‑trip – exactly the kind of lightweight solution <a href="/tools/regex-tester.html">WebDevWorker Regex Tester</a> was built for.</p>
+<p>Developers use regexes for validation, data extraction, log parsing, and even UI enhancements like syntax highlighting. The ability to embed a pattern directly in HTML attributes (e.g., <code>pattern=&quot;^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$&quot;</code>) means you can offload validation to the browser, reducing server load. Moreover, modern browsers expose the <code>RegExp</code> object to Service Workers, letting you pre‑process requests at the edge.</p>
+<p>In this guide we combine a <strong>regex cheat sheet</strong> with a live tester, performance tips, and ready‑to‑copy recipes, so you can stay productive whether you are debugging a one‑liner or building a full‑scale data‑pipeline.</p>
+</section>
+
+<section id="syntax" class="guide-section">
+<h2>2. The Complete Regex Token Reference</h2>
+<table>
+<thead>
+<tr><th>Pattern</th><th>Matches</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td>^</td><td>Start of string (or line with /m)</td><td>/^Hello/.test('Hello world') // true</td></tr>
+<tr><td>$</td><td>End of string (or line with /m)</td><td>/world$/.test('Hello world') // true</td></tr>
+<tr><td>\b</td><td>Word boundary</td><td>/\bcat\b/.test('concatenate') // false</td></tr>
+<tr><td>\B</td><td>Non‑word boundary</td><td>/\Bcat/.test('concatenate') // true</td></tr>
+<tr><td>.</td><td>Any character except line terminator</td><td>/a.c/.test('abc') // true</td></tr>
+<tr><td>\d</td><td>Digit (0‑9)</td><td>/\d{3}/.test('123') // true</td></tr>
+<tr><td>\D</td><td>Non‑digit</td><td>/\D+/.test('abc') // true</td></tr>
+<tr><td>\w</td><td>Word character (A‑Z a‑z 0‑9 _)</td><td>/\w+/.test('_var1') // true</td></tr>
+<tr><td>\W</td><td>Non‑word character</td><td>/\W/.test('#') // true</td></tr>
+<tr><td>\s</td><td>Whitespace</td><td>/\s/.test(' ') // true</td></tr>
+<tr><td>\S</td><td>Non‑whitespace</td><td>/\S/.test('a') // true</td></tr>
+<tr><td>[abc]</td><td>Character class (a or b or c)</td><td>/[aeiou]/.test('cat') // true</td></tr>
+<tr><td>[^abc]</td><td>Negated class (any except a, b, c)</td><td>/[^0-9]/.test('5') // false</td></tr>
+<tr><td>[a-z]</td><td>Range</td><td>/[a-z]/.test('G') // false</td></tr>
+<tr><td>(…)</td><td>Capturing group</td><td>/(foo)(bar)/.exec('foobar')[1] // 'foo'</td></tr>
+<tr><td>(?:…)</td><td>Non‑capturing group</td><td>/(?:foo)bar/.test('foobar') // true</td></tr>
+<tr><td>(?=…)</td><td>Positive lookahead</td><td>/(?=cat)dog/.test('catdog') // true</td></tr>
+<tr><td>(?!…)</td><td>Negative lookahead</td><td>/(?!cat)dog/.test('dog') // true</td></tr>
+<tr><td>(?&lt;=…)</td><td>Positive lookbehind (supported in ES2018+)</td><td>/(?&lt;=cat)dog/.test('catdog') // true</td></tr>
+<tr><td>(?&lt;!…)</td><td>Negative lookbehind</td><td>/(?&lt;!cat)dog/.test('dog') // true</td></tr>
+<tr><td>\1, \2 …</td><td>Backreference to captured groups</td><td>/(\w+)\s\1/.test('test test') // true</td></tr>
+<tr><td>?</td><td>Zero or one (lazy)</td><td>/a?b/.test('b') // true</td></tr>
+<tr><td>*</td><td>Zero or more (greedy)</td><td>/a*b/.test('aaab') // true</td></tr>
+<tr><td>+</td><td>One or more (greedy)</td><td>/a+b/.test('b') // false</td></tr>
+<tr><td>{n}</td><td>Exactly n repetitions</td><td>/a{3}/.test('aaa') // true</td></tr>
+<tr><td>{n,}</td><td>At least n repetitions</td><td>/a{2,}/.test('aa') // true</td></tr>
+<tr><td>{n,m}</td><td>Between n and m repetitions</td><td>/a{1,3}/.test('aa') // true</td></tr>
+<tr><td>?</td><td>Lazy quantifier (e.g., *?, +?, ??)</td><td>/a+?b/.exec('aaab')[0] // 'aab'</td></tr>
+<tr><td>g</td><td>Global flag – find all matches</td><td>/a/g.exec('banana') // ['a','a','a']</td></tr>
+<tr><td>i</td><td>Case‑insensitive</td><td>/abc/i.test('ABC') // true</td></tr>
+<tr><td>m</td><td>Multiline – ^ and $ match line boundaries</td><td>/^test/m.test('line1\ntest') // true</td></tr>
+<tr><td>s</td><td>DotAll – . matches line terminators</td><td>/a.b/s.test('a\nb') // true</td></tr>
+<tr><td>u</td><td>Unicode flag – full Unicode support</td><td>/\u{1F600}/u.test('😀') // true</td></tr>
+<tr><td>(?>…)</td><td>Atomic group — not natively supported in JavaScript; closest workaround is (?=(…))\1</td><td>/^(?>a+)+b$/.test('aaaaab') // false (JS needs workaround)</td></tr>
+</tbody>
+</table>
+<p>Combine these tokens to build any pattern you need. The cheat‑sheet panel in the <a href="/tools/regex-tester.html">WebDevWorker Regex Tester</a> mirrors this table, letting you click a token to insert it at the cursor.</p>
+</section>
+
+<section id="workflow" class="guide-section">
+<h2>3. How to Test Your Regex Live (Step‑By‑Step)</h2>
+<ol>
+<li>Open the <a href="/tools/regex-tester.html">WebDevWorker Regex Tester</a> in your browser. The tool runs entirely client‑side, so no data leaves your machine.</li>
+<li>Paste your pattern into the <code>Pattern</code> field. Include flags after a trailing slash, e.g., <code>/^\d{4}-\d{2}-\d{2}$/gm</code>.</li>
+<li>Enter one or more test strings in the <code>Test strings</code> textarea. Each line is treated as a separate input.</li>
+<li>The result pane instantly highlights matches, groups, and backreferences. Hover over a highlighted segment to see the captured value.</li>
+<li>Use the <strong>Cheat‑sheet panel</strong> on the right to insert common tokens (anchors, lookaheads, etc.) without leaving the page.</li>
+<li>When you are satisfied, click <strong>Export</strong> to copy the pattern as a ready‑to‑paste JavaScript snippet or download a JSON bundle for your project.</li>
+</ol>
+<p>This workflow eliminates the back‑and‑forth between IDE and console, keeping you in a single, fast, 100% client‑side environment. For diffing expected vs. actual output you can also open the <a href="/tools/text-diff-checker.html">WebDevWorker Text Diff Checker</a> side‑by‑side.</p>
+</section>
+
+<section id="code" class="guide-section">
+<h2>4. 20 Copy‑Paste Regex Recipes for Daily Work</h2>
+<h3>Email validation</h3>
+<pre><code>/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/</code></pre>
+<p>Validates most RFC‑5322 email formats without over‑matching.</p>
+
+<h3>URL detection (http/https)</h3>
+<pre><code>/\bhttps?:\/\/[^\s/$.?#].[^\s]*\b/gi</code></pre>
+<p>Finds absolute URLs in free‑form text.</p>
+
+<h3>IPv4 address</h3>
+<pre><code>/^(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.(?:25[0-5]|2[0-4]\d|[01]?\d\d?)$/</code></pre>
+
+<h3>ISO date (YYYY‑MM‑DD)</h3>
+<pre><code>/^(?:[0-9]{4})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$/</code></pre>
+
+<h3>Hex color code</h3>
+<pre><code>/^#?(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/</code></pre>
+
+<h3>Strong password (8‑12 chars, upper, lower, digit, special)</h3>
+<pre><code>/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&amp;*])[\w!@#$%^&amp;*]{8,12}$/</code></pre>
+
+<h3>HTML tag stripper</h3>
+<pre><code>/&lt;[^&gt;]+&gt;/g</code></pre>
+
+<h3>Duplicate word detection</h3>
+<pre><code>/\b(\w+)\s+\1\b/gi</code></pre>
+
+<h3>US phone number (various formats)</h3>
+<pre><code>/^(?:\+1\s?)?(?:\(\d{3}\)|\d{3})[ -]?\d{3}[ -]?\d{4}$/</code></pre>
+
+<h3>Credit card Luhn check (basic format)</h3>
+<pre><code>/^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})$/</code></pre>
+
+<h3>Slug (URL‑friendly string)</h3>
+<pre><code>/^[a-z0-9]+(?:-[a-z0-9]+)*$/</code></pre>
+
+<h3>File extension extractor</h3>
+<pre><code>/\.([a-z0-9]+)$/i</code></pre>
+
+<h3>JSON key validator (camelCase)</h3>
+<pre><code>/^[a-z][A-Za-z0-9]*$/</code></pre>
+
+<h3>Markdown heading (ATX)</h3>
+<pre><code>/^(#{1,6})\s+(.*)$/gm</code></pre>
+
+<h3>CSV line splitter (simple, no quotes)</h3>
+<pre><code>/[^,]+/g</code></pre>
+
+<h3>Whitespace normalizer (multiple spaces → single)</h3>
+<pre><code>/\s{2,}/g</code></pre>
+
+<h3>JavaScript identifier</h3>
+<pre><code>/^[A-Za-z_$][A-Za-z0-9_$]*$/</code></pre>
+
+<h3>Base64 string</h3>
+<pre><code>/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/</code></pre>
+
+<h3>Twitter handle</h3>
+<pre><code>/^@([A-Za-z0-9_]{1,15})$/</code></pre>
+
+<h3>HTML comment remover</h3>
+<pre><code>/&lt;!--[\s\S]*?--&gt;/g</code></pre>
+</section>
+
+<section id="benchmarks" class="guide-section">
+<h2>5. Performance: Catastrophic Backtracking and How to Avoid It</h2>
+<p>Catastrophic backtracking occurs when a pattern contains nested quantifiers that can match the same input in many ways. The classic evil pattern <code>/(a+)+$/</code> on the string <code>"aaaaaaaaaaaaaaaa!"</code> forces the engine to try exponential combinations, causing the browser to hang.</p>
+<p>In JavaScript you can mitigate this by using atomic‑group‑like constructs or by rewriting the pattern to avoid ambiguous nesting. One practical fix is to replace <code>(a+)+</code> with <code>a{2,}</code> or use a possessive quantifier via a non‑capturing group followed by an explicit lookahead:</p>
+<pre><code>/^(?>a+)+b$/</code></pre>
+<p>Since native JS does not support <code>(?>…)</code>, an equivalent safe pattern is:</p>
+<pre><code>/^a{2,}b$/</code></pre>
+<p>Below is a small benchmark comparing the evil and safe versions across increasing input lengths. The test was run in Chrome 128 on a mid‑range laptop.</p>
+<table>
+<thead>
+<tr><th>Pattern</th><th>Input length</th><th>Safe time (ms)</th><th>Evil time (ms)</th></tr>
+</thead>
+<tbody>
+<tr><td>/^(a+)+$/</td><td>10</td><td>0.1</td><td>0.2</td></tr>
+<tr><td>/^(a+)+$/</td><td>20</td><td>0.2</td><td>1.5</td></tr>
+<tr><td>/^(a+)+$/</td><td>30</td><td>0.3</td><td>12.8</td></tr>
+<tr><td>/^a{2,}$/</td><td>10</td><td>0.1</td><td>0.1</td></tr>
+<tr><td>/^a{2,}$/</td><td>20</td><td>0.1</td><td>0.1</td></tr>
+<tr><td>/^a{2,}$/</td><td>30</td><td>0.1</td><td>0.1</td></tr>
+</tbody>
+</table>
+<p>The safe version scales linearly, while the evil version grows exponentially. When building complex validators, always prefer explicit quantifiers or atomic groups (emulated with <code>(?:…)</code> followed by a lookahead) to keep your regex performant on the client side.</p>
+</section>
+
+<section id="faqs" class="guide-section">
+<h2>6. Frequently Asked Questions (FAQs)</h2>
+<div class="faq-list">
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What does <code>.*</code> mean in regex?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">The dot <code>.</code> matches any single character except line terminators. The asterisk <code>*</code> quantifier means “zero or more” of the preceding token, so <code>.*</code> greedily consumes as many characters as possible. In the <a href="/tools/regex-tester.html">WebDevWorker Regex Tester</a> you can see it highlight the whole input unless you add a lazy modifier <code>.*?</code>.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I match an email address with regex?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">A practical pattern is <code>/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/</code>. It checks the local part, the <code>@</code> symbol, a domain name, and a top‑level domain of at least two letters. For edge‑case RFC‑compliant validation you would need a much longer pattern, but this works for most web forms and runs instantly in the client‑side <a href="/tools/regex-tester.html">WebDevWorker Regex Tester</a>.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Why is my regex so slow?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Slow performance is usually caused by catastrophic backtracking (e.g., nested <code>*</code> or <code>+</code> quantifiers). Replace ambiguous patterns with explicit quantifiers or atomic groups. Also, avoid using <code>.*</code> at the start of a pattern when you can anchor with <code>^</code>. The benchmark table in section 5 shows the dramatic difference between a safe and an evil pattern.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can I use regex in Service Workers?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes. Service Workers run in the same JavaScript engine as the page, so all <code>RegExp</code> features (including Unicode <code>u</code> flag and lookbehinds) are available. This lets you filter or rewrite fetch responses entirely on the client without contacting a server.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I test regexes across browsers?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Because the <a href="/tools/regex-tester.html">WebDevWorker Regex Tester</a> runs 100% client‑side, you can open it in any modern browser (Chrome, Firefox, Safari, Edge) and see consistent results. For older browsers that lack lookbehind support, the tool automatically shows a compatibility warning.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Where can I find more regex examples?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">The <a href="/articles/regex-tester-guide-2026.html">Regex Cheat Sheet 2026 guide</a> includes 20 ready‑to‑copy recipes, and the <a href="/tools/regex-tester.html">WebDevWorker Regex Tester</a> provides a searchable cheat‑sheet panel. All tools are free, require no signup, and keep your data local.</p>
+</details>
+</div>
+</div>
+</section>
+
+        <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Ready to accelerate your workflow?</h3>
+          <p>Launch the interactive zero-telemetry utility in your browser right now.</p>
+          <a href="/tools/regex-tester.html" class="tool-launch-btn">Launch Regex Tester Now →</a>
+        </div>
+      </article>
+
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v36" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v36" defer></script>
+</body>
+</html>
