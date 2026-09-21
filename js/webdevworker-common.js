@@ -83,10 +83,16 @@
   }
 
   // 3. Sidebar Navigation & Scroll
+  // NOTE: the actual scroller is `.sidebar-nav` (overflow-y:auto); #sidebar
+  // itself never scrolls, so save/restore must target `nav`, not `sidebar`.
   function initSidebar() {
     const sidebar = document.getElementById('sidebar');
     const nav = document.querySelector('#sidebar .sidebar-nav');
     if (!sidebar || !nav) return;
+
+    function persistSidebarScroll() {
+      try { sessionStorage.setItem('cw_sidebar_scroll', String(nav.scrollTop)); } catch (e) {}
+    }
 
     const existingLinks = nav.querySelectorAll('a.sidebar-link, a[href*="/tools/"]');
     if (existingLinks.length > 0) {
@@ -96,15 +102,26 @@
         const isActive = (href === currentPath) || (href === '/' && (currentPath === '/' || currentPath === ''));
         link.classList.toggle('active', isActive);
 
-        link.addEventListener('click', function () {
-          try { sessionStorage.setItem('cw_sidebar_scroll', sidebar.scrollTop); } catch (e) {}
-        });
+        link.addEventListener('click', persistSidebarScroll);
       });
     }
 
-    const savedScroll = sessionStorage.getItem('cw_sidebar_scroll');
-    if (savedScroll !== null && !isNaN(parseInt(savedScroll, 10))) {
-      sidebar.scrollTop = parseInt(savedScroll, 10);
+    // pagehide covers every navigation (cards, nav links, back/forward),
+    // not just sidebar-link clicks.
+    window.addEventListener('pagehide', persistSidebarScroll);
+
+    function restoreSidebarScroll() {
+      try {
+        const savedScroll = sessionStorage.getItem('cw_sidebar_scroll');
+        if (savedScroll !== null && !isNaN(parseInt(savedScroll, 10))) {
+          nav.scrollTop = parseInt(savedScroll, 10);
+        }
+      } catch (e) {}
+    }
+    restoreSidebarScroll();
+    // Re-apply after layout settles (fonts/images can shift scroll height).
+    if (window.requestAnimationFrame) {
+      requestAnimationFrame(restoreSidebarScroll);
     }
   }
 
