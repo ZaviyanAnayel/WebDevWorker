@@ -1276,3 +1276,205 @@ details p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.7; marg
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ============================================================
+   PREMIUM MICRO-INTERACTIONS — global button feel, ripple,
+   toast notifications, copy success state, cookie banner.
+   ============================================================ */
+
+/* --- Premium button feel: hover lift, press depth, focus ring --- */
+:where(button, .btn, input[type="button"], input[type="submit"], input[type="reset"], [role="button"]) {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.16s ease, box-shadow 0.22s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, filter 0.2s ease;
+}
+@media (hover: hover) {
+  :where(button, .btn, input[type="button"], input[type="submit"], input[type="reset"], [role="button"]):hover {
+    transform: translateY(-1px);
+  }
+}
+:where(button, .btn, input[type="button"], input[type="submit"], input[type="reset"], [role="button"]):active {
+  transform: translateY(0) scale(0.97);
+}
+:where(button, .btn, input[type="button"], input[type="submit"], input[type="reset"], [role="button"]):focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(button, .btn, input[type="button"], input[type="submit"], input[type="reset"], [role="button"]) {
+    transition: none;
+  }
+}
+
+/* --- Click ripple (span injected by JS, host class is temporary) --- */
+.ww-ripple-host {
+  position: relative;
+  overflow: hidden;
+}
+.ww-ripple {
+  position: absolute;
+  border-radius: 9999px;
+  background: currentColor;
+  opacity: 0.28;
+  transform: scale(0);
+  pointer-events: none;
+  animation: ww-ripple 0.55s ease-out forwards;
+}
+@keyframes ww-ripple {
+  to {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ww-ripple {
+    display: none;
+  }
+}
+
+/* --- Copy success state (applied ~1.5s by JS) --- */
+button.ww-copy-success {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: rgba(16, 185, 129, 0.55);
+  color: #34d399;
+}
+
+/* --- Global toast notifications --- */
+#wwToastWrap {
+  position: fixed;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10040;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+}
+.ww-toast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #0d1424;
+  color: #eef2f9;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.55);
+  animation: ww-toast-in 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ww-toast.ww-toast-success {
+  border-color: rgba(16, 185, 129, 0.55);
+}
+.ww-toast.ww-toast-success .ww-toast-icon {
+  color: #34d399;
+}
+.ww-toast.ww-toast-error {
+  border-color: rgba(244, 63, 94, 0.55);
+}
+.ww-toast.ww-toast-error .ww-toast-icon {
+  color: #fb7185;
+}
+.ww-toast.ww-toast-out {
+  animation: ww-toast-out 0.3s ease-in forwards;
+}
+@keyframes ww-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.95);
+  }
+}
+@keyframes ww-toast-out {
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+}
+
+/* --- Cookie consent banner (injected by JS, dark system UI in all themes) --- */
+#wwCookieBanner {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 10030;
+  max-width: 600px;
+  margin: 0 auto;
+  background: #0d1424;
+  color: #e6ebf4;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 18px;
+  padding: 18px 20px;
+  box-shadow: 0 28px 70px -12px rgba(0, 0, 0, 0.65);
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  transform: translateY(150%);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.25, 1.02), opacity 0.4s ease;
+}
+#wwCookieBanner.ww-show {
+  transform: translateY(0);
+  opacity: 1;
+}
+.ww-cookie-text {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: #c3ccd9;
+  flex: 1;
+  min-width: 0;
+}
+.ww-cookie-text strong {
+  color: #ffffff;
+  font-size: 0.92rem;
+}
+.ww-cookie-text a {
+  color: #7dd3fc;
+  text-decoration: underline;
+}
+.ww-cookie-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.ww-cookie-accept,
+.ww-cookie-decline {
+  border-radius: 999px;
+  padding: 9px 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  font-family: inherit;
+}
+.ww-cookie-accept {
+  background: #eab308;
+  color: #1a1405;
+}
+.ww-cookie-decline {
+  background: transparent;
+  color: #c3ccd9;
+  border-color: rgba(148, 163, 184, 0.4);
+}
+@media (max-width: 560px) {
+  #wwCookieBanner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .ww-cookie-actions {
+    justify-content: stretch;
+  }
+  .ww-cookie-accept,
+  .ww-cookie-decline {
+    flex: 1;
+  }
+}
+
