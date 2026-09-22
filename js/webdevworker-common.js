@@ -16,6 +16,91 @@
 
   const currentPath = normalize(window.location.pathname);
 
+  // 0. Clipboard hardening — every copy button keeps working even when
+  // navigator.clipboard.writeText rejects (permissions, background tab, …)
+  // or when navigator.clipboard is missing entirely (non-secure contexts).
+  function initClipboardHardening() {
+    function execFallback(text) {
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = String(text == null ? '' : text);
+        ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;';
+        (document.body || document.documentElement).appendChild(ta);
+        try { ta.focus(); } catch (e) {}
+        ta.select();
+        try { ta.setSelectionRange(0, ta.value.length); } catch (e2) {}
+        var ok = document.execCommand('copy');
+        ta.remove();
+        return !!ok;
+      } catch (e) { return false; }
+    }
+    // Robust copy used by page-level copy buttons: clipboard API + execCommand
+    // fallback + honest toast (no fake "Copied!" when the copy actually failed).
+    // Defined here so it exists even before initMicroInteractions runs.
+    try {
+      var wdwToastFn = function (msg, type) {
+        try {
+          if (typeof window.wdwToast === 'function') return window.wdwToast(msg, type);
+          if (typeof window.showToast === 'function') return window.showToast(msg, type);
+        } catch (e) {}
+      };
+      window.wwCopyText = function (text, okMsg) {
+        var doCopy;
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          doCopy = navigator.clipboard.writeText(text).then(
+            function () { return true; },
+            function () { return execFallback(text); }
+          );
+        } else {
+          doCopy = Promise.resolve(execFallback(text));
+        }
+        return doCopy.then(function (ok) {
+          wdwToastFn(ok ? (okMsg || 'Copied to clipboard ✓') : 'Copy failed — please select the text manually', ok ? 'success' : 'error');
+          return !!ok;
+        });
+      };
+    } catch (e) {}
+    try {
+      // (a) navigator.clipboard missing entirely (http, old browsers): install a shim
+      // so direct navigator.clipboard.writeText(...) call sites don't throw.
+      if (typeof navigator !== 'undefined' && !navigator.clipboard) {
+        var shim = {
+          writeText: function (text) {
+            return new Promise(function (resolve, reject) {
+              if (execFallback(text)) resolve(); else reject(new Error('copy failed'));
+            });
+          },
+          readText: function () { return Promise.reject(new Error('clipboard unavailable')); }
+        };
+        try {
+          Object.defineProperty(navigator, 'clipboard', { value: shim, configurable: true, writable: true });
+        } catch (e) {
+          try { navigator.clipboard = shim; } catch (e2) {}
+        }
+      }
+      // (b) real clipboard exists: fall back to execCommand when writeText rejects,
+      // so legacy direct call sites keep working instead of failing silently.
+      var proto = window.Clipboard && window.Clipboard.prototype;
+      if (proto && !proto.__wwHardened && typeof proto.writeText === 'function') {
+        var orig = proto.writeText;
+        proto.writeText = function (text) {
+          var self = this, args = arguments, p;
+          try { p = orig.apply(self, args); }
+          catch (e) { p = Promise.reject(e); }
+          return Promise.resolve(p).then(
+            function () {},
+            function () {
+              if (execFallback(text)) return;
+              throw new Error('Copy failed — please select the text manually');
+            }
+          );
+        };
+        proto.__wwHardened = true;
+      }
+    } catch (e) {}
+  }
+
   // 1. Dynamic Theme Sync — 4-theme cycle (dark / light / sepia / dim).
   //    Respects the saved user choice permanently; unknown values normalize to dark.
   const WDW_THEMES = [
@@ -81,6 +166,34 @@
       g.style.cssText = 'display:inline-flex; align-items:center; gap:6px; padding:6px 14px; margin-right:8px; border-radius:6px; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.3); color:#38bdf8; text-decoration:none; font-size:0.85rem; font-weight:700; cursor:pointer; vertical-align:middle;';
       themeBtn.parentNode.insertBefore(g, themeBtn);
     }
+  }
+
+  // 2b. Article "Back" button — every guide under /articles/ gets a visible
+  // back control (history.back with a /articles/ fallback).
+  function injectArticleBack() {
+    try {
+      var path = window.location.pathname || '';
+      if (path.indexOf('/articles/') !== 0) return;
+      if (/\/articles\/(index\.html)?$/.test(path)) return;
+      if (document.getElementById('wwArticleBack')) return;
+      var btn = document.createElement('button');
+      btn.id = 'wwArticleBack';
+      btn.type = 'button';
+      btn.innerHTML = '&#8592; Back';
+      btn.setAttribute('aria-label', 'Go back to previous page');
+      btn.style.cssText = 'display:inline-flex;align-items:center;gap:6px;margin:14px 18px 0;padding:7px 14px;border-radius:8px;border:1px solid var(--border,#e2e8f0);background:var(--bg-surface,#fff);color:var(--text-main,#0f172a);font-size:.82rem;font-weight:700;cursor:pointer;';
+      btn.onclick = function () {
+        try {
+          if (window.history.length > 1) { window.history.back(); return; }
+        } catch (e) {}
+        window.location.href = '/articles/';
+      };
+      var wrap = document.querySelector('.guide-article-wrap');
+      var host = document.querySelector('main');
+      if (wrap && wrap.parentNode) wrap.parentNode.insertBefore(btn, wrap);
+      else if (host) host.insertBefore(btn, host.firstChild);
+      else if (document.body) document.body.insertBefore(btn, document.body.firstChild);
+    } catch (e) {}
   }
 
   // 3. Sidebar Navigation & Scroll
@@ -559,8 +672,10 @@
   }
 
   function runAll() {
+    initClipboardHardening();
     syncTheme();
     injectGuides();
+    injectArticleBack();
     initSidebar();
     initMobileDrawer();
     initSearch();

@@ -20,7 +20,7 @@
   </p>
 
   <p>
-    <a href="https://github.com/zaviyan/webdevworker/stargazers"><img src="https://img.shields.io/badge/Stars-85%2B%20Tools-eab308?style=for-the-badge&logo=starship&logoColor=black" alt="85+ Tools" /></a>
+    <a href="https://github.com/ZaviyanAnayel/WebDevWorker/stargazers"><img src="https://img.shields.io/badge/Stars-85%2B%20Tools-eab308?style=for-the-badge&logo=starship&logoColor=black" alt="85+ Tools" /></a>
     <a href="https://webdevworker.com"><img src="https://img.shields.io/badge/Privacy-100%25%20Zero%20Telemetry-10b981?style=for-the-badge&logo=shield&logoColor=white" alt="Zero Telemetry" /></a>
     <a href="https://webdevworker.com"><img src="https://img.shields.io/badge/Runtime-Browser%20V8%20Sandbox-38bdf8?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Browser V8 Sandbox" /></a>
     <a href="https://webdevworker.com"><img src="https://img.shields.io/badge/PWA-100%25%20Offline%20Capable-a855f7?style=for-the-badge&logo=pwa&logoColor=white" alt="PWA Ready" /></a>
@@ -263,7 +263,7 @@ WebDevWorker is designed to be zero-dependency and 100% self-hostable on any sta
 ### Option 1: Quick Static Preview (Python)
 ```bash
 # Clone the repository
-git clone https://github.com/zaviyan/webdevworker.git
+git clone https://github.com/ZaviyanAnayel/WebDevWorker.git
 cd webdevworker
 
 # Start a local static server

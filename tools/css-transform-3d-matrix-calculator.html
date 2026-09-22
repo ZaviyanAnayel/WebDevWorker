@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html data-theme="dark" lang="en">
 <head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','light','sepia','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>CSS 3D Transform Studio &amp; matrix3d() Calculator | WebDevWorker</title>
@@ -32,8 +33,8 @@
     gtag('config', 'G-G718R5DYYR');
   </script>
 
-  <link href="/css/webdevworker.css?v=2026-wdw-v40" rel="stylesheet"/>
-  <link href="/css/ai-widget.css?v=2026-wdw-v40" rel="stylesheet"/>
+  <link href="/css/webdevworker.css?v=2026-wdw-v41" rel="stylesheet"/>
+  <link href="/css/ai-widget.css?v=2026-wdw-v41" rel="stylesheet"/>
 
   <script type="application/ld+json">
 {
@@ -527,8 +528,8 @@
     </div>
   </div>
 
-  <script src="/js/webdevworker-common.js?v=2026-wdw-v40" defer></script>
-  <script src="/js/ai-widget.js?v=2026-wdw-v40" defer></script>
+  <script src="/js/webdevworker-common.js?v=2026-wdw-v41" defer></script>
+  <script src="/js/ai-widget.js?v=2026-wdw-v41" defer></script>
   <script>
 
         function update3D() {
@@ -568,8 +569,7 @@
         }
 
         function copy3DCSS() {
-          navigator.clipboard.writeText(document.getElementById('cssOutput3D').innerText);
-          showToast('Copied 3D CSS code to clipboard!');
+          window.wwCopyText(document.getElementById('cssOutput3D').innerText, 'Copied 3D CSS code to clipboard!');
         }
 
         ['perspSlider', 'rotXSlider', 'rotYSlider', 'rotZSlider', 'transZSlider', 'scaleSlider'].forEach(id => {

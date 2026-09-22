@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','light','sepia','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Next.js 15 & React 19: Zero‑Runtime JSX Migration Guide | WebDevWorker Guide (2026)</title>
   <meta name="description" content="Learn how to convert raw HTML/SVG to Next.js 15 Server Components with React 19 JSX, zero‑runtime overhead, and production‑ready best practices."/>
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
-  <link rel="canonical" href="https://www.webdevworker.com/articles/html-to-jsx-migration-guide-2026.html"/>
+  <link rel="canonical" href="https://webdevworker.com/articles/html-to-jsx-migration-guide-2026.html"/>
   <link rel="icon" type="image/png" href="/assets/favicon.png"/>
   <meta name="theme-color" content="#06b6d4"/>
 
@@ -14,7 +15,7 @@
   <meta property="og:title" content="Next.js 15 & React 19: Zero‑Runtime JSX Migration Guide | WebDevWorker"/>
   <meta property="og:description" content="Learn how to convert raw HTML/SVG to Next.js 15 Server Components with React 19 JSX, zero‑runtime overhead, and production‑ready best practices."/>
   <meta property="og:type" content="article"/>
-  <meta property="og:url" content="https://www.webdevworker.com/articles/html-to-jsx-migration-guide-2026.html"/>
+  <meta property="og:url" content="https://webdevworker.com/articles/html-to-jsx-migration-guide-2026.html"/>
   <meta property="og:site_name" content="WebDevWorker"/>
 
   <!-- Google AdSense -->
@@ -29,18 +30,18 @@
         "@type": "Article",
         "headline": "Next.js 15 & React 19: Zero‑Runtime JSX Migration Guide",
         "description": "Learn how to convert raw HTML/SVG to Next.js 15 Server Components with React 19 JSX, zero‑runtime overhead, and production‑ready best practices.",
-        "mainEntityOfPage": "https://www.webdevworker.com/articles/html-to-jsx-migration-guide-2026.html",
+        "mainEntityOfPage": "https://webdevworker.com/articles/html-to-jsx-migration-guide-2026.html",
         "datePublished": "2026-09-20",
         "dateModified": "2026-09-20",
         "author": {
           "@type": "Organization",
           "name": "WebDevWorker Engineering Team",
-          "url": "https://www.webdevworker.com/about.html"
+          "url": "https://webdevworker.com/about.html"
         },
         "publisher": {
           "@type": "Organization",
           "name": "WebDevWorker",
-          "logo": "https://www.webdevworker.com/assets/favicon.png"
+          "logo": "https://webdevworker.com/assets/favicon.png"
         }
       },
       {
@@ -102,6 +103,36 @@
       --accent: #06b6d4;
       --accent-gradient: linear-gradient(135deg, #06b6d4, #3b82f6);
       --code-bg: #030712;
+    }
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: rgba(6, 182, 212, 0.28);
+      --text: #0f172a;
+      --text-muted: #475569;
+      --accent: #0891b2;
+      --accent-gradient: linear-gradient(135deg, #0891b2, #2563eb);
+      --code-bg: #f1f5f9;
+    }
+    [data-theme="sepia"] {
+      --bg: #f5efe0;
+      --card-bg: #fffaf0;
+      --card-border: rgba(6, 182, 212, 0.25);
+      --text: #3f2f1f;
+      --text-muted: #6b5d4f;
+      --accent: #0e7490;
+      --accent-gradient: linear-gradient(135deg, #0e7490, #1d4ed8);
+      --code-bg: #efe6d4;
+    }
+    [data-theme="dim"] {
+      --bg: #1a2233;
+      --card-bg: #222d42;
+      --card-border: rgba(6, 182, 212, 0.22);
+      --text: #dbe4f0;
+      --text-muted: #8fa0b8;
+      --accent: #06b6d4;
+      --accent-gradient: linear-gradient(135deg, #06b6d4, #3b82f6);
+      --code-bg: #111a2a;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -368,7 +399,7 @@
       <h3><span>🛠️</span> Interactive Developer Tool: HTML to JSX & React Component Converter</h3>
       <p>Test, convert, and format directly in your browser with WebDevWorker's zero-knowledge client-side developer engine. 100% private, zero server telemetry, certified offline execution.</p>
       <div class="tool-actions">
-        <a href="https://www.webdevworker.com/tools/html-to-jsx.html" class="tool-launch-btn">Launch Free HTML to JSX & React Component Converter →</a>
+        <a href="https://webdevworker.com/tools/html-to-jsx.html" class="tool-launch-btn">Launch Free HTML to JSX & React Component Converter →</a>
         <a href="/articles/" class="hub-link-btn">📚 Browse All 85 Guides</a>
       </div>
     </div>
@@ -597,7 +628,7 @@ export default function HomePage() {
       <h3>Ready to optimize your workflow?</h3>
       <p>Run your code transformations and developer calculations instantly with 100% browser sandbox security.</p>
       <div class="tool-actions">
-        <a href="https://www.webdevworker.com/tools/html-to-jsx.html" class="tool-launch-btn">Launch HTML to JSX & React Component Converter Now →</a>
+        <a href="https://webdevworker.com/tools/html-to-jsx.html" class="tool-launch-btn">Launch HTML to JSX & React Component Converter Now →</a>
         <a href="/articles/" class="hub-link-btn">📚 Guides Directory</a>
       </div>
     </div>
@@ -628,5 +659,6 @@ export default function HomePage() {
       }
     }
   </script>
+<script src="/js/webdevworker-common.js?v=2026-wdw-v41" defer></script>
 </body>
 </html>
