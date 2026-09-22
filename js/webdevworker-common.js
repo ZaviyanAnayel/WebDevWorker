@@ -16,6 +16,137 @@
 
   const currentPath = normalize(window.location.pathname);
 
+  // 0b. Top-level copy safety net — installed immediately at script evaluation
+  // (not inside any init), so copy buttons and toasts keep working even if a
+  // later initializer throws. The clipboard write is raced against a timeout
+  // so a hanging promise can never leave a button silently dead.
+  (function installCopySafetyNet() {
+    try {
+      if (typeof window.wdwToast !== 'function') {
+        window.wdwToast = function (message, type) {
+          try {
+            var wrap = document.getElementById('wwToastWrap');
+            if (!wrap) {
+              wrap = document.createElement('div');
+              wrap.id = 'wwToastWrap';
+              wrap.setAttribute('aria-live', 'polite');
+              wrap.style.cssText = 'position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;';
+              document.body.appendChild(wrap);
+            }
+            var el = document.createElement('div');
+            el.textContent = String(message == null ? '' : message);
+            el.style.cssText = 'background:#1f2937;color:#f9fafb;padding:10px 18px;border-radius:999px;font-size:0.85rem;box-shadow:0 8px 24px rgba(0,0,0,0.35);' + (type === 'error' ? 'background:#7f1d1d;' : type === 'success' ? 'background:#065f46;' : '');
+            wrap.appendChild(el);
+            setTimeout(function () { try { el.remove(); } catch (e) {} }, 2600);
+          } catch (e) {}
+        };
+        if (typeof window.showToast !== 'function') window.showToast = window.wdwToast;
+      }
+
+      function snExecFallback(text) {
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = String(text == null ? '' : text);
+          ta.setAttribute('readonly', '');
+          ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;';
+          (document.body || document.documentElement).appendChild(ta);
+          try { ta.focus(); } catch (e) {}
+          ta.select();
+          try { ta.setSelectionRange(0, ta.value.length); } catch (e2) {}
+          var ok = document.execCommand('copy');
+          ta.remove();
+          return !!ok;
+        } catch (e) { return false; }
+      }
+
+      function snWriteText(text) {
+        return new Promise(function (resolve) {
+          var done = false;
+          function fin(ok) { if (!done) { done = true; resolve(!!ok); } }
+          var timer = setTimeout(function () { fin(snExecFallback(text)); }, 1500);
+          try {
+            if (typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+              navigator.clipboard.writeText(String(text)).then(
+                function () { try { clearTimeout(timer); } catch (e) {} fin(true); },
+                function () { try { clearTimeout(timer); } catch (e2) {} fin(snExecFallback(text)); }
+              );
+            } else {
+              try { clearTimeout(timer); } catch (e3) {}
+              fin(snExecFallback(text));
+            }
+          } catch (e4) { try { clearTimeout(timer); } catch (e5) {} fin(snExecFallback(text)); }
+        });
+      }
+
+      function snResolveBtn(btnRef) {
+        try {
+          if (typeof btnRef === 'string') return document.getElementById(btnRef);
+          if (btnRef && btnRef.nodeType === 1) return btnRef;
+        } catch (e) {}
+        return null;
+      }
+
+      function snCopyCode(targetId, btnRef) {
+        try {
+          var target = document.getElementById(targetId);
+          var text = target ? (target.innerText || target.textContent || '') : '';
+          if (!text) { window.wdwToast('Nothing to copy', 'error'); return; }
+          var btn = snResolveBtn(btnRef);
+          window.wwCopyText(text).then(function (ok) {
+            try {
+              if (ok && btn && btn.getBoundingClientRect) {
+                var w = btn.getBoundingClientRect().width;
+                var orig = btn.innerHTML;
+                if (w > 0) { try { btn.style.minWidth = Math.ceil(w) + 'px'; } catch (e) {} }
+                btn.innerHTML = '\u2713 Copied';
+                setTimeout(function () { try { btn.innerHTML = orig; btn.style.minWidth = ''; } catch (e2) {} }, 1500);
+              }
+            } catch (e3) {}
+          });
+        } catch (e4) {
+          try { window.wdwToast('Copy failed', 'error'); } catch (e5) {}
+        }
+      }
+
+      if (typeof window.wwCopyText !== 'function') {
+        window.wwCopyText = function (text, okMsg) {
+          return snWriteText(text).then(function (ok) {
+            window.wdwToast(ok ? (okMsg || 'Copied to clipboard \u2713') : 'Copy failed \u2014 please select the text manually', ok ? 'success' : 'error');
+            return ok;
+          });
+        };
+        window.wwCopyText.__wwTopLevel = true;
+      }
+
+      var existing = window.copyCode;
+      var src = (typeof existing === 'function') ? Function.prototype.toString.call(existing) : '';
+      var isStub = /typeof window\.copyCode/.test(src) || /window\.copyCode\s*\(/.test(src);
+      if (typeof existing !== 'function' || isStub) {
+        window.copyCode = snCopyCode;
+        window.copyCode.__wwTopLevel = true;
+      }
+
+      // Capture-phase delegation: if the inline onclick's copyCode is missing at
+      // click time, perform the copy here so a button never silently does nothing.
+      try {
+        document.addEventListener('click', function (e) {
+          try {
+            if (typeof window.copyCode === 'function') return;
+            var t = e.target;
+            if (!t || !t.closest) return;
+            var btn = t.closest('button');
+            if (!btn) return;
+            var oc = btn.getAttribute('onclick') || '';
+            var m = /copyCode\(\s*['"]([^'"]+)['"]/.exec(oc);
+            if (!m) return;
+            e.preventDefault();
+            snCopyCode(m[1], btn);
+          } catch (err) {}
+        }, true);
+      } catch (e6) {}
+    } catch (outer) {}
+  })();
+
   // 0. Clipboard hardening — every copy button keeps working even when
   // navigator.clipboard.writeText rejects (permissions, background tab, …)
   // or when navigator.clipboard is missing entirely (non-secure contexts).
@@ -45,6 +176,8 @@
           if (typeof window.showToast === 'function') return window.showToast(msg, type);
         } catch (e) {}
       };
+      // Skip when the top-level safety net already installed its never-hanging version.
+      if (!window.wwCopyText || !window.wwCopyText.__wwTopLevel) {
       window.wwCopyText = function (text, okMsg) {
         var doCopy;
         if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
@@ -60,6 +193,7 @@
           return !!ok;
         });
       };
+      }
     } catch (e) {}
     try {
       // (a) navigator.clipboard missing entirely (http, old browsers): install a shim
@@ -525,6 +659,9 @@
     }
     try {
       const existing = window.copyCode;
+      if (existing && existing.__wwTopLevel) {
+        // Top-level safety net already installed the robust implementation; nothing to repair.
+      } else {
       const src = (typeof existing === 'function') ? Function.prototype.toString.call(existing) : '';
       const isStub = /typeof window\.copyCode/.test(src) || /window\.copyCode\s*\(/.test(src);
       if (typeof existing !== 'function' || isStub) {
@@ -548,28 +685,8 @@
         };
         window.copyCode.__wwWrapped = true;
       }
+      }
     } catch (e) {}
-
-    // --- Delegated copy safety net (capture phase) ---
-    // If window.copyCode is missing/broken on a page, inline onclick="...copyCode(...)"
-    // handlers fail silently. This listener runs first and performs the copy itself,
-    // so a copy button can never silently do nothing.
-    try {
-      document.addEventListener('click', function (e) {
-        try {
-          if (typeof window.copyCode === 'function') return; // inline handler will do it
-          const t = e.target;
-          if (!t || !t.closest) return;
-          const btn = t.closest('button');
-          if (!btn) return;
-          const oc = btn.getAttribute('onclick') || '';
-          const m = /copyCode\(\s*['"]([^'"]+)['"]/.exec(oc);
-          if (!m) return;
-          e.preventDefault();
-          robustCopyCode(m[1], btn);
-        } catch (err) {}
-      }, true);
-    } catch (e2) {}
   }
 
   // 7. Cookie consent banner (notice + stored choice; ad code untouched)
