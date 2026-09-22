@@ -478,6 +478,12 @@
         if (btn && btn instanceof Element) {
           try {
             if (btn.__wwOrigHtml === undefined) btn.__wwOrigHtml = btn.innerHTML;
+            // Lock the button width BEFORE changing its label so "Copy" -> "✓ Copied"
+            // never causes a layout shift (buttons jumping left/right).
+            try {
+              if (btn.__wwOrigMinW === undefined) btn.__wwOrigMinW = btn.style.minWidth || '';
+              btn.style.minWidth = btn.offsetWidth + 'px';
+            } catch (e2) {}
             btn.classList.add('ww-copy-success');
             const label = (btn.textContent || '').trim().toLowerCase();
             if (label === 'copy' || label.indexOf('copy ') === 0) btn.textContent = '✓ Copied';
@@ -486,7 +492,9 @@
               if (btn.__wwOrigHtml !== undefined && btn.__wwOrigHtml !== null) {
                 btn.innerHTML = btn.__wwOrigHtml;
               }
+              try { btn.style.minWidth = (btn.__wwOrigMinW === undefined ? '' : btn.__wwOrigMinW); } catch (e3) {}
               btn.__wwOrigHtml = undefined;
+              btn.__wwOrigMinW = undefined;
             }, 1500);
           } catch (e) {}
         }
@@ -672,16 +680,14 @@
   }
 
   function runAll() {
-    initClipboardHardening();
-    syncTheme();
-    injectGuides();
-    injectArticleBack();
-    initSidebar();
-    initMobileDrawer();
-    initSearch();
-    initGlobalSearchDropdown();
-    initMicroInteractions();
-    initCookieBanner();
+    // Each init is isolated: one failing init must never prevent the others
+    // (especially the copy-button repair in initMicroInteractions) from running.
+    var inits = [initClipboardHardening, syncTheme, injectGuides, injectArticleBack,
+                 initSidebar, initMobileDrawer, initSearch, initGlobalSearchDropdown,
+                 initMicroInteractions, initCookieBanner];
+    for (var i = 0; i < inits.length; i++) {
+      try { inits[i](); } catch (e) { try { console.warn('WDW init failed:', inits[i].name, e); } catch (e2) {} }
+    }
   }
 
   if (document.readyState === 'loading') {
