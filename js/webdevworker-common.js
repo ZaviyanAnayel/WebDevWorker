@@ -235,12 +235,10 @@
     } catch (e) {}
   }
 
-  // 1. Dynamic Theme Sync — 4-theme cycle (dark / light / sepia / dim).
+  // 1. Dynamic Theme Sync — 2-theme cycle (dark / dim), same as CalcWorker.
   //    Respects the saved user choice permanently; unknown values normalize to dark.
   const WDW_THEMES = [
     { id: 'dark',  icon: '\uD83C\uDF19', label: 'Dark' },
-    { id: 'light', icon: '\u2600\uFE0F', label: 'Light' },
-    { id: 'sepia', icon: '\uD83D\uDCD6', label: 'Sepia' },
     { id: 'dim',   icon: '\uD83C\uDF06', label: 'Dim' }
   ];
   function wdwThemeDef(id) {
