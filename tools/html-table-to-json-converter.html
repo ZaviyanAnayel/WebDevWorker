@@ -19,8 +19,8 @@
     gtag('js', new Date());
     gtag('config', 'G-G718R5DYYR');
   </script>
-  <link href="/css/webdevworker.css?v=2026-wdw-v42" rel="stylesheet"/>
-  <link href="/css/ai-widget.css?v=2026-wdw-v42" rel="stylesheet"/>
+  <link href="/css/webdevworker.css?v=2026-wdw-v43" rel="stylesheet"/>
+  <link href="/css/ai-widget.css?v=2026-wdw-v43" rel="stylesheet"/>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -171,7 +171,7 @@
             <div style="display: flex; flex-direction: column;">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                 <span style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#38bdf8;">JSON Array Format</span>
-                <button type="button" class="copy-code-btn" id="copyJsonBtn" onclick="copyCode('tblJson', 'copyJsonBtn')" style="position:static !important; padding:6px 12px; font-size:0.8rem;">📋 Copy JSON</button>
+                <button type="button" class="copy-code-btn" id="copyJsonBtn" onclick="window.copyCode('tblJson', 'copyJsonBtn')" style="position:static !important; padding:6px 12px; font-size:0.8rem;">📋 Copy JSON</button>
               </div>
               <pre id="tblJson" style="background:#070a13; padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.12); font-family:monospace; font-size:0.84rem; color:#38bdf8; height:240px; overflow-y:auto; margin:0; line-height:1.5;">[
   {
@@ -193,7 +193,7 @@
             <div style="display: flex; flex-direction: column;">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                 <span style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#10b981;">CSV Output Format</span>
-                <button type="button" class="copy-code-btn" id="copyCsvBtn" onclick="copyCode('tblCsv', 'copyCsvBtn')" style="position:static !important; padding:6px 12px; font-size:0.8rem;">📋 Copy CSV</button>
+                <button type="button" class="copy-code-btn" id="copyCsvBtn" onclick="window.copyCode('tblCsv', 'copyCsvBtn')" style="position:static !important; padding:6px 12px; font-size:0.8rem;">📋 Copy CSV</button>
               </div>
               <pre id="tblCsv" style="background:#070a13; padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.12); font-family:monospace; font-size:0.84rem; color:#10b981; height:240px; overflow-y:auto; margin:0; line-height:1.5;">"id","framework","stars","language"
 "1","React","225000","JavaScript"
@@ -496,8 +496,8 @@ function tableToJson(tableHtml) {
     </div>
   </div>
 
-  <script src="/js/webdevworker-common.js?v=2026-wdw-v42" defer></script>
-  <script src="/js/ai-widget.js?v=2026-wdw-v42" defer></script>
+  <script src="/js/webdevworker-common.js?v=2026-wdw-v43" defer></script>
+  <script src="/js/ai-widget.js?v=2026-wdw-v43" defer></script>
   <script>
     function convertTable() {
       const raw = document.getElementById('tblInput').value.trim();

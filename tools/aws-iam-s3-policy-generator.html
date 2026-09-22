@@ -33,8 +33,8 @@
     gtag('config', 'G-G718R5DYYR');
   </script>
 
-  <link href="/css/webdevworker.css?v=2026-wdw-v42" rel="stylesheet"/>
-  <link href="/css/ai-widget.css?v=2026-wdw-v42" rel="stylesheet"/>
+  <link href="/css/webdevworker.css?v=2026-wdw-v43" rel="stylesheet"/>
+  <link href="/css/ai-widget.css?v=2026-wdw-v43" rel="stylesheet"/>
 
   <script type="application/ld+json">
 {
@@ -252,7 +252,7 @@
         <div style="display: flex; flex-direction: column;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <label class="form-label" style="margin: 0;">Compiled AWS IAM Policy (JSON)</label>
-            <button class="btn btn-primary" onclick="copyCode('policyOutput', this)" style="padding: 6px 14px; font-size: 0.82rem;"><span>📋</span> Copy Policy</button>
+            <button class="btn btn-primary" onclick="window.copyCode('policyOutput', this)" style="padding: 6px 14px; font-size: 0.82rem;"><span>📋</span> Copy Policy</button>
           </div>
           <pre id="policyOutput" class="code-output-box" style="flex: 1; min-height: 380px; margin: 0; padding: 18px; font-family: var(--font-mono); font-size: 0.86rem; line-height: 1.55; border-radius: 12px; overflow: auto;"></pre>
         </div>
@@ -524,8 +524,8 @@ s3_client.put_bucket_policy(Bucket='my-bucket', Policy=json.dumps(policy_documen
     </div>
   </div>
 
-  <script src="/js/webdevworker-common.js?v=2026-wdw-v42" defer></script>
-  <script src="/js/ai-widget.js?v=2026-wdw-v42" defer></script>
+  <script src="/js/webdevworker-common.js?v=2026-wdw-v43" defer></script>
+  <script src="/js/ai-widget.js?v=2026-wdw-v43" defer></script>
   <script>
 
       const presets = {

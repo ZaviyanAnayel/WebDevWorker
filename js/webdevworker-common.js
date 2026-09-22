@@ -549,6 +549,27 @@
         window.copyCode.__wwWrapped = true;
       }
     } catch (e) {}
+
+    // --- Delegated copy safety net (capture phase) ---
+    // If window.copyCode is missing/broken on a page, inline onclick="...copyCode(...)"
+    // handlers fail silently. This listener runs first and performs the copy itself,
+    // so a copy button can never silently do nothing.
+    try {
+      document.addEventListener('click', function (e) {
+        try {
+          if (typeof window.copyCode === 'function') return; // inline handler will do it
+          const t = e.target;
+          if (!t || !t.closest) return;
+          const btn = t.closest('button');
+          if (!btn) return;
+          const oc = btn.getAttribute('onclick') || '';
+          const m = /copyCode\(\s*['"]([^'"]+)['"]/.exec(oc);
+          if (!m) return;
+          e.preventDefault();
+          robustCopyCode(m[1], btn);
+        } catch (err) {}
+      }, true);
+    } catch (e2) {}
   }
 
   // 7. Cookie consent banner (notice + stored choice; ad code untouched)

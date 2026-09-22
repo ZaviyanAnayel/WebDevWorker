@@ -33,8 +33,8 @@
     gtag('config', 'G-G718R5DYYR');
   </script>
 
-  <link href="/css/webdevworker.css?v=2026-wdw-v42" rel="stylesheet"/>
-  <link href="/css/ai-widget.css?v=2026-wdw-v42" rel="stylesheet"/>
+  <link href="/css/webdevworker.css?v=2026-wdw-v43" rel="stylesheet"/>
+  <link href="/css/ai-widget.css?v=2026-wdw-v43" rel="stylesheet"/>
 
   <script type="application/ld+json">
 {
@@ -210,7 +210,7 @@
               <button id="tabSqlDrizzle" class="btn btn-secondary sql-tab-btn" onclick="switchSqlTab('Drizzle')" style="padding: 5px 12px; font-size: 0.8rem;">Drizzle</button>
               <button id="tabSqlZod" class="btn btn-secondary sql-tab-btn" onclick="switchSqlTab('Zod')" style="padding: 5px 12px; font-size: 0.8rem;">Zod</button>
             </div>
-            <button class="btn btn-primary" onclick="copyCode(getActiveSqlTarget(), this)" style="padding: 5px 14px; font-size: 0.8rem;"><span>📋</span> Copy Output</button>
+            <button class="btn btn-primary" onclick="window.copyCode(getActiveSqlTarget(), this)" style="padding: 5px 14px; font-size: 0.8rem;"><span>📋</span> Copy Output</button>
           </div>
 
           <div id="boxSqlTs" class="sql-tab-content">
@@ -491,8 +491,8 @@ export async function POST(req: NextRequest) {
     </div>
   </div>
 
-  <script src="/js/webdevworker-common.js?v=2026-wdw-v42" defer></script>
-  <script src="/js/ai-widget.js?v=2026-wdw-v42" defer></script>
+  <script src="/js/webdevworker-common.js?v=2026-wdw-v43" defer></script>
+  <script src="/js/ai-widget.js?v=2026-wdw-v43" defer></script>
   <script>
 
       function parseSql() {
