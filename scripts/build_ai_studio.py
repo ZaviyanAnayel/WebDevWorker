@@ -57,6 +57,21 @@ API_VERIFY = """
 
 LANGS = ["JavaScript", "TypeScript", "Python", "PHP", "Java", "Go", "Rust", "C#", "Ruby", "SQL"]
 
+MICROAPP_EXAMPLES = """
+    <div class="ai-examples">
+      <span class="ai-examples-label">Try one:</span>
+      <button type="button" class="ai-example-chip" data-ex="Udhar khata for my clothes shop: customer name, phone number, suits count, total bill, amount paid, remaining due, date. Per-row WhatsApp button that sends the bill to the customer.">👕 Udhar Khata — Clothes Shop</button>
+      <button type="button" class="ai-example-chip" data-ex="Daily water and task tracker: date, water intake in liters, and 5 daily tasks each with a Done/Pending status.">💧 Water + 5 Daily Tasks</button>
+      <button type="button" class="ai-example-chip" data-ex="Car fuel and maintenance log: date, fuel liters, fuel cost, odometer reading, service type (Oil change, Tires, Brakes, Wash, Other), notes.">🚗 Car Fuel &amp; Maintenance Log</button>
+    </div>"""
+
+MICROAPP_VERIFY = """
+    <div class="ai-verify" data-verify="micro-app">
+      <h3>📚 My Micro-App Library</h3>
+      <p class="ai-verify-sub">Forged apps live in your browser (localStorage). Save them, reopen them, delete them — no account, no server.</p>
+      <div class="ai-lib-strip"></div>
+    </div>"""
+
 TOOLS = [
     dict(
         slug="ai-regex-smith", icon="🔣", name="AI Regex Smith",
@@ -179,6 +194,18 @@ TOOLS = [
         fields=(
             field_textarea("ai-in-0", "Code to explain", "Paste the mysterious code…", 8)
             + field_select("ai-in-1", "Language", LANGS)
+        ),
+    ),
+    dict(
+        slug="ai-micro-app-smith", icon="🏭", name="AI Micro-App Smith",
+        h1a="Describe the app.", h1b="Get a working tool.",
+        tagline="Say what you need — an udhar khata, a habit tracker, a car log — and get a real working mini-app: form, data table, WhatsApp sharing, CSV export. Saved in your browser, no signup.",
+        meta="AI micro-app generator: describe a tool in plain language, get a working mini-app with form, table, WhatsApp share and CSV export. Free, no signup.",
+        keywords="ai app generator, micro app builder, describe app get tool, udhar khata app maker, no code app generator, ai tool generator",
+        cta="Forge My Micro-App", after="microapp", verify=MICROAPP_VERIFY,
+        fields=(
+            MICROAPP_EXAMPLES
+            + field_textarea("ai-in-0", "Describe the mini-app you need", "e.g. Udhar khata for my clothes shop: customer name, phone, suits, bill, paid, due, date — with a WhatsApp bill button per row…", 4)
         ),
     ),
 ]

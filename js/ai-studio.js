@@ -1,5 +1,5 @@
 /**
- * WebDevWorker AI Studio — shared framework for the 10 AI instruments.
+ * WebDevWorker AI Studio — shared framework for the 11 AI instruments.
  * Each instrument page is a thin config; all AI plumbing lives here.
  * POSTs to /api/ai (server-side Groq, rate-limited, cost-capped).
  * No API keys in the browser. AdSense / site chrome untouched.
@@ -102,6 +102,13 @@
         '**Architecture map:** components/modules as a nested bullet list\n' +
         '**Walkthrough:** step-by-step of the execution flow\n' +
         '**Key gotchas:** 2-3 bullets';
+    },
+    'ai-micro-app-smith': function (v) {
+      return 'You are a micro-app architect. The user describes a small personal utility app they want (a tracker, log, ledger, checklist).\n' +
+        'Requirement: ' + v[0] + '\n' +
+        'Respond with ONLY a JSON object — no markdown fences, no commentary, no extra text — matching EXACTLY this schema:\n' +
+        '{"appName":"short name","fields":[{"key":"snake_case_key","label":"Short Label","type":"text|number|date|select|tel","options":["a","b"],"required":true}],"tableColumns":["key1","key2"],"actions":["whatsapp"],"whatsappTemplate":"optional template using {key} placeholders"}\n' +
+        'Rules: 3 to 8 fields. Field keys: lowercase snake_case, unique. "type" must be one of text, number, date, select, tel. "options" required only for select type (2-8 short options). "tableColumns" must be a subset of field keys, 2-6 columns. "actions": use ["whatsapp"] only if the app naturally needs sharing a row via WhatsApp (bills, invoices, orders), otherwise []. "whatsappTemplate": only when actions includes whatsapp — a short message with {key} placeholders. No HTML, no scripts, no code in any string. Keep labels under 30 characters.';
     }
   };
 
@@ -310,6 +317,277 @@
     });
   }
 
+  /* ----------------------------------------------- micro-app smith */
+  // Deterministic local renderer for ai-micro-app-smith. The AI returns a
+  // STRICT JSON spec only; this code builds the mini-app from the parsed
+  // spec. AI strings are never injected as raw HTML — everything is escaped.
+  var MICROAPP_TYPES = { text: 1, number: 1, date: 1, select: 1, tel: 1 };
+  var MICROAPP_LIB_KEY = 'wdw_microapp_library_v1';
+
+  function microAppValidate(spec) {
+    if (!spec || typeof spec !== 'object') return false;
+    if (typeof spec.appName !== 'string' || !spec.appName.trim() || spec.appName.length > 60) return false;
+    if (!Array.isArray(spec.fields) || spec.fields.length < 1 || spec.fields.length > 12) return false;
+    var keys = {}, i, f;
+    for (i = 0; i < spec.fields.length; i++) {
+      f = spec.fields[i];
+      if (!f || typeof f !== 'object') return false;
+      if (typeof f.key !== 'string' || !/^[a-z][a-z0-9_]{0,29}$/.test(f.key)) return false;
+      if (keys[f.key]) return false;
+      keys[f.key] = 1;
+      if (typeof f.label !== 'string' || !f.label.trim() || f.label.length > 40) return false;
+      if (!MICROAPP_TYPES[f.type]) return false;
+      if (f.type === 'select') {
+        if (!Array.isArray(f.options) || f.options.length < 1 || f.options.length > 20) return false;
+        for (var j = 0; j < f.options.length; j++) {
+          if (typeof f.options[j] !== 'string' || !f.options[j].trim() || f.options[j].length > 40) return false;
+        }
+      }
+    }
+    if (!Array.isArray(spec.tableColumns) || spec.tableColumns.length < 1 || spec.tableColumns.length > 8) return false;
+    for (var k = 0; k < spec.tableColumns.length; k++) {
+      if (typeof spec.tableColumns[k] !== 'string' || !keys[spec.tableColumns[k]]) return false;
+    }
+    if (spec.actions !== undefined) {
+      if (!Array.isArray(spec.actions)) return false;
+      for (var a = 0; a < spec.actions.length; a++) {
+        if (spec.actions[a] !== 'whatsapp' && spec.actions[a] !== 'none') return false;
+      }
+    }
+    if (spec.whatsappTemplate !== undefined &&
+        (typeof spec.whatsappTemplate !== 'string' || spec.whatsappTemplate.length > 500)) return false;
+    return true;
+  }
+
+  function microAppParse(answer) {
+    var txt = String(answer || '').trim()
+      .replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
+    var m = txt.match(/\{[\s\S]*\}/);
+    if (!m) return null;
+    try {
+      var spec = JSON.parse(m[0]);
+      return microAppValidate(spec) ? spec : null;
+    } catch (e) { return null; }
+  }
+
+  function microAppStorageKey(name) {
+    return 'wdw_microapp_v1_' + String(name).toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40);
+  }
+
+  function microAppRows(key) {
+    try { var r = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(r) ? r : []; }
+    catch (e) { return []; }
+  }
+
+  function microAppPersist(key, rows) {
+    try { localStorage.setItem(key, JSON.stringify(rows.slice(0, 2000))); } catch (e) {}
+  }
+
+  function microAppLib() {
+    try { var l = JSON.parse(localStorage.getItem(MICROAPP_LIB_KEY) || '[]'); return Array.isArray(l) ? l : []; }
+    catch (e) { return []; }
+  }
+
+  function microAppLibSave(l) {
+    try { localStorage.setItem(MICROAPP_LIB_KEY, JSON.stringify(l.slice(0, 50))); } catch (e) {}
+  }
+
+  function renderMicroApp(root, outEl, spec) {
+    var key = microAppStorageKey(spec.appName);
+    var rows = microAppRows(key);
+    var hasWA = Array.isArray(spec.actions) && spec.actions.indexOf('whatsapp') !== -1;
+    var idp = 'ma' + Math.random().toString(36).slice(2, 8);
+    var i;
+
+    function fieldLabel(k) {
+      for (var x = 0; x < spec.fields.length; x++) {
+        if (spec.fields[x].key === k) return spec.fields[x].label;
+      }
+      return k;
+    }
+
+    function formHtml() {
+      return spec.fields.map(function (f, fi) {
+        var input;
+        if (f.type === 'select') {
+          input = '<select id="' + idp + '-f' + fi + '">' + f.options.map(function (o) {
+            return '<option value="' + esc(o) + '">' + esc(o) + '</option>';
+          }).join('') + '</select>';
+        } else {
+          input = '<input type="' + f.type + '" id="' + idp + '-f' + fi + '"' +
+            (f.required ? ' required' : '') + ' autocomplete="off"/>';
+        }
+        return '<div class="ai-field"><label for="' + idp + '-f' + fi + '">' +
+          esc(f.label) + (f.required ? ' *' : '') + '</label>' + input + '</div>';
+      }).join('');
+    }
+
+    function waMessage(row) {
+      var tpl = spec.whatsappTemplate ||
+        ('*' + spec.appName + '*\n' + spec.fields.map(function (fr) {
+          return fr.label + ': {' + fr.key + '}';
+        }).join('\n'));
+      return tpl.replace(/\{([a-z0-9_]+)\}/gi, function (mm, kk) {
+        return row[kk] == null ? '' : String(row[kk]);
+      });
+    }
+
+    function paint() {
+      var head = spec.tableColumns.map(function (c) { return '<th>' + esc(fieldLabel(c)) + '</th>'; }).join('');
+      var body = rows.map(function (row, ri) {
+        var tds = spec.tableColumns.map(function (c) {
+          return '<td>' + esc(row[c] == null ? '' : String(row[c])) + '</td>';
+        }).join('');
+        var acts = '';
+        if (hasWA) acts += '<button type="button" class="ai-mini-btn ai-ma-wa" data-ri="' + ri + '">WhatsApp</button> ';
+        acts += '<button type="button" class="ai-mini-btn danger ai-ma-del" data-ri="' + ri + '">Delete</button>';
+        return '<tr>' + tds + '<td class="ai-ma-acts">' + acts + '</td></tr>';
+      }).join('');
+      outEl.innerHTML =
+        '<div class="ai-ma-app">' +
+        '<div class="ai-ma-head"><h3>🏭 ' + esc(spec.appName) + '</h3>' +
+        '<div class="ai-ma-tools">' +
+        '<button type="button" class="ai-mini-btn ai-ma-save">★ Save to Library</button>' +
+        '<button type="button" class="ai-mini-btn ai-ma-csv">Export CSV</button>' +
+        '<button type="button" class="ai-mini-btn danger ai-ma-clear">Clear All</button>' +
+        '</div></div>' +
+        '<div class="ai-ma-form">' + formHtml() + '</div>' +
+        '<button type="button" class="ai-run-btn ai-ma-add" style="padding:11px 26px;font-size:0.9rem;"><span class="ai-run-label">＋ Add Entry</span></button>' +
+        '<div class="ai-ma-tablewrap"><table class="ai-ma-table"><thead><tr>' + head + '<th>Actions</th></tr></thead>' +
+        '<tbody>' + (body || '<tr><td colspan="' + (spec.tableColumns.length + 1) + '" class="ai-ma-empty">No entries yet — add your first one above.</td></tr>') +
+        '</tbody></table></div>' +
+        '<div class="ai-ma-count">' + rows.length + ' entr' + (rows.length === 1 ? 'y' : 'ies') + ' · stored in your browser (localStorage)</div>' +
+        '</div>';
+      wire();
+    }
+
+    function collect() {
+      var row = {}, ok = true;
+      spec.fields.forEach(function (f, fi) {
+        var el = document.getElementById(idp + '-f' + fi);
+        var v = el ? el.value.trim() : '';
+        if (f.required && !v) { ok = false; if (el) el.style.borderColor = '#ef4444'; }
+        else if (el) { el.style.borderColor = ''; }
+        row[f.key] = v;
+      });
+      return ok ? row : null;
+    }
+
+    function clearForm() {
+      spec.fields.forEach(function (f, fi) {
+        var el = document.getElementById(idp + '-f' + fi);
+        if (el) el.value = '';
+      });
+    }
+
+    function toCSV() {
+      var q = function (s) { return '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"'; };
+      var lines = [spec.tableColumns.map(fieldLabel).map(q).join(',')];
+      rows.forEach(function (row) {
+        lines.push(spec.tableColumns.map(function (c) { return q(row[c]); }).join(','));
+      });
+      return lines.join('\n');
+    }
+
+    function wire() {
+      outEl.querySelector('.ai-ma-add').addEventListener('click', function () {
+        var row = collect();
+        if (!row) {
+          if (window.wdwToast) window.wdwToast('Please fill the required fields', 'error');
+          return;
+        }
+        rows.push(row);
+        microAppPersist(key, rows);
+        clearForm();
+        paint();
+        if (window.wdwToast) window.wdwToast('Entry added ✓', 'success');
+      });
+      outEl.querySelector('.ai-ma-csv').addEventListener('click', function () {
+        if (!rows.length) {
+          if (window.wdwToast) window.wdwToast('Nothing to export yet', 'error');
+          return;
+        }
+        var blob = new Blob([toCSV()], { type: 'text/csv;charset=utf-8' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = key + '.csv';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+      });
+      outEl.querySelector('.ai-ma-clear').addEventListener('click', function () {
+        if (!rows.length) return;
+        if (!confirm('Delete all ' + rows.length + ' entries?')) return;
+        rows = [];
+        microAppPersist(key, rows);
+        paint();
+      });
+      outEl.querySelector('.ai-ma-save').addEventListener('click', function () {
+        var lib = microAppLib().filter(function (it) { return it.key !== key; });
+        lib.unshift({ name: spec.appName, key: key, spec: spec });
+        microAppLibSave(lib);
+        paintMicroAppLibrary(root);
+        if (window.wdwToast) window.wdwToast('Saved to your library ✓', 'success');
+      });
+      outEl.querySelectorAll('.ai-ma-del').forEach(function (b) {
+        b.addEventListener('click', function () {
+          rows.splice(Number(b.getAttribute('data-ri')), 1);
+          microAppPersist(key, rows);
+          paint();
+        });
+      });
+      outEl.querySelectorAll('.ai-ma-wa').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var row = rows[Number(b.getAttribute('data-ri'))];
+          if (!row) return;
+          window.open('https://wa.me/?text=' + encodeURIComponent(waMessage(row)), '_blank', 'noopener');
+        });
+      });
+    }
+
+    paint();
+  }
+
+  function paintMicroAppLibrary(root) {
+    var panel = root.querySelector('[data-verify="micro-app"]');
+    if (!panel) return;
+    var strip = panel.querySelector('.ai-lib-strip');
+    var lib = microAppLib();
+    if (!lib.length) {
+      strip.innerHTML = '<span class="ai-rx-dim">No saved apps yet — forge one above, then hit “★ Save to Library”.</span>';
+      return;
+    }
+    strip.innerHTML = lib.map(function (it, idx) {
+      return '<span class="ai-lib-chip"><button type="button" class="ai-lib-open" data-i="' + idx + '">' +
+        esc(it.name) + '</button>' +
+        '<button type="button" class="ai-lib-del" data-i="' + idx + '" title="Delete">✕</button></span>';
+    }).join('');
+    strip.querySelectorAll('.ai-lib-open').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var it = microAppLib()[Number(b.getAttribute('data-i'))];
+        if (!it || !microAppValidate(it.spec)) return;
+        var outWrap = root.querySelector('.ai-output-wrap');
+        var outEl = root.querySelector('.ai-output');
+        outWrap.style.display = 'block';
+        renderMicroApp(root, outEl, it.spec);
+        outWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    });
+    strip.querySelectorAll('.ai-lib-del').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var l = microAppLib();
+        l.splice(Number(b.getAttribute('data-i')), 1);
+        microAppLibSave(l);
+        paintMicroAppLibrary(root);
+      });
+    });
+  }
+
+  function wireMicroAppSmith(root) {
+    paintMicroAppLibrary(root);
+  }
+
   /* ------------------------------------------------------------- page init */
   function initPage(cfg) {
     var root = document.querySelector('[data-ai-studio]');
@@ -351,7 +629,19 @@
       ask(cfg.tool, prompt).then(function (answer) {
         setLoading(false);
         btn.querySelector('.ai-run-label').textContent = cfg.cta;
-        renderMarkdown(outEl, answer);
+        if (cfg.after === 'microapp') {
+          var spec = microAppParse(answer);
+          if (!spec) {
+            errEl.textContent = 'The AI returned an invalid app spec. Try again with a simpler, concrete description (e.g. name the fields you need).';
+            errEl.style.display = 'block';
+            if (window.wdwToast) window.wdwToast('Invalid app spec — please retry', 'error');
+            outWrap.style.display = 'none';
+          } else {
+            renderMicroApp(root, outEl, spec);
+          }
+        } else {
+          renderMarkdown(outEl, answer);
+        }
         if (cfg.after === 'regex' && root.querySelector('.ai-rx-pattern')) {
           var m = /```(?:\w*\n)?([\s\S]*?)```/.exec(answer);
           if (m) root.querySelector('.ai-rx-pattern').value = m[1].trim().split('\n')[0];
@@ -364,8 +654,20 @@
       });
     });
 
+    // one-click example chips: fill the first input with the example text
+    root.querySelectorAll('.ai-example-chip').forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        var ta = root.querySelector('#ai-in-0');
+        if (ta) {
+          ta.value = chip.getAttribute('data-ex') || '';
+          ta.focus();
+        }
+      });
+    });
+
     wireRegexTester(root);
     wireApiSender(root);
+    wireMicroAppSmith(root);
   }
 
   window.AIStudio = { initPage: initPage, ask: ask, renderMarkdown: renderMarkdown };

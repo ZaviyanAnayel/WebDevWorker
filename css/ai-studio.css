@@ -40,7 +40,7 @@
 }
 .ai-field { margin-bottom: 18px; }
 .ai-field label { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 8px; }
-.ai-field textarea, .ai-field input[type="text"], .ai-field select {
+.ai-field textarea, .ai-field input[type="text"], .ai-field input[type="number"], .ai-field input[type="date"], .ai-field input[type="tel"], .ai-field select {
   width: 100%; background: var(--bg-body); color: var(--text-main);
   border: 1px solid var(--border); border-radius: 12px;
   padding: 13px 15px; font-size: 0.92rem; line-height: 1.6; font-family: inherit;
@@ -124,6 +124,52 @@
 .ai-api-status { display: inline-block; font-weight: 800; font-size: 0.85rem; padding: 6px 14px; border-radius: 9999px; margin-bottom: 10px; }
 .ai-api-status.ok { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
 .ai-api-status.bad { background: rgba(239, 68, 68, 0.12); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
+
+/* micro-app smith */
+.ai-examples { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+.ai-examples-label { font-size: 0.78rem; font-weight: 700; color: var(--text-dim); align-self: center; }
+.ai-example-chip {
+  background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #6ee7b7; border-radius: 9999px; padding: 8px 16px;
+  font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.15s ease;
+}
+.ai-example-chip:hover { background: rgba(16, 185, 129, 0.18); border-color: rgba(16, 185, 129, 0.6); }
+.ai-ma-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.ai-ma-head h3 { margin: 0; font-size: 1.1rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.01em; }
+.ai-ma-tools { display: flex; gap: 8px; flex-wrap: wrap; }
+.ai-mini-btn {
+  background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 8px; padding: 6px 12px; font-size: 0.75rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.ai-mini-btn:hover { background: #059669; color: #fff; }
+.ai-mini-btn.danger { background: rgba(239, 68, 68, 0.10); color: #fca5a5; border-color: rgba(239, 68, 68, 0.4); }
+.ai-mini-btn.danger:hover { background: #dc2626; color: #fff; }
+.ai-ma-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 16px; }
+.ai-ma-form .ai-field { margin-bottom: 0; }
+.ai-ma-tablewrap { overflow-x: auto; margin-top: 16px; border: 1px solid var(--border); border-radius: 12px; }
+.ai-ma-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.ai-ma-table th {
+  text-align: left; padding: 10px 12px; background: rgba(16, 185, 129, 0.08);
+  color: #6ee7b7; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
+}
+.ai-ma-table td { padding: 10px 12px; border-top: 1px solid var(--border); color: var(--text-main); vertical-align: middle; }
+.ai-ma-acts { white-space: nowrap; }
+.ai-ma-empty { padding: 18px; text-align: center; color: var(--text-dim); font-size: 0.85rem; }
+.ai-ma-count { font-size: 0.78rem; color: var(--text-dim); margin-top: 10px; }
+.ai-lib-strip { display: flex; gap: 10px; flex-wrap: wrap; }
+.ai-lib-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(16, 185, 129, 0.07); border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 9999px; padding: 5px 6px 5px 14px;
+}
+.ai-lib-open { background: none; border: none; color: #6ee7b7; font-weight: 700; font-size: 0.8rem; cursor: pointer; padding: 0; font-family: inherit; }
+.ai-lib-open:hover { color: #fff; }
+.ai-lib-del {
+  background: rgba(239, 68, 68, 0.12); border: none; color: #fca5a5; border-radius: 50%;
+  width: 22px; height: 22px; font-size: 0.65rem; cursor: pointer; line-height: 1;
+}
+.ai-lib-del:hover { background: #dc2626; color: #fff; }
 
 /* homepage AI Studio cards */
 .ai-studio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 26px 0 8px; }

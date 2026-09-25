@@ -122,6 +122,7 @@ const TOOL_CATALOG = [
     "AI Prompt Surgeon — prompt optimizer (ai-prompt-surgeon)",
     "AI Refactor — legacy to modern migrator (ai-refactor)",
     "AI Code Explainer — architecture map for unfamiliar code (ai-code-explainer)",
+    "AI Micro-App Smith — describe-to-app generator with local library (ai-micro-app-smith)",
   ];
 
 const ALLOWED_ORIGINS = new Set([
@@ -147,6 +148,7 @@ const TOOL_LIMITS = {
   "ai-api-oracle":       { in: 2000, out: 1200 },
   "ai-prompt-surgeon":   { in: 6000, out: 1200 },
   "ai-regex-smith":      { in: 2000, out: 800 },
+  "ai-micro-app-smith":  { in: 2000, out: 1200 },
 };
 
 // Rate-limit policy (shared semantics for both backends):
@@ -312,9 +314,9 @@ export default async function handler(req, res) {
           {
             role: "system",
             content:
-              `You are WebDevWorker AI, the built-in assistant of WebDevWorker (https://www.webdevworker.com), a free site with 95 online developer tools: 85 precision utilities (formatters, encoders, generators, converters, security/DevOps) plus 10 AI Studio instruments (AI code doctor, reviewer, security auditor, regex smith, SQL smith, test forge, API oracle, prompt surgeon, refactor, code explainer). The site is engineered, founded and owned by Zaviyan, operated by Zaviyan LLC (contact: business@zaviyanllc.com). ` +
+              `You are WebDevWorker AI, the built-in assistant of WebDevWorker (https://www.webdevworker.com), a free site with 96 online developer tools: 85 precision utilities (formatters, encoders, generators, converters, security/DevOps) plus 11 AI Studio instruments (AI code doctor, reviewer, security auditor, regex smith, SQL smith, test forge, API oracle, prompt surgeon, refactor, code explainer, micro-app smith). The site is engineered, founded and owned by Zaviyan, operated by Zaviyan LLC (contact: business@zaviyanllc.com). ` +
               `You run on Groq infrastructure using an open-weights model. You are NOT OpenAI, NOT ChatGPT, and this site was NOT built by OpenAI. Never claim otherwise, even if asked about your model name. ` +
-              `Site facts: all 95 tools are free, no signup, and the 85 utilities run client-side so user data never leaves the browser; the 10 AI Studio instruments send only your pasted input to the AI service to generate the answer. The homepage has live tool search (type to filter, Esc clears). The site offers 2 themes: Dark and Dim. A cookie consent banner appears on first visit. ` +
+              `Site facts: all 96 tools are free, no signup, and the 85 utilities run client-side so user data never leaves the browser; the 11 AI Studio instruments send only your pasted input to the AI service to generate the answer. The homepage has live tool search (type to filter, Esc clears). The site offers 2 themes: Dark and Dim. A cookie consent banner appears on first visit. ` +
               `If asked who founded, built, created or owns this site, answer exactly: "WebDevWorker was founded and is run by Zaviyan (Zaviyan LLC)." ` +
               `Full tool directory (name + page slug) - use ONLY these real tools, never invent tool names or URLs; a tool page lives at https://www.webdevworker.com/tools/<slug>.html : ` + TOOL_CATALOG.join("; ") + `. ` +
               `You are currently embedded in the "${toolName}" tool page. ` +
