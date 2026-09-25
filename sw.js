@@ -4,8 +4,10 @@ const ASSETS_TO_CACHE = [
   '/manifest.json',
   '/css/webdevworker.css',
   '/css/ai-widget.css',
+  '/css/ai-studio.css',
   '/js/webdevworker-common.js',
   '/js/ai-widget.js',
+  '/js/ai-studio.js',
   '/assets/webdevworker-logo-horizontal.svg',
   '/assets/favicon.png'
 ];

@@ -112,6 +112,16 @@ const TOOL_CATALOG = [
     "WebSocket Client & Real (websocket-client-tester)",
     "XML Formatter, Validator & XML to JSON Converter (xml-formatter-json-converter)",
     "YAML to JSON Converter (yaml-to-json-converter)",
+    "AI Regex Smith — describe-to-pattern + live tester (ai-regex-smith)",
+    "AI Code Doctor — stack-trace debugger (ai-code-doctor)",
+    "AI Code Reviewer — senior review on demand (ai-code-reviewer)",
+    "AI Security Auditor — paste-and-audit vulnerabilities (ai-security-auditor)",
+    "AI SQL Smith — English to dialect-correct SQL (ai-sql-smith)",
+    "AI Test Forge — unit test generator (ai-test-forge)",
+    "AI API Oracle — describe-to-request + in-browser REST client (ai-api-oracle)",
+    "AI Prompt Surgeon — prompt optimizer (ai-prompt-surgeon)",
+    "AI Refactor — legacy to modern migrator (ai-refactor)",
+    "AI Code Explainer — architecture map for unfamiliar code (ai-code-explainer)",
   ];
 
 const ALLOWED_ORIGINS = new Set([
@@ -123,6 +133,21 @@ const MAX_QUESTION_CHARS = 600; // input cost cap
 const MAX_BODY_BYTES = 8 * 1024; // body size cap
 const MAX_OUTPUT_TOKENS = 600; // output cost cap
 const UPSTREAM_TIMEOUT_MS = 12_000;
+
+// Per-tool caps for the AI Studio instruments (Oct 2026). Code tools need
+// larger pastes; defaults stay conservative for the Q&A widget.
+const TOOL_LIMITS = {
+  "ai-code-doctor":      { in: 8000, out: 1500 },
+  "ai-code-reviewer":    { in: 8000, out: 1500 },
+  "ai-security-auditor": { in: 8000, out: 1500 },
+  "ai-refactor":         { in: 8000, out: 1500 },
+  "ai-code-explainer":   { in: 8000, out: 1500 },
+  "ai-test-forge":       { in: 6000, out: 1500 },
+  "ai-sql-smith":        { in: 3000, out: 1200 },
+  "ai-api-oracle":       { in: 2000, out: 1200 },
+  "ai-prompt-surgeon":   { in: 6000, out: 1200 },
+  "ai-regex-smith":      { in: 2000, out: 800 },
+};
 
 // Rate-limit policy (shared semantics for both backends):
 //   30 requests / 10 minutes per IP, plus a per-isolate daily budget of 2000
@@ -250,7 +275,8 @@ export default async function handler(req, res) {
   if (!body || typeof body !== "object") return json(res, 400, { error: "Invalid request body." });
 
   const tool = sanitizeTool(body.tool);
-  const question = String(body.question || "").slice(0, MAX_QUESTION_CHARS).trim();
+  const lim = TOOL_LIMITS[tool] || { in: MAX_QUESTION_CHARS, out: MAX_OUTPUT_TOKENS };
+  const question = String(body.question || "").slice(0, lim.in).trim();
   if (!question) return json(res, 400, { error: "Question is required." });
   if (question.length < 2) return json(res, 400, { error: "Question too short." });
 
@@ -281,14 +307,14 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: MODEL,
         temperature: 0.4,
-        max_tokens: MAX_OUTPUT_TOKENS, // output cost cap
+        max_tokens: lim.out, // per-tool output cost cap
         messages: [
           {
             role: "system",
             content:
-              `You are WebDevWorker AI, the built-in assistant of WebDevWorker (https://www.webdevworker.com), a free site with 85 online developer tools: formatters, encoders, generators, converters, and security/DevOps utilities. The site is engineered, founded and owned by Zaviyan, operated by Zaviyan LLC (contact: business@zaviyanllc.com). ` +
+              `You are WebDevWorker AI, the built-in assistant of WebDevWorker (https://www.webdevworker.com), a free site with 95 online developer tools: 85 precision utilities (formatters, encoders, generators, converters, security/DevOps) plus 10 AI Studio instruments (AI code doctor, reviewer, security auditor, regex smith, SQL smith, test forge, API oracle, prompt surgeon, refactor, code explainer). The site is engineered, founded and owned by Zaviyan, operated by Zaviyan LLC (contact: business@zaviyanllc.com). ` +
               `You run on Groq infrastructure using an open-weights model. You are NOT OpenAI, NOT ChatGPT, and this site was NOT built by OpenAI. Never claim otherwise, even if asked about your model name. ` +
-              `Site facts: all 85 tools are free, no signup, and run client-side so user data never leaves the browser. The homepage has live tool search (type to filter, Esc clears). The site offers 2 themes: Dark and Dim. A cookie consent banner appears on first visit. ` +
+              `Site facts: all 95 tools are free, no signup, and the 85 utilities run client-side so user data never leaves the browser; the 10 AI Studio instruments send only your pasted input to the AI service to generate the answer. The homepage has live tool search (type to filter, Esc clears). The site offers 2 themes: Dark and Dim. A cookie consent banner appears on first visit. ` +
               `If asked who founded, built, created or owns this site, answer exactly: "WebDevWorker was founded and is run by Zaviyan (Zaviyan LLC)." ` +
               `Full tool directory (name + page slug) - use ONLY these real tools, never invent tool names or URLs; a tool page lives at https://www.webdevworker.com/tools/<slug>.html : ` + TOOL_CATALOG.join("; ") + `. ` +
               `You are currently embedded in the "${toolName}" tool page. ` +
