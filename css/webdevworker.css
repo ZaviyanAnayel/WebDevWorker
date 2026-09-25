@@ -417,11 +417,14 @@ button.copy-btn.copied,
 button[class*="btn-copy"].copied,
 button[data-copy].copied,
 button[onclick*="copy" i].copied,
-button[id*="copy" i].copied {
+button[id*="copy" i].copied,
+button[id*="copy" i]:not(.nav-item):not(.tab-btn).copied,
+button[id*="copy" i]:not(.nav-item):not(.tab-btn).success {
   background: #047857 !important;
+  background-image: none !important;
   color: #ffffff !important;
   border-color: #10b981 !important;
-  box-shadow: 0 0 18px rgba(16, 185, 129, 0.6) !important;
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.7) !important;
   transform: scale(1.02) !important;
 }
 
@@ -713,11 +716,14 @@ button[id*="copy" i].copied {
 
 /* Copied Emerald Green Active State */
 .copy-code-btn.copied,
-.copy-code-btn.success {
+.copy-code-btn.success,
+button[id*="copy" i]:not(.nav-item):not(.tab-btn).copied,
+button[id*="copy" i]:not(.nav-item):not(.tab-btn).success {
   background: #047857 !important;
+  background-image: none !important;
   color: #ffffff !important;
   border-color: #10b981 !important;
-  box-shadow: 0 0 18px rgba(16, 185, 129, 0.6) !important;
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.7) !important;
   transform: scale(1.02) !important;
 }
 

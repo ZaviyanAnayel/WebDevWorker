@@ -73,11 +73,21 @@
             btn.innerHTML = '<span>✓</span> <span>Copied!</span>';
             btn.classList.add('copied');
             btn.classList.add('success');
+            btn.style.setProperty('background', '#047857', 'important');
+            btn.style.setProperty('background-image', 'none', 'important');
+            btn.style.setProperty('box-shadow', '0 0 18px rgba(16, 185, 129, 0.7)', 'important');
+            btn.style.setProperty('border-color', '#10b981', 'important');
+            btn.style.setProperty('color', '#ffffff', 'important');
             setTimeout(function() {
               btn.innerHTML = orig;
               btn.classList.remove('copied');
               btn.classList.remove('success');
               btn.style.minWidth = '';
+              btn.style.removeProperty('background');
+              btn.style.removeProperty('background-image');
+              btn.style.removeProperty('box-shadow');
+              btn.style.removeProperty('border-color');
+              btn.style.removeProperty('color');
             }, 2200);
           }
           if (window.wdwToast) {
@@ -86,26 +96,30 @@
         }
 
         function fallback() {
+          var copiedOk = false;
           try {
             var ta = document.createElement('textarea');
             ta.value = String(text == null ? '' : text);
             ta.setAttribute('readonly', '');
             ta.style.position = 'fixed';
-            ta.style.top = '-9999px';
-            ta.style.left = '-9999px';
-            ta.style.opacity = '0';
+            ta.style.top = '0';
+            ta.style.left = '0';
+            ta.style.width = '2px';
+            ta.style.height = '2px';
+            ta.style.opacity = '0.01';
             ta.style.pointerEvents = 'none';
             document.body.appendChild(ta);
             ta.focus();
             ta.select();
             ta.setSelectionRange(0, ta.value.length);
-            var ok = document.execCommand('copy');
+            copiedOk = document.execCommand('copy');
             document.body.removeChild(ta);
-            if (ok) {
-              triggerSuccess();
-              return;
-            }
           } catch(e) {}
+
+          if (copiedOk) {
+            triggerSuccess();
+            return;
+          }
 
           // Second fallback: direct text selection
           if (window.getSelection && document.createRange && target) {
@@ -115,8 +129,7 @@
               var sel = window.getSelection();
               sel.removeAllRanges();
               sel.addRange(range);
-              triggerSuccess('Highlighted! Press Ctrl+C to copy');
-              return;
+              document.execCommand('copy');
             } catch(e2) {}
           }
 
