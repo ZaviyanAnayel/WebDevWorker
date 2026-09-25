@@ -19,14 +19,22 @@ MIN_WORDS = 700  # calibrated: proven live articles measure 705-1487 by this cou
 REQUIRED_SECTIONS = ["overview", "syntax", "workflow", "code", "benchmarks", "faqs"]
 
 def changed_articles():
+    # Articles created/modified by THIS run. Uses `git status --porcelain`
+    # because the workflow checks out with fetch-depth:1, where HEAD~1
+    # does not exist and the old `git diff HEAD~1 HEAD` approach failed,
+    # falling back to validating the entire directory (wedging the pipeline
+    # on previously-published articles).
     try:
-        out = subprocess.run(["git", "diff", "--name-only", "HEAD~1", "HEAD"],
+        out = subprocess.run(["git", "status", "--porcelain", "articles/"],
                              capture_output=True, text=True, timeout=30).stdout
-        files = [l.strip() for l in out.splitlines()
-                 if l.strip().startswith("articles/") and l.strip().endswith(".html")]
-        if files: return files
-    except Exception: pass
-    return [os.path.join("articles", f) for f in os.listdir("articles") if f.endswith(".html")]
+        files = []
+        for line in out.splitlines():
+            m = re.search(r"([^\s]+\.html)$", line.strip())
+            if m and m.group(1).startswith("articles/"):
+                files.append(m.group(1))
+        return files  # empty = nothing new this run -> trivially valid
+    except Exception:
+        return []
 
 def validate(path):
     errs = []

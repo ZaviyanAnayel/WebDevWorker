@@ -47,13 +47,14 @@ Rules:
 - Internal links: 3-5 to REAL WebDevWorker tools from this list only: {tools}. Format: <a href="/tools/SLUG.html">Name</a>.
 - Mention "WebDevWorker" 3-4 times; emphasize 100% client-side, no signup, no data leaves the browser.
 - Each non-FAQ section 250-450 words of specific, useful content. No filler. Escape & as &amp;.
+- Total body copy MUST exceed 800 words. Write exactly 6 FAQ items — never fewer. Do not truncate, summarize, or stop early; finish all 6 sections completely.
 """
 
 def groq(prompt, api_key):
     body = json.dumps({
         "model": MODEL,
         "temperature": 0.7,
-        "max_tokens": 8000,
+        "max_tokens": 16000,
         "reasoning_effort": "low",
         "messages": [
             {"role": "system", "content": "You are an elite SEO technical writer for WebDevWorker.com. Output ONLY raw HTML. Never markdown, never code fences, never commentary."},
