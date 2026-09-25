@@ -9,7 +9,7 @@ import re, html, pathlib
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 TPL = (REPO / "tools" / "jwt-decoder.html").read_text(encoding="utf-8")
-VER = "2026-wdw-v75"
+VER = "2026-wdw-v76"
 
 def field_textarea(fid, label, placeholder, rows=4):
     return (

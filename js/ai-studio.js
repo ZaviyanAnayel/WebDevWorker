@@ -568,6 +568,8 @@
         '<div class="ai-ma-app">' +
         '<div class="ai-ma-head"><h3>🏭 ' + esc(spec.appName) + '</h3>' +
         '<div class="ai-ma-tools">' +
+        '<button type="button" class="ai-mini-btn ai-ma-share" title="Share App Link">🔗 Share App</button>' +
+        '<button type="button" class="ai-mini-btn ai-ma-pwa" title="Install to Phone Home Screen">📱 Install to Phone</button>' +
         '<button type="button" class="ai-mini-btn ai-ma-save">★ Save to Library</button>' +
         '<button type="button" class="ai-mini-btn ai-ma-csv">Export CSV</button>' +
         '<button type="button" class="ai-mini-btn danger ai-ma-clear">Clear All</button>' +
@@ -624,6 +626,48 @@
         paint();
         if (window.wdwToast) window.wdwToast('Entry added ✓', 'success');
       });
+
+      var shareBtn = outEl.querySelector('.ai-ma-share');
+      if (shareBtn) {
+        shareBtn.addEventListener('click', function () {
+          try {
+            var str = btoa(unescape(encodeURIComponent(JSON.stringify(spec))));
+            var url = window.location.origin + window.location.pathname + '?spec=' + encodeURIComponent(str);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(url).then(function () {
+                if (window.wdwToast) window.wdwToast('App link copied to clipboard! Share on WhatsApp ✓', 'success');
+                else alert('App link copied to clipboard:\n' + url);
+              });
+            } else {
+              prompt('Copy your app link:', url);
+            }
+          } catch (e) {
+            if (window.wdwToast) window.wdwToast('Could not generate share link', 'error');
+          }
+        });
+      }
+
+      var pwaBtn = outEl.querySelector('.ai-ma-pwa');
+      if (pwaBtn) {
+        pwaBtn.addEventListener('click', function () {
+          if (window.deferredPwaPrompt) {
+            window.deferredPwaPrompt.prompt();
+            window.deferredPwaPrompt.userChoice.then(function (choice) {
+              if (choice.outcome === 'accepted' && window.wdwToast) {
+                window.wdwToast('App installed to your phone! ✓', 'success');
+              }
+              window.deferredPwaPrompt = null;
+            });
+          } else {
+            var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+            var msg = isIos
+              ? '📱 Phone me Install karne ka tareeqa:\n\n1. Safari me neeche Share button (⎋) dabayein.\n2. "Add to Home Screen" select karein.\n\nApp direct phone screen par install ho jayegi aur bina Play Store ke chalegi!'
+              : '📱 Phone me Install karne ka tareeqa:\n\n1. Chrome browser me oopar 3 dots (⋮) dabayein.\n2. "Install app" ya "Add to Home screen" select karein.\n\nApp direct phone screen par install ho jayegi aur Play Store ki zaroorat nahi!';
+            alert(msg);
+          }
+        });
+      }
+
       outEl.querySelector('.ai-ma-csv').addEventListener('click', function () {
         if (!rows.length) {
           if (window.wdwToast) window.wdwToast('Nothing to export yet', 'error');
@@ -671,6 +715,7 @@
     }
 
     paint();
+    try { localStorage.setItem('wdw_microapp_active_spec_v1', JSON.stringify(spec)); } catch (e) {}
     saveToLibrary(); // auto-save: forged apps survive refresh via the library
   }
 
@@ -712,6 +757,40 @@
 
   function wireMicroAppSmith(root) {
     paintMicroAppLibrary(root);
+
+    // Auto-restore active app or shared URL app on page load/refresh
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var qSpec = params.get('spec');
+      var toRestore = null;
+      if (qSpec) {
+        try {
+          var jsonStr = decodeURIComponent(escape(atob(qSpec.replace(/ /g, '+'))));
+          toRestore = microAppNormalize(JSON.parse(jsonStr));
+        } catch (e) {}
+      }
+      if (!toRestore) {
+        var saved = localStorage.getItem('wdw_microapp_active_spec_v1');
+        if (saved) {
+          try { toRestore = microAppNormalize(JSON.parse(saved)); } catch (e) {}
+        }
+      }
+      // Fallback: if no active spec, but library has at least one app, restore the latest one!
+      if (!toRestore) {
+        var lib = microAppLib();
+        if (lib.length && lib[0].spec) {
+          toRestore = microAppNormalize(lib[0].spec);
+        }
+      }
+      if (toRestore) {
+        var outWrap = root.querySelector('.ai-output-wrap');
+        var outEl = root.querySelector('.ai-output');
+        if (outWrap && outEl) {
+          outWrap.style.display = 'block';
+          renderMicroApp(root, outEl, toRestore);
+        }
+      }
+    } catch (e) {}
   }
 
   /* ------------------------------------------------------------- page init */
