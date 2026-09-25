@@ -324,69 +324,138 @@
   var MICROAPP_TYPES = { text: 1, number: 1, date: 1, select: 1, tel: 1 };
   var MICROAPP_LIB_KEY = 'wdw_microapp_library_v1';
 
-  function microAppValidate(spec) {
-    if (!spec || typeof spec !== 'object') return false;
-    if (typeof spec.appName !== 'string' || !spec.appName.trim() || spec.appName.length > 60) return false;
-    if (!Array.isArray(spec.fields) || spec.fields.length < 1 || spec.fields.length > 12) return false;
-    var keys = {}, i, f;
-    for (i = 0; i < spec.fields.length; i++) {
-      f = spec.fields[i];
-      if (!f || typeof f !== 'object') return false;
-      if (typeof f.key !== 'string' || !/^[a-z][a-z0-9_]{0,29}$/.test(f.key)) return false;
-      if (keys[f.key]) return false;
-      keys[f.key] = 1;
-      if (typeof f.label !== 'string' || !f.label.trim() || f.label.length > 40) return false;
-      if (!MICROAPP_TYPES[f.type]) return false;
-      if (f.type === 'select') {
-        if (!Array.isArray(f.options) || f.options.length < 1 || f.options.length > 20) return false;
-        for (var j = 0; j < f.options.length; j++) {
-          if (typeof f.options[j] !== 'string' || !f.options[j].trim() || f.options[j].length > 40) return false;
-        }
+  function microAppExtractJson(text) {
+    // Balanced-brace extraction: finds the first {...} block even when the AI
+    // wraps it in commentary. String-aware so braces inside quotes don't count.
+    var s = String(text || '');
+    var start = s.indexOf('{');
+    if (start < 0) return null;
+    var depth = 0, instr = false, esc = false, i, ch;
+    for (i = start; i < s.length; i++) {
+      ch = s[i];
+      if (instr) {
+        if (esc) esc = false;
+        else if (ch === '\\') esc = true;
+        else if (ch === '"') instr = false;
+        continue;
+      }
+      if (ch === '"') instr = true;
+      else if (ch === '{') depth++;
+      else if (ch === '}') {
+        depth--;
+        if (depth === 0) return s.slice(start, i + 1);
       }
     }
-    if (!Array.isArray(spec.tableColumns) || spec.tableColumns.length < 1 || spec.tableColumns.length > 8) return false;
-    for (var k = 0; k < spec.tableColumns.length; k++) {
-      if (typeof spec.tableColumns[k] !== 'string' || !keys[spec.tableColumns[k]]) return false;
-    }
-    if (spec.actions !== undefined) {
-      if (!Array.isArray(spec.actions)) return false;
-      for (var a = 0; a < spec.actions.length; a++) {
-        if (spec.actions[a] !== 'whatsapp' && spec.actions[a] !== 'none') return false;
+    return null;
+  }
+
+  function microAppSanitizeKey(k) {
+    var key = String(k || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+    if (!key) key = 'field';
+    if (/^[0-9]/.test(key)) key = 'f_' + key;
+    return key.slice(0, 30);
+  }
+
+  function microAppNormalize(raw) {
+    // Repair-and-normalize: instead of rejecting imperfect AI output,
+    // coerce it into a valid spec (fix keys, drop bad cards, fill defaults).
+    if (!raw || typeof raw !== 'object') return null;
+    var fields = [], seen = {}, i, f, key, label, type;
+    var srcFields = Array.isArray(raw.fields) ? raw.fields : [];
+    for (i = 0; i < srcFields.length && fields.length < 12; i++) {
+      f = srcFields[i];
+      if (!f || typeof f !== 'object') continue;
+      key = microAppSanitizeKey(f.key);
+      if (seen[key]) {
+        var n = 2, kk = key + '_' + n;
+        while (seen[kk] && n < 50) { n++; kk = key + '_' + n; }
+        key = kk;
       }
-    }
-    if (spec.whatsappTemplate !== undefined &&
-        (typeof spec.whatsappTemplate !== 'string' || spec.whatsappTemplate.length > 500)) return false;
-    // Optional dashboard stat cards: sum/avg/min/max/count/countWhere over rows.
-    if (spec.dashboard !== undefined) {
-      if (!Array.isArray(spec.dashboard) || spec.dashboard.length > 6) return false;
-      var OPS = { sum: 1, avg: 1, min: 1, max: 1, count: 1, countWhere: 1 };
-      for (var d = 0; d < spec.dashboard.length; d++) {
-        var card = spec.dashboard[d];
-        if (!card || typeof card !== 'object') return false;
-        if (typeof card.label !== 'string' || !card.label.trim() || card.label.length > 40) return false;
-        if (!OPS[card.op]) return false;
-        if (card.op === 'count') {
-          if (card.field !== undefined || card.equals !== undefined) return false;
-        } else {
-          if (typeof card.field !== 'string' || !keys[card.field]) return false;
-          if (card.op === 'countWhere') {
-            if (typeof card.equals !== 'string' || !card.equals.trim() || card.equals.length > 40) return false;
+      seen[key] = 1;
+      label = String(f.label || key).trim().slice(0, 40) || key;
+      type = MICROAPP_TYPES[f.type] ? f.type : 'text';
+      var nf = { key: key, label: label, type: type };
+      if (type === 'select') {
+        var opts = [];
+        if (Array.isArray(f.options)) {
+          for (var j = 0; j < f.options.length && opts.length < 20; j++) {
+            var o = String(f.options[j] || '').trim().slice(0, 40);
+            if (o && opts.indexOf(o) < 0) opts.push(o);
           }
         }
+        if (!opts.length) opts = ['Option 1', 'Option 2'];
+        nf.options = opts;
+      }
+      if (f.required === true) nf.required = true;
+      fields.push(nf);
+    }
+    if (!fields.length) return null;
+    // tableColumns: keep valid keys only; fallback to the first fields.
+    var cols = [];
+    if (Array.isArray(raw.tableColumns)) {
+      for (i = 0; i < raw.tableColumns.length && cols.length < 8; i++) {
+        var c = microAppSanitizeKey(raw.tableColumns[i]);
+        if (seen[c] && cols.indexOf(c) < 0) cols.push(c);
       }
     }
-    return true;
+    if (!cols.length) {
+      for (i = 0; i < fields.length && cols.length < 4; i++) cols.push(fields[i].key);
+    }
+    // dashboard: keep only valid cards, drop the rest (never kill the whole app).
+    var dash = [], OPS = { sum: 1, avg: 1, min: 1, max: 1, count: 1, countWhere: 1 };
+    if (Array.isArray(raw.dashboard)) {
+      for (i = 0; i < raw.dashboard.length && dash.length < 6; i++) {
+        var card = raw.dashboard[i];
+        if (!card || typeof card !== 'object' || !OPS[card.op]) continue;
+        var cl = String(card.label || '').trim().slice(0, 40);
+        if (!cl) continue;
+        var nc = { label: cl, op: card.op };
+        if (card.op === 'count') { dash.push(nc); continue; }
+        var cf = microAppSanitizeKey(card.field);
+        if (!seen[cf]) continue;
+        nc.field = cf;
+        if (card.op === 'countWhere') {
+          var eq = String(card.equals || '').trim().slice(0, 40);
+          if (!eq) continue;
+          nc.equals = eq;
+        }
+        dash.push(nc);
+      }
+    }
+    var actions = [];
+    if (Array.isArray(raw.actions) && raw.actions.indexOf('whatsapp') >= 0) actions = ['whatsapp'];
+    var wa = null;
+    if (actions.length && typeof raw.whatsappTemplate === 'string' && raw.whatsappTemplate.trim()) {
+      wa = raw.whatsappTemplate.trim().slice(0, 500);
+    }
+    var spec = {
+      appName: String(raw.appName || 'My Micro-App').trim().slice(0, 60) || 'My Micro-App',
+      fields: fields,
+      tableColumns: cols,
+      actions: actions
+    };
+    if (dash.length) spec.dashboard = dash;
+    if (wa) spec.whatsappTemplate = wa;
+    return spec;
   }
+
 
   function microAppParse(answer) {
     var txt = String(answer || '').trim()
       .replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
-    var m = txt.match(/\{[\s\S]*\}/);
-    if (!m) return null;
-    try {
-      var spec = JSON.parse(m[0]);
-      return microAppValidate(spec) ? spec : null;
-    } catch (e) { return null; }
+    var candidates = [txt, microAppExtractJson(txt)];
+    for (var i = 0; i < candidates.length; i++) {
+      var c = candidates[i];
+      if (!c) continue;
+      var tries = [c, c.replace(/,\s*([}\]])/g, '$1')]; // raw, then trailing-comma repair
+      for (var t = 0; t < tries.length; t++) {
+        try {
+          var spec = microAppNormalize(JSON.parse(tries[t]));
+          if (spec) return spec;
+        } catch (e) {}
+      }
+    }
+    return null;
   }
 
   function microAppStorageKey(name) {
@@ -618,11 +687,12 @@
     strip.querySelectorAll('.ai-lib-open').forEach(function (b) {
       b.addEventListener('click', function () {
         var it = microAppLib()[Number(b.getAttribute('data-i'))];
-        if (!it || !microAppValidate(it.spec)) return;
+        var libSpec = it && microAppNormalize(it.spec);
+        if (!libSpec) return;
         var outWrap = root.querySelector('.ai-output-wrap');
         var outEl = root.querySelector('.ai-output');
         outWrap.style.display = 'block';
-        renderMicroApp(root, outEl, it.spec);
+        renderMicroApp(root, outEl, libSpec);
         outWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       });
     });
@@ -693,10 +763,26 @@
         if (cfg.after === 'microapp') {
           var spec = microAppParse(answer);
           if (!spec) {
-            errEl.textContent = 'The AI returned an invalid app spec. Try again with a simpler, concrete description (e.g. name the fields you need).';
-            errEl.style.display = 'block';
-            if (window.wdwToast) window.wdwToast('Invalid app spec — please retry', 'error');
-            outWrap.style.display = 'none';
+            // One automatic retry with a stricter reminder — the user never
+            // sees the first failure; the Thinking state simply continues.
+            ask(cfg.tool, prompt + '\n\nSTRICT REMINDER: your previous reply was not valid JSON. Reply now with ONLY the JSON object — no code fences, no commentary, no extra text.').then(function (answer2) {
+              setLoading(false);
+              btn.querySelector('.ai-run-label').textContent = cfg.cta;
+              var spec2 = microAppParse(answer2);
+              if (!spec2) {
+                errEl.textContent = 'The AI could not build an app from that description. Try naming the fields you need (e.g. "invoice tracker: client name, amount, due date, status").';
+                errEl.style.display = 'block';
+                if (window.wdwToast) window.wdwToast('Could not build app — please retry', 'error');
+                outWrap.style.display = 'none';
+              } else {
+                renderMicroApp(root, outEl, spec2);
+              }
+            }).catch(function (err2) {
+              setLoading(false);
+              btn.querySelector('.ai-run-label').textContent = cfg.cta;
+              errEl.textContent = friendlyError(err2);
+              errEl.style.display = 'block';
+            });
           } else {
             renderMicroApp(root, outEl, spec);
           }

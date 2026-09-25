@@ -1,4 +1,4 @@
-const CACHE_NAME = 'webdevworker-cache-v2026-v75';
+const CACHE_NAME = 'webdevworker-cache-v2026-v76';
 const ASSETS_TO_CACHE = [
   '/',
   '/manifest.json',
