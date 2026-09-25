@@ -644,11 +644,14 @@
         microAppPersist(key, rows);
         paint();
       });
+    function saveToLibrary() {
+      var lib = microAppLib().filter(function (it) { return it.key !== key; });
+      lib.unshift({ name: spec.appName, key: key, spec: spec });
+      microAppLibSave(lib);
+      paintMicroAppLibrary(root);
+    }
       outEl.querySelector('.ai-ma-save').addEventListener('click', function () {
-        var lib = microAppLib().filter(function (it) { return it.key !== key; });
-        lib.unshift({ name: spec.appName, key: key, spec: spec });
-        microAppLibSave(lib);
-        paintMicroAppLibrary(root);
+        saveToLibrary();
         if (window.wdwToast) window.wdwToast('Saved to your library ✓', 'success');
       });
       outEl.querySelectorAll('.ai-ma-del').forEach(function (b) {
@@ -668,6 +671,7 @@
     }
 
     paint();
+    saveToLibrary(); // auto-save: forged apps survive refresh via the library
   }
 
   function paintMicroAppLibrary(root) {
