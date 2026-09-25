@@ -1501,3 +1501,19 @@ button.ww-copy-success {
   }
 }
 
+/* Fix Copy Button Layout Shift (Prevents Left/Right Jumping) */
+.copy-btn, 
+.btn-copy, 
+button[onclick*="copy"],
+.tool-action-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 95px !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease !important;
+}
+
+

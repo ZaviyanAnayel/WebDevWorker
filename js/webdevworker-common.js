@@ -147,6 +147,26 @@
     } catch (outer) {}
   })();
 
+  function copyToClipboard(text, btn) {
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+      if (btn) {
+        const origText = btn.innerHTML;
+        const curWidth = btn.offsetWidth;
+        btn.style.minWidth = curWidth + 'px';
+        btn.innerHTML = '✓ Copied!';
+        btn.classList.add('copied');
+        
+        setTimeout(() => {
+          btn.innerHTML = origText;
+          btn.classList.remove('copied');
+          btn.style.minWidth = '';
+        }, 2000);
+      }
+    }).catch(err => console.error('Copy failed:', err));
+  }
+  window.copyToClipboard = copyToClipboard;
+
   // 0. Clipboard hardening — every copy button keeps working even when
   // navigator.clipboard.writeText rejects (permissions, background tab, …)
   // or when navigator.clipboard is missing entirely (non-secure contexts).
