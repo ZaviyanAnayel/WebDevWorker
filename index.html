@@ -1,14 +1,27 @@
 <!DOCTYPE html>
 <html data-theme="dark" lang="en">
 <head>
-<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+<script>
+  (function(){
+    try {
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      var t = localStorage.getItem('wdw_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+    } catch(e){}
+  })();
+</script>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>WebDevWorker — 85+ Free Developer, CSS, API &amp; Security Utilities</title>
 <meta content="85+ high-precision developer utilities. CSS flexbox &amp; grid builders, HTML to JSX, JSON to Zod, clamp() calculator, JSON to TypeScript, cURL converter, mock data, SHA hashes, and QR pro. 100% offline, zero-telemetry &amp; private." name="description"/>
 <meta content="web developer tools, css generator, html to jsx, json to zod, json to typescript, curl converter, flexbox generator, grid builder, qr code generator, webdevworker" name="keywords"/>
 <meta content="WebDevWorker" name="author"/>
-<meta content="index, follow" name="robots"/>
+<meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name="robots"/>
+<meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name="googlebot"/>
+<meta name="geo.region" content="US-CA" />
+<meta name="geo.placename" content="San Francisco" />
+<meta name="geo.position" content="37.7749;-122.4194" />
+<meta name="ICBM" content="37.7749, -122.4194" />
 <link href="https://webdevworker.com/" rel="canonical"/>
 <meta content="WebDevWorker — 85+ Free Developer, CSS, Security &amp; API Utilities" property="og:title"/>
 <meta content="85+ free high-precision developer utilities, CSS generators, and code formatters. 100% client-side privacy with PWA offline support." property="og:description"/>
@@ -42,8 +55,8 @@
   gtag('js', new Date());
   gtag('config', 'G-G718R5DYYR');
 </script>
-<link href="/css/webdevworker.css?v=2026-wdw-v45" rel="stylesheet"/>
-<link href="/css/ai-widget.css?v=2026-wdw-v45" rel="stylesheet"/>
+<link href="/css/webdevworker.css?v=2026-wdw-v60" rel="stylesheet"/>
+<link href="/css/ai-widget.css?v=2026-wdw-v60" rel="stylesheet"/>
 </head>
 <body>
 <div class="app-shell">
@@ -76,13 +89,13 @@
         <div class="hero-aurora"></div>
         <div class="hero-content">
           <div class="hero-pill-badge">
-            <span class="hero-pill-dot"></span> 85+ Professional Developer Utilities • 100% Client-Side Sandbox
+            <span class="hero-pill-dot"></span> 58+ Professional Developer Utilities • 100% Client-Side Sandbox
           </div>
           <h1 class="hero-headline">
             The High-Precision <span class="hero-headline-gradient">Developer Workstation</span>
           </h1>
           <p class="hero-description">
-            85+ essential frontend, CSS, API, and cryptographic utilities engineered for modern software engineers, webmasters, and designers. 100% client-side memory execution with zero telemetry, zero server storage, and complete offline PWA support.
+            58+ essential frontend, CSS, API, and cryptographic utilities engineered for modern software engineers, webmasters, and designers. 100% client-side memory execution with zero telemetry, zero server storage, and complete offline PWA support.
           </p>
 
           <!-- Command Bar Hero Search -->
@@ -1513,7 +1526,7 @@
       <section class="seo-card" style="margin-top: 48px; padding: 36px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px;">
         <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 14px;">Why Modern Developers Choose WebDevWorker</h2>
         <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.75; margin-bottom: 16px;">
-          Most online developer tools charge monthly subscription fees for features like cURL conversion, Mock data generation, TypeScript type generation, and custom QR codes. WebDevWorker provides all 85 tools 100% free and client-side. Your sensitive code, JSON payloads, and cryptographic keys never leave your machine.
+          Most online developer tools charge monthly subscription fees for features like cURL conversion, Mock data generation, TypeScript type generation, and custom QR codes. WebDevWorker provides all 58 tools 100% free and client-side. Your sensitive code, JSON payloads, and cryptographic keys never leave your machine.
         </p>
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:20px; margin-top:24px;">
           <div style="padding:18px; background:var(--bg-subtle); border-radius:12px; border:1px solid var(--border);">
@@ -1537,7 +1550,7 @@
           <div class="footer-grid">
             <div class="footer-brand-col">
               <a href="/" style="display:inline-block;"><img src="/assets/webdevworker-logo-horizontal.svg" alt="WebDevWorker" style="height:36px;"></a>
-              <p>The premier client-side developer workstation. 85+ high-precision utilities for modern web development, frontend design, and server administration.</p>
+              <p>The premier client-side developer workstation. 58+ high-precision utilities for modern web development, frontend design, and server administration.</p>
               <p style="margin-top:12px; font-size:0.82rem; color:var(--brand-primary); font-weight:700;">Founded by Zaviyan &bull; Operated by Zaviyan LLC</p>
               <p style="margin-top:2px; font-size:0.76rem; color:var(--text-dim);">Corporate Support: business@zaviyanll.com</p>
             </div>
@@ -1591,7 +1604,7 @@
             <div style="display:flex; gap:16px; flex-wrap:wrap;">
               <span>🔒 100% Client-Side Sandboxed</span>
               <span>⚡ Zero Telemetry</span>
-              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+              <span>📲 Offline PWA Capable</span>
             </div>
           </div>
         </div>
@@ -1600,7 +1613,7 @@
   </div>
 </div>
 
-<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
-<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+<script src="/js/webdevworker-common.js?v=2026-wdw-v60" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v60" defer></script>
 </body>
 </html>

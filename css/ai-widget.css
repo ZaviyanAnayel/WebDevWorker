@@ -40,18 +40,9 @@
 }
 
 [data-theme="light"] .cw-ai-launcher {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 55%, #a855f7 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.55) !important;
-  box-shadow: 0 10px 30px -4px rgba(124, 58, 237, 0.5), 0 2px 8px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
-}
-
-[data-theme="light"] .cw-ai-launcher:hover {
-  box-shadow: 0 14px 38px -4px rgba(124, 58, 237, 0.65), 0 4px 12px rgba(0, 0, 0, 0.14) !important;
-}
-
-[data-theme="light"] .cw-ai-launcher-text {
-  color: #ffffff !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+  background: #ffffff !important;
+  border: 1.5px solid #ca8a04 !important;
+  box-shadow: 0 8px 24px -4px rgba(202, 138, 4, 0.3), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
 }
 
 .cw-ai-launcher:hover {
@@ -72,7 +63,7 @@
 }
 
 [data-theme="light"] .cw-ai-launcher-label {
-  color: #ffffff !important;
+  color: #0f172a !important;
 }
 
 .cw-ai-window {

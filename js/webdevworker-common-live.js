@@ -169,45 +169,23 @@
     } catch (outer) {}
   })();
 
-    function copyToClipboard(text, btn) {
+  function copyToClipboard(text, btn) {
     if (!text) return;
-    function updateBtnVisual() {
+    navigator.clipboard.writeText(text).then(() => {
       if (btn) {
-        var origText = btn.innerHTML;
-        var curWidth = btn.offsetWidth;
-        if (curWidth > 0) btn.style.minWidth = curWidth + 'px';
+        const origText = btn.innerHTML;
+        const curWidth = btn.offsetWidth;
+        btn.style.minWidth = curWidth + 'px';
         btn.innerHTML = '✓ Copied!';
-        btn.style.background = '#10b981';
-        btn.style.color = '#ffffff';
         btn.classList.add('copied');
-        setTimeout(function() {
+        
+        setTimeout(() => {
           btn.innerHTML = origText;
-          btn.style.background = '';
-          btn.style.color = '';
           btn.classList.remove('copied');
           btn.style.minWidth = '';
         }, 2000);
       }
-      if (window.wdwToast) window.wdwToast('Copied ✓', 'success');
-    }
-    function fallbackExec() {
-      try {
-        var ta = document.createElement('textarea');
-        ta.value = String(text);
-        ta.style.cssText = 'position:fixed;top:0;left:0;width:2em;height:2em;padding:0;border:none;outline:none;background:transparent;z-index:99999;';
-        document.body.appendChild(ta);
-        ta.focus();
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-      } catch(e) {}
-      updateBtnVisual();
-    }
-    if (navigator.clipboard && window.isSecureContext && typeof navigator.clipboard.writeText === 'function') {
-      navigator.clipboard.writeText(String(text)).then(updateBtnVisual).catch(fallbackExec);
-    } else {
-      fallbackExec();
-    }
+    }).catch(err => console.error('Copy failed:', err));
   }
   window.copyToClipboard = copyToClipboard;
 
@@ -219,8 +197,8 @@
       try {
         var ta = document.createElement('textarea');
         ta.value = String(text == null ? '' : text);
-        // ta.setAttribute("readonly", "");
-        ta.style.cssText = 'position:fixed;top:0;left:0;width:2em;height:2em;padding:0;border:none;outline:none;background:transparent;z-index:99999;';
+        ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;';
         (document.body || document.documentElement).appendChild(ta);
         try { ta.focus(); } catch (e) {}
         ta.select();
@@ -648,8 +626,8 @@
       try {
         const ta = document.createElement('textarea');
         ta.value = text;
-        // ta.setAttribute("readonly", "");
-        ta.style.cssText = 'position:fixed;top:0;left:0;width:2em;height:2em;padding:0;border:none;outline:none;background:transparent;z-index:99999;';
+        ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
         document.body.appendChild(ta);
         ta.select();
         ta.setSelectionRange(0, ta.value.length);

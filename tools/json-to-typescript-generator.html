@@ -134,8 +134,12 @@
   gtag('js', new Date());
   gtag('config', 'G-G718R5DYYR');
 </script>
-<link href="/css/webdevworker.css?v=2026-wdw-v35" rel="stylesheet"/>
-<link href="/css/ai-widget.css?v=2026-wdw-v35" rel="stylesheet"/>
+<link href="/css/webdevworker.css?v=2026-wdw-v60" rel="stylesheet"/>
+<link href="/css/ai-widget.css?v=2026-wdw-v60" rel="stylesheet"/>
+  <meta name="geo.region" content="US-CA" />
+  <meta name="geo.placename" content="San Francisco" />
+  <meta name="geo.position" content="37.7749;-122.4194" />
+  <meta name="ICBM" content="37.7749, -122.4194" />
 </head>
 <body>
 <div class="app-shell">
@@ -561,8 +565,8 @@ export interface UserMetadata {
   </div>
 </div>
 
-<script src="/js/webdevworker-common.js?v=2026-wdw-v35" defer></script>
-<script src="/js/ai-widget.js?v=2026-wdw-v35" defer></script>
+<script src="/js/webdevworker-common.js?v=2026-wdw-v60" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v60" defer></script>
 <script>
 
 function jsonToTs() {
@@ -658,60 +662,36 @@ function downloadDts() {
 }
 
 function copyCode(targetId, btnRef) {
-  var target = document.getElementById(targetId);
-  var btn = typeof btnRef === 'string' ? document.getElementById(btnRef) : btnRef;
-  var text = target ? (target.innerText || target.textContent || '') : '';
-  if (!text || text.startsWith('Invalid JSON')) {
-    if (window.wdwToast) window.wdwToast('Nothing to copy', 'error');
-    return;
-  }
-
-  function showSuccess() {
-    if (btn) {
-      var orig = btn.getAttribute('data-orig') || btn.innerHTML;
-      btn.setAttribute('data-orig', orig);
-      btn.innerHTML = '✓ Copied!';
-      btn.style.background = '#10b981';
-      btn.style.color = '#ffffff';
-      setTimeout(function() {
-        btn.innerHTML = orig;
-        btn.style.background = '';
-        btn.style.color = '';
-      }, 1800);
-    }
-    if (window.wdwToast) window.wdwToast('TypeScript types copied to clipboard!', 'success');
-  }
-
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(text).then(showSuccess).catch(fallback);
+  if (typeof window.snCopyCode === 'function') {
+    window.snCopyCode(targetId, btnRef);
   } else {
-    fallback();
-  }
-
-  function fallback() {
+    var el = document.getElementById(targetId);
+    var t = el ? (el.value !== undefined && el.value !== '' ? el.value : el.innerText || el.textContent || '') : '';
+    if (!t) return;
     try {
       var ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.left = '-9999px';
-      ta.style.top = '0';
+      ta.value = t;
+      ta.style.cssText = 'position:fixed;top:0;left:0;width:2em;height:2em;padding:0;border:none;outline:none;background:transparent;z-index:99999;';
       document.body.appendChild(ta);
       ta.focus();
       ta.select();
-      var ok = document.execCommand('copy');
+      document.execCommand('copy');
       document.body.removeChild(ta);
-      if (ok) {
-        showSuccess();
-        return;
-      }
     } catch(e) {}
-    if (window.getSelection && document.createRange && target) {
-      var range = document.createRange();
-      range.selectNodeContents(target);
-      var sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-      if (window.wdwToast) window.wdwToast('Text highlighted! Press Ctrl+C to copy', 'success');
+    var btn = typeof btnRef === 'string' ? document.getElementById(btnRef) : btnRef;
+    if (!btn && typeof event !== 'undefined' && event && event.target) {
+      btn = event.target.closest('button, .copy-code-btn');
+    }
+    if (btn) {
+      var orig = btn.innerHTML;
+      btn.innerHTML = '✓ Copied!';
+      btn.style.background = '#10b981';
+      btn.style.color = '#ffffff';
+      setTimeout(function(){
+        btn.innerHTML = orig;
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 2000);
     }
   }
 }

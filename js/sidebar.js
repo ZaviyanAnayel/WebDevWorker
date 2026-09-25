@@ -1,120 +1,466 @@
 /**
- * WebDevWorker / CalcWorker — Universal Master Sidebar & PWA Manager
- * Theme Lock REMOVED: Now 100% respects user Light/Dark mode choice permanently.
+ * CalcWorker — Universal Synchronized Sidebar & Scroll Memory Engine V34
+ * Features:
+ * - Persistent Sidebar Scroll Memory across page navigations
+ * - Auto-Scroll to active calculator link
+ * - Glowing PRO, HOT, NEW, 2026, LIVE badges
+ * - Click ripple flash wave
  */
 (function () {
   'use strict';
 
+  const SIDEBAR_GROUPS = [
+  {
+    "title": "Flagship Suite",
+    "items": [
+      {
+        "icon": "\u26a1",
+        "label": "OmniCalc Ultra (6-in-1)",
+        "href": "/tools/omnicalc.html",
+        "badge": "HOT"
+      }
+    ]
+  },
+  {
+    "title": "Taxes & Income",
+    "items": [
+      {
+        "icon": "\ud83d\udcb5",
+        "label": "Paycheck Calculator (2026)",
+        "href": "/tools/paycheck-calculator.html",
+        "badge": "2026"
+      },
+      {
+        "icon": "\ud83d\udcbc",
+        "label": "Freelance 1099 Tax Estimator",
+        "href": "/tools/freelance-tax-calculator.html",
+        "badge": "PRO"
+      },
+      {
+        "icon": "\ud83c\udfdb\ufe0f",
+        "label": "Tax Withholding (2026)",
+        "href": "/tools/tax-withholding.html"
+      },
+      {
+        "icon": "\u23f1\ufe0f",
+        "label": "Hourly Rate Calculator",
+        "href": "/tools/hourly-rate.html"
+      },
+      {
+        "icon": "\u231b",
+        "label": "Overtime Calculator",
+        "href": "/tools/overtime-calculator.html"
+      },
+      {
+        "icon": "\ud83d\ude97",
+        "label": "Gig Worker Net Profit",
+        "href": "/tools/gig-profit.html",
+        "badge": "NEW"
+      },
+      {
+        "icon": "\ud83c\udff7\ufe0f",
+        "label": "US State Sales Tax",
+        "href": "/tools/sales-tax-calculator.html"
+      }
+    ]
+  },
+  {
+    "title": "Real Estate & Loans",
+    "items": [
+      {
+        "icon": "\ud83c\udfe1",
+        "label": "Mortgage & Amortization (PITI)",
+        "href": "/tools/mortgage-calculator.html",
+        "badge": "PRO"
+      },
+      {
+        "icon": "\ud83d\ude98",
+        "label": "Auto Loan Calculator",
+        "href": "/tools/auto-loan.html",
+        "badge": "NEW"
+      },
+      {
+        "icon": "\ud83d\ude99",
+        "label": "Car Lease Payment",
+        "href": "/tools/car-lease-calculator.html"
+      },
+      {
+        "icon": "\ud83c\udfe6",
+        "label": "HELOC & Credit Line",
+        "href": "/tools/heloc-calculator.html"
+      },
+      {
+        "icon": "\u2696\ufe0f",
+        "label": "Rent vs Buy Decision",
+        "href": "/tools/rent-vs-buy.html",
+        "badge": "HOT"
+      },
+      {
+        "icon": "\ud83d\udcc5",
+        "label": "Prorated Rent Calculator",
+        "href": "/tools/prorated-rent-calculator.html"
+      },
+      {
+        "icon": "\u2600\ufe0f",
+        "label": "Solar Panel ROI Estimator",
+        "href": "/tools/solar-roi.html",
+        "badge": "PRO"
+      }
+    ]
+  },
+  {
+    "title": "Wealth, Debt & Savings",
+    "items": [
+      {
+        "icon": "\ud83d\udcc8",
+        "label": "Compound Interest & Goal",
+        "href": "/tools/compound-interest.html",
+        "badge": "PRO"
+      },
+      {
+        "icon": "\ud83c\udfd6\ufe0f",
+        "label": "401(k) & Retirement Savings",
+        "href": "/tools/retirement-401k.html",
+        "badge": "PRO"
+      },
+      {
+        "icon": "\ud83d\udee1\ufe0f",
+        "label": "Roth IRA Tax-Free Growth",
+        "href": "/tools/roth-ira-calculator.html",
+        "badge": "HOT"
+      },
+      {
+        "icon": "\ud83d\udcb3",
+        "label": "Credit Card Payoff",
+        "href": "/tools/credit-card-payoff.html"
+      },
+      {
+        "icon": "\u2744\ufe0f",
+        "label": "Debt Snowball & Avalanche",
+        "href": "/tools/debt-payoff.html"
+      },
+      {
+        "icon": "\ud83c\udf93",
+        "label": "Student Loan Repayment",
+        "href": "/tools/student-loan.html"
+      },
+      {
+        "icon": "\ud83e\ude99",
+        "label": "Cryptocurrency Profit & ROI",
+        "href": "/tools/crypto-profit-calculator.html",
+        "badge": "HOT"
+      },
+      {
+        "icon": "\ud83d\udcc9",
+        "label": "US Inflation & Purchasing Power",
+        "href": "/tools/inflation-calculator.html",
+        "badge": "PRO"
+      }
+    ]
+  },
+  {
+    "title": "E-Commerce & Sellers",
+    "items": [
+      {
+        "icon": "\ud83d\udce6",
+        "label": "Amazon FBA Profit & Fee",
+        "href": "/tools/amazon-fba-calculator.html",
+        "badge": "PRO"
+      },
+      {
+        "icon": "\ud83d\udecd\ufe0f",
+        "label": "Etsy Fee & Profit",
+        "href": "/tools/etsy-profit.html",
+        "badge": "HOT"
+      },
+      {
+        "icon": "\ud83c\udff7\ufe0f",
+        "label": "eBay Seller Fee & Profit",
+        "href": "/tools/ebay-fee-calculator.html"
+      },
+      {
+        "icon": "\ud83d\uded2",
+        "label": "Shopify Fee & Margin",
+        "href": "/tools/shopify-fee-calculator.html",
+        "badge": "PRO"
+      },
+      {
+        "icon": "\ud83d\udcca",
+        "label": "Multi-Platform Comparator",
+        "href": "/tools/ecommerce-profit-comparator.html",
+        "badge": "HOT"
+      },
+      {
+        "icon": "\ud83c\udfaf",
+        "label": "Business Break-Even Point",
+        "href": "/tools/break-even.html"
+      }
+    ]
+  },
+  {
+    "title": "Creators & Social Media",
+    "items": [
+      {
+        "icon": "\ud83e\ude99",
+        "label": "TikTok Coins & Gifts Value",
+        "href": "/tools/tiktok-coins-calculator.html",
+        "badge": "HOT"
+      },
+      {
+        "icon": "\ud83d\udcb0",
+        "label": "TikTok Creator Money",
+        "href": "/tools/tiktok-money-calculator.html",
+        "badge": "NEW"
+      },
+      {
+        "icon": "\ud83d\udecd\ufe0f",
+        "label": "TikTok Shop Affiliate",
+        "href": "/tools/tiktok-shop-affiliate-calculator.html",
+        "badge": "HOT"
+      },
+      {
+        "icon": "\u25b6\ufe0f",
+        "label": "YouTube Money & CPM",
+        "href": "/tools/youtube-money-calculator.html",
+        "badge": "PRO"
+      },
+      {
+        "icon": "\ud83d\udcf8",
+        "label": "Instagram Sponsored Rate",
+        "href": "/tools/instagram-money-calculator.html"
+      },
+      {
+        "icon": "\ud83d\udcc8",
+        "label": "Channel Milestone Tracker",
+        "href": "/tools/channel-growth-calculator.html"
+      },
+      {
+        "icon": "\ud83c\udf99\ufe0f",
+        "label": "Podcast Sponsorship Rates",
+        "href": "/tools/podcast-sponsorship-calculator.html"
+      }
+    ]
+  },
+  {
+    "title": "Currency & Global Exchange",
+    "items": [
+      {
+        "icon": "\ud83c\udf10",
+        "label": "Universal Currency Converter",
+        "href": "/tools/currency-converter.html",
+        "badge": "LIVE"
+      },
+      {
+        "icon": "\ud83d\udcb6",
+        "label": "USD to EUR (Euro)",
+        "href": "/tools/usd-to-eur.html",
+        "badge": "LIVE"
+      },
+      {
+        "icon": "\ud83d\udcb7",
+        "label": "USD to GBP (British Pound)",
+        "href": "/tools/usd-to-gbp.html"
+      },
+      {
+        "icon": "\ud83c\udf41",
+        "label": "USD to CAD (Canadian Dollar)",
+        "href": "/tools/usd-to-cad.html"
+      },
+      {
+        "icon": "\ud83c\udf2e",
+        "label": "USD to MXN (Mexican Peso)",
+        "href": "/tools/usd-to-mxn.html"
+      },
+      {
+        "icon": "\u20b9",
+        "label": "USD to INR (Indian Rupee)",
+        "href": "/tools/usd-to-inr.html"
+      },
+      {
+        "icon": "\ud83d\udcb4",
+        "label": "USD to JPY (Japanese Yen)",
+        "href": "/tools/usd-to-jpy.html"
+      },
+      {
+        "icon": "\ud83c\uddf5\ud83c\uddf0",
+        "label": "USD to PKR (Pakistani Rupee)",
+        "href": "/tools/usd-to-pkr.html",
+        "badge": "HOT"
+      }
+    ]
+  },
+  {
+    "title": "Health, Fitness & Everyday Math",
+    "items": [
+      {
+        "icon": "\u2696\ufe0f",
+        "label": "BMI & Body Composition",
+        "href": "/tools/bmi-calculator.html",
+        "badge": "PRO"
+      },
+      {
+        "icon": "\ud83e\udd57",
+        "label": "Calorie & Deficit Planner",
+        "href": "/tools/calorie-calculator.html",
+        "badge": "HOT"
+      },
+      {
+        "icon": "\ud83d\udca7",
+        "label": "Daily Water Intake Goal",
+        "href": "/tools/water-intake-calculator.html"
+      },
+      {
+        "icon": "\ud83d\udc5f",
+        "label": "Steps to Miles & Calories",
+        "href": "/tools/steps-to-miles.html"
+      },
+      {
+        "icon": "\ud83c\udfcb\ufe0f",
+        "label": "Bench Press 1RM Estimator",
+        "href": "/tools/bench-press-calculator.html",
+        "badge": "HOT"
+      },
+      {
+        "icon": "\ud83d\udd22",
+        "label": "Percentage Calculator (3-in-1)",
+        "href": "/tools/percentage-calculator.html",
+        "badge": "PRO"
+      },
+      {
+        "icon": "\ud83c\udf82",
+        "label": "Exact Age & Date Calculator",
+        "href": "/tools/age-calculator.html",
+        "badge": "NEW"
+      },
+      {
+        "icon": "\ud83d\uddd3\ufe0f",
+        "label": "Date Difference & Calendar",
+        "href": "/tools/date-calculator.html"
+      },
+      {
+        "icon": "\u26fd",
+        "label": "Fuel Cost & Commute Trip",
+        "href": "/tools/fuel-cost-calculator.html",
+        "badge": "PRO"
+      },
+      {
+        "icon": "\ud83c\udf7d\ufe0f",
+        "label": "Tip & Dining Bill Splitter",
+        "href": "/tools/tip-calculator.html"
+      },
+      {
+        "icon": "\ud83c\udf93",
+        "label": "GPA & Cumulative Grade",
+        "href": "/tools/gpa-calculator.html",
+        "badge": "PRO"
+      }
+    ]
+  }
+];
+
   function normalize(path) {
-    if (!path) return "/";
-    let p = path.split("?")[0].split("#")[0];
-    if (p === "/index.html") return "/";
-    if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
-    return p;
-  }
-
-  const currentPath = normalize(window.location.pathname);
-
-  // 1. Dynamic Theme Sync (Respects User Choice)
-  function syncTheme() {
-    const saved = localStorage.getItem('wdw_theme') || 
-                  localStorage.getItem('webdevworker_theme') || 
-                  localStorage.getItem('calcworker_theme') || 
-                  localStorage.getItem('theme') || 
-                  'dark';
-
-    document.documentElement.setAttribute('data-theme', saved);
-    if (document.body) document.body.setAttribute('data-theme', saved);
-
-    const themeBtn = document.getElementById('themeToggleBtn');
-    if (themeBtn) {
-      themeBtn.innerHTML = (saved === 'dark') ? '☀️ Light' : '🌙 Dark';
-      themeBtn.onclick = function (e) {
-        if (e) e.preventDefault();
-        const cur = document.documentElement.getAttribute('data-theme') || 'dark';
-        const nxt = (cur === 'dark') ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', nxt);
-        if (document.body) document.body.setAttribute('data-theme', nxt);
-        try {
-          localStorage.setItem('wdw_theme', nxt);
-          localStorage.setItem('webdevworker_theme', nxt);
-          localStorage.setItem('calcworker_theme', nxt);
-          localStorage.setItem('theme', nxt);
-        } catch (err) {}
-        themeBtn.innerHTML = (nxt === 'dark') ? '☀️ Light' : '🌙 Dark';
-      };
+    if (!path) return '';
+    path = path.toLowerCase().replace(/index\.html$/, '');
+    if (path.length > 1 && path.endsWith('/')) {
+      path = path.slice(0, -1);
     }
+    return path;
   }
 
-  // 2. Inject Guides Button
-  function injectGuides() {
-    if (document.getElementById('navGuidesBtn')) return;
-    const themeBtn = document.getElementById('themeToggleBtn');
-    if (themeBtn && themeBtn.parentNode) {
-      const g = document.createElement('a');
-      g.id = 'navGuidesBtn';
-      g.href = '/articles/';
-      g.innerHTML = '📚 Guides';
-      g.style.cssText = 'display:inline-flex; align-items:center; gap:6px; padding:6px 14px; margin-right:8px; border-radius:6px; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.3); color:#38bdf8; text-decoration:none; font-size:0.85rem; font-weight:700; cursor:pointer; vertical-align:middle;';
-      themeBtn.parentNode.insertBefore(g, themeBtn);
-    }
-  }
+  function renderSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const nav = document.querySelector("#sidebar .sidebar-nav") || document.getElementById("sidebarNav");
+    if (!nav || !sidebar) return;
 
-  // 3. Sidebar Navigation & Scroll
-  function initSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const nav = document.querySelector('#sidebar .sidebar-nav');
-    if (!sidebar || !nav) return;
+    const currentPath = normalize(window.location.pathname);
+    let html = '';
 
-    const existingLinks = nav.querySelectorAll('a.sidebar-link, a[href*="/tools/"]');
-    if (existingLinks.length > 0) {
-      existingLinks.forEach(link => {
-        link.classList.add('sidebar-link');
-        const href = normalize(link.getAttribute('href'));
-        const isActive = (href === currentPath) || (href === '/' && (currentPath === '/' || currentPath === ''));
-        link.classList.toggle('active', isActive);
+    // Dashboard Home link
+    const isHome = currentPath === "/" || currentPath === "";
+    html += `
+      <div class="nav-group">
+        <div class="nav-group-title">Overview</div>
+        <a href="/" class="sidebar-link ${isHome ? 'active' : ''}">
+          <span class="tool-icon">⚡</span>
+          <span class="tool-label">Dashboard Overview</span>
+          ${isHome ? '<span class="active-dot"></span>' : ''}
+        </a>
+      </div>
+    `;
 
-        link.addEventListener('click', function () {
-          try { sessionStorage.setItem('cw_sidebar_scroll', sidebar.scrollTop); } catch (e) {}
-        });
+    SIDEBAR_GROUPS.forEach(group => {
+      html += `<div class="nav-group"><div class="nav-group-title">${group.title}</div>`;
+      group.items.forEach(item => {
+        const itemPath = normalize(item.href);
+        const isActive = (currentPath === itemPath);
+        
+        let badgeClass = '';
+        if (item.badge) {
+          badgeClass = item.badge.toLowerCase();
+          if (item.badge === '2026') badgeClass = 'y2026';
+        }
+        
+        const badgeHtml = item.badge ? `<span class="tool-badge ${badgeClass}">${item.badge}</span>` : '';
+        const dotHtml = isActive ? '<span class="active-dot"></span>' : '';
+        html += `
+          <a href="${item.href}" class="sidebar-link ${isActive ? 'active' : ''}">
+            <span class="tool-icon">${item.icon}</span>
+            <span class="tool-label">${item.label}</span>
+            ${badgeHtml}
+            ${dotHtml}
+          </a>
+        `;
       });
-    }
+      html += `</div>`;
+    });
 
-    const savedScroll = sessionStorage.getItem('cw_sidebar_scroll');
-    if (savedScroll !== null && !isNaN(parseInt(savedScroll, 10))) {
+    // Legal / Policy Links
+    html += `
+      <div class="nav-group">
+        <div class="nav-group-title">Legal & Trust</div>
+        <a href="/about.html" class="sidebar-link ${currentPath === '/about.html' ? 'active' : ''}">
+          <span class="tool-icon">ℹ️</span><span class="tool-label">About CalcWorker</span>
+        </a>
+        <a href="/privacy.html" class="sidebar-link ${currentPath === '/privacy.html' ? 'active' : ''}">
+          <span class="tool-icon">🔒</span><span class="tool-label">Privacy Policy</span>
+        </a>
+        <a href="/terms.html" class="sidebar-link ${currentPath === '/terms.html' ? 'active' : ''}">
+          <span class="tool-icon">📜</span><span class="tool-label">Terms of Service</span>
+        </a>
+        <a href="/contact.html" class="sidebar-link ${currentPath === '/contact.html' ? 'active' : ''}">
+          <span class="tool-icon">✉️</span><span class="tool-label">Contact Us</span>
+        </a>
+      </div>
+    `;
+
+    nav.innerHTML = html;
+
+    // Attach click listener for smooth scroll memory
+    const links = nav.querySelectorAll(".sidebar-link");
+    links.forEach(link => {
+      link.addEventListener("click", function () {
+        sessionStorage.setItem("calcworker_sidebar_scroll", sidebar.scrollTop);
+      });
+    });
+
+    // Restore scroll position
+    const savedScroll = sessionStorage.getItem("calcworker_sidebar_scroll");
+    if (savedScroll !== null) {
       sidebar.scrollTop = parseInt(savedScroll, 10);
+    } else {
+      const activeLink = nav.querySelector(".sidebar-link.active");
+      if (activeLink) {
+        activeLink.scrollIntoView({ block: "center", behavior: "smooth" });
+      }
     }
   }
 
-  // 4. Mobile Drawer
-  function initMobileDrawer() {
-    const hamburger = document.getElementById('hamburgerBtn');
-    const sidebar = document.getElementById('sidebar');
-    const backdrop = document.getElementById('sidebarBackdrop');
-    if (!hamburger || !sidebar) return;
-
-    hamburger.onclick = () => {
-      sidebar.classList.toggle('open');
-      if (backdrop) backdrop.classList.toggle('open');
-    };
-    if (backdrop) {
-      backdrop.onclick = () => {
-        sidebar.classList.remove('open');
-        backdrop.classList.remove('open');
-      };
-    }
-  }
-
-  function runAll() {
-    syncTheme();
-    injectGuides();
-    initSidebar();
-    initMobileDrawer();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', runAll);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", renderSidebar);
   } else {
-    runAll();
+    renderSidebar();
   }
+
+  // Expose groups globally for AI search bar
+  window.CW_TOOLS_DATA = SIDEBAR_GROUPS;
 })();
