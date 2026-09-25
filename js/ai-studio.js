@@ -107,8 +107,8 @@
       return 'You are a micro-app architect. The user describes a small personal utility app they want (a tracker, log, ledger, checklist).\n' +
         'Requirement: ' + v[0] + '\n' +
         'Respond with ONLY a JSON object — no markdown fences, no commentary, no extra text — matching EXACTLY this schema:\n' +
-        '{"appName":"short name","fields":[{"key":"snake_case_key","label":"Short Label","type":"text|number|date|select|tel","options":["a","b"],"required":true}],"tableColumns":["key1","key2"],"actions":["whatsapp"],"whatsappTemplate":"optional template using {key} placeholders"}\n' +
-        'Rules: 3 to 8 fields. Field keys: lowercase snake_case, unique. "type" must be one of text, number, date, select, tel. "options" required only for select type (2-8 short options). "tableColumns" must be a subset of field keys, 2-6 columns. "actions": use ["whatsapp"] only if the app naturally needs sharing a row via WhatsApp (bills, invoices, orders), otherwise []. "whatsappTemplate": only when actions includes whatsapp — a short message with {key} placeholders. No HTML, no scripts, no code in any string. Keep labels under 30 characters.';
+        '{"appName":"short name","fields":[{"key":"snake_case_key","label":"Short Label","type":"text|number|date|select|tel","options":["a","b"],"required":true}],"tableColumns":["key1","key2"],"dashboard":[{"label":"Total Spent","op":"sum|avg|min|max|count|countWhere","field":"amount","equals":"Unpaid"}],"actions":["whatsapp"],"whatsappTemplate":"optional template using {key} placeholders"}\n' +
+        'Rules: 3 to 8 fields. Field keys: lowercase snake_case, unique. "type" must be one of text, number, date, select, tel. "options" required only for select type (2-8 short options). "tableColumns" must be a subset of field keys, 2-6 columns. "dashboard": 2-4 stat cards that make this feel like a complete app — use "sum"/"avg"/"min"/"max" on numeric fields, "count" for total entries (no "field" needed), "countWhere" with "field" + "equals" to count rows matching a status (e.g. unpaid invoices). "field" must be an existing field key; for sum/avg/min/max it should be a number-type field. "actions": use ["whatsapp"] only if the app naturally needs sharing a row via WhatsApp (bills, invoices, orders), otherwise []. "whatsappTemplate": only when actions includes whatsapp — a short message with {key} placeholders. No HTML, no scripts, no code in any string. Keep labels under 30 characters.';
     }
   };
 
@@ -356,6 +356,25 @@
     }
     if (spec.whatsappTemplate !== undefined &&
         (typeof spec.whatsappTemplate !== 'string' || spec.whatsappTemplate.length > 500)) return false;
+    // Optional dashboard stat cards: sum/avg/min/max/count/countWhere over rows.
+    if (spec.dashboard !== undefined) {
+      if (!Array.isArray(spec.dashboard) || spec.dashboard.length > 6) return false;
+      var OPS = { sum: 1, avg: 1, min: 1, max: 1, count: 1, countWhere: 1 };
+      for (var d = 0; d < spec.dashboard.length; d++) {
+        var card = spec.dashboard[d];
+        if (!card || typeof card !== 'object') return false;
+        if (typeof card.label !== 'string' || !card.label.trim() || card.label.length > 40) return false;
+        if (!OPS[card.op]) return false;
+        if (card.op === 'count') {
+          if (card.field !== undefined || card.equals !== undefined) return false;
+        } else {
+          if (typeof card.field !== 'string' || !keys[card.field]) return false;
+          if (card.op === 'countWhere') {
+            if (typeof card.equals !== 'string' || !card.equals.trim() || card.equals.length > 40) return false;
+          }
+        }
+      }
+    }
     return true;
   }
 
@@ -433,6 +452,38 @@
       });
     }
 
+    function dashNum(v) {
+      if (v == null || isNaN(v)) return '—';
+      return (Math.round(v * 100) / 100).toString();
+    }
+
+    function dashValue(card) {
+      if (card.op === 'count') return String(rows.length);
+      var vals = rows.map(function (r) { return parseFloat(r[card.field]); })
+        .filter(function (x) { return !isNaN(x); });
+      if (card.op === 'countWhere') {
+        var n = 0;
+        rows.forEach(function (r) { if (String(r[card.field]) === card.equals) n++; });
+        return String(n);
+      }
+      if (!vals.length) return '—';
+      if (card.op === 'sum') return dashNum(vals.reduce(function (a, b) { return a + b; }, 0));
+      if (card.op === 'avg') return dashNum(vals.reduce(function (a, b) { return a + b; }, 0) / vals.length);
+      if (card.op === 'min') return dashNum(Math.min.apply(null, vals));
+      if (card.op === 'max') return dashNum(Math.max.apply(null, vals));
+      return '—';
+    }
+
+    function dashHtml() {
+      if (!Array.isArray(spec.dashboard) || !spec.dashboard.length) return '';
+      var cards = spec.dashboard.map(function (card) {
+        return '<div class="ai-ma-dashcard"><div class="ai-ma-dashval">' +
+          esc(dashValue(card)) + '</div><div class="ai-ma-dashlabel">' +
+          esc(card.label) + '</div></div>';
+      }).join('');
+      return '<div class="ai-ma-dash">' + cards + '</div>';
+    }
+
     function paint() {
       var head = spec.tableColumns.map(function (c) { return '<th>' + esc(fieldLabel(c)) + '</th>'; }).join('');
       var body = rows.map(function (row, ri) {
@@ -452,6 +503,7 @@
         '<button type="button" class="ai-mini-btn ai-ma-csv">Export CSV</button>' +
         '<button type="button" class="ai-mini-btn danger ai-ma-clear">Clear All</button>' +
         '</div></div>' +
+        dashHtml() +
         '<div class="ai-ma-form">' + formHtml() + '</div>' +
         '<button type="button" class="ai-run-btn ai-ma-add" style="padding:11px 26px;font-size:0.9rem;"><span class="ai-run-label">＋ Add Entry</span></button>' +
         '<div class="ai-ma-tablewrap"><table class="ai-ma-table"><thead><tr>' + head + '<th>Actions</th></tr></thead>' +

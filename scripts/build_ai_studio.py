@@ -9,7 +9,7 @@ import re, html, pathlib
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 TPL = (REPO / "tools" / "jwt-decoder.html").read_text(encoding="utf-8")
-VER = "2026-wdw-v71"
+VER = "2026-wdw-v72"
 
 def field_textarea(fid, label, placeholder, rows=4):
     return (
@@ -60,9 +60,9 @@ LANGS = ["JavaScript", "TypeScript", "Python", "PHP", "Java", "Go", "Rust", "C#"
 MICROAPP_EXAMPLES = """
     <div class="ai-examples">
       <span class="ai-examples-label">Try one:</span>
-      <button type="button" class="ai-example-chip" data-ex="Udhar khata for my clothes shop: customer name, phone number, suits count, total bill, amount paid, remaining due, date. Per-row WhatsApp button that sends the bill to the customer.">👕 Udhar Khata — Clothes Shop</button>
-      <button type="button" class="ai-example-chip" data-ex="Daily water and task tracker: date, water intake in liters, and 5 daily tasks each with a Done/Pending status.">💧 Water + 5 Daily Tasks</button>
-      <button type="button" class="ai-example-chip" data-ex="Car fuel and maintenance log: date, fuel liters, fuel cost, odometer reading, service type (Oil change, Tires, Brakes, Wash, Other), notes.">🚗 Car Fuel &amp; Maintenance Log</button>
+      <button type="button" class="ai-example-chip" data-ex="Freelance invoice tracker: client name, invoice number, amount in USD, due date, status (Sent, Paid, Overdue), notes. Show total invoiced, total paid, and total overdue on a dashboard. Per-row WhatsApp button that sends a payment reminder to the client.">💼 Invoice Tracker</button>
+      <button type="button" class="ai-example-chip" data-ex="Gym workout log: date, exercise name, sets, reps, weight in lbs, notes. Show total workouts logged and heaviest weight lifted on a dashboard.">🏋️ Workout Log</button>
+      <button type="button" class="ai-example-chip" data-ex="Monthly budget tracker: date, category (Housing, Food, Transport, Utilities, Fun, Other), description, amount in USD. Show total spent and spending per category on a dashboard.">🏠 Budget Tracker</button>
     </div>"""
 
 MICROAPP_VERIFY = """
@@ -199,13 +199,13 @@ TOOLS = [
     dict(
         slug="ai-micro-app-smith", icon="🏭", name="AI Micro-App Smith",
         h1a="Describe the app.", h1b="Get a working tool.",
-        tagline="Say what you need — an udhar khata, a habit tracker, a car log — and get a real working mini-app: form, data table, WhatsApp sharing, CSV export. Saved in your browser, no signup.",
-        meta="AI micro-app generator: describe a tool in plain language, get a working mini-app with form, table, WhatsApp share and CSV export. Free, no signup.",
-        keywords="ai app generator, micro app builder, describe app get tool, udhar khata app maker, no code app generator, ai tool generator",
+        tagline="Say what you need — an invoice tracker, a workout log, a budget planner — and get a real working mini-app: form, dashboard, data table, WhatsApp sharing, CSV export. Saved in your browser, no signup.",
+        meta="AI micro-app generator: describe a tool in plain language, get a working mini-app with form, dashboard, table, WhatsApp share and CSV export. Free, no signup.",
+        keywords="ai app generator, micro app builder, no code app generator, invoice tracker maker, budget tracker builder, workout log app, describe app get tool",
         cta="Forge My Micro-App", after="microapp", verify=MICROAPP_VERIFY,
         fields=(
             MICROAPP_EXAMPLES
-            + field_textarea("ai-in-0", "Describe the mini-app you need", "e.g. Udhar khata for my clothes shop: customer name, phone, suits, bill, paid, due, date — with a WhatsApp bill button per row…", 4)
+            + field_textarea("ai-in-0", "Describe the mini-app you need", "e.g. Freelance invoice tracker: client name, invoice number, amount, due date, status (Sent, Paid, Overdue) — with a dashboard showing total unpaid…", 4)
         ),
     ),
 ]
@@ -261,8 +261,8 @@ def build(tool):
     slug = tool["slug"]
     page = TPL
 
-    # cache-bust bump
-    page = page.replace("2026-wdw-v70", VER)
+    # cache-bust bump (regex: TPL carries the previous version, whatever it is)
+    page = re.sub(r"2026-wdw-v\d+", VER, page)
 
     # head tags
     page = re.sub(r"<title>.*?</title>",
