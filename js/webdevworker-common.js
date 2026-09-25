@@ -614,27 +614,33 @@
     updateCount(total, '');
   }
 
-  // 5b. Category filter pills — the buttons previously had no handler (dead on click).
+  // 5b. Category filter pills — delegated handler (was dead: no handler at all).
+  // Delegation keeps working no matter which pill instance is clicked.
   function initCategoryFilter() {
-    var btns = document.querySelectorAll('.cat-filter-btn');
-    if (!btns.length) return;
     var grid = document.getElementById('toolsGrid');
-    btns.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        btns.forEach(function (b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-        var cat = btn.getAttribute('data-cat');
-        if (!grid) return;
-        var cards = grid.querySelectorAll('.tool-card');
-        var visible = 0;
-        cards.forEach(function (card) {
-          var show = cat === 'all' || card.getAttribute('data-category') === cat;
-          card.style.display = show ? '' : 'none';
-          if (show) visible++;
-        });
-        var countEl = document.getElementById('filteredToolsCount');
-        if (countEl) countEl.textContent = cat === 'all' ? cards.length + ' Tools' : visible + ' tools found';
+    if (!grid || document.body.hasAttribute('data-ww-catfilter')) return;
+    document.body.setAttribute('data-ww-catfilter', '1');
+    document.addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('.cat-filter-btn') : null;
+      if (!btn || !grid.contains(btn) && !btn.closest('.category-filter-row')) return;
+      var pills = document.querySelectorAll('.cat-filter-btn');
+      pills.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      // Clear any active text search so category state is predictable
+      ['heroSearchInput', 'searchToolsInput'].forEach(function (id) {
+        var inp = document.getElementById(id);
+        if (inp) inp.value = '';
       });
+      var cat = btn.getAttribute('data-cat');
+      var cards = grid.querySelectorAll('.tool-card');
+      var visible = 0;
+      cards.forEach(function (card) {
+        var show = cat === 'all' || card.getAttribute('data-category') === cat;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      var countEl = document.getElementById('filteredToolsCount');
+      if (countEl) countEl.textContent = cat === 'all' ? cards.length + ' Tools' : visible + ' tools found';
     });
   }
 
