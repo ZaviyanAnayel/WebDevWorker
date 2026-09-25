@@ -203,14 +203,16 @@
 
   function doCopy(text, btn) {
     function done() {
-      if (!btn) return;
+      if (!btn || btn.__wwCopyActive) return; // site copier already shows feedback
       var orig = btn.textContent;
-      btn.textContent = 'Copied ✓';
+      var origMinW = btn.style.minWidth;
+      try { btn.style.minWidth = btn.offsetWidth + 'px'; } catch (e) {}
+      btn.textContent = '✓ Copied!';
       btn.classList.add('copied');
-      setTimeout(function () { btn.textContent = orig; btn.classList.remove('copied'); }, 1600);
+      setTimeout(function () { btn.textContent = orig; btn.classList.remove('copied'); btn.style.minWidth = origMinW; }, 1600);
     }
-    if (window.copyCode) {
-      // reuse the site's bulletproof copier via a temp node
+    if (typeof window.copyCode === 'function') {
+      // reuse the site's bulletproof copier (it owns the visual feedback + toast)
       var tmp = document.createElement('textarea');
       tmp.value = text;
       tmp.style.cssText = 'position:fixed;opacity:0;pointer-events:none;';
@@ -218,9 +220,9 @@
       document.body.appendChild(tmp);
       try { window.copyCode('aiStudioTmpCopy', btn); } catch (e) {
         fallbackCopy(text);
+        done();
       }
       setTimeout(function () { tmp.remove(); }, 500);
-      done();
       return;
     }
     fallbackCopy(text);

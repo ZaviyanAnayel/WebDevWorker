@@ -90,6 +90,7 @@
 .ai-copy-btn {
   background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);
   border-radius: 8px; padding: 4px 12px; font-size: 0.72rem; font-weight: 700; cursor: pointer;
+  min-width: 96px; white-space: nowrap; box-sizing: border-box;
 }
 .ai-copy-btn.copied, .ai-copy-btn:hover { background: #059669; color: #fff; }
 .ai-codeblock pre { margin: 0; padding: 16px; overflow-x: auto; background: rgba(0, 0, 0, 0.45); }

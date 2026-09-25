@@ -65,17 +65,23 @@
         }
 
         function triggerSuccess(customMsg) {
+          // Idempotent per button: a single click fires this twice (capture-phase
+          // delegation + the button's own inline onclick). Run the visual + toast once.
+          if (btn && btn.__wwCopyActive) return;
           if (btn) {
+            btn.__wwCopyActive = true;
             var orig = btn.getAttribute('data-orig-html') || btn.innerHTML;
             btn.setAttribute('data-orig-html', orig);
+            // Width lock: "Copy Payload" -> "Copied!" must never resize the button.
+            var origMinW = btn.style.minWidth;
+            try { btn.style.minWidth = btn.offsetWidth + 'px'; } catch (eLock) {}
             btn.classList.add('copied');
 
-            // In-place label change without changing dimensions or element hierarchy
-            var labelSpan = btn.querySelector('span:last-child');
-            var iconSpan = btn.querySelector('span:first-child');
-            if (labelSpan && iconSpan && labelSpan !== iconSpan) {
-              iconSpan.textContent = '✓';
-              labelSpan.textContent = 'Copied!';
+            // In-place label change without changing element hierarchy
+            var spans = btn.querySelectorAll('span');
+            if (spans.length >= 2) {
+              spans[0].textContent = '✓';
+              spans[spans.length - 1].textContent = 'Copied!';
             } else {
               btn.innerHTML = '<span>✓</span> <span>Copied!</span>';
             }
@@ -83,6 +89,8 @@
             setTimeout(function() {
               btn.innerHTML = orig;
               btn.classList.remove('copied');
+              btn.style.minWidth = origMinW;
+              btn.__wwCopyActive = false;
             }, 1800);
           }
           if (window.wdwToast) {
