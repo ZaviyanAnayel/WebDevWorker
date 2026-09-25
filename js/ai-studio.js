@@ -657,6 +657,10 @@
 
     function setLoading(on) {
       btn.disabled = on;
+      // Lock the button width before swapping the label, so "Thinking…"
+      // never collapses it (width jump looked cheap/janky).
+      if (on) { btn.style.minWidth = btn.offsetWidth + 'px'; }
+      else { btn.style.minWidth = ''; }
       btn.querySelector('.ai-run-label').textContent = on ? 'Thinking…' : cfg.cta;
       if (on) {
         outWrap.style.display = 'block';
@@ -672,6 +676,11 @@
       if (!primary) {
         errEl.textContent = 'Paste or describe something first — the AI needs input to work with.';
         errEl.style.display = 'block';
+        // Tactile nudge so the click doesn't feel dead.
+        btn.classList.remove('ai-shake');
+        void btn.offsetWidth;
+        btn.classList.add('ai-shake');
+        setTimeout(function () { btn.classList.remove('ai-shake'); }, 400);
         return;
       }
       errEl.style.display = 'none';
