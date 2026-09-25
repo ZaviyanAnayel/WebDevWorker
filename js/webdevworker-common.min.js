@@ -30,32 +30,55 @@
               wrap = document.createElement('div');
               wrap.id = 'wwToastWrap';
               wrap.setAttribute('aria-live', 'polite');
-              wrap.style.cssText = 'position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;';
+              wrap.style.cssText = 'position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:999999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;';
               document.body.appendChild(wrap);
             }
             var el = document.createElement('div');
             el.textContent = String(message == null ? '' : message);
-            el.style.cssText = 'background:#1f2937;color:#f9fafb;padding:10px 18px;border-radius:999px;font-size:0.85rem;box-shadow:0 8px 24px rgba(0,0,0,0.35);' + (type === 'error' ? 'background:#7f1d1d;' : type === 'success' ? 'background:#065f46;' : '');
+            var isSuccess = type === 'success' || !type;
+            var isError = type === 'error';
+            el.style.cssText = 'padding:10px 22px;border-radius:9999px;font-size:0.86rem;font-weight:700;letter-spacing:-0.01em;box-shadow:0 10px 25px -5px rgba(0,0,0,0.5), 0 0 16px rgba(16,185,129,0.35);transition:all 0.25s ease;transform:translateY(0);' +
+              (isSuccess ? 'background:linear-gradient(135deg, #065f46 0%, #047857 100%);color:#ffffff;border:1px solid #10b981;' :
+               isError ? 'background:#7f1d1d;color:#fee2e2;border:1px solid #ef4444;' :
+               'background:#1f2937;color:#f9fafb;border:1px solid rgba(255,255,255,0.15);');
             wrap.appendChild(el);
-            setTimeout(function () { try { el.remove(); } catch (e) {} }, 2600);
+            setTimeout(function () {
+              try {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(8px)';
+                setTimeout(function() { el.remove(); }, 250);
+              } catch (e) {}
+            }, 2400);
           } catch (e) {}
         };
         if (typeof window.showToast !== 'function') window.showToast = window.wdwToast;
       }
 
       function bulletproofCopy(text, target, btn, okMsg) {
+        if (!btn) {
+          if (typeof event !== 'undefined' && event && event.target) {
+            btn = event.target.closest('button, .copy-code-btn, .btn-copy, .copy-btn, [data-copy]');
+          }
+          if (!btn && document.activeElement && (document.activeElement.tagName === 'BUTTON' || (document.activeElement.classList && document.activeElement.classList.contains('copy-code-btn')))) {
+            btn = document.activeElement;
+          }
+        }
+
         function triggerSuccess(customMsg) {
           if (btn) {
             var orig = btn.getAttribute('data-orig-html') || btn.innerHTML;
             btn.setAttribute('data-orig-html', orig);
-            btn.innerHTML = '✓ Copied!';
-            btn.style.borderColor = '#10b981';
-            btn.style.color = '#10b981';
+            var curWidth = btn.offsetWidth;
+            if (curWidth > 0 && !btn.style.minWidth) btn.style.minWidth = curWidth + 'px';
+            btn.innerHTML = '<span>✓</span> <span>Copied!</span>';
+            btn.classList.add('copied');
+            btn.classList.add('success');
             setTimeout(function() {
               btn.innerHTML = orig;
-              btn.style.borderColor = '';
-              btn.style.color = '';
-            }, 1800);
+              btn.classList.remove('copied');
+              btn.classList.remove('success');
+              btn.style.minWidth = '';
+            }, 2200);
           }
           if (window.wdwToast) {
             window.wdwToast(customMsg || okMsg || 'Copied to clipboard ✓', 'success');
@@ -66,19 +89,16 @@
           try {
             var ta = document.createElement('textarea');
             ta.value = String(text == null ? '' : text);
+            ta.setAttribute('readonly', '');
             ta.style.position = 'fixed';
-            ta.style.top = '0';
-            ta.style.left = '0';
-            ta.style.width = '2em';
-            ta.style.height = '2em';
-            ta.style.padding = '0';
-            ta.style.border = 'none';
-            ta.style.outline = 'none';
-            ta.style.boxShadow = 'none';
-            ta.style.background = 'transparent';
+            ta.style.top = '-9999px';
+            ta.style.left = '-9999px';
+            ta.style.opacity = '0';
+            ta.style.pointerEvents = 'none';
             document.body.appendChild(ta);
             ta.focus();
             ta.select();
+            ta.setSelectionRange(0, ta.value.length);
             var ok = document.execCommand('copy');
             document.body.removeChild(ta);
             if (ok) {
@@ -122,15 +142,35 @@
 
       function snCopyCode(targetId, btnRef) {
         try {
-          var target = document.getElementById(targetId);
-          var text = target ? (target.value !== undefined && target.value !== '' ? target.value : target.innerText || target.textContent || '') : '';
+          var target = typeof targetId === 'string' ? document.getElementById(targetId) : targetId;
+          var btn = snResolveBtn(btnRef);
+          if (!btn && typeof event !== 'undefined' && event && event.target) {
+            btn = event.target.closest('button, .copy-code-btn, .btn-copy, .copy-btn, [data-copy]');
+          }
+          if (!btn && document.activeElement && (document.activeElement.tagName === 'BUTTON' || (document.activeElement.classList && document.activeElement.classList.contains('copy-code-btn')))) {
+            btn = document.activeElement;
+          }
+
+          var text = '';
+          if (target) {
+            if (target.value !== undefined && target.value !== '') {
+              text = target.value;
+            } else if (target.innerText !== undefined && target.innerText !== '') {
+              text = target.innerText;
+            } else {
+              text = target.textContent || '';
+            }
+          }
+          if (!text && btn) {
+            var parentBox = btn.closest('.code-output-box, .tool-result-card, .tool-output, .form-group, .tool-card');
+            if (parentBox) {
+              var codeEl = parentBox.querySelector('pre, code, textarea, input');
+              if (codeEl) text = codeEl.value || codeEl.innerText || codeEl.textContent || '';
+            }
+          }
           if (!text) {
             if (window.wdwToast) window.wdwToast('Nothing to copy', 'error');
             return;
-          }
-          var btn = snResolveBtn(btnRef);
-          if (!btn && typeof event !== 'undefined' && event && event.target) {
-            btn = event.target.closest('button, .copy-code-btn');
           }
           bulletproofCopy(text, target, btn);
         } catch (e4) {
@@ -140,7 +180,14 @@
 
       window.copyCode = snCopyCode;
       window.copyCode.__wwTopLevel = true;
-      if (typeof window.wwCopyText !== 'function') {
+      window.snCopyCode = snCopyCode;
+
+      window.copyToClipboard = function(text, btn) {
+        if (!text) return;
+        bulletproofCopy(text, null, btn);
+      };
+
+      if (typeof window.wwCopyText !== 'function' || !window.wwCopyText.__wwTopLevel) {
         window.wwCopyText = function (text, okMsg) {
           return new Promise(function(resolve) {
             bulletproofCopy(text, null, null, okMsg);
@@ -150,66 +197,60 @@
         window.wwCopyText.__wwTopLevel = true;
       }
 
-      // Capture-phase delegation: ensure any button with onclick="copyCode" works
+      // Capture-phase delegation: ensure any button with copy intent works flawlessly
       try {
         document.addEventListener('click', function (e) {
           try {
             var t = e.target;
             if (!t || !t.closest) return;
-            var btn = t.closest('button, .copy-code-btn');
+            var btn = t.closest('button, .copy-code-btn, .btn-copy, .copy-btn, [data-copy]');
             if (!btn) return;
             var oc = btn.getAttribute('onclick') || '';
             var m = /copyCode\(\s*['"]([^'"]+)['"]/.exec(oc);
-            if (!m) return;
-            e.preventDefault();
-            snCopyCode(m[1], btn);
+            if (m) {
+              e.preventDefault();
+              snCopyCode(m[1], btn);
+              return;
+            }
+            var dataCopy = btn.getAttribute('data-copy');
+            if (dataCopy) {
+              e.preventDefault();
+              snCopyCode(dataCopy, btn);
+              return;
+            }
           } catch (err) {}
         }, true);
       } catch (e6) {}
+
+      // Signature CalcWorker styling & clipboard emoji decorator
+      function initAllCopyButtonsVisual() {
+        try {
+          var btns = document.querySelectorAll('.copy-code-btn, .btn-copy, .copy-btn, button[onclick*="copy" i], button[id*="copy" i]:not(.nav-item):not(.tab-btn)');
+          btns.forEach(function(b) {
+            if (b.hasAttribute('data-copy-styled')) return;
+            b.setAttribute('data-copy-styled', '1');
+            
+            if (!b.classList.contains('copy-code-btn') && !b.classList.contains('btn-copy') && !b.classList.contains('copy-btn')) {
+              b.classList.add('copy-code-btn');
+            }
+
+            var txt = b.textContent.trim();
+            if (!b.innerHTML.includes('📋') && !b.innerHTML.includes('✓') && !b.querySelector('svg')) {
+              b.innerHTML = '<span>📋</span> <span>' + (txt || 'Copy Code') + '</span>';
+            }
+          });
+        } catch (e) {}
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAllCopyButtonsVisual);
+      } else {
+        initAllCopyButtonsVisual();
+      }
+      setTimeout(initAllCopyButtonsVisual, 400);
+      setTimeout(initAllCopyButtonsVisual, 1200);
     } catch (outer) {}
   })();
-
-    function copyToClipboard(text, btn) {
-    if (!text) return;
-    function updateBtnVisual() {
-      if (btn) {
-        var origText = btn.innerHTML;
-        var curWidth = btn.offsetWidth;
-        if (curWidth > 0) btn.style.minWidth = curWidth + 'px';
-        btn.innerHTML = '✓ Copied!';
-        btn.style.background = '#10b981';
-        btn.style.color = '#ffffff';
-        btn.classList.add('copied');
-        setTimeout(function() {
-          btn.innerHTML = origText;
-          btn.style.background = '';
-          btn.style.color = '';
-          btn.classList.remove('copied');
-          btn.style.minWidth = '';
-        }, 2000);
-      }
-      if (window.wdwToast) window.wdwToast('Copied ✓', 'success');
-    }
-    function fallbackExec() {
-      try {
-        var ta = document.createElement('textarea');
-        ta.value = String(text);
-        ta.style.cssText = 'position:fixed;top:0;left:0;width:2em;height:2em;padding:0;border:none;outline:none;background:transparent;z-index:99999;';
-        document.body.appendChild(ta);
-        ta.focus();
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-      } catch(e) {}
-      updateBtnVisual();
-    }
-    if (navigator.clipboard && window.isSecureContext && typeof navigator.clipboard.writeText === 'function') {
-      navigator.clipboard.writeText(String(text)).then(updateBtnVisual).catch(fallbackExec);
-    } else {
-      fallbackExec();
-    }
-  }
-  window.copyToClipboard = copyToClipboard;
 
   // 0. Clipboard hardening — every copy button keeps working even when
   // navigator.clipboard.writeText rejects (permissions, background tab, …)

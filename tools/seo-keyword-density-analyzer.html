@@ -21,8 +21,8 @@
     
 
 </script>
-  <link href="/css/webdevworker.css?v=2026-wdw-v60" rel="stylesheet"/>
-  <link href="/css/ai-widget.css?v=2026-wdw-v60" rel="stylesheet"/>
+  <link href="/css/webdevworker.css?v=2026-wdw-v70" rel="stylesheet"/>
+  <link href="/css/ai-widget.css?v=2026-wdw-v70" rel="stylesheet"/>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -191,6 +191,10 @@
               <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Reading Time</div>
               <div id="statReadingTime" style="font-size: 1.4rem; font-weight: 800; color: #10b981; margin-top: 4px;">0 min</div>
             </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; margin-bottom: 14px;">
+            <button type="button" class="copy-code-btn" id="copySeoBtn" onclick="copySeoSummary()"><span>📋</span> Copy Keywords Report</button>
           </div>
 
           <!-- N-Gram Density Tables -->
@@ -552,8 +556,8 @@ function analyzeKeywordDensity(text, targetWord) {
     </div>
   </div>
 
-  <script src="/js/webdevworker-common.js?v=2026-wdw-v60" defer></script>
-  <script src="/js/ai-widget.js?v=2026-wdw-v60" defer></script>
+  <script src="/js/webdevworker-common.js?v=2026-wdw-v70" defer></script>
+  <script src="/js/ai-widget.js?v=2026-wdw-v70" defer></script>
   <script>
     const STOPWORDS = new Set([
       'a','about','above','after','again','against','all','am','an','and','any','are','aren\'t','as','at',
@@ -665,9 +669,34 @@ function analyzeKeywordDensity(text, targetWord) {
       document.getElementById('seoTextInput').value = '';
       analyzeKeywords();
     }
-  
-    
 
-</script>
+    function copySeoSummary() {
+      const totalWords = document.getElementById('statTotalWords').textContent || '0';
+      const uniqueWords = document.getElementById('statUniqueWords').textContent || '0';
+      const chars = document.getElementById('statChars').textContent || '0';
+      const readingTime = document.getElementById('statReadingTime').textContent || '0 min';
+
+      function extractRows(tableId) {
+        const rows = Array.from(document.querySelectorAll('#' + tableId + ' tr'));
+        return rows.map(r => {
+          const cells = Array.from(r.querySelectorAll('td, th')).map(c => c.textContent.trim());
+          return cells.join(' | ');
+        }).filter(t => t && !t.includes('No text') && !t.includes('No significant')).join('\n');
+      }
+
+      let report = 'SEO Keyword Density Analysis Report\n';
+      report += '=====================================\n';
+      report += `Total Words: ${totalWords} | Unique Words: ${uniqueWords} | Characters: ${chars} | Reading Time: ${readingTime}\n\n`;
+      report += '--- Unigrams (Top Words) ---\n' + (extractRows('unigramTableBody') || 'None') + '\n\n';
+      report += '--- Bigrams (Top 2-Word Phrases) ---\n' + (extractRows('bigramTableBody') || 'None') + '\n\n';
+      report += '--- Trigrams (Top 3-Word Phrases) ---\n' + (extractRows('trigramTableBody') || 'None') + '\n';
+      
+      if (typeof window.copyToClipboard === 'function') {
+        window.copyToClipboard(report);
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(report);
+      }
+    }
+  </script>
 </body>
 </html>
