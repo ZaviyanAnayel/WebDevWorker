@@ -332,64 +332,75 @@ body {
   box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4) !important;
 }
 
-.copy-code-btn,
-.btn-copy,
-.copy-btn,
-button.copy-btn,
-.cw-calc-copy-btn,
-button[class*="btn-copy"],
-button[data-copy],
-button[onclick*="copy" i],
-button[id*="copy" i]:not(.nav-item):not(.tab-btn) {
+.copy-code-btn {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
   color: #ffffff !important;
   border: 1px solid rgba(255, 255, 255, 0.22) !important;
-  padding: 8px 16px !important;
-  border-radius: 8px !important;
-  font-weight: 700 !important;
-  font-size: 0.82rem !important;
+  padding: 5px 12px !important;
+  height: 28px !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  font-size: 0.76rem !important;
   letter-spacing: -0.01em !important;
   cursor: pointer !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 6px !important;
-  box-shadow: 0 3px 12px rgba(16, 185, 129, 0.35) !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+  gap: 5px !important;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25) !important;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2) !important;
   user-select: none !important;
   white-space: nowrap !important;
-  line-height: 1.2 !important;
+  line-height: 1 !important;
   z-index: 30 !important;
   text-decoration: none !important;
+  box-sizing: border-box !important;
+  transform: none !important;
+}
+
+.btn-copy,
+.cw-calc-copy-btn,
+button.copy-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  padding: 8px 16px !important;
+  height: 36px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 0.82rem !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25) !important;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+  transform: none !important;
 }
 
 .copy-code-btn:hover,
 .btn-copy:hover,
-.copy-btn:hover,
-button.copy-btn:hover,
 .cw-calc-copy-btn:hover,
-button[class*="btn-copy"]:hover,
-button[data-copy]:hover,
-button[onclick*="copy" i]:hover,
-button[id*="copy" i]:not(.nav-item):not(.tab-btn):hover {
-  transform: translateY(-1.5px) !important;
-  box-shadow: 0 5px 18px rgba(16, 185, 129, 0.5) !important;
+button.copy-btn:hover {
   filter: brightness(1.08) !important;
   color: #ffffff !important;
-  border-color: rgba(255, 255, 255, 0.45) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 3px 10px rgba(16, 185, 129, 0.35) !important;
+  transform: none !important;
 }
 
 .copy-code-btn:active,
 .btn-copy:active,
-.copy-btn:active,
-button.copy-btn:active,
 .cw-calc-copy-btn:active,
-button[class*="btn-copy"]:active,
-button[data-copy]:active,
-button[onclick*="copy" i]:active,
-button[id*="copy" i]:not(.nav-item):not(.tab-btn):active {
-  transform: scale(0.97) !important;
+button.copy-btn:active {
+  transform: none !important;
+  filter: brightness(0.95) !important;
 }
 
 /* Header-placed and inline copy buttons */
@@ -402,30 +413,26 @@ button[id*="copy" i]:not(.nav-item):not(.tab-btn):active {
 /* Pinned in-box buttons (when inside a code-output-box) */
 .code-output-box > .copy-code-btn:not(.header-copy-btn) {
   position: absolute !important;
-  top: 10px !important;
-  right: 12px !important;
+  top: 8px !important;
+  right: 10px !important;
 }
 
-/* Copied Emerald Green Active State */
+/* Copied Emerald Green Active State - FIXED SIZE, NO ENLARGEMENT */
 .copy-code-btn.copied,
 .copy-code-btn.success,
 .btn-copy.copied,
 .btn-copy.success,
-.copy-btn.copied,
-button.copy-btn.copied,
 .cw-calc-copy-btn.copied,
-button[class*="btn-copy"].copied,
-button[data-copy].copied,
-button[onclick*="copy" i].copied,
-button[id*="copy" i].copied,
+button.copy-btn.copied,
 button[id*="copy" i]:not(.nav-item):not(.tab-btn).copied,
 button[id*="copy" i]:not(.nav-item):not(.tab-btn).success {
   background: #047857 !important;
   background-image: none !important;
   color: #ffffff !important;
   border-color: #10b981 !important;
-  box-shadow: 0 0 18px rgba(16, 185, 129, 0.7) !important;
-  transform: scale(1.02) !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4) !important;
+  transform: none !important;
+  scale: 1 !important;
 }
 
 .code-output-box > pre {
@@ -662,70 +669,7 @@ button[id*="copy" i]:not(.nav-item):not(.tab-btn).success {
 }
 
 
-/* ========================================================
-   Universal Luxury Emerald Copy Buttons (CalcWorker Match)
-   ======================================================== */
-.copy-code-btn {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.22) !important;
-  padding: 7px 15px !important;
-  border-radius: 8px !important;
-  font-size: 0.82rem !important;
-  font-weight: 700 !important;
-  cursor: pointer !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 6px !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  box-shadow: 0 3px 12px rgba(16, 185, 129, 0.35) !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
-  z-index: 50 !important;
-  user-select: none !important;
-  line-height: 1.2 !important;
-  white-space: nowrap !important;
-  flex-shrink: 0 !important;
-}
 
-/* Header-Aligned Copy Buttons (Always on Right of Section Title) */
-.header-copy-btn,
-.tool-action-header .copy-code-btn {
-  position: static !important;
-  margin: 0 !important;
-}
-
-/* Pinned in-box buttons (when inside a relative code-output-box) */
-.code-output-box > .copy-code-btn:not(.header-copy-btn) {
-  position: absolute !important;
-  top: 10px !important;
-  right: 12px !important;
-}
-
-.copy-code-btn:hover {
-  transform: translateY(-1.5px) !important;
-  box-shadow: 0 5px 18px rgba(16, 185, 129, 0.5) !important;
-  filter: brightness(1.08) !important;
-  color: #ffffff !important;
-  border-color: rgba(255, 255, 255, 0.45) !important;
-}
-
-.copy-code-btn:active {
-  transform: scale(0.97) !important;
-}
-
-/* Copied Emerald Green Active State */
-.copy-code-btn.copied,
-.copy-code-btn.success,
-button[id*="copy" i]:not(.nav-item):not(.tab-btn).copied,
-button[id*="copy" i]:not(.nav-item):not(.tab-btn).success {
-  background: #047857 !important;
-  background-image: none !important;
-  color: #ffffff !important;
-  border-color: #10b981 !important;
-  box-shadow: 0 0 18px rgba(16, 185, 129, 0.7) !important;
-  transform: scale(1.02) !important;
-}
 
 .code-output-box {
   background: #020617 !important;

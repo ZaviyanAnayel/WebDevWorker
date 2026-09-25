@@ -68,27 +68,22 @@
           if (btn) {
             var orig = btn.getAttribute('data-orig-html') || btn.innerHTML;
             btn.setAttribute('data-orig-html', orig);
-            var curWidth = btn.offsetWidth;
-            if (curWidth > 0 && !btn.style.minWidth) btn.style.minWidth = curWidth + 'px';
-            btn.innerHTML = '<span>✓</span> <span>Copied!</span>';
             btn.classList.add('copied');
-            btn.classList.add('success');
-            btn.style.setProperty('background', '#047857', 'important');
-            btn.style.setProperty('background-image', 'none', 'important');
-            btn.style.setProperty('box-shadow', '0 0 18px rgba(16, 185, 129, 0.7)', 'important');
-            btn.style.setProperty('border-color', '#10b981', 'important');
-            btn.style.setProperty('color', '#ffffff', 'important');
+
+            // In-place label change without changing dimensions or element hierarchy
+            var labelSpan = btn.querySelector('span:last-child');
+            var iconSpan = btn.querySelector('span:first-child');
+            if (labelSpan && iconSpan && labelSpan !== iconSpan) {
+              iconSpan.textContent = '✓';
+              labelSpan.textContent = 'Copied!';
+            } else {
+              btn.innerHTML = '<span>✓</span> <span>Copied!</span>';
+            }
+
             setTimeout(function() {
               btn.innerHTML = orig;
               btn.classList.remove('copied');
-              btn.classList.remove('success');
-              btn.style.minWidth = '';
-              btn.style.removeProperty('background');
-              btn.style.removeProperty('background-image');
-              btn.style.removeProperty('box-shadow');
-              btn.style.removeProperty('border-color');
-              btn.style.removeProperty('color');
-            }, 2200);
+            }, 1800);
           }
           if (window.wdwToast) {
             window.wdwToast(customMsg || okMsg || 'Copied to clipboard ✓', 'success');
@@ -238,18 +233,16 @@
       // Signature CalcWorker styling & clipboard emoji decorator
       function initAllCopyButtonsVisual() {
         try {
-          var btns = document.querySelectorAll('.copy-code-btn, .btn-copy, .copy-btn, button[onclick*="copy" i], button[id*="copy" i]:not(.nav-item):not(.tab-btn)');
+          var btns = document.querySelectorAll('.copy-code-btn, .btn-copy, .copy-btn, .header-copy-btn');
           btns.forEach(function(b) {
+            // Never expand tiny table buttons or compact secondary buttons
+            if (b.closest('table, tr, td, th') || (b.classList.contains('btn-secondary') && !b.classList.contains('copy-code-btn'))) return;
             if (b.hasAttribute('data-copy-styled')) return;
             b.setAttribute('data-copy-styled', '1');
             
-            if (!b.classList.contains('copy-code-btn') && !b.classList.contains('btn-copy') && !b.classList.contains('copy-btn')) {
-              b.classList.add('copy-code-btn');
-            }
-
-            var txt = b.textContent.trim();
+            var txt = b.textContent.replace(/📋|✓/g, '').trim();
             if (!b.innerHTML.includes('📋') && !b.innerHTML.includes('✓') && !b.querySelector('svg')) {
-              b.innerHTML = '<span>📋</span> <span>' + (txt || 'Copy Code') + '</span>';
+              b.innerHTML = '<span>📋</span> <span>' + (txt || 'Copy') + '</span>';
             }
           });
         } catch (e) {}
