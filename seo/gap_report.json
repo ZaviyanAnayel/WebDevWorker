@@ -1,31 +1,5 @@
 {
   "competitor_new_pages": [],
-  "keyword_gaps": [
-    {
-      "keyword": "uuid generator v4 online",
-      "slug": "uuid-generator-v4-online-2026.html",
-      "title": "UUID Generator v4 Online: Free & Instant (2026 Guide)",
-      "tool": "uuid-generator"
-    },
-    {
-      "keyword": "hash generator sha256 md5",
-      "slug": "hash-generator-sha256-md5-2026.html",
-      "title": "Hash Generator: SHA-256, MD5 & More Explained (2026)",
-      "tool": "hash-generator"
-    }
-  ],
-  "recommended": [
-    {
-      "keyword": "uuid generator v4 online",
-      "slug": "uuid-generator-v4-online-2026.html",
-      "title": "UUID Generator v4 Online: Free & Instant (2026 Guide)",
-      "tool": "uuid-generator"
-    },
-    {
-      "keyword": "hash generator sha256 md5",
-      "slug": "hash-generator-sha256-md5-2026.html",
-      "title": "Hash Generator: SHA-256, MD5 & More Explained (2026)",
-      "tool": "hash-generator"
-    }
-  ]
+  "keyword_gaps": [],
+  "recommended": []
 }
