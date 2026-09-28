@@ -26,5 +26,5 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 
-Sitemap: https://webdevworker.com/sitemap.xml
-LLMs: https://webdevworker.com/llms.txt
+Sitemap: https://www.webdevworker.com/sitemap.xml
+LLMs: https://www.webdevworker.com/llms.txt

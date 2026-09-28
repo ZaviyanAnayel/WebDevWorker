@@ -110,7 +110,7 @@ def update_jsonld(head, cfg, canon, today, faqs):
 
 def assemble(cfg, sections, shell):
     slug = cfg["slug"]
-    canon = f"https://webdevworker.com/articles/{slug}"
+    canon = f"https://www.webdevworker.com/articles/{slug}"
     today = datetime.date.today().isoformat()
     head = shell["head"]
     head = re.sub(r"<title>.*?</title>", f"<title>{esc(cfg['title_tag'])}</title>", head, count=1, flags=re.S)

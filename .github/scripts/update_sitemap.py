@@ -14,7 +14,7 @@ ARTICLES_DIR = "articles"
 ADDED_LIST = os.path.join("seo", "added_urls.txt")
 
 ENTRY_TMPL = """  <url>
-    <loc>https://webdevworker.com/articles/{slug}</loc>
+    <loc>https://www.webdevworker.com/articles/{slug}</loc>
     <lastmod>{today}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -36,7 +36,7 @@ def main():
     for f in sorted(os.listdir(ARTICLES_DIR)):
         if not f.endswith(".html"):
             continue
-        url = f"https://webdevworker.com/articles/{f}"
+        url = f"https://www.webdevworker.com/articles/{f}"
         if url in existing_locs:
             continue
         xml = xml.replace("</urlset>", ENTRY_TMPL.format(slug=f, today=today) + "</urlset>", 1)

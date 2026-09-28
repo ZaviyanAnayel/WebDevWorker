@@ -3,35 +3,35 @@
 > WebDevWorker is a comprehensive, client-side developer utility platform featuring 85+ high-precision tools for web developers, software engineers, DevOps specialists, and UI/UX designers. All tools execute 100% in-browser with zero telemetry and zero latency.
 
 ## Developer & API Tools
-- [JSON to TypeScript Generator](https://webdevworker.com/tools/json-to-typescript-generator.html): Automatically convert raw JSON payloads into strict TypeScript interfaces, types, and downloadable .d.ts files.
-- [JSON to Zod Schema Converter](https://webdevworker.com/tools/json-to-zod-schema.html): Convert JSON structures into runtime validation Zod schemas.
-- [cURL to Fetch & Axios Converter](https://webdevworker.com/tools/curl-to-code-converter.html): Convert cURL network requests into JavaScript Fetch, Axios, Python Requests, and Go.
-- [SQL to TypeScript & Prisma Converter](https://webdevworker.com/tools/sql-to-typescript-prisma-converter.html): Generate type-safe Prisma models and TypeScript schemas from SQL DDL.
-- [Mock Data & Dummy JSON API Generator](https://webdevworker.com/tools/mock-data-generator.html): Instant generation of realistic user, e-commerce, and paginated test datasets.
-- [Code Beautifier & Minifier](https://webdevworker.com/tools/code-beautifier-minifier.html): Client-side formatter and minifier for HTML, CSS, JavaScript, and JSON.
-- [JSON Formatter & Validator](https://webdevworker.com/tools/json-formatter-validator.html): Strict JSON syntax validation, formatting, and minification.
-- [SQL Query Formatter](https://webdevworker.com/tools/sql-formatter.html): Format complex MySQL, PostgreSQL, SQLite, and BigQuery SQL queries.
+- [JSON to TypeScript Generator](https://www.webdevworker.com/tools/json-to-typescript-generator.html): Automatically convert raw JSON payloads into strict TypeScript interfaces, types, and downloadable .d.ts files.
+- [JSON to Zod Schema Converter](https://www.webdevworker.com/tools/json-to-zod-schema.html): Convert JSON structures into runtime validation Zod schemas.
+- [cURL to Fetch & Axios Converter](https://www.webdevworker.com/tools/curl-to-code-converter.html): Convert cURL network requests into JavaScript Fetch, Axios, Python Requests, and Go.
+- [SQL to TypeScript & Prisma Converter](https://www.webdevworker.com/tools/sql-to-typescript-prisma-converter.html): Generate type-safe Prisma models and TypeScript schemas from SQL DDL.
+- [Mock Data & Dummy JSON API Generator](https://www.webdevworker.com/tools/mock-data-generator.html): Instant generation of realistic user, e-commerce, and paginated test datasets.
+- [Code Beautifier & Minifier](https://www.webdevworker.com/tools/code-beautifier-minifier.html): Client-side formatter and minifier for HTML, CSS, JavaScript, and JSON.
+- [JSON Formatter & Validator](https://www.webdevworker.com/tools/json-formatter-validator.html): Strict JSON syntax validation, formatting, and minification.
+- [SQL Query Formatter](https://www.webdevworker.com/tools/sql-formatter.html): Format complex MySQL, PostgreSQL, SQLite, and BigQuery SQL queries.
 
 ## CSS & Visual UI Generators
-- [CSS Flexbox Visual Builder](https://webdevworker.com/tools/css-flexbox-generator.html): Interactive visual builder for CSS Flexbox layouts with instant code export.
-- [CSS Grid 2D Visual Builder](https://webdevworker.com/tools/css-grid-generator.html): Full visual grid-template-columns, areas, and gap layout designer.
-- [CSS clamp() Fluid Typography Calculator](https://webdevworker.com/tools/css-clamp-calculator.html): Perfectly fluid responsive font sizes and spacing without media queries.
-- [CSS Box Shadow & Glow Studio](https://webdevworker.com/tools/css-box-shadow-generator.html): Multi-layered box shadows, neon glows, and soft elevation presets.
-- [CSS Glassmorphism Studio](https://webdevworker.com/tools/css-glassmorphism-generator.html): Modern frosted glass effects with backdrop-filter blur and border styling.
-- [CSS Gradient Mesh Studio](https://webdevworker.com/tools/css-gradient-mesh-generator.html): High-aesthetic organic mesh gradients with 4-point color blending.
-- [Tailwind CSS to Vanilla CSS Converter](https://webdevworker.com/tools/tailwind-to-css-converter.html): Convert Tailwind utility classes into raw, clean CSS rules.
+- [CSS Flexbox Visual Builder](https://www.webdevworker.com/tools/css-flexbox-generator.html): Interactive visual builder for CSS Flexbox layouts with instant code export.
+- [CSS Grid 2D Visual Builder](https://www.webdevworker.com/tools/css-grid-generator.html): Full visual grid-template-columns, areas, and gap layout designer.
+- [CSS clamp() Fluid Typography Calculator](https://www.webdevworker.com/tools/css-clamp-calculator.html): Perfectly fluid responsive font sizes and spacing without media queries.
+- [CSS Box Shadow & Glow Studio](https://www.webdevworker.com/tools/css-box-shadow-generator.html): Multi-layered box shadows, neon glows, and soft elevation presets.
+- [CSS Glassmorphism Studio](https://www.webdevworker.com/tools/css-glassmorphism-generator.html): Modern frosted glass effects with backdrop-filter blur and border styling.
+- [CSS Gradient Mesh Studio](https://www.webdevworker.com/tools/css-gradient-mesh-generator.html): High-aesthetic organic mesh gradients with 4-point color blending.
+- [Tailwind CSS to Vanilla CSS Converter](https://www.webdevworker.com/tools/tailwind-to-css-converter.html): Convert Tailwind utility classes into raw, clean CSS rules.
 
 ## Security & Cryptography Tools
-- [SHA-256, SHA-512 & SHA-1 Hash Checksum](https://webdevworker.com/tools/hash-generator.html): Hardware-accelerated client-side cryptographic hashing.
-- [JWT Token Inspector & Decoder](https://webdevworker.com/tools/jwt-decoder.html): Decode and inspect JSON Web Token headers, claims, and expiry without secret exposure.
-- [UUID & GUID v4 Bulk Generator](https://webdevworker.com/tools/uuid-generator.html): Generate cryptographically secure RFC 4122 compliant UUIDs.
-- [AES-GCM Encryption & Decryption](https://webdevworker.com/tools/aes-encryption-decryption-tool.html): Authenticated encryption and decryption using the Web Crypto API.
-- [Strong Password & Entropy Generator](https://webdevworker.com/tools/password-generator.html): High-entropy randomized password generation with custom character sets.
+- [SHA-256, SHA-512 & SHA-1 Hash Checksum](https://www.webdevworker.com/tools/hash-generator.html): Hardware-accelerated client-side cryptographic hashing.
+- [JWT Token Inspector & Decoder](https://www.webdevworker.com/tools/jwt-decoder.html): Decode and inspect JSON Web Token headers, claims, and expiry without secret exposure.
+- [UUID & GUID v4 Bulk Generator](https://www.webdevworker.com/tools/uuid-generator.html): Generate cryptographically secure RFC 4122 compliant UUIDs.
+- [AES-GCM Encryption & Decryption](https://www.webdevworker.com/tools/aes-encryption-decryption-tool.html): Authenticated encryption and decryption using the Web Crypto API.
+- [Strong Password & Entropy Generator](https://www.webdevworker.com/tools/password-generator.html): High-entropy randomized password generation with custom character sets.
 
 ## DevOps & Webmaster Tools
-- [Robots.txt Crawler & Rule Generator](https://webdevworker.com/tools/robots-txt-generator.html): Craft crawler instructions for Googlebot, Bingbot, and AI crawlers.
-- [.htaccess Redirect & Security Header Builder](https://webdevworker.com/tools/htaccess-generator.html): Apache rewrite rules, 301 redirects, SSL enforcement, and CORS headers.
-- [Cron Expression Visualizer & Schedule Builder](https://webdevworker.com/tools/cron-expression-generator.html): Interactive crontab schedule designer with human-readable descriptions.
-- [Linux Chmod Permissions Calculator](https://webdevworker.com/tools/chmod-permissions-calculator.html): Octal and symbolic permission generator for Unix/Linux filesystems.
+- [Robots.txt Crawler & Rule Generator](https://www.webdevworker.com/tools/robots-txt-generator.html): Craft crawler instructions for Googlebot, Bingbot, and AI crawlers.
+- [.htaccess Redirect & Security Header Builder](https://www.webdevworker.com/tools/htaccess-generator.html): Apache rewrite rules, 301 redirects, SSL enforcement, and CORS headers.
+- [Cron Expression Visualizer & Schedule Builder](https://www.webdevworker.com/tools/cron-expression-generator.html): Interactive crontab schedule designer with human-readable descriptions.
+- [Linux Chmod Permissions Calculator](https://www.webdevworker.com/tools/chmod-permissions-calculator.html): Octal and symbolic permission generator for Unix/Linux filesystems.
 
 All utilities run completely client-side in the user's browser, ensuring absolute security, data privacy, and zero latency. Operated by Zaviyan LLC.

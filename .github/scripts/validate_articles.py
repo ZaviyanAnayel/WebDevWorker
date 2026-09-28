@@ -43,7 +43,7 @@ def validate(path):
     if not re.search(r"<title>.{20,120}</title>", h): errs.append("bad <title>")
     m = re.search(r'<meta name="description" content="([^"]+)"', h)
     if not m or not (50 <= len(m.group(1)) <= 300): errs.append("bad meta description")
-    if f'<link rel="canonical" href="https://webdevworker.com/articles/{base}"' not in h:
+    if f'<link rel="canonical" href="https://www.webdevworker.com/articles/{base}"' not in h:
         errs.append("canonical mismatch")
     for sid in REQUIRED_SECTIONS:
         if f'<section id="{sid}"' not in h: errs.append(f"missing section #{sid}")
