@@ -149,6 +149,11 @@ def main():
         else:
             print(f"  warn: no tool detected for {slug}")
     hub = bump_counts(hub, counts)
+    # keep the search-box placeholder count in sync too
+    if counts.get("all"):
+        hub = re.sub(r"Search all \d+ developer guides",
+                     lambda m: f"Search all {int(re.search(r'\d+', m.group(0)).group(0)) + counts['all']} developer guides",
+                     hub, count=1)
     open(HUB, "w", encoding="utf-8").write(hub)
     print(f"post_publish done: hub +{counts['all']} cards")
 
