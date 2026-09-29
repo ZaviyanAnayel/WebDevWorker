@@ -2,18 +2,6 @@
   "competitor_new_pages": [],
   "keyword_gaps": [
     {
-      "keyword": "ai code reviewer online",
-      "slug": "ai-code-reviewer-online-guide-2026.html",
-      "title": "AI Code Reviewer Online: Free Automated Code Review (2026 Guide)",
-      "tool": "ai-code-reviewer"
-    },
-    {
-      "keyword": "ai code explainer",
-      "slug": "ai-code-explainer-guide-2026.html",
-      "title": "AI Code Explainer: Understand Any Code Instantly (2026 Guide)",
-      "tool": "ai-code-explainer"
-    },
-    {
       "keyword": "ai code debugger fix errors",
       "slug": "ai-code-doctor-debug-fix-2026.html",
       "title": "AI Code Doctor: Debug Errors and Fix Code with AI (2026 Guide)",
@@ -70,16 +58,16 @@
   ],
   "recommended": [
     {
-      "keyword": "ai code reviewer online",
-      "slug": "ai-code-reviewer-online-guide-2026.html",
-      "title": "AI Code Reviewer Online: Free Automated Code Review (2026 Guide)",
-      "tool": "ai-code-reviewer"
+      "keyword": "ai code debugger fix errors",
+      "slug": "ai-code-doctor-debug-fix-2026.html",
+      "title": "AI Code Doctor: Debug Errors and Fix Code with AI (2026 Guide)",
+      "tool": "ai-code-doctor"
     },
     {
-      "keyword": "ai code explainer",
-      "slug": "ai-code-explainer-guide-2026.html",
-      "title": "AI Code Explainer: Understand Any Code Instantly (2026 Guide)",
-      "tool": "ai-code-explainer"
+      "keyword": "ai code refactor tool",
+      "slug": "ai-refactor-tool-guide-2026.html",
+      "title": "AI Refactor Tool: Clean Up Code Automatically (2026 Guide)",
+      "tool": "ai-refactor"
     }
   ]
 }
