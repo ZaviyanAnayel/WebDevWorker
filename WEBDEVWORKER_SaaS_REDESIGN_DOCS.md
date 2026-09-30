@@ -3,7 +3,7 @@
 ## 🌟 Executive Overview
 WebDevWorker.com has been completely transformed into an elite, Silicon Valley-grade developer platform inspired by **Vercel, Linear, Raycast, Stripe, and Framer**. The entire engineering experience has been rebuilt from the ground up with a unique developer aesthetic—distinct from CalcWorker—featuring an animated **Aurora Borealis background effect, dynamic cursor spotlight, frosted glassmorphism, sticky PWA app installation header with zero scroll loss**, and seamless client-side sandboxing.
 
-All 36 developer utilities, backend logic, APIs, Google AdSense (`ca-pub-3405098265613384`), Google Analytics (`G-G718R5DYYR`), URLs, robots.txt, ads.txt, sitemap.xml, and SEO metadata have been strictly preserved.
+All 36 developer utilities, backend logic, APIs, Google AdSense (`ca-pub-7358272532329016`), Google Analytics (`G-G718R5DYYR`), URLs, robots.txt, ads.txt, sitemap.xml, and SEO metadata have been strictly preserved.
 
 ---
 

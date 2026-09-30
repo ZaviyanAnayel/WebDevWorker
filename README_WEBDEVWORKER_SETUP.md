@@ -45,7 +45,7 @@ Yeh package **WebDevWorker.com** ki mukammal production-ready website hai, jisme
      18. Code Diff & Text Comparison Tool (`/tools/text-diff-checker.html`)
 
 5. **Google Monetization & SEO:**
-   - Google AdSense Auto Ads tag (`ca-pub-3405098265613384`) on every page.
+   - Google AdSense Auto Ads tag (`ca-pub-7358272532329016`) on every page.
    - Google Analytics tag (`G-1QCQNSCVQM`) on every page.
    - Complete `sitemap.xml` and `robots.txt`.
    - Contextual internal linking between all related tools.

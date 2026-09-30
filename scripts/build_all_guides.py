@@ -345,7 +345,7 @@ def render_article_html(tool):
   <meta property="og:image" content="https://webdevworker.com/assets/logo.png"/>
 
   <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384" crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
 
   <!-- Schema.org JSON-LD -->
   <script type="application/ld+json">
@@ -713,7 +713,7 @@ def rebuild_hub(tools_data):
   <meta property="og:image" content="https://webdevworker.com/assets/logo.png"/>
 
   <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384" crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
 
   <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v36"/>
   <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v36"/>
