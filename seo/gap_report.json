@@ -2,18 +2,6 @@
   "competitor_new_pages": [],
   "keyword_gaps": [
     {
-      "keyword": "ai code debugger fix errors",
-      "slug": "ai-code-doctor-debug-fix-2026.html",
-      "title": "AI Code Doctor: Debug Errors and Fix Code with AI (2026 Guide)",
-      "tool": "ai-code-doctor"
-    },
-    {
-      "keyword": "ai code refactor tool",
-      "slug": "ai-refactor-tool-guide-2026.html",
-      "title": "AI Refactor Tool: Clean Up Code Automatically (2026 Guide)",
-      "tool": "ai-refactor"
-    },
-    {
       "keyword": "ai regex generator from english",
       "slug": "ai-regex-generator-guide-2026.html",
       "title": "AI Regex Generator: Build Regex from Plain English (2026 Guide)",
@@ -58,16 +46,16 @@
   ],
   "recommended": [
     {
-      "keyword": "ai code debugger fix errors",
-      "slug": "ai-code-doctor-debug-fix-2026.html",
-      "title": "AI Code Doctor: Debug Errors and Fix Code with AI (2026 Guide)",
-      "tool": "ai-code-doctor"
+      "keyword": "ai regex generator from english",
+      "slug": "ai-regex-generator-guide-2026.html",
+      "title": "AI Regex Generator: Build Regex from Plain English (2026 Guide)",
+      "tool": "ai-regex-smith"
     },
     {
-      "keyword": "ai code refactor tool",
-      "slug": "ai-refactor-tool-guide-2026.html",
-      "title": "AI Refactor Tool: Clean Up Code Automatically (2026 Guide)",
-      "tool": "ai-refactor"
+      "keyword": "ai sql query generator text to sql",
+      "slug": "ai-sql-generator-text-to-sql-2026.html",
+      "title": "AI SQL Generator: Text-to-SQL Queries in Your Dialect (2026 Guide)",
+      "tool": "ai-sql-smith"
     }
   ]
 }

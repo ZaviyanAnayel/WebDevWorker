@@ -1,2 +1,2 @@
-https://www.webdevworker.com/articles/ai-code-doctor-debug-fix-2026.html
-https://www.webdevworker.com/articles/ai-refactor-tool-guide-2026.html
+https://www.webdevworker.com/articles/ai-regex-generator-guide-2026.html
+https://www.webdevworker.com/articles/ai-sql-generator-text-to-sql-2026.html
