@@ -2,18 +2,6 @@
   "competitor_new_pages": [],
   "keyword_gaps": [
     {
-      "keyword": "ai regex generator from english",
-      "slug": "ai-regex-generator-guide-2026.html",
-      "title": "AI Regex Generator: Build Regex from Plain English (2026 Guide)",
-      "tool": "ai-regex-smith"
-    },
-    {
-      "keyword": "ai sql query generator text to sql",
-      "slug": "ai-sql-generator-text-to-sql-2026.html",
-      "title": "AI SQL Generator: Text-to-SQL Queries in Your Dialect (2026 Guide)",
-      "tool": "ai-sql-smith"
-    },
-    {
       "keyword": "ai unit test generator",
       "slug": "ai-unit-test-generator-guide-2026.html",
       "title": "AI Test Generator: Create Unit Tests from Your Code (2026 Guide)",
@@ -46,16 +34,16 @@
   ],
   "recommended": [
     {
-      "keyword": "ai regex generator from english",
-      "slug": "ai-regex-generator-guide-2026.html",
-      "title": "AI Regex Generator: Build Regex from Plain English (2026 Guide)",
-      "tool": "ai-regex-smith"
+      "keyword": "ai unit test generator",
+      "slug": "ai-unit-test-generator-guide-2026.html",
+      "title": "AI Test Generator: Create Unit Tests from Your Code (2026 Guide)",
+      "tool": "ai-test-forge"
     },
     {
-      "keyword": "ai sql query generator text to sql",
-      "slug": "ai-sql-generator-text-to-sql-2026.html",
-      "title": "AI SQL Generator: Text-to-SQL Queries in Your Dialect (2026 Guide)",
-      "tool": "ai-sql-smith"
+      "keyword": "ai code security scanner vulnerabilities",
+      "slug": "ai-security-auditor-code-scan-2026.html",
+      "title": "AI Security Auditor: Scan Code for Vulnerabilities (2026 Guide)",
+      "tool": "ai-security-auditor"
     }
   ]
 }

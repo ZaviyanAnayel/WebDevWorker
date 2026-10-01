@@ -1,2 +1,2 @@
-https://www.webdevworker.com/articles/ai-regex-generator-guide-2026.html
-https://www.webdevworker.com/articles/ai-sql-generator-text-to-sql-2026.html
+https://www.webdevworker.com/articles/ai-security-auditor-code-scan-2026.html
+https://www.webdevworker.com/articles/ai-unit-test-generator-guide-2026.html
