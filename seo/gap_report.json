@@ -2,18 +2,6 @@
   "competitor_new_pages": [],
   "keyword_gaps": [
     {
-      "keyword": "ai prompt optimizer",
-      "slug": "ai-prompt-surgeon-optimizer-2026.html",
-      "title": "AI Prompt Surgeon: Optimize Prompts, Stop Wasting Tokens (2026 Guide)",
-      "tool": "ai-prompt-surgeon"
-    },
-    {
-      "keyword": "ai api request builder",
-      "slug": "ai-api-oracle-request-builder-2026.html",
-      "title": "AI API Oracle: Describe the Call, Get Method URL and cURL (2026 Guide)",
-      "tool": "ai-api-oracle"
-    },
-    {
       "keyword": "ai micro app builder",
       "slug": "ai-micro-app-smith-builder-2026.html",
       "title": "AI Micro-App Smith: Describe the App, Get a Working Mini-App (2026 Guide)",
@@ -22,16 +10,10 @@
   ],
   "recommended": [
     {
-      "keyword": "ai prompt optimizer",
-      "slug": "ai-prompt-surgeon-optimizer-2026.html",
-      "title": "AI Prompt Surgeon: Optimize Prompts, Stop Wasting Tokens (2026 Guide)",
-      "tool": "ai-prompt-surgeon"
-    },
-    {
-      "keyword": "ai api request builder",
-      "slug": "ai-api-oracle-request-builder-2026.html",
-      "title": "AI API Oracle: Describe the Call, Get Method URL and cURL (2026 Guide)",
-      "tool": "ai-api-oracle"
+      "keyword": "ai micro app builder",
+      "slug": "ai-micro-app-smith-builder-2026.html",
+      "title": "AI Micro-App Smith: Describe the App, Get a Working Mini-App (2026 Guide)",
+      "tool": "ai-micro-app-smith"
     }
   ]
 }
