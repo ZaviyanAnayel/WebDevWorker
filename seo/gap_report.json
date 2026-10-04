@@ -1,19 +1,5 @@
 {
   "competitor_new_pages": [],
-  "keyword_gaps": [
-    {
-      "keyword": "ai micro app builder",
-      "slug": "ai-micro-app-smith-builder-2026.html",
-      "title": "AI Micro-App Smith: Describe the App, Get a Working Mini-App (2026 Guide)",
-      "tool": "ai-micro-app-smith"
-    }
-  ],
-  "recommended": [
-    {
-      "keyword": "ai micro app builder",
-      "slug": "ai-micro-app-smith-builder-2026.html",
-      "title": "AI Micro-App Smith: Describe the App, Get a Working Mini-App (2026 Guide)",
-      "tool": "ai-micro-app-smith"
-    }
-  ]
+  "keyword_gaps": [],
+  "recommended": []
 }
