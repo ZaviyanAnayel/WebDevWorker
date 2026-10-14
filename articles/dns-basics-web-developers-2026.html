@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- SEO meta: title, description, canonical URL -->
+  <title>DNS Basics for Web Developers: Records, Propagation, and Troubleshooting | WebDevWorker</title>
+  <meta name="description" content="DNS basics for web developers: A, CNAME, MX, TXT records, TTL and propagation, plus dig and nslookup troubleshooting. Everything you need to ship domains."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/dns-basics-web-developers-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="DNS Basics for Web Developers: Records, Propagation, and Troubleshooting | WebDevWorker"/>
+  <meta property="og:description" content="DNS basics for web developers: A, CNAME, MX, TXT records, TTL and propagation, plus dig and nslookup troubleshooting. Everything you need to ship domains."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/dns-basics-web-developers-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "DNS Basics for Web Developers: Records, Propagation, and Troubleshooting",
+      "description": "DNS basics for web developers: A, CNAME, MX, TXT records, TTL and propagation, plus dig and nslookup troubleshooting. Everything you need to ship domains.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/dns-basics-web-developers-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+                {
+          "@type": "Question",
+          "name": "What is the difference between an A record and a CNAME?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An A record maps a name directly to an IP address (example.com to 93.184.215.14). A CNAME maps a name to another name (www to example.com), so it follows wherever the target points. Use A for the apex domain and CNAME for subdomains that should track another hostname."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does DNS propagation take?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Anywhere from minutes to 48 hours, depending on the TTL you set and how aggressively resolvers cache. With a 300-second TTL, most of the internet updates within minutes; some ISPs cache longer regardless. Plan migrations around the old TTL, not wishful thinking."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use a CNAME on my root domain?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. DNS rules forbid a CNAME from coexisting with the other records the apex requires (NS, SOA). Point the apex with an A/AAAA record, or use your provider's ALIAS or ANAME record, which behaves like a CNAME but is legal at the root."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a TTL in DNS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Time to live: the number of seconds resolvers are allowed to cache a record before asking again. Low TTLs (300s) make changes propagate fast but increase query load; high TTLs (86400s) are efficient but slow to update. Lower it before migrations."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I check if my DNS changes have propagated?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Query multiple public resolvers with dig example.com @1.1.1.1 versus @8.8.8.8 and compare, or use a global propagation checker. Always verify against your authoritative nameserver first to confirm the source of truth is correct."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "DNS Basics",
+          "item": "https://www.webdevworker.com/articles/dns-basics-web-developers-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">DNS Basics</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🌐 Web Fundamentals</div>
+          <h1 class="guide-title">DNS Basics for Web Developers: Records, Propagation, and Troubleshooting</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 8 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3>🌐 DNS is where every deploy begins</h3>
+          <p style="color: var(--text-muted); margin: 0;">From records to propagation, DNS underpins the whole web. Keep learning with HTTP methods, Nginx, and Linux networking guides in the Guides Hub.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides →</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. How DNS Turns Names into IP Addresses</a></li>
+            <li><a href="#sec2" style="color:var(--brand-primary);">2. The Record Types You Will Actually Use</a></li>
+            <li><a href="#sec3" style="color:var(--brand-primary);">3. TTL and Propagation: Why Changes Take Time</a></li>
+            <li><a href="#sec4" style="color:var(--brand-primary);">4. Troubleshooting DNS Like a Pro</a></li>
+            <li><a href="#sec5" style="color:var(--brand-primary);">5. DNS Best Practices Before You Deploy</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+          <h2>1. How DNS Turns Names into IP Addresses</h2>
+          <p>When you type <code>example.com</code>, your computer does not know where that is — it asks the <strong>Domain Name System</strong>, the internet's phone book. The lookup is a chain: your device asks a <strong>recursive resolver</strong> (usually your ISP or 1.1.1.1/8.8.8.8), which walks down from the <strong>root servers</strong> to the <strong>TLD servers</strong> (<code>.com</code>) to your domain's <strong>authoritative nameservers</strong>, which finally answer with the IP.</p>
+<p>The whole chain usually completes in milliseconds, and resolvers <strong>cache</strong> answers to avoid repeating it. That caching is the source of both DNS's speed and its most confusing behavior — stale records — which we will unravel in section 3.</p>
+<pre class="code-box"># Watch a full DNS lookup in action
+dig example.com +trace
+
+# Simple query: what IP does this name resolve to?
+dig example.com +short
+# 93.184.215.14</pre>
+<p>As a web developer you rarely run authoritative servers, but you constantly configure records at your registrar or DNS provider (Cloudflare, Route 53, Namecheap) — and when a deploy “doesn't work,” DNS is guilty often enough to earn this guide.</p>
+<p>Think of the hierarchy as delegation: the root delegates <code>.com</code> to Verisign, Verisign delegates <code>example.com</code> to your nameservers, and your nameservers answer for everything beneath. Each level only knows about the one below it — elegant, distributed, and remarkably resilient.</p>
+        </section>
+
+        <section id="sec2" class="guide-section">
+          <h2>2. The Record Types You Will Actually Use</h2>
+          <p>DNS has dozens of record types, but six cover virtually all web development work:</p>
+<table class="data-table">
+<thead><tr><th>Type</th><th>Maps</th><th>Example Use</th></tr></thead>
+<tbody>
+<tr><td><strong>A</strong></td><td>Name → IPv4 address</td><td><code>example.com → 93.184.215.14</code></td></tr>
+<tr><td><strong>AAAA</strong></td><td>Name → IPv6 address</td><td>IPv6 version of an A record</td></tr>
+<tr><td><strong>CNAME</strong></td><td>Name → another name</td><td><code>www → example.com</code></td></tr>
+<tr><td><strong>MX</strong></td><td>Domain → mail servers</td><td>Routes email to Google Workspace</td></tr>
+<tr><td><strong>TXT</strong></td><td>Name → free text</td><td>SPF, DKIM, domain verification</td></tr>
+<tr><td><strong>NS</strong></td><td>Domain → nameservers</td><td>Delegates DNS to Cloudflare</td></tr>
+</tbody></table>
+<p>The classic setup: an <strong>A record</strong> on the apex (<code>example.com</code>) pointing to your server's IP, and a <strong>CNAME</strong> on <code>www</code> pointing to the apex. One critical rule: a <strong>CNAME cannot coexist with other records</strong>, so it can never sit on the apex itself (which needs NS and SOA records) — use an A record or your provider's ALIAS/ANAME feature there.</p>
+<p><strong>MX</strong> and <strong>TXT</strong> records run your email: MX says where mail goes, while TXT records publish SPF, DKIM, and DMARC policies that keep your emails out of spam folders.</p>
+        </section>
+
+        <section id="sec3" class="guide-section">
+          <h2>3. TTL and Propagation: Why Changes Take Time</h2>
+          <p>Every DNS record carries a <strong>TTL</strong> (time to live) in seconds — how long resolvers may cache it. A TTL of 3600 means changes can take up to an hour to be visible everywhere. This delay is <strong>propagation</strong>, and it is the number one source of “but I changed it!” confusion.</p>
+<p>The pro move: <strong>lower your TTL to 300 seconds a day or two before a migration</strong>, make the change, verify, then raise it back. Short TTLs during the move mean mistakes are correctable in minutes; long TTLs afterward mean faster lookups and less load on your nameservers.</p>
+<pre class="code-box"># Check a record's remaining TTL from a public resolver
+dig example.com @1.1.1.1
+
+# Compare what different resolvers see (propagation check)
+for r in 1.1.1.1 8.8.8.8 9.9.9.9; do
+  echo "== $r =="; dig +short example.com @$r
+done</pre>
+<p>Note that some ISPs ignore low TTLs and cache longer regardless — during critical migrations, patience plus verification beats repeated edits.</p>
+        </section>
+
+        <section id="sec4" class="guide-section">
+          <h2>4. Troubleshooting DNS Like a Pro</h2>
+          <p>DNS problems have a signature: the site works for you but not for a client, or HTTPS is fine on <code>www</code> but broken on the apex. Diagnose from the authoritative source outward with <code>dig</code>, <code>nslookup</code>, and <code>host</code>:</p>
+<pre class="code-box"># Is the authoritative server answering correctly?
+dig example.com @ns1.yourprovider.com
+
+# Full record dump: A, MX, TXT in one view
+dig example.com ANY +noall +answer
+
+# Quick checks
+nslookup example.com
+host -t MX example.com</pre>
+<p>Work through this checklist: (1) query the authoritative nameserver directly — if it is wrong, fix it there; (2) check TTL to see how long stale caches persist; (3) look for typos and trailing dots; (4) confirm you did not put a CNAME on the apex; (5) verify nameserver delegation at your registrar matches your DNS provider. Tools like <code>whatsmydns.net</code> visualize propagation across global resolvers.</p>
+        </section>
+
+        <section id="sec5" class="guide-section">
+          <h2>5. DNS Best Practices Before You Deploy</h2>
+          <p>Treat DNS as part of your deploy checklist, not an afterthought. Before pointing a domain at a new server: lower the TTL 24–48 hours ahead, publish SPF/DKIM/DMARC TXT records if the domain sends email, and keep the old server answering until propagation completes — a premature shutdown strands users on stale caches.</p>
+<pre class="code-box"># TXT records every sending domain should publish
+# SPF: which servers may send mail
+"v=spf1 include:_spf.google.com ~all"
+# DMARC: what to do with failures
+"v=DMARC1; p=quarantine; rua=mailto:dmarc@example.com"</pre>
+<p>Use a DNS provider with an API (Cloudflare, Route 53) so record changes can be scripted and version-controlled alongside infrastructure. Monitor with periodic <code>dig</code> checks or uptime monitors that resolve independently — and document your zone somewhere your future self can find at 2 AM.</p>
+<p>Finally, enable DNSSEC if your provider supports it — it cryptographically signs your zone so resolvers can detect spoofed answers. It is a one-time setup that closes one of DNS's oldest trust gaps.</p>
+        </section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between an A record and a CNAME?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">An A record maps a name directly to an IP address (example.com to 93.184.215.14). A CNAME maps a name to another name (www to example.com), so it follows wherever the target points. Use A for the apex domain and CNAME for subdomains that should track another hostname.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How long does DNS propagation take?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Anywhere from minutes to 48 hours, depending on the TTL you set and how aggressively resolvers cache. With a 300-second TTL, most of the internet updates within minutes; some ISPs cache longer regardless. Plan migrations around the old TTL, not wishful thinking.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can I use a CNAME on my root domain?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No. DNS rules forbid a CNAME from coexisting with the other records the apex requires (NS, SOA). Point the apex with an A/AAAA record, or use your provider's ALIAS or ANAME record, which behaves like a CNAME but is legal at the root.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is a TTL in DNS?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Time to live: the number of seconds resolvers are allowed to cache a record before asking again. Low TTLs (300s) make changes propagate fast but increase query load; high TTLs (86400s) are efficient but slow to update. Lower it before migrations.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I check if my DNS changes have propagated?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Query multiple public resolvers with dig example.com @1.1.1.1 versus @8.8.8.8 and compare, or use a global propagation checker. Always verify against your authoritative nameserver first to confirm the source of truth is correct.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+        <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Keep leveling up</h3>
+          <p style="color: var(--text-muted); margin: 0;">DNS points the world at your server — make sure what is listening is solid with Nginx reverse proxy setup.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub →</a>
+        </div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

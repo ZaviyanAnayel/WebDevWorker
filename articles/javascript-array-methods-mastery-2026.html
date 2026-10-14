@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JavaScript Array Methods: map, filter, reduce Mastery | WebDevWorker</title>
+  <meta name="description" content="Master JavaScript array methods in 2026: map, filter, reduce, find, some, every, and sort done right. Real-world examples and chaining patterns included."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/javascript-array-methods-mastery-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="JavaScript Array Methods: map, filter, reduce Mastery | WebDevWorker"/>
+  <meta property="og:description" content="Master JavaScript array methods in 2026: map, filter, reduce, find, some, every, and sort done right. Real-world examples and chaining patterns included."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/javascript-array-methods-mastery-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "JavaScript Array Methods: map, filter, reduce Mastery (2026)",
+      "description": "Master JavaScript array methods in 2026: map, filter, reduce, find, some, every, and sort done right. Real-world examples and chaining patterns included.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/javascript-array-methods-mastery-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+                  {
+            "@type": "Question",
+            "name": "Should I use map or forEach?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Use map when you want a new array from transformed elements; use forEach only for side effects like logging or DOM updates. A map whose return value is ignored is a code smell — it misleads readers into expecting a result array."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does reduce actually work?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "It walks the array left to right, calling your reducer with (accumulator, currentElement) and using each return value as the next accumulator. The initial value you pass becomes the first accumulator. Think of it as a snowball rolling downhill, gathering a result as it goes."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why does sort() mangle my numbers?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Bare sort() converts elements to strings and orders them lexicographically, so 80 comes before 9. Always pass a comparator for numbers: (a, b) => a - b for ascending. For strings, use localeCompare for language-aware ordering."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which array methods mutate the original array?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The mutators are push, pop, shift, unshift, splice, sort, reverse, fill, and copyWithin. Everything else in this guide (map, filter, reduce, find, toSorted, slice, concat) returns new values. When in doubt, check MDN — or default to the ES2023 to*-variants."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is chaining array methods slow?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "For typical application data (hundreds to low thousands of items), no — engines optimize chained pipelines well and clarity wins. Only for very large datasets (100k+ items) does a single manual loop meaningfully beat chained intermediates on memory."
+            }
+          }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Array Methods Guide",
+          "item": "https://www.webdevworker.com/articles/javascript-array-methods-mastery-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Array Methods Guide</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">⚡ JavaScript</div>
+          <h1 class="guide-title">JavaScript Array Methods: map, filter, reduce Mastery</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 8 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. map and filter: Transform Without Mutating</a></li>
+            <li><a href="#sec2" style="color:var(--brand-primary);">2. reduce: The Swiss Army Knife</a></li>
+            <li><a href="#sec3" style="color:var(--brand-primary);">3. find, findIndex, some, every, and includes</a></li>
+            <li><a href="#sec4" style="color:var(--brand-primary);">4. sort Done Right (and Immutability)</a></li>
+            <li><a href="#sec5" style="color:var(--brand-primary);">5. Array Methods Cheat Sheet</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+                <section id="sec1" class="guide-section">
+          <h2>1. map and filter: Transform Without Mutating</h2>
+          <p>map and filter are the bread and butter of modern JavaScript: map transforms every element (one in, one out), filter keeps only the elements that pass a test. Both return brand-new arrays and never touch the original — that immutability is the point. It makes data flow predictable, enables safe chaining, and is the reason React-style rendering can rely on reference comparisons.</p>
+          <p>The callbacks receive (element, index, array), though most calls use just the element. Keep callbacks pure — no pushing to outside arrays, no DOM writes inside a map. When you catch yourself writing map purely for side effects, that is forEach's job: map is for producing a new array, and using it otherwise confuses every reader.</p>
+          <p>Chaining is where these shine: orders.filter(o =&gt; o.paid).map(o =&gt; o.total) reads as a pipeline and allocates intermediate arrays the engine optimizes well. For genuinely huge datasets (hundreds of thousands of items) a single for loop with manual accumulation can win on memory — but for normal application data, clarity beats micro-optimization every single time, and the next developer will thank you.</p>
+          <pre class="code-box">const products = [
+  { name: 'Keyboard', price: 89,  inStock: true  },
+  { name: 'Mouse',    price: 39,  inStock: false },
+  { name: 'Monitor',  price: 299, inStock: true  },
+  { name: 'Webcam',   price: 79,  inStock: true  },
+];
+
+// Pipeline: filter -&gt; map -&gt; readable output. Original untouched.
+const listing = products
+  .filter(p =&gt; p.inStock)
+  .map(p =&gt; `${p.name}: $${p.price}`);
+
+console.log(listing);
+// ['Keyboard: $89', 'Monitor: $299', 'Webcam: $79']
+console.log(products.length); // 4 — original array unchanged
+</pre>
+        </section>
+        <section id="sec2" class="guide-section">
+          <h2>2. reduce: The Swiss Army Knife</h2>
+          <p>reduce collapses an array into a single value — a number, an object, another array, anything. It takes a reducer (accumulator, current) =&gt; newAccumulator and an initial value, then threads the accumulator through every element. Summing is the hello-world, but grouping, counting, and building lookup maps are where it earns its reputation.</p>
+          <p>The initial value is not optional in practice: without it, reduce uses the first element as the seed and starts from the second — which throws on empty arrays and produces wrong types when your accumulator differs from element type. Always pass the initial value explicitly; it documents the result's shape and eliminates an entire bug class.</p>
+          <p>If reduce feels cryptic, name your accumulator well and keep reducers small. A well-named reducer — (totals, order) =&gt; ... — reads fine; a clever one-liner with single-letter variables does not. Readability is a feature of your code, not a tax on it.</p>
+          <pre class="code-box">const orders = [
+  { id: 1, status: 'shipped', total: 120 },
+  { id: 2, status: 'pending', total:  45 },
+  { id: 3, status: 'shipped', total:  80 },
+  { id: 4, status: 'pending', total:  60 },
+];
+
+// Sum with an explicit initial value
+const revenue = orders.reduce((sum, o) =&gt; sum + o.total, 0); // 305
+
+// Group by status: array -&gt; object of arrays
+const byStatus = orders.reduce((groups, o) =&gt; {
+  (groups[o.status] ??= []).push(o);
+  return groups;
+}, {});
+// { shipped: [...2 items], pending: [...2 items] }
+
+// Count occurrences
+const counts = orders.reduce((c, o) =&gt; {
+  c[o.status] = (c[o.status] || 0) + 1;
+  return c;
+}, {}); // { shipped: 2, pending: 2 }
+</pre>
+        </section>
+        <section id="sec3" class="guide-section">
+          <h2>3. find, findIndex, some, every, and includes</h2>
+          <p>Not every question needs a transformed array. find returns the first matching element (or undefined); findIndex returns its position (or -1); some asks “does at least one match?” and every asks “do all match?” — both returning booleans. includes checks a flat array for a value with SameValueZero comparison, which correctly handles NaN unlike indexOf.</p>
+          <p>These are short-circuiting: some and every stop at the first decisive element, and find stops at the first match. On large arrays that early exit is a genuine performance win over filter(...)[0], which always scans everything. Prefer the precise method: it communicates intent (I want a boolean, not a list) and the engine rewards it.</p>
+          <p>A common mistake is using find when you need filter's multiplicity, or includes on arrays of objects (it compares by reference, so includes({id:1}) never matches a different {id:1} object). For object searches, some(arr, o =&gt; o.id === 1) or find with a predicate is the correct tool.</p>
+          <pre class="code-box">const users = [
+  { id: 1, name: 'Ayesha', role: 'admin',  active: true  },
+  { id: 2, name: 'Bilal',  role: 'member', active: true  },
+  { id: 3, name: 'Chen',   role: 'member', active: false },
+];
+
+const admin   = users.find(u =&gt; u.role === 'admin'); // { id:1, ... }
+const idx     = users.findIndex(u =&gt; u.name === 'Chen'); // 2
+const anyOff  = users.some(u =&gt; !u.active);   // true
+const allOn   = users.every(u =&gt; u.active);   // false
+const hasId2  = users.map(u =&gt; u.id).includes(2); // true
+
+// Short-circuit: stops at Bilal, never visits Chen
+const firstMember = users.find(u =&gt; {
+  console.log('checking', u.name);
+  return u.role === 'member';
+});
+</pre>
+        </section>
+        <section id="sec4" class="guide-section">
+          <h2>4. sort Done Right (and Immutability)</h2>
+          <p>Array.prototype.sort is the most misused method in the language. Called bare, it converts elements to strings and sorts lexicographically — so [10, 9, 80].sort() gives [10, 80, 9]. Numeric sorting needs an explicit comparator: (a, b) =&gt; a - b for ascending, (a, b) =&gt; b - a for descending. For strings, localeCompare handles language-aware ordering far better than &lt; and &gt;.</p>
+          <p>The second trap: sort mutates in place and returns the same array reference. Assigning const sorted = arr.sort() does not protect the original — both names point at the one sorted array. ES2023 fixed this ergonomically with toSorted(), toReversed(), and toSpliced(), which return new arrays and leave the original untouched. In 2026 there is no reason to hand-roll [...arr].sort() anymore.</p>
+          <p>Comparators can sort by multiple criteria: sort by status priority, then by date within each group. Return the first non-zero comparison, and keep comparators pure — a comparator with side effects or inconsistent results produces silently wrong orderings that are miserable to debug.</p>
+          <pre class="code-box">const nums = [10, 9, 80, 21];
+console.log([...nums].sort());              // [10, 80, 9, 21] — WRONG for numbers
+console.log([...nums].sort((a, b) =&gt; a - b)); // [9, 10, 21, 80] — correct
+
+// toSorted(): the immutable sort (ES2023, all modern browsers)
+const scores = [88, 42, 95];
+const ranked = scores.toSorted((a, b) =&gt; b - a);
+console.log(ranked); // [95, 88, 42]
+console.log(scores); // [88, 42, 95] — original untouched
+
+// Multi-criteria sort: priority first, then newest
+const tasks = [
+  { title: 'Fix bug', priority: 1, created: '2026-10-12' },
+  { title: 'Write docs', priority: 2, created: '2026-10-14' },
+  { title: 'Refactor', priority: 1, created: '2026-10-14' },
+];
+const ordered = tasks.toSorted((a, b) =&gt;
+  a.priority - b.priority || b.created.localeCompare(a.created));
+</pre>
+        </section>
+        <section id="sec5" class="guide-section">
+          <h2>5. Array Methods Cheat Sheet</h2>
+          <p>The table below is the reference card for this entire guide: what each method returns, whether it mutates, and the one-liner that captures its purpose. Tape it to your monitor until the mutating vs non-mutating column becomes reflex.</p>
+          <p>The deeper pattern worth internalizing: prefer the non-mutating methods (map, filter, toSorted, toSpliced, slice, concat) for data pipelines, and reserve mutating ones (push, splice, sort, reverse) for deliberate in-place updates where you own the array. That single discipline prevents an outsized share of state bugs, especially in applications where the same array is read by multiple components or cached between renders.</p>
+          <p>From here, flatMap (map + flatten in one pass), groupBy (the new Object.groupBy in ES2024), and the iterator helpers are natural next steps — but the methods in this guide handle the overwhelming majority of production code you will ever write, so make them second nature first and review this table often.</p>
+          <table class="data-table">
+          <thead>
+          <tr><th>Method</th><th>Returns</th><th>Mutates?</th><th>Use it to</th></tr>
+          </thead>
+          <tbody>
+          <tr><td>map</td><td>New array, same length</td><td>No</td><td>Transform every element</td></tr>
+          <tr><td>filter</td><td>New array, subset</td><td>No</td><td>Keep elements passing a test</td></tr>
+          <tr><td>reduce</td><td>Any single value</td><td>No</td><td>Sum, group, or collapse to one value</td></tr>
+          <tr><td>find / findIndex</td><td>Element / index or undefined / -1</td><td>No</td><td>Locate the first match (short-circuits)</td></tr>
+          <tr><td>some / every</td><td>Boolean</td><td>No</td><td>Test “any” or “all” (short-circuits)</td></tr>
+          <tr><td>includes</td><td>Boolean</td><td>No</td><td>Check a primitive value is present</td></tr>
+          <tr><td>sort</td><td>Same array reference</td><td>YES</td><td>Order in place (needs comparator!)</td></tr>
+          <tr><td>toSorted (ES2023)</td><td>New sorted array</td><td>No</td><td>Sort without mutating — prefer this</td></tr>
+          <tr><td>forEach</td><td>undefined</td><td>No (but encourages side effects)</td><td>Side effects only; cannot break/return</td></tr>
+          <tr><td>flatMap</td><td>New flattened array</td><td>No</td><td>Map where each item yields 0..n results</td></tr>
+          </tbody>
+          </table>
+        </section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Should I use map or forEach?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Use map when you want a new array from transformed elements; use forEach only for side effects like logging or DOM updates. A map whose return value is ignored is a code smell — it misleads readers into expecting a result array.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How does reduce actually work?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">It walks the array left to right, calling your reducer with (accumulator, currentElement) and using each return value as the next accumulator. The initial value you pass becomes the first accumulator. Think of it as a snowball rolling downhill, gathering a result as it goes.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Why does sort() mangle my numbers?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Bare sort() converts elements to strings and orders them lexicographically, so 80 comes before 9. Always pass a comparator for numbers: (a, b) =&gt; a - b for ascending. For strings, use localeCompare for language-aware ordering.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Which array methods mutate the original array?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">The mutators are push, pop, shift, unshift, splice, sort, reverse, fill, and copyWithin. Everything else in this guide (map, filter, reduce, find, toSorted, slice, concat) returns new values. When in doubt, check MDN — or default to the ES2023 to*-variants.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Is chaining array methods slow?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">For typical application data (hundreds to low thousands of items), no — engines optimize chained pipelines well and clarity wins. Only for very large datasets (100k+ items) does a single manual loop meaningfully beat chained intermediates on memory.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

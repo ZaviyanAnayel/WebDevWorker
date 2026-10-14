@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JavaScript Debounce vs Throttle: Implementations Guide | WebDevWorker</title>
+  <meta name="description" content="Debounce vs throttle explained with from-scratch implementations: search inputs, scroll handlers, resize events, and when to use each. 2026 guide with code."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/javascript-debounce-throttle-guide-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="JavaScript Debounce vs Throttle: Implementations Guide | WebDevWorker"/>
+  <meta property="og:description" content="Debounce vs throttle explained with from-scratch implementations: search inputs, scroll handlers, resize events, and when to use each. 2026 guide with code."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/javascript-debounce-throttle-guide-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "JavaScript Debounce vs Throttle: Implementations Guide (2026)",
+      "description": "Debounce vs throttle explained with from-scratch implementations: search inputs, scroll handlers, resize events, and when to use each. 2026 guide with code.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/javascript-debounce-throttle-guide-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+                  {
+            "@type": "Question",
+            "name": "What is the real difference between debounce and throttle?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Debounce waits for a pause in events and then runs once (final state wins); throttle runs at most once per fixed interval while events keep coming (regular updates win). Search inputs debounce; scroll handlers throttle."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I write debounce from scratch?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Return a wrapper function that closes over a timeout id: on each call, clearTimeout the pending timer and set a new one for `wait` ms that invokes the original function. Only the last call in a burst survives, because every earlier timer gets cleared."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What are leading and trailing edge?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Leading edge runs the function immediately on the first call of a burst (then ignores the rest); trailing edge — the default — runs after the quiet period ends. Use leading for submit buttons (first click wins) and trailing for search inputs (final text wins)."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "When should I use throttle instead of debounce?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "When you need updates during continuous activity rather than after it stops: scroll-linked animations, parallax, mousemove coordinates, live resize previews. If the user must see feedback while the event stream is still flowing, throttle."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use requestAnimationFrame as a throttle?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, and for visual updates it is the best throttle: it caps execution to the display refresh rate and syncs work with the browser's paint cycle. It only fits animation-adjacent handlers, though — for API calls or autosave, use time-based debounce/throttle instead."
+            }
+          }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Debounce vs Throttle",
+          "item": "https://www.webdevworker.com/articles/javascript-debounce-throttle-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Debounce vs Throttle</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">⚡ JavaScript</div>
+          <h1 class="guide-title">JavaScript Debounce vs Throttle: Implementations Guide</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 7 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. The Problem: Drowning in Events</a></li>
+            <li><a href="#sec2" style="color:var(--brand-primary);">2. Debounce: Wait Until It Stops</a></li>
+            <li><a href="#sec3" style="color:var(--brand-primary);">3. Throttle: At Most Once Per Interval</a></li>
+            <li><a href="#sec4" style="color:var(--brand-primary);">4. Choosing Between Them: Real-World Rules</a></li>
+            <li><a href="#sec5" style="color:var(--brand-primary);">5. Debounce vs Throttle Cheat Sheet</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+                <section id="sec1" class="guide-section">
+          <h2>1. The Problem: Drowning in Events</h2>
+          <p>Some browser events fire at a furious rate: scroll can emit dozens of events per second, resize fires continuously while dragging a window edge, and input fires on every keystroke. Running expensive work — an API search, a layout measurement, a re-render — on every single event melts CPUs, hammers APIs, and drops frames. Your handler is not too slow; it is simply called too often.</p>
+          <p>Debounce and throttle are the two canonical answers, and they solve different halves of the problem. Debounce says “wait until the events stop, then run once” — ideal when you only care about the final state. Throttle says “run at most once per interval while events continue” — ideal when you need regular updates during continuous activity. Confusing them produces bugs that feel intermittent: a throttled search input fires mid-typing; a debounced scroll handler never updates while scrolling.</p>
+          <p>Both are higher-order functions: they take your function and return a wrapped version with timing behavior. The implementations are each under fifteen lines, and writing them once yourself — rather than copying a snippet — is what makes the difference between them stick permanently.</p>
+          <pre class="code-box">// The problem: this fires on EVERY keystroke
+document.querySelector('#search').addEventListener('input', (e) =&gt; {
+  fetch(`/api/search?q=${e.target.value}`); // 10 keystrokes = 10 requests!
+});
+
+// Scroll handlers have the same disease
+window.addEventListener('scroll', () =&gt; {
+  document.querySelectorAll('.reveal').forEach(checkVisibility); // per frame!
+});
+</pre>
+        </section>
+        <section id="sec2" class="guide-section">
+          <h2>2. Debounce: Wait Until It Stops</h2>
+          <p>Debounce restarts a timer on every call and only invokes your function when the timer survives uninterrupted for the full wait period. Typing “javasc” then pausing fires one search for the complete term; each keystroke before the pause just resets the clock. The implementation is a closure over a timeout id: clear the pending timer, set a new one.</p>
+          <p>The classic options are leading and trailing edge. Trailing (the default) runs after the quiet period — right for search inputs and autosave. Leading runs immediately on the first call, then ignores subsequent calls until the wait elapses — right for “submit once” buttons where double-clicks must not double-submit. Some implementations support both; know which edge your use case needs before reaching for options.</p>
+          <p>Choose the wait to match human rhythm: 200–300ms for search-as-you-type, 500–1000ms for autosave and resize-recalculation. Too short and you barely save any calls; too long and the UI feels dead. And always cancel pending debounced calls on teardown — a debounced save firing after its component unmounted is a real-world bug.</p>
+          <pre class="code-box">function debounce(fn, wait = 300, { leading = false } = {}) {
+  let timeoutId = null;
+  return function (...args) {
+    const callNow = leading &amp;&amp; timeoutId === null;
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() =&gt; {
+      timeoutId = null;
+      if (!leading) fn.apply(this, args); // trailing edge
+    }, wait);
+    if (callNow) fn.apply(this, args);     // leading edge
+  };
+}
+
+// Search input: one request per pause in typing
+const search = debounce((query) =&gt; {
+  fetch(`/api/search?q=${encodeURIComponent(query)}`)
+    .then(r =&gt; r.json()).then(renderResults);
+}, 250);
+
+document.querySelector('#search')
+  .addEventListener('input', (e) =&gt; search(e.target.value.trim()));
+</pre>
+        </section>
+        <section id="sec3" class="guide-section">
+          <h2>3. Throttle: At Most Once Per Interval</h2>
+          <p>Throttle guarantees your function runs at most once per interval no matter how many events arrive. The simplest implementation records the last run timestamp and executes only when enough time has passed; a refined version also schedules a trailing call so the final state is never skipped (a scroll handler that never renders the last 200ms of scrolling feels broken).</p>
+          <p>For visual updates during scroll, requestAnimationFrame is the idiomatic throttle: it naturally caps execution to the display's refresh rate and aligns work with the browser's paint cycle. A tiny rAF-throttle wrapper — “if no frame is scheduled, schedule one” — replaces timestamp math entirely for animation-adjacent handlers.</p>
+          <p>Throttle intervals follow the same human-rhythm logic: ~100ms for scroll-linked effects (parallax, reveal-on-scroll), 200–500ms for resize recalculation, and rAF for anything that moves pixels. Longer than ~500ms and continuous interactions start feeling steppy rather than smooth.</p>
+          <pre class="code-box">function throttle(fn, interval = 200) {
+  let lastRun = 0;
+  let timeoutId = null;
+  return function (...args) {
+    const now = Date.now();
+    const remaining = interval - (now - lastRun);
+    clearTimeout(timeoutId);
+    if (remaining &lt;= 0) {
+      lastRun = now;
+      fn.apply(this, args); // leading edge: run now
+    } else {
+      // trailing edge: guarantee the final state runs
+      timeoutId = setTimeout(() =&gt; {
+        lastRun = Date.now();
+        fn.apply(this, args);
+      }, remaining);
+    }
+  };
+}
+
+// rAF throttle: perfect cadence for scroll-driven visuals
+function rafThrottle(fn) {
+  let scheduled = false;
+  return function (...args) {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() =&gt; {
+      scheduled = false;
+      fn.apply(this, args);
+    });
+  };
+}
+
+window.addEventListener('scroll',
+  rafThrottle(() =&gt; updateParallax(window.scrollY)), { passive: true });
+</pre>
+        </section>
+        <section id="sec4" class="guide-section">
+          <h2>4. Choosing Between Them: Real-World Rules</h2>
+          <p>The decision rule fits in one sentence: if you want the final state after activity stops, debounce; if you want regular updates while activity continues, throttle. Search inputs, autosave, and window-resize recalculation debounce. Scroll effects, mousemove tracking, and live character counters throttle.</p>
+          <p>Watch for the hybrid cases. Infinite scroll typically throttles the scroll check (regular polling while scrolling) but the actual data fetch is naturally once-per-threshold. A resize handler that re-lays-out a chart usually debounces at ~250ms — but if the layout is cheap and the chart should track the drag live, throttle at ~100ms instead. Let the cost of the work and the need for liveness decide, not habit.</p>
+          <p>In frameworks, wrap the debounced/throttled function once (useMemo, a module-level definition, or a ref) — recreating it every render resets its internal timer and silently disables the rate limiting. And remember cleanup: cancelAnimationFrame, clearTimeout, and removeEventListener for anything you scheduled, or background tabs will keep doing phantom work.</p>
+          <pre class="code-box">// Resize: debounce expensive re-layout until dragging pauses
+const relayout = debounce(() =&gt; {
+  chart.resize(window.innerWidth, window.innerHeight);
+  repositionOverlays();
+}, 250);
+window.addEventListener('resize', relayout);
+
+// Mousemove: throttle live coordinate readout
+const readout = throttle((x, y) =&gt; {
+  coordsEl.textContent = `${x}, ${y}`;
+}, 100);
+canvas.addEventListener('mousemove', (e) =&gt; readout(e.clientX, e.clientY));
+
+// Cleanup matters: cancel pending work on teardown
+// (framework unmount, SPA navigation, component destroy)
+window.removeEventListener('resize', relayout);
+</pre>
+        </section>
+        <section id="sec5" class="guide-section">
+          <h2>5. Debounce vs Throttle Cheat Sheet</h2>
+          <p>This table is the whole guide on one card: the behavior, the canonical use cases, and the failure mode of picking the wrong one. When a teammate asks “should this be debounced or throttled?”, walk down the middle column together and let the use case decide confidently.</p>
+          <p>Both patterns share the same three engineering duties: create the wrapped function once so its internal timer survives across events, pick an interval that matches human perception rather than an arbitrary round number, and clean up timers and listeners on teardown. Get those three right and event storms become a solved problem rather than a recurring production fire.</p>
+          <p>For the full event-handling picture, pair this guide with our event delegation tutorial (fewer listeners to rate-limit in the first place) and the DOM manipulation guide (batching the updates your handlers perform).</p>
+          <table class="data-table">
+          <thead>
+          <tr><th></th><th>Debounce</th><th>Throttle</th></tr>
+          </thead>
+          <tbody>
+          <tr><td>Core idea</td><td>Run once, after events stop for `wait` ms</td><td>Run at most once per `interval` ms while events continue</td></tr>
+          <tr><td>Search as-you-type</td><td>✅ ideal — one request per pause</td><td>❌ fires mid-typing with partial queries</td></tr>
+          <tr><td>Scroll effects / parallax</td><td>❌ never updates while scrolling</td><td>✅ ideal — smooth regular updates (or rAF)</td></tr>
+          <tr><td>Window resize re-layout</td><td>✅ ideal — recalc once after drag</td><td>OK if layout must track the drag live</td></tr>
+          <tr><td>Autosave drafts</td><td>✅ ideal — save the settled text</td><td>❌ saves intermediate states wastefully</td></tr>
+          <tr><td>Button double-submit</td><td>✅ with leading edge — first click wins</td><td>❌ allows a second submit per interval</td></tr>
+          <tr><td>Mousemove tracking</td><td>❌ only fires after the mouse stops</td><td>✅ ideal — steady coordinate stream</td></tr>
+          <tr><td>Key mechanism</td><td>clearTimeout + setTimeout reset</td><td>Timestamp comparison (+ optional trailing timer)</td></tr>
+          </tbody>
+          </table>
+        </section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the real difference between debounce and throttle?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Debounce waits for a pause in events and then runs once (final state wins); throttle runs at most once per fixed interval while events keep coming (regular updates win). Search inputs debounce; scroll handlers throttle.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I write debounce from scratch?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Return a wrapper function that closes over a timeout id: on each call, clearTimeout the pending timer and set a new one for `wait` ms that invokes the original function. Only the last call in a burst survives, because every earlier timer gets cleared.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What are leading and trailing edge?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Leading edge runs the function immediately on the first call of a burst (then ignores the rest); trailing edge — the default — runs after the quiet period ends. Use leading for submit buttons (first click wins) and trailing for search inputs (final text wins).</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">When should I use throttle instead of debounce?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">When you need updates during continuous activity rather than after it stops: scroll-linked animations, parallax, mousemove coordinates, live resize previews. If the user must see feedback while the event stream is still flowing, throttle.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can I use requestAnimationFrame as a throttle?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes, and for visual updates it is the best throttle: it caps execution to the display refresh rate and syncs work with the browser's paint cycle. It only fits animation-adjacent handlers, though — for API calls or autosave, use time-based debounce/throttle instead.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

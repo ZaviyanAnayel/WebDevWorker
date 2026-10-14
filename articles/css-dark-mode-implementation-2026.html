@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSS Dark Mode: The Complete Implementation Guide | WebDevWorker</title>
+  <meta name="description" content="Learn CSS dark mode in 2026: prefers-color-scheme, CSS custom properties, a persistent theme toggle with localStorage, and contrast best practices with code."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/css-dark-mode-implementation-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="CSS Dark Mode: The Complete Implementation Guide | WebDevWorker"/>
+  <meta property="og:description" content="Learn CSS dark mode in 2026: prefers-color-scheme, CSS custom properties, a persistent theme toggle with localStorage, and contrast best practices with code."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/css-dark-mode-implementation-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "CSS Dark Mode: The Complete Implementation Guide (2026)",
+      "description": "Learn CSS dark mode in 2026: prefers-color-scheme, CSS custom properties, a persistent theme toggle with localStorage, and contrast best practices with code.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/css-dark-mode-implementation-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+                  {
+            "@type": "Question",
+            "name": "Does prefers-color-scheme work in all modern browsers?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Chrome, Edge, Firefox, Safari, and mobile browsers have supported it since 2019–2020, covering effectively all real-world traffic. It is pure CSS, so it works before JavaScript loads and degrades gracefully — browsers that do not understand it simply ignore the block."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Should my dark theme use pure black backgrounds?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Usually not. Pure black (#000) with white text causes halation, where text looks blurry, and feels harsh in dark rooms. Most professional dark themes use deep grays or blues like #0f172a or #121212 with off-white text (#e2e8f0), which is easier on the eyes while still looking properly dark."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I stop the page flashing white before dark mode applies?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Put a tiny inline script in <head> that reads the saved theme from localStorage and sets data-theme on <html> before first paint. Because it runs synchronously during parsing, the browser paints the correct theme on the very first frame — no flash, no framework needed."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I support the OS setting and a manual toggle together?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, and you should. Default to the OS preference with matchMedia('(prefers-color-scheme: dark)'), then let an explicit toggle choice stored in localStorage override it. The manual rule (html[data-theme=\"dark\"]) needs equal or higher specificity so the user's deliberate choice always wins."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does dark mode affect SEO or page performance?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Not directly — search engines do not rank dark themes higher, and the CSS involved is trivial in size. Indirectly it helps: users who prefer dark mode stay longer and bounce less when a site respects their setting, and those engagement signals do matter for SEO."
+            }
+          }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "CSS Dark Mode Guide",
+          "item": "https://www.webdevworker.com/articles/css-dark-mode-implementation-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">CSS Dark Mode Guide</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🎨 CSS &amp; Layout</div>
+          <h1 class="guide-title">CSS Dark Mode: The Complete Implementation Guide</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 8 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. How prefers-color-scheme Works</a></li>
+            <li><a href="#sec2" style="color:var(--brand-primary);">2. Theming with CSS Custom Properties</a></li>
+            <li><a href="#sec3" style="color:var(--brand-primary);">3. Adding a Manual Theme Toggle</a></li>
+            <li><a href="#sec4" style="color:var(--brand-primary);">4. Polishing the Details: Images, Shadows, and Contrast</a></li>
+            <li><a href="#sec5" style="color:var(--brand-primary);">5. Dark Mode Best Practices and Pitfalls</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+                <section id="sec1" class="guide-section">
+          <h2>1. How prefers-color-scheme Works</h2>
+          <p>Every modern operating system ships a light/dark appearance setting, and browsers expose it to CSS through the prefers-color-scheme media query. Wrap rules in @media (prefers-color-scheme: dark) and those styles apply automatically whenever the user's OS is in dark mode — no JavaScript, no toggle button, no cookies. It is the fastest way to ship a dark theme: you declare an alternate palette and the browser handles the switching, even when the user flips their OS setting at sunset.</p>
+          <p>The media query also supports light and no-preference values. You can design dark-first — dark palette as the base styles with @media (prefers-color-scheme: light) for light overrides — or the reverse. Either order works; what matters is that every color on the page is defined in both schemes: backgrounds, text, borders, shadows, and form controls. Anything you forget stays blindingly bright in dark mode, which is the single most common dark-mode bug in production.</p>
+          <p>Support is effectively universal: Chrome, Edge, Firefox, Safari, and mobile browsers have supported prefers-color-scheme since 2019–2020. Because it is pure CSS, it works before JavaScript loads and degrades gracefully in older browsers, which simply ignore the block. For many content sites, this one media query plus a well-chosen palette is the entire dark-mode implementation — but most product teams go further and add a manual override, which is where CSS custom properties come in.</p>
+          <pre class="code-box">/* Automatic dark mode — zero JavaScript required */
+body {
+  background: #ffffff;
+  color: #1e293b;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #0f172a;
+    color: #e2e8f0;
+  }
+  a { color: #7dd3fc; }
+  .card {
+    background: #1e293b;
+    border-color: #334155;
+  }
+}</pre>
+        </section>
+        <section id="sec2" class="guide-section">
+          <h2>2. Theming with CSS Custom Properties</h2>
+          <p>Duplicating every rule inside a media query gets messy fast. The professional approach is to define your palette once as CSS custom properties on :root, use those variables everywhere, then redefine only the variables for dark mode. Components never change — only the tokens they reference do. This collapses a dark theme from hundreds of override rules into a single block of variable reassignments.</p>
+          <p>The standard pattern pairs a data-theme attribute on the &lt;html&gt; element with the OS media query. Define default variables for light mode, override them inside @media (prefers-color-scheme: dark), and also override them under html[data-theme="dark"] so a manual toggle can force either scheme regardless of the OS. The data-theme rule needs equal or higher specificity than the media-query rule so the user's explicit choice always wins.</p>
+          <p>Name variables by purpose, not by appearance: --bg-surface and --text-main beat --light-gray and --dark-blue, because values change meaning between themes while the purpose stays constant. A solid token set covers page background, surface backgrounds, primary text, muted text, borders, brand color, and state colors for success, warning, and danger — each tuned separately for light and dark so contrast stays comfortable in both.</p>
+          <pre class="code-box">:root {
+  --bg-page: #ffffff;
+  --bg-surface: #f1f5f9;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --brand: #2563eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-page: #0f172a;
+    --bg-surface: #1e293b;
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --brand: #60a5fa;
+  }
+}
+
+/* Manual override always wins over the OS setting */
+html[data-theme="dark"] {
+  --bg-page: #0f172a;
+  --bg-surface: #1e293b;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --border: #334155;
+  --brand: #60a5fa;
+}</pre>
+        </section>
+        <section id="sec3" class="guide-section">
+          <h2>3. Adding a Manual Theme Toggle</h2>
+          <p>A manual toggle respects users who want your site dark while their OS is light, or vice versa. The implementation is small: a button flips data-theme on &lt;html&gt; between light and dark, and the choice is saved to localStorage so it persists across visits. On page load, an inline script in &lt;head&gt; reads the saved value before first paint and sets the attribute immediately — this is what prevents the white flash that plagues naive implementations.</p>
+          <p>When no saved preference exists, fall back to the OS setting with window.matchMedia('(prefers-color-scheme: dark)').matches. A polished toggle also listens for OS changes while the page is open and updates the theme live — unless the user has already made an explicit choice, which should always win over the automatic setting.</p>
+          <p>Accessibility matters here too: give the toggle an aria-label such as “Switch to dark mode”, reflect the current state with aria-pressed, and make sure the button itself remains visible in both themes. Place it in the site header or settings menu, where users expect theme controls to live.</p>
+          <pre class="code-box">&lt;!-- Inline in &lt;head&gt;: runs before first paint, prevents theme flash --&gt;
+&lt;script&gt;
+(function () {
+  try {
+    var saved = localStorage.getItem('theme');
+    var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  } catch (e) {}
+})();
+&lt;/script&gt;</pre>
+          <pre class="code-box">// Theme toggle button logic
+const btn = document.getElementById('themeToggle');
+
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  try { localStorage.setItem('theme', theme); } catch (e) {}
+  btn.setAttribute('aria-pressed', String(theme === 'dark'));
+}
+
+btn.addEventListener('click', () =&gt; {
+  const current = document.documentElement.getAttribute('data-theme');
+  setTheme(current === 'dark' ? 'light' : 'dark');
+});</pre>
+        </section>
+        <section id="sec4" class="guide-section">
+          <h2>4. Polishing the Details: Images, Shadows, and Contrast</h2>
+          <p>Colors are only half the battle. Photographs and illustrations keep full brightness in dark mode and can feel like headlights on a dark page. A light filter: brightness(0.85) on media in dark mode takes the edge off without mangling the image. For simple black line-art logos, filter: invert(1) flips them to white — but never invert photographs, which come out looking like x-ray negatives.</p>
+          <p>Shadows need rethinking too: a soft black drop shadow is invisible on a near-black background. In dark themes, favor subtle light borders or slightly lighter layered surfaces (cards a step above the page background) to create depth instead of relying on shadows. Borders in dark mode generally need to be a touch lighter than you expect to remain visible at all.</p>
+          <p>Do not forget native UI: form inputs, scrollbars, and selection colors follow the browser's own theme unless told otherwise. Adding &lt;meta name="color-scheme" content="light dark"&gt; lets the browser render scrollbars, checkboxes, and default form controls to match your theme. Setting the CSS color-scheme property on :root achieves the same for these native elements even when the meta tag is missed.</p>
+          <pre class="code-box">/* Tame bright media in dark mode */
+@media (prefers-color-scheme: dark) {
+  img.photo, video {
+    filter: brightness(0.85) contrast(1.05);
+  }
+  .logo-mark {
+    filter: invert(1); /* line-art logos only — never photos */
+  }
+  .card {
+    box-shadow: none;              /* dark shadows vanish on dark bg */
+    border: 1px solid var(--border);
+  }
+}</pre>
+        </section>
+        <section id="sec5" class="guide-section">
+          <h2>5. Dark Mode Best Practices and Pitfalls</h2>
+          <p>Pure black (#000) backgrounds with pure white text cause halation — text appears to bleed — and strain eyes in dark rooms. Professional dark themes use very dark grays or deep blues such as #0f172a or #121212 with off-white text like #e2e8f0. Keep body text contrast at WCAG AA (4.5:1) minimum; muted secondary text is where most dark themes fail audits, so check it explicitly rather than eyeballing it.</p>
+          <p>Add a short transition on theme change (transition: background-color .2s, color .2s) so the flip feels intentional rather than jarring — but respect prefers-reduced-motion and skip the animation for users who request reduced motion. Test both themes side by side: open two windows, force one to each theme, and click through every page, modal, tooltip, and empty state.</p>
+          <p>Finally, remember that dark mode is a rendering concern, not a separate site: never fork content or features by theme, and never assume dark mode means nighttime — plenty of users run dark mode at noon. Ship the toggle, respect the OS, keep contrast honest, and your dark mode will feel native instead of bolted on.</p>
+          <table class="data-table">
+          <thead>
+          <tr><th>Pitfall</th><th>Why it hurts</th><th>Fix</th></tr>
+          </thead>
+          <tbody>
+          <tr><td>Pure black + pure white</td><td>Halation and eye strain in dark rooms</td><td>Use #0f172a–#121212 backgrounds with off-white text</td></tr>
+          <tr><td>Theme flash on load</td><td>Page paints light before JS runs</td><td>Inline &lt;head&gt; script sets data-theme before first paint</td></tr>
+          <tr><td>Forgotten components</td><td>Modals and tooltips stay bright</td><td>Tokenize every color; audit all UI states in both themes</td></tr>
+          <tr><td>Low-contrast muted text</td><td>Fails WCAG AA, hard to read</td><td>Verify muted text hits 4.5:1 contrast in both themes</td></tr>
+          <tr><td>Inverted photographs</td><td>filter: invert() on photos looks broken</td><td>Invert line-art logos only; use brightness() on photos</td></tr>
+          </tbody>
+          </table>
+        </section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Does prefers-color-scheme work in all modern browsers?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes. Chrome, Edge, Firefox, Safari, and mobile browsers have supported it since 2019–2020, covering effectively all real-world traffic. It is pure CSS, so it works before JavaScript loads and degrades gracefully — browsers that do not understand it simply ignore the block.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Should my dark theme use pure black backgrounds?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Usually not. Pure black (#000) with white text causes halation, where text looks blurry, and feels harsh in dark rooms. Most professional dark themes use deep grays or blues like #0f172a or #121212 with off-white text (#e2e8f0), which is easier on the eyes while still looking properly dark.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I stop the page flashing white before dark mode applies?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Put a tiny inline script in &lt;head&gt; that reads the saved theme from localStorage and sets data-theme on &lt;html&gt; before first paint. Because it runs synchronously during parsing, the browser paints the correct theme on the very first frame — no flash, no framework needed.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can I support the OS setting and a manual toggle together?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes, and you should. Default to the OS preference with matchMedia('(prefers-color-scheme: dark)'), then let an explicit toggle choice stored in localStorage override it. The manual rule (html[data-theme="dark"]) needs equal or higher specificity so the user's deliberate choice always wins.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Does dark mode affect SEO or page performance?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Not directly — search engines do not rank dark themes higher, and the CSS involved is trivial in size. Indirectly it helps: users who prefer dark mode stay longer and bounce less when a site respects their setting, and those engagement signals do matter for SEO.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- SEO: replace TITLE, DESC (150-160 chars), and SLUG everywhere -->
+  <title>TypeScript Beginner&#x27;s Guide 2026: Setup, Types, tsc &amp; tsconfig | WebDevWorker</title>
+  <meta name="description" content="Start TypeScript in 2026: install and configure tsc, understand tsconfig.json, learn basic types, functions, type narrowing, and compile your first project."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/typescript-beginners-guide-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="TypeScript Beginner&#x27;s Guide 2026: Setup, Types, tsc &amp; tsconfig | WebDevWorker"/>
+  <meta property="og:description" content="Start TypeScript in 2026: install and configure tsc, understand tsconfig.json, learn basic types, functions, type narrowing, and compile your first project."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/typescript-beginners-guide-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "TypeScript Beginner&#x27;s Guide 2026: Setup, Types, tsc and tsconfig",
+      "description": "Start TypeScript in 2026: install and configure tsc, understand tsconfig.json, learn basic types, functions, type narrowing, and compile your first project.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/typescript-beginners-guide-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+    "@type": "Question",
+    "name": "Do browsers run TypeScript directly?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Browsers only execute JavaScript, so TypeScript must be compiled to JavaScript with tsc (or a bundler like Vite/esbuild) before it runs. All type annotations are erased during compilation, which is why TypeScript adds zero runtime overhead."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "Will TypeScript make my app run faster?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No — and it isn't meant to. TypeScript is a development-time tool: it catches bugs, improves autocompletion, and makes refactoring safer. The emitted JavaScript runs exactly as fast as hand-written JavaScript."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "Should I enable strict mode as a beginner?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, absolutely — and especially as a beginner. strict: true turns on the checks (like strictNullChecks and noImplicitAny) that catch the most bugs. Learning with strict mode on teaches you habits that scale; learning without it teaches workarounds you'll have to unlearn."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "What is the difference between .ts and .tsx files?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use .ts for pure TypeScript and .tsx for files containing JSX (React components). The .tsx extension tells the compiler to parse angle brackets as JSX rather than as type assertions, which avoids ambiguity."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "Can I convert an existing JavaScript project to TypeScript gradually?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — that's one of TypeScript's strengths. Enable allowJs in tsconfig.json, rename files to .ts one module at a time (starting with the buggiest ones), and fix the errors the compiler surfaces. Your project keeps working at every step."
+    }
+}
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "TypeScript Basics",
+          "item": "https://www.webdevworker.com/articles/typescript-beginners-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">TypeScript Basics</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">📘 TypeScript</div>
+          <h1 class="guide-title">TypeScript Beginner&#x27;s Guide 2026: Setup, Types, tsc &amp; tsconfig</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 8 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3><span>📘</span> Level Up Your JavaScript</h3>
+          <p>TypeScript is a career multiplier — continue in the Guides Hub with interfaces vs types, generics, and typed API patterns that professional teams use daily.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides →</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. Why TypeScript? Static Types for JavaScript</a></li>
+            <li><a href="#sec2" style="color:var(--brand-primary);">2. Setting Up TypeScript: tsc and tsconfig.json</a></li>
+            <li><a href="#sec3" style="color:var(--brand-primary);">3. Basic Types: Primitives, Arrays, and Unions</a></li>
+            <li><a href="#sec4" style="color:var(--brand-primary);">4. Functions, Objects, and Type Narrowing</a></li>
+            <li><a href="#sec5" style="color:var(--brand-primary);">5. Compiling Your Code: From .ts to .js</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. Why TypeScript? Static Types for JavaScript</h2>
+<p>TypeScript is JavaScript with a static type system layered on top: you annotate values with types, and the compiler checks them <em>before</em> your code runs. The classic payoff is catching the typo'd property or wrong argument type at write-time instead of discovering it in production via a <code>Cannot read properties of undefined</code> crash at 2 AM.</p><p>The second payoff is tooling. Because the compiler understands your types, editors offer precise autocompletion, safe rename-refactoring across files, and inline documentation. On a large codebase this is transformative — you can explore an unfamiliar module by hovering rather than reading every file, and refactors that would be terrifying in plain JavaScript become routine.</p><p>Crucially, TypeScript is a <strong>superset</strong>: every valid JavaScript program is a valid TypeScript program. You can rename <code>.js</code> files to <code>.ts</code> and adopt types incrementally, which is why teams migrate million-line codebases without a rewrite. Types are erased at compile time, so there is zero runtime overhead — TypeScript changes how you write code, never how it runs.</p><pre class="code-box">// Plain JavaScript: the bug hides until runtime
+function getDiscount(price, rate) {
+  return price - price * rate;
+}
+getDiscount("100", 0.1); // "100" - "100" * 0.1 → NaN, silently
+
+// TypeScript: the bug is caught while you type
+function getDiscount(price: number, rate: number): number {
+  return price - price * rate;
+}
+getDiscount("100", 0.1);
+// ❌ Argument of type 'string' is not assignable to parameter of type 'number'</pre>
+</section>
+
+        <section id="sec2" class="guide-section">
+<h2>2. Setting Up TypeScript: tsc and tsconfig.json</h2>
+<p>Install TypeScript as a dev dependency in your project: <code>npm install -D typescript</code>. This gives you the <code>tsc</code> compiler CLI. Running <code>npx tsc --init</code> generates a <code>tsconfig.json</code> with every option documented in comments — it looks intimidating, but you only need to understand a handful of settings to start.</p><p>The essential options: <code>target</code> (which JS version to emit — <code>ES2020</code> or newer is a sane default), <code>module</code> (<code>ESNext</code> or <code>NodeNext</code> for bundlers/Node), <code>strict: true</code> (enables the full family of strict checks — turn this on from day one), <code>outDir</code> (where compiled JS goes), and <code>include</code>/<code>exclude</code> (which files to compile). <code>noEmitOnError</code> prevents emitting JS when type errors exist, which keeps broken builds from shipping.</p><p>For Node.js projects, set <code>moduleResolution</code> to <code>Bundler</code> (with Vite/webpack) or <code>NodeNext</code> (for pure Node ESM). If you are starting a frontend app, you rarely configure any of this by hand — Vite's <code>npm create vite@latest -- --template react-ts</code> and Next.js's built-in support generate a correct <code>tsconfig.json</code> for you.</p><pre class="code-box"># 1. Install the compiler (per project — never global, so versions stay pinned)
+npm install -D typescript
+
+# 2. Generate tsconfig.json with documented defaults
+npx tsc --init
+
+# 3. Type-check without emitting, or compile to ./dist
+npx tsc --noEmit        # check only — great in CI
+npx tsc                 # emits JS per tsconfig
+npx tsc --watch         # recompile on every save</pre><pre class="code-box">{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,            // ← the single most important option
+    "noEmitOnError": true,     // don't emit JS when type errors exist
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "skipLibCheck": true,      // skip type-checking node_modules .d.ts files
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}</pre>
+</section>
+
+        <section id="sec3" class="guide-section">
+<h2>3. Basic Types: Primitives, Arrays, and Unions</h2>
+<p>The core primitives mirror JavaScript: <code>string</code>, <code>number</code>, <code>boolean</code>, plus <code>null</code>, <code>undefined</code>, <code>bigint</code>, and <code>symbol</code>. TypeScript's <code>number</code> covers both integers and floats — there is no separate int type. Annotate with a colon: <code>const name: string = "Ava"</code>. You will often omit annotations because of <strong>type inference</strong>: <code>const age = 30</code> is already known to be <code>number</code>, and redundant annotations just add noise.</p><p>Arrays use <code>string[]</code> or <code>Array&lt;string&gt;</code> syntax; tuples fix the length and per-position types with <code>[string, number]</code> — handy for key-value pairs or coordinate pairs. <strong>Union types</strong> (<code>string | number</code>) express 'either/or' and are the foundation of flexible APIs; <strong>literal types</strong> (<code>"success" | "error"</code>) restrict a value to an exact set of strings.</p><p>Two types deserve a warning label. <code>any</code> disables checking entirely and spreads like a virus through inference — treat it as technical debt. <code>unknown</code> is the safe alternative: it accepts anything but forces you to narrow the type before using it. New code should reach for <code>unknown</code> whenever the type is genuinely unknowable, such as parsed JSON or caught errors.</p><table class="data-table"><thead><tr><th>Type</th><th>Example</th><th>When to use it</th></tr></thead><tbody><tr><td><code>string / number / boolean</code></td><td><code>const n: number = 42</code></td><td>Everyday values; rely on inference when obvious</td></tr><tr><td><code>string[]</code></td><td><code>const tags: string[] = []</code></td><td>Homogeneous lists</td></tr><tr><td><code>[string, number]</code> (tuple)</td><td><code>const entry: [string, number]</code></td><td>Fixed-shape pairs like coordinates</td></tr><tr><td><code>string \| null</code> (union)</td><td><code>let token: string \| null</code></td><td>Values that may be absent</td></tr><tr><td><code>"a" \| "b"</code> (literal union)</td><td><code>type Status = "ok" \| "fail"</code></td><td>Finite option sets, API statuses</td></tr><tr><td><code>unknown</code></td><td><code>const data: unknown = JSON.parse(s)</code></td><td>Untrusted input you will narrow before use</td></tr><tr><td><code>any</code></td><td><code>const x: any = ...</code></td><td>Escape hatch only — avoid in new code</td></tr></tbody></table><pre class="code-box">// Inference: no annotation needed, still fully typed
+const greeting = "hello";       // string
+const scores = [10, 20, 30];    // number[]
+
+// Unions + literal types: precise, self-documenting APIs
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
+type ApiResult = { status: "ok"; data: string } | { status: "error"; message: string };
+
+function handle(res: ApiResult) {
+  if (res.status === "ok") {
+    console.log(res.data);      // ✅ narrowed: data exists here
+  } else {
+    console.log(res.message);   // ✅ narrowed: message exists here
+  }
+}
+
+// unknown forces you to check before use — any would not
+function parse(input: string): unknown {
+  return JSON.parse(input);
+}</pre>
+</section>
+
+        <section id="sec4" class="guide-section">
+<h2>4. Functions, Objects, and Type Narrowing</h2>
+<p>Function annotations cover parameters and the return type: <code>function add(a: number, b: number): number</code>. Parameters are required by default; append <code>?</code> for optional ones (<code>name?: string</code>) or provide defaults (<code>retries = 3</code>). Arrow functions annotate identically. A useful habit: annotate return types on exported functions — it documents the contract and catches accidental return-type drift during refactors.</p><p>Object shapes are described with <strong>interfaces</strong> (or type aliases — see our dedicated guide): <code>interface User { id: number; name: string; email?: string }</code>. The <code>?</code> marks optional properties, and <code>readonly</code> prevents reassignment. Interfaces compose with <code>extends</code>, so shared fields live in one place.</p><p><strong>Narrowing</strong> is how TypeScript refines a broad type to a specific one inside a branch. <code>typeof</code> checks narrow primitives, <code>instanceof</code> narrows class instances, truthiness checks eliminate <code>null</code>/<code>undefined</code>, and discriminated unions (a shared literal field like <code>status</code>) narrow object variants — as the <code>ApiResult</code> example above showed. Well-designed unions make narrowing feel automatic rather than ceremonial.</p><pre class="code-box">// Functions: annotated params + return type
+function createUser(name: string, age?: number): { id: number; name: string } {
+  return { id: Math.floor(Math.random() * 1e6), name };
+}
+const greet = (user: { name: string }): string =&gt; `Hello, ${user.name}!`;
+
+// Interfaces: named object shapes
+interface Product {
+  readonly id: number;
+  title: string;
+  price: number;
+  tags?: string[];
+}
+
+function formatPrice(p: Product): string {
+  return `$${p.price.toFixed(2)}`;  // autocomplete knows every field
+}
+
+// Narrowing with typeof and truthiness
+function printId(id: string | number | null): void {
+  if (id == null) return;                 // null/undefined eliminated
+  if (typeof id === "string") {
+    console.log(id.toUpperCase());        // ✅ string here
+  } else {
+    console.log(id.toFixed(0));           // ✅ number here
+  }
+}</pre>
+</section>
+
+        <section id="sec5" class="guide-section">
+<h2>5. Compiling Your Code: From .ts to .js</h2>
+<p>Running <code>npx tsc</code> reads <code>tsconfig.json</code> and emits JavaScript into <code>outDir</code>, mirroring your source tree. Browsers and Node run only the emitted JS — TypeScript never executes directly. During development, <code>npx tsc --watch</code> recompiles on save, and most editors surface errors inline without any manual compile step at all.</p><p><code>strict: true</code> deserves emphasis because it is the difference between TypeScript that helps and TypeScript that merely decorates. Strict mode enables <code>strictNullChecks</code> (no more silent <code>undefined</code>), <code>noImplicitAny</code> (every parameter needs a knowable type), and several other checks. Code written under strict mode has measurably fewer null-reference bugs; code written without it often just moves the same bugs around.</p><p>Two final workflow tips. First, add <code>"typecheck": "tsc --noEmit"</code> to your npm scripts and run it in CI — it catches type errors without producing build artifacts. Second, when adopting TypeScript in an existing JavaScript project, enable <code>allowJs</code> and rename files to <code>.ts</code> one at a time, starting with the modules that cause the most bugs. Incremental adoption beats big-bang rewrites every time.</p><pre class="code-box">{
+  "scripts": {
+    "typecheck": "tsc --noEmit",   // CI-friendly: checks types, emits nothing
+    "build": "tsc",                // emits ./dist per tsconfig
+    "dev": "tsc --watch"           // recompile on save during development
+  }
+}
+
+// Gradual migration: allowJs lets .js and .ts coexist
+// tsconfig.json
+{
+  "compilerOptions": {
+    "strict": true,
+    "allowJs": true,
+    "checkJs": false,      // flip to true later to type-check the old JS too
+    "outDir": "./dist"
+  },
+  "include": ["src/**/*"]
+}</pre>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Do browsers run TypeScript directly?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No. Browsers only execute JavaScript, so TypeScript must be compiled to JavaScript with tsc (or a bundler like Vite/esbuild) before it runs. All type annotations are erased during compilation, which is why TypeScript adds zero runtime overhead.</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Will TypeScript make my app run faster?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No — and it isn't meant to. TypeScript is a development-time tool: it catches bugs, improves autocompletion, and makes refactoring safer. The emitted JavaScript runs exactly as fast as hand-written JavaScript.</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Should I enable strict mode as a beginner?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes, absolutely — and especially as a beginner. strict: true turns on the checks (like strictNullChecks and noImplicitAny) that catch the most bugs. Learning with strict mode on teaches you habits that scale; learning without it teaches workarounds you'll have to unlearn.</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between .ts and .tsx files?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Use .ts for pure TypeScript and .tsx for files containing JSX (React components). The .tsx extension tells the compiler to parse angle brackets as JSX rather than as type assertions, which avoids ambiguity.</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can I convert an existing JavaScript project to TypeScript gradually?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes — that's one of TypeScript's strengths. Enable allowJs in tsconfig.json, rename files to .ts one module at a time (starting with the buggiest ones), and fix the errors the compiler surfaces. Your project keeps working at every step.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Keep leveling up</h3>
+          <p>Static types reward you every single day — keep going with advanced TypeScript guides and backend tutorials in the Guides Hub.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub →</a>
+        </div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

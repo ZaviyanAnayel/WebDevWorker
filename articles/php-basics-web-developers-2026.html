@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- : replace TITLE, DESC (150-160 chars), and SLUG everywhere -->
+  <title>PHP Basics for Web Developers: Syntax, Forms & Superglobals (2026) | WebDevWorker</title>
+  <meta name="description" content="Learn PHP basics fast: syntax, variables, control flow, superglobals like $_GET and $_POST, and safe form handling. Modern PHP 8 code examples included."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/php-basics-web-developers-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="PHP Basics for Web Developers: Syntax, Forms & Superglobals (2026) | WebDevWorker"/>
+  <meta property="og:description" content="Learn PHP basics fast: syntax, variables, control flow, superglobals like $_GET and $_POST, and safe form handling. Modern PHP 8 code examples included."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/php-basics-web-developers-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "PHP Basics for Web Developers: Syntax, Forms & Superglobals",
+      "description": "Learn PHP basics fast: syntax, variables, control flow, superglobals like $_GET and $_POST, and safe form handling. Modern PHP 8 code examples included.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/php-basics-web-developers-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "Is PHP dead in 2026?", "acceptedAnswer": {"@type": "Answer", "text": "Not even close. PHP 8 is modern and fast, WordPress powers an enormous share of the web, and Laravel and Symfony run serious applications at major companies. Demand for PHP developers remains strong, especially in agencies, e-commerce, and content platforms."}},
+      {"@type": "Question", "name": "Should I learn PHP, JavaScript, or Python?", "acceptedAnswer": {"@type": "Answer", "text": "It depends on your target. For server-rendered sites, WordPress work, or cheap shared hosting, PHP is unmatched. For single-page apps or data science, JavaScript or Python fit better. The PHP plus JavaScript combination remains one of the most employable stacks in web development."}},
+      {"@type": "Question", "name": "Which PHP version should I learn?", "acceptedAnswer": {"@type": "Answer", "text": "Learn PHP 8.2 or 8.3: typed properties, union types, match expressions, attributes, and readonly classes. Avoid any tutorial still teaching mysql_* functions or PHP 5 patterns — that knowledge is obsolete and often insecure."}},
+      {"@type": "Question", "name": "How do I run PHP on my own computer?", "acceptedAnswer": {"@type": "Answer", "text": "Install PHP directly from php.net, use XAMPP or Laragon for a complete Apache and MySQL stack, or run php -S localhost:8000 in your project folder for the zero-setup built-in development server."}},
+      {"@type": "Question", "name": "Is PHP secure?", "acceptedAnswer": {"@type": "Answer", "text": "PHP itself is fine — insecurity comes from outdated patterns like concatenating user input into SQL or echoing it unescaped. Modern practices (PDO prepared statements, htmlspecialchars, password_hash) make PHP applications as secure as any other stack."}}
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "PHP Basics for Web Developers",
+          "item": "https://www.webdevworker.com/articles/php-basics-web-developers-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">PHP Basics for Web Developers</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🐘 PHP</div>
+          <h1 class="guide-title">PHP Basics for Web Developers: Syntax, Forms & Superglobals (2026)</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 7 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <!-- <div class="tool-embed-banner">
+  <h3><span>🐘</span> Go Deeper with PHP & Databases</h3>
+  <p>Ready for the next step? Learn to pair PHP with MySQL using PDO prepared statements, then compare database engines to pick the right one for your project.</p>
+  <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides &rarr;</a>
+</div>: one banner linking to /articles/ Guides Hub with 1-2 sentence teaser relevant to the topic -->
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. How PHP Works: Server-Side Scripting in Plain English</a></li>
+<li><a href="#sec2" style="color:var(--brand-primary);">2. Syntax Essentials: Variables, Types, and Control Flow</a></li>
+<li><a href="#sec3" style="color:var(--brand-primary);">3. Superglobals: $_GET, $_POST, $_SERVER & $_SESSION</a></li>
+<li><a href="#sec4" style="color:var(--brand-primary);">4. Processing HTML Forms the Safe Way</a></li>
+<li><a href="#sec5" style="color:var(--brand-primary);">5. Functions, Includes & Organizing Your Code</a></li>
+<li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. How PHP Works: Server-Side Scripting in Plain English</h2>
+<p>PHP runs on the server, not in the browser. When a visitor requests a .php page, the server executes your PHP code, which typically outputs HTML, and the browser receives only the finished HTML — it never sees your source. That simple model is why PHP conquered the web: you mix code and markup in one file, upload it to nearly any shared host, and it just works.</p>
+<p>Reports of PHP's death have been greatly exaggerated for over a decade. Modern PHP 8 is a different language from the PHP 5 tutorials still floating around: it has a just-in-time compiler, union types, attributes, match expressions, and a thriving ecosystem led by Laravel and Symfony. WordPress alone — built on PHP — still powers an enormous share of all websites, which keeps PHP skills commercially valuable.</p>
+<p>To follow this guide you need PHP 8.1 or newer. The fastest local setup is XAMPP or Laragon for a full Apache-plus-MySQL stack, Docker if you prefer containers, or simply the built-in development server: run php -S localhost:8000 in your project folder and open http://localhost:8000 in a browser. No build step, no bundler, no waiting.</p>
+</section>
+
+<section id="sec2" class="guide-section">
+<h2>2. Syntax Essentials: Variables, Types, and Control Flow</h2>
+<p>PHP code lives inside &lt;?php ... ?&gt; tags; everything outside them is sent to the browser untouched. Variables always start with $ — $name = "Ayesha" — and PHP is dynamically typed, so a variable can hold a string now and an integer later. Statements end with semicolons, and the habit of writing them consistently will save you from half your parse errors.</p>
+<p>Comparison deserves special attention: == compares loosely ("5" == 5 is true), while === compares strictly including type ("5" === 5 is false). Seasoned PHP developers default to === everywhere and only reach for == deliberately. Arrays are PHP's workhorse — they act as lists, dictionaries, and everything between — and foreach loops over them with a syntax you will use daily.</p>
+<p>Functions like count(), strlen(), and in_array() cover most everyday needs, and the null coalescing operator ?? provides clean defaults: $page = $_GET["page"] ?? 1 reads as "page parameter, or 1 if missing." Modern PHP also supports arrow functions, named arguments, and return type declarations, closing most of the ergonomic gap with newer languages.</p><pre class="code-box">&lt;?php
+$name = "Ayesha";
+$scores = [92, 85, 78];
+$user = ["name" =&gt; "Bilal", "role" =&gt; "editor"];
+
+// strict comparison: type AND value must match
+if ($user["role"] === "editor") {
+    echo "Welcome, " . $name . "!";
+}
+
+foreach ($scores as $i =&gt; $score) {
+    echo "Test " . ($i + 1) . ": $score\n"; // variables expand in double quotes
+}
+
+$page = $_GET["page"] ?? 1;  // default to 1 when missing
+?&gt;</pre><table class="data-table">
+<thead><tr><th>Type</th><th>Example</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>string</td><td>"hello", 'hi'</td><td>Double quotes expand $variables; single quotes don't</td></tr><tr><td>int / float</td><td>42, 3.14</td><td>Arithmetic works as expected; watch float precision</td></tr><tr><td>bool</td><td>true, false</td><td>Use === comparisons to avoid loose-typing surprises</td></tr><tr><td>array</td><td>[1, 2], ["a" =&gt; 1]</td><td>Ordered map: lists and dictionaries in one type</td></tr><tr><td>null</td><td>null</td><td>Absence of value; ?? operator handles it gracefully</td></tr><tr><td>object</td><td>new DateTime()</td><td>Instances of classes; PHP 8 has typed properties</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="sec3" class="guide-section">
+<h2>3. Superglobals: $_GET, $_POST, $_SERVER & $_SESSION</h2>
+<p>Superglobals are built-in arrays available in every scope without declaring them global — the reason you can read $_POST inside any function. $_GET holds URL query parameters (search.php?q=php), $_POST holds submitted form bodies, and $_SERVER carries request metadata like the request method, script path, and client IP. They are the bridge between the HTTP request and your code.</p>
+<p>Sessions deserve their own spotlight: call session_start() at the top of your script and PHP gives you the persistent $_SESSION array, stored server-side and keyed to the visitor by a cookie. That is how login state survives page loads — you set $_SESSION["user_id"] = 42 once, and every later request knows who is browsing. Never store passwords or secrets in sessions; store the user ID and look the rest up.</p>
+<p>Two more superglobals round out the set: $_COOKIE for reading browser cookies and $_FILES for handling uploads, each with quirks worth a dedicated guide. The golden rule for all of them is identical: treat every value as untrusted user input until you have validated or escaped it.</p><pre class="code-box">&lt;?php
+session_start();
+
+// Reading query strings: search.php?q=php&amp;page=2
+$query = $_GET["q"] ?? "";
+$page  = (int)($_GET["page"] ?? 1);
+
+// Request metadata
+$method = $_SERVER["REQUEST_METHOD"]; // GET or POST
+$ip     = $_SERVER["REMOTE_ADDR"];
+
+// Persistent login state
+if (isset($_SESSION["user_id"])) {
+    echo "Logged in as user #" . (int)$_SESSION["user_id"];
+}
+?&gt;</pre>
+</section>
+
+<section id="sec4" class="guide-section">
+<h2>4. Processing HTML Forms the Safe Way</h2>
+<p>A form with method="post" sends its fields to $_POST, keyed by each input's name attribute. Your handler's first job is validation: check required fields with empty(), verify email shape with filter_var($email, FILTER_VALIDATE_EMAIL), and cast numbers with (int). Client-side JavaScript validation improves UX but proves nothing — the server must re-check everything, because attackers bypass browsers entirely.</p>
+<p>The second job is safe output. Any user-supplied value echoed into HTML must pass through htmlspecialchars($value, ENT_QUOTES), which converts &lt;, &gt;, quotes, and ampersands into harmless entities. Skip this step and a visitor can inject a &lt;script&gt; tag that runs in every other visitor's browser — the classic stored XSS attack, defeated by one function call.</p>
+<p>Finally, follow the Post/Redirect/Get pattern: after handling a POST, send header("Location: thank-you.php") and exit instead of rendering HTML directly. Refreshing the result page then repeats a harmless GET instead of resubmitting the form — no duplicate comments, orders, or signups from an impatient F5 key.</p><pre class="code-box">&lt;!-- contact.html --&gt;
+&lt;form method="post" action="contact.php"&gt;
+  &lt;input type="text" name="name" placeholder="Your name" required&gt;
+  &lt;input type="email" name="email" placeholder="Email" required&gt;
+  &lt;button type="submit"&gt;Send&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;?php // contact.php
+$name  = trim($_POST["name"] ?? "");
+$email = trim($_POST["email"] ?? "");
+
+if ($name === "" || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    die("Please provide a valid name and email.");
+}
+
+// ... save to database here ...
+
+echo "Thanks, " . htmlspecialchars($name, ENT_QUOTES) . "!";
+// then: header("Location: thank-you.php"); exit; // PRG pattern
+?&gt;</pre>
+</section>
+
+<section id="sec5" class="guide-section">
+<h2>5. Functions, Includes & Organizing Your Code</h2>
+<p>Functions turn repeated logic into named, testable units. PHP 8 lets you declare parameter and return types — function add(int $a, int $b): int — which catches whole categories of bugs at the call site instead of deep in execution. Default parameter values, named arguments, and union types (int|float) make signatures expressive without getting verbose.</p>
+<p>Includes solve the copy-paste problem of shared markup. Put your doctype, navigation, and footer in partials like header.php and footer.php, then pull them into each page with require "partials/header.php". Prefer require over include for essential files (it halts on failure instead of limping on), and require_once when a file defines functions or constants that must load exactly once.</p>
+<p>A sane starter layout looks like this: public/ holding only index.php and assets (your web root), with src/ for functions and classes, partials/ for shared markup, and config.php for settings kept outside the document root where possible. This tiny bit of structure is the difference between a weekend script and a project you can still understand in six months.</p><pre class="code-box">&lt;?php // src/helpers.php
+declare(strict_types=1);
+
+function greeting(string $name): string {
+    return "Hello, " . htmlspecialchars($name, ENT_QUOTES) . "!";
+}
+
+function is_admin(array $user): bool {
+    return ($user["role"] ?? "") === "admin";
+}
+?&gt;
+
+&lt;?php // public/index.php
+require_once __DIR__ . "/../src/helpers.php";
+require "../partials/header.php";
+
+echo greeting($_GET["name"] ?? "Guest");
+
+require "../partials/footer.php";
+?&gt;</pre>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+  <details style="padding:14px 18px;">
+    <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Is PHP dead in 2026?</summary>
+    <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Not even close. PHP 8 is modern and fast, WordPress powers an enormous share of the web, and Laravel and Symfony run serious applications at major companies. Demand for PHP developers remains strong, especially in agencies, e-commerce, and content platforms.</p>
+  </details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+  <details style="padding:14px 18px;">
+    <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Should I learn PHP, JavaScript, or Python?</summary>
+    <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">It depends on your target. For server-rendered sites, WordPress work, or cheap shared hosting, PHP is unmatched. For single-page apps or data science, JavaScript or Python fit better. The PHP plus JavaScript combination remains one of the most employable stacks in web development.</p>
+  </details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+  <details style="padding:14px 18px;">
+    <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Which PHP version should I learn?</summary>
+    <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Learn PHP 8.2 or 8.3: typed properties, union types, match expressions, attributes, and readonly classes. Avoid any tutorial still teaching mysql_* functions or PHP 5 patterns — that knowledge is obsolete and often insecure.</p>
+  </details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+  <details style="padding:14px 18px;">
+    <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I run PHP on my own computer?</summary>
+    <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Install PHP directly from php.net, use XAMPP or Laragon for a complete Apache and MySQL stack, or run php -S localhost:8000 in your project folder for the zero-setup built-in development server.</p>
+  </details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+  <details style="padding:14px 18px;">
+    <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Is PHP secure?</summary>
+    <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">PHP itself is fine — insecurity comes from outdated patterns like concatenating user input into SQL or echoing it unescaped. Modern practices (PDO prepared statements, htmlspecialchars, password_hash) make PHP applications as secure as any other stack.</p>
+  </details>
+</div>
+          </div>
+        </section>
+
+                <!-- <div class="tool-embed-banner" style="margin-top: 48px;">
+  <h3><span>&#x1F680;</span> Keep leveling up</h3>
+  <p>Next up: build a complete PHP and MySQL CRUD app with PDO, then explore SQL JOINs and indexing to make your queries correct and fast.</p>
+  <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub &rarr;</a>
+</div>: CTA banner linking to /articles/ Guides Hub with a topic-relevant teaser line -->
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

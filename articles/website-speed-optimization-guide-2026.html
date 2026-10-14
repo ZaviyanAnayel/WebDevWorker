@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <title>Website Speed Optimization: The Complete 2026 Playbook | WebDevWorker</title>
+  <meta name="description" content="Speed up your website in 2026 with minification, Brotli compression, code splitting, and CDN caching — practical, deployable techniques with real code."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/website-speed-optimization-guide-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Website Speed Optimization: The Complete 2026 Playbook | WebDevWorker"/>
+  <meta property="og:description" content="Speed up your website in 2026 with minification, Brotli compression, code splitting, and CDN caching — practical, deployable techniques with real code."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/website-speed-optimization-guide-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Website Speed Optimization: The Complete 2026 Playbook",
+      "description": "Speed up your website in 2026 with minification, Brotli compression, code splitting, and CDN caching — practical, deployable techniques with real code.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/website-speed-optimization-guide-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How fast should a website load in 2026?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Aim for Largest Contentful Paint under 2.5 seconds on real mobile devices, which is Google's \"good\" threshold. Most revenue-focused teams target sub-2 seconds on desktop and sub-3 seconds on 4G mobile, since each extra second measurably reduces conversions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Brotli better than Gzip?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, for text assets. Brotli typically produces 15-25% smaller files than Gzip at comparable settings, and every modern browser supports it. Serve Brotli as the first choice with Gzip as the fallback, and consider Zstandard for origin-to-edge compression."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I still need minification if I use a CDN?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. A CDN makes delivery faster but cannot shrink the bytes \u2014 a 500KB unminified bundle is still 500KB from the edge. Minification, tree-shaking, and code splitting reduce the payload; the CDN then delivers that smaller payload from nearby. The two techniques stack."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the single biggest speed win for most sites?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Cutting JavaScript weight. On typical marketing and e-commerce sites, unused framework code, duplicate libraries, and heavy third-party scripts dominate the budget. Auditing and removing JavaScript usually beats every image or server tweak combined."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can caching make my site slower?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Misconfigured caching can. Overly short cache lifetimes force re-downloads, missing cache headers on versioned assets waste revalidation round-trips, and caching personalized HTML at the edge can serve the wrong user's content. Cache aggressively but version your assets with content hashes."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Speed Optimization",
+          "item": "https://www.webdevworker.com/articles/website-speed-optimization-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Speed Optimization</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">⚡ Performance</div>
+          <h1 class="guide-title">Website Speed Optimization: The Complete 2026 Playbook</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 9 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3><span>🚀</span> Speed Is a Stack, Not a Trick</h3>
+          <p>Minification, compression, and CDNs work best together. Dive into our focused guides on images, lazy loading, and Core Web Vitals next.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides &#8594;</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. Why Milliseconds Still Decide Revenue</a></li><li><a href="#sec2" style="color:var(--brand-primary);">2. Measure First: Establishing Your Baseline</a></li><li><a href="#sec3" style="color:var(--brand-primary);">3. Shrink the Payload: Minification, Bundling & Code Splitting</a></li><li><a href="#sec4" style="color:var(--brand-primary);">4. Compression: Gzip vs Brotli vs Zstandard</a></li><li><a href="#sec5" style="color:var(--brand-primary);">5. CDNs, Caching & Edge Delivery</a></li><li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. Why Milliseconds Still Decide Revenue</h2>
+<p>Speed is the most brutally honest metric on the web: every millisecond shows up in the numbers. Large-scale studies across retail, SaaS, and media consistently find that conversion rates fall as load time rises — the oft-cited curve shows double-digit conversion drops for each additional second past the two-second mark. Bounce probability climbs even faster on mobile, where patience is thinnest and networks are least forgiving.</p>
+<p>Speed also compounds through SEO. Google's page experience signals reward fast pages, but the bigger search win is behavioral: faster pages earn more engagement, lower bounce rates, and more return visits, which feeds every downstream ranking signal. A one-second improvement is rarely just a technical trophy — it is usually a measurable revenue event.</p>
+<p>The discipline that separates real optimization from cargo-cult tuning is the performance budget. Set hard numbers before you touch code — for example, 170KB of JavaScript, 100KB of CSS, LCP under 2.5s on a mid-tier Android — and enforce them in CI so regressions fail the build. Without a budget, every sprint quietly adds weight back.</p>
+</section>
+
+<section id="sec2" class="guide-section">
+<h2>2. Measure First: Establishing Your Baseline</h2>
+<p>You cannot optimize what you have not measured, and the measurement that matters is your users' reality. Start with field data: the CrUX report in PageSpeed Insights or Search Console's Core Web Vitals report shows how real visitors experience your pages. If 40% of your traffic is on low-end devices, a lab test on a simulated Moto G4 is closer to truth than your MacBook's devtools.</p>
+<p>For debugging, lab tools give you the waterfall — the single most useful artifact in performance work. Open WebPageTest, run a test on a real mobile profile, and read the waterfall top to bottom: long orange (TTFB) bars mean server problems, giant blue (download) bars mean payload problems, and purple (CPU) blocks mean JavaScript problems. Fix the biggest bar first; micro-optimizing anything else is theater.</p>
+<p>Record three baselines before changing anything: total page weight, request count, and LCP on a throttled mobile profile. Every change you make afterwards gets judged against these numbers. If a "fix" does not move one of them, revert it — performance work that cannot be measured is just superstition.</p>
+</section>
+
+<section id="sec3" class="guide-section">
+<h2>3. Shrink the Payload: Minification, Bundling & Code Splitting</h2>
+<p>Most sites ship far more code than they execute. Minification strips whitespace, comments, and dead code from your bundles — typically 20-40% off JavaScript and CSS for zero behavior change. Modern build tools do this automatically in production mode, but legacy projects and hand-rolled scripts often skip it. Verify your production build is actually minified; you would be surprised how often it is not.</p>
+<p>Bundling strategy matters more than it used to. HTTP/2 and HTTP/3 multiplexing removed the old penalty for many requests, so the modern approach is granular code splitting: ship a tiny critical bundle for the current route and lazy-load the rest. The dynamic <code>import()</code> below is the workhorse — the chart library, the rich text editor, the admin panel all load only when the user actually needs them.</p>
+<p>Tree-shaking completes the picture: import only what you use from libraries, and let the bundler drop the rest. Audit with a bundle analyzer quarterly — dependencies accrete silently, and a single careless <code>import</code> can drag in hundreds of kilobytes of unused code.</p><pre class="code-box">// Load heavy features only when the user asks for them
+document.getElementById('show-chart').addEventListener('click', async () =&gt; {
+  const { renderChart } = await import('./charts.js'); // separate chunk
+  renderChart(document.getElementById('chart'));
+});
+
+// Route-level splitting keeps the initial bundle tiny
+const routes = {
+  '/dashboard': () =&gt; import('./dashboard.js'),
+  '/settings':  () =&gt; import('./settings.js'),
+};</pre>
+</section>
+
+<section id="sec4" class="guide-section">
+<h2>4. Compression: Gzip vs Brotli vs Zstandard</h2>
+<p>Text-based assets — HTML, CSS, JavaScript, JSON, SVG — compress dramatically, and the algorithm you choose decides how much. Gzip is the universal baseline, supported everywhere for two decades. Brotli, built by Google, delivers 15-25% smaller files than Gzip on typical web assets and is supported by every modern browser. Zstandard (zstd) compresses and decompresses even faster, making it excellent for origin-to-edge and dynamic content, though browser support for content encoding is still rolling out.</p>
+<p>The practical setup in 2026: serve precompressed Brotli files at high quality levels for static assets (you compress once at build time, so quality 11 is free), Gzip as the automatic fallback, and enable dynamic compression for HTML and API responses. Nginx and Apache both support this natively, as shown below. Cloudflare, Fastly, and other CDNs can also compress at the edge if your origin cannot.</p>
+<p>One caveat: never compress already-compressed formats. JPEG, PNG, AVIF, WebP, WOFF2, and MP4 gain nothing from Brotli and only waste CPU. Restrict text compression to text MIME types and let binary formats pass through untouched.</p><table class="data-table">
+<thead><tr><th>Algorithm</th><th>Typical savings vs raw</th><th>Browser support</th><th>Best use</th></tr></thead>
+<tbody>
+<tr><td>Gzip (level 6)</td><td>~70% smaller</td><td>Universal</td><td>Fallback for old clients</td></tr><tr><td>Brotli (quality 11)</td><td>~80% smaller</td><td>All modern browsers</td><td>Static text assets (precompressed)</td></tr><tr><td>Zstandard</td><td>~80% smaller, faster</td><td>Rolling out (2024+)</td><td>Dynamic content, origin-to-edge</td></tr><tr><td>None (binary formats)</td><td>0% (already compressed)</td><td>N/A</td><td>Images, video, WOFF2 fonts</td></tr>
+</tbody>
+</table><pre class="code-box"># nginx: precompressed Brotli + Gzip fallback for static assets
+http {
+  gzip on;
+  gzip_types text/css application/javascript application/json image/svg+xml;
+  gzip_vary on;
+
+  brotli on;
+  brotli_static on;   # serve .br files built at deploy time
+  brotli_types text/css application/javascript application/json image/svg+xml;
+}
+# Build step: brotli -q 11 -k dist/*.js dist/*.css</pre>
+</section>
+
+<section id="sec5" class="guide-section">
+<h2>5. CDNs, Caching & Edge Delivery</h2>
+<p>A Content Delivery Network puts your static assets on servers near your users, cutting round-trip time from hundreds of milliseconds to tens. For a global audience this is the single largest latency win available: the HTML still comes from your origin, but images, fonts, CSS, and JS arrive from an edge node in the visitor's city. Most CDNs also terminate TLS at the edge, compress, and minify on the fly.</p>
+<p>Caching policy decides how much of that CDN power you actually capture. Version your static assets with content hashes (<code>app.a3f9c1.js</code>) and serve them with <code>Cache-Control: public, max-age=31536000, immutable</code> — they can be cached for a year because the filename changes when the content does. HTML and API responses get short lifetimes or <code>no-cache</code> with ETag revalidation, so users always see fresh content without re-downloading unchanged bytes.</p>
+<p>Finally, warm up the connection pipeline with resource hints. <code>preconnect</code> to your CDN and font origins in the <code>&lt;head&gt;</code> so DNS, TCP, and TLS handshakes finish before the first asset is requested — on mobile networks this alone can save 300-500ms.</p><pre class="code-box">&lt;!-- Warm up critical origins before any asset is requested --&gt;
+&lt;link rel="preconnect" href="https://cdn.example.com" crossorigin /&gt;
+&lt;link rel="preconnect" href="https://fonts.googleapis.com" /&gt;
+&lt;link rel="dns-prefetch" href="https://analytics.example.com" /&gt;
+
+&lt;!-- Versioned assets: cache for a year, immutable --&gt;
+&lt;!-- Response header for /static/app.a3f9c1.js --&gt;
+Cache-Control: public, max-age=31536000, immutable
+
+&lt;!-- HTML: always revalidate, never serve stale --&gt;
+Cache-Control: public, max-age=0, must-revalidate</pre>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How fast should a website load in 2026?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Aim for Largest Contentful Paint under 2.5 seconds on real mobile devices, which is Google's "good" threshold. Most revenue-focused teams target sub-2 seconds on desktop and sub-3 seconds on 4G mobile, since each extra second measurably reduces conversions.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Is Brotli better than Gzip?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes, for text assets. Brotli typically produces 15-25% smaller files than Gzip at comparable settings, and every modern browser supports it. Serve Brotli as the first choice with Gzip as the fallback, and consider Zstandard for origin-to-edge compression.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Do I still need minification if I use a CDN?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes. A CDN makes delivery faster but cannot shrink the bytes — a 500KB unminified bundle is still 500KB from the edge. Minification, tree-shaking, and code splitting reduce the payload; the CDN then delivers that smaller payload from nearby. The two techniques stack.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the single biggest speed win for most sites?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Cutting JavaScript weight. On typical marketing and e-commerce sites, unused framework code, duplicate libraries, and heavy third-party scripts dominate the budget. Auditing and removing JavaScript usually beats every image or server tweak combined.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can caching make my site slower?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Misconfigured caching can. Overly short cache lifetimes force re-downloads, missing cache headers on versioned assets waste revalidation round-trips, and caching personalized HTML at the edge can serve the wrong user's content. Cache aggressively but version your assets with content hashes.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Keep leveling up</h3>
+          <p>A fast site is never finished — keep tuning your stack with our deep-dive performance guides.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub &#8594;</a>
+        </div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

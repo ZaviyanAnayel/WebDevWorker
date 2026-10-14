@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <title>Security Headers Implementation Guide: CSP, HSTS, and More (2026) | WebDevWorker</title>
+  <meta name="description" content="Implement essential HTTP security headers step by step: Content Security Policy, X-Frame-Options, Referrer-Policy, Permissions-Policy, and HSTS on any stack."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/secure-headers-implementation-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Security Headers Implementation Guide: CSP, HSTS, and More (2026) | WebDevWorker"/>
+  <meta property="og:description" content="Implement essential HTTP security headers step by step: Content Security Policy, X-Frame-Options, Referrer-Policy, Permissions-Policy, and HSTS on any stack."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/secure-headers-implementation-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Security Headers Implementation Guide: CSP, HSTS, and More (2026)",
+      "description": "Implement essential HTTP security headers step by step: Content Security Policy, X-Frame-Options, Referrer-Policy, Permissions-Policy, and HSTS on any stack.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/secure-headers-implementation-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+                {
+          "@type": "Question",
+          "name": "Do security headers replace input validation and output encoding?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Headers are a defense-in-depth layer, not a replacement for secure coding. Output encoding stops XSS at the source; CSP limits the damage if an encoding bug slips through. You need both \u2014 headers mitigate whole attack classes cheaply, but they cannot fix logic flaws or injection in your application code."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does my CSP break my site, and how do I fix it safely?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "CSP usually breaks inline scripts, inline event handlers, and third-party widgets that were never allowlisted. Fix it by moving inline scripts to external files, replacing inline handlers with addEventListener, and adding legitimate third-party domains to the policy \u2014 never by adding 'unsafe-inline'. Test in report-only mode first to find every break before enforcing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I still send X-Frame-Options if I have frame-ancestors in CSP?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, as a fallback. Modern browsers honor CSP frame-ancestors, but older browsers only understand X-Frame-Options. Sending both (DENY or SAMEORIGIN alongside frame-ancestors 'none') costs one line and covers the long tail of legacy clients."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between Referrer-Policy values?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "no-referrer sends nothing ever; strict-origin-when-cross-origin (the recommended default) sends the full URL for same-origin requests but only the origin cross-origin; same-origin sends referrers only within your own site. Choose based on how much URL information \u2014 which may contain tokens or queries \u2014 you are comfortable sharing with third parties."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I verify my security headers are working?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use curl -I to inspect raw response headers on several paths (not just the homepage, since nested configs can drop headers), run your domain through securityheaders.com for a graded report, and check the browser console for CSP violation messages after deploying a new policy."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Security Headers Implementation",
+          "item": "https://www.webdevworker.com/articles/secure-headers-implementation-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Security Headers Implementation</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🔐 Auth & Security</div>
+          <h1 class="guide-title">Security Headers Implementation Guide: CSP, HSTS, and More (2026)</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 8 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3><span>🛡️</span> One Line of Defense Per Header</h3>
+          <p>Security headers are the cheapest hardening you will ever deploy. Browse the security guides next for HTTPS setup, XSS prevention, and CSRF tokens.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides &rarr;</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. What Security Headers Actually Do</a></li>
+<li><a href="#sec2" style="color:var(--brand-primary);">2. Content Security Policy, the Big One</a></li>
+<li><a href="#sec3" style="color:var(--brand-primary);">3. Clickjacking and MIME-Sniffing Defenses</a></li>
+<li><a href="#sec4" style="color:var(--brand-primary);">4. Referrer-Policy and Permissions-Policy</a></li>
+<li><a href="#sec5" style="color:var(--brand-primary);">5. Shipping Headers on Nginx, Apache, and Express</a></li>
+<li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. What Security Headers Actually Do</h2>
+<p>HTTP security headers are response directives that instruct the browser how to handle your pages — which resources may load, whether the page may be framed, how much referrer information to share, and more. They cost nothing at runtime, require no client-side code, and mitigate entire classes of attacks (clickjacking, MIME-sniffing exploits, some XSS) that application code alone cannot fully prevent.</p>
+<p>Think of them as guardrails: your application code is the driver, and headers keep the browser from veering into dangerous behavior when something goes wrong. A missing <code>X-Frame-Options</code> header does not create a vulnerability by itself, but it turns a minor UI redress trick into a full account-takeover vector. Headers are the cheapest defense-in-depth layer you own, and most take one line to deploy.</p>
+<p>You can audit any site in seconds: open DevTools, check the response headers of the main document, and compare against the baseline set covered in this guide. Tools like securityheaders.com grade your configuration and explain each missing header. Aim for the full baseline on every HTML response; API-only responses need a smaller but still important subset.</p>
+</section>
+
+<section id="sec2" class="guide-section">
+<h2>2. Content Security Policy, the Big One</h2>
+<p>Content Security Policy (CSP) is the most powerful header in the set. It defines an allowlist of trusted sources for scripts, styles, images, fonts, and other resource types, so even if an attacker injects markup, the browser refuses to execute or load anything outside the policy. A strict CSP converts most XSS from "account takeover" into "harmless text on a page".</p>
+<p>A production-ready starting policy for a typical app looks like this:</p>
+<pre class="code-box">Content-Security-Policy: default-src 'self';
+  script-src 'self';
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data: https:;
+  font-src 'self';
+  object-src 'none';
+  base-uri 'self';
+  frame-ancestors 'none';
+  form-action 'self';
+  upgrade-insecure-requests;</pre>
+<p>Each directive has a job: <code>object-src 'none'</code> kills Flash-era plugin attacks, <code>base-uri 'self'</code> stops attackers from hijacking relative URLs, <code>frame-ancestors 'none'</code> is the modern anti-clickjacking directive, and <code>form-action 'self'</code> prevents forms from submitting credentials to external domains. The <code>style-src 'unsafe-inline'</code> compromise is common because many CSS frameworks need it; eliminate inline scripts entirely instead — that is where the real XSS leverage lives.</p>
+<p>Roll out in <code>Content-Security-Policy-Report-Only</code> mode first, collect violation reports at a <code>report-uri</code> endpoint for a week, fix legitimate breakage (usually inline scripts that should move to external files), then enforce. For inline scripts you cannot move, generate a per-request cryptographic nonce and allow <code>'nonce-&lt;value&gt;'</code> rather than weakening the whole policy with <code>'unsafe-inline'</code>.</p>
+</section>
+
+<section id="sec3" class="guide-section">
+<h2>3. Clickjacking and MIME-Sniffing Defenses</h2>
+<p>Clickjacking tricks users into clicking something invisible — your "Delete account" button hidden under an attractive decoy page inside an iframe. The defense is to forbid framing of your sensitive pages. The modern directive is CSP's <code>frame-ancestors</code>, with the older <code>X-Frame-Options</code> header as a fallback for legacy browsers:</p>
+<pre class="code-box"># Modern: CSP frame-ancestors (replaces X-Frame-Options where supported)
+Content-Security-Policy: frame-ancestors 'none';
+
+# Legacy fallback for older browsers
+X-Frame-Options: DENY
+# ...or allow framing only by your own origin:
+X-Frame-Options: SAMEORIGIN</pre>
+<p>MIME sniffing is a subtler threat: a browser that "sniffs" a file's type can be tricked into executing an uploaded image as JavaScript. The fix is two-part — always serve uploads with the correct <code>Content-Type</code>, and send <code>X-Content-Type-Options: nosniff</code> so the browser trusts your declared type and never guesses. This one header neutralizes a whole category of upload-based attacks.</p>
+</section>
+
+<section id="sec4" class="guide-section">
+<h2>4. Referrer-Policy and Permissions-Policy</h2>
+<p><code>Referrer-Policy</code> controls how much of the referring URL the browser shares when navigating away or loading subresources. The default behavior in modern browsers already trims cross-origin referrers, but an explicit policy documents your intent and protects sensitive URLs — password-reset tokens or internal search queries embedded in the URL should never leak to third parties via the <code>Referer</code> header:</p>
+<pre class="code-box"># Sensible default: full URL for same-origin, origin-only cross-origin
+Referrer-Policy: strict-origin-when-cross-origin
+
+# Maximum privacy: never send referrer information
+Referrer-Policy: no-referrer</pre>
+<p><code>Permissions-Policy</code> (formerly Feature-Policy) lets you disable powerful browser features your site does not use — camera, microphone, geolocation, payment APIs — so a successful XSS injection cannot silently activate them:</p>
+<pre class="code-box"># Disable sensitive features site-wide; allow fullscreen only for your own origin
+Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), fullscreen=(self)</pre>
+<p>These two headers are about blast-radius reduction. They do not stop the initial injection, but they decide what the attacker can do with it — and "nothing, because the camera and referrer data are locked down" is a much better incident than the alternative.</p>
+</section>
+
+<section id="sec5" class="guide-section">
+<h2>5. Shipping Headers on Nginx, Apache, and Express</h2>
+<p>Shipping headers is straightforward on every major stack. In Nginx, add them once in the server block so every response inherits them:</p>
+<pre class="code-box">server {
+    listen 443 ssl;
+    server_name example.com;
+
+    # Baseline security headers — inherited by all responses
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; object-src 'none'; frame-ancestors 'none';" always;
+}</pre>
+<p>Apache uses the <code>Header</code> directive (<code>Header always set X-Frame-Options "SAMEORIGIN"</code>), and in Express the <code>helmet</code> middleware sets a sensible baseline with one line — <code>app.use(helmet())</code> — with each header individually tunable. One caution: <code>add_header</code> in Nginx is not inherited if a nested location block defines its own <code>add_header</code>, a classic gotcha that silently drops your headers on specific routes. Verify with <code>curl -I</code> against several paths, not just the homepage.</p>
+<table class="data-table"><thead><tr><th>Header</th><th>Protects Against</th><th>Recommended Value</th></tr></thead><tbody><tr><td>Content-Security-Policy</td><td>XSS, data exfiltration</td><td>Strict allowlist; no 'unsafe-inline' for scripts</td></tr><tr><td>Strict-Transport-Security</td><td>SSL stripping</td><td>max-age=31536000; includeSubDomains</td></tr><tr><td>X-Frame-Options / frame-ancestors</td><td>Clickjacking</td><td>DENY or SAMEORIGIN / 'none'</td></tr><tr><td>X-Content-Type-Options</td><td>MIME-sniffing attacks</td><td>nosniff</td></tr><tr><td>Referrer-Policy</td><td>URL data leakage</td><td>strict-origin-when-cross-origin</td></tr><tr><td>Permissions-Policy</td><td>Feature abuse after XSS</td><td>Disable unused camera/mic/geolocation</td></tr></tbody></table>
+<p>Headers are set-and-forget infrastructure: configure them once, verify with a scanner, and re-check after major deploys. Few security investments pay off this cheaply.</p>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Do security headers replace input validation and output encoding?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No. Headers are a defense-in-depth layer, not a replacement for secure coding. Output encoding stops XSS at the source; CSP limits the damage if an encoding bug slips through. You need both — headers mitigate whole attack classes cheaply, but they cannot fix logic flaws or injection in your application code.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Why does my CSP break my site, and how do I fix it safely?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">CSP usually breaks inline scripts, inline event handlers, and third-party widgets that were never allowlisted. Fix it by moving inline scripts to external files, replacing inline handlers with addEventListener, and adding legitimate third-party domains to the policy — never by adding 'unsafe-inline'. Test in report-only mode first to find every break before enforcing.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Should I still send X-Frame-Options if I have frame-ancestors in CSP?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes, as a fallback. Modern browsers honor CSP frame-ancestors, but older browsers only understand X-Frame-Options. Sending both (DENY or SAMEORIGIN alongside frame-ancestors 'none') costs one line and covers the long tail of legacy clients.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between Referrer-Policy values?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">no-referrer sends nothing ever; strict-origin-when-cross-origin (the recommended default) sends the full URL for same-origin requests but only the origin cross-origin; same-origin sends referrers only within your own site. Choose based on how much URL information — which may contain tokens or queries — you are comfortable sharing with third parties.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I verify my security headers are working?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Use curl -I to inspect raw response headers on several paths (not just the homepage, since nested configs can drop headers), run your domain through securityheaders.com for a graded report, and check the browser console for CSP violation messages after deploying a new policy.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+        <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Keep leveling up</h3>
+          <p>Combine strict headers with HTTPS, HSTS, and output encoding to give browsers everything they need to defend your users automatically.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub &rarr;</a>
+        </div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JavaScript Fetch API: The Complete Guide | WebDevWorker</title>
+  <meta name="description" content="Master the Fetch API in 2026: GET and POST requests, custom headers, JSON handling, timeouts with AbortController, and error handling. Full code examples."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/javascript-fetch-api-complete-guide-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="JavaScript Fetch API: The Complete Guide | WebDevWorker"/>
+  <meta property="og:description" content="Master the Fetch API in 2026: GET and POST requests, custom headers, JSON handling, timeouts with AbortController, and error handling. Full code examples."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/javascript-fetch-api-complete-guide-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "JavaScript Fetch API: The Complete Guide (2026)",
+      "description": "Master the Fetch API in 2026: GET and POST requests, custom headers, JSON handling, timeouts with AbortController, and error handling. Full code examples.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/javascript-fetch-api-complete-guide-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+                  {
+            "@type": "Question",
+            "name": "Why doesn't fetch throw an error on 404 or 500 responses?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "By design, fetch only rejects on network-level failures (DNS, connection refused, CORS blocks). HTTP error statuses still resolve because the server responded. Always check response.ok or the status code yourself and throw when your application treats it as an error."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I add a timeout to a fetch request?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Use AbortController: create a controller, pass its signal into fetch, and call controller.abort() from a setTimeout. The fetch rejects with an AbortError, which you catch and convert into a timeout message. Remember to clearTimeout in a finally block."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I send cookies with fetch?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Set credentials: 'include' in the init object for cross-origin requests (same-origin requests send cookies by default with 'same-origin'). The server must also respond with Access-Control-Allow-Credentials: true, and its Allow-Origin header cannot be a wildcard when credentials are involved."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Should I use fetch or Axios in 2026?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "For most projects, native fetch is enough — it is promise-based, universally supported, and needs no dependency. Axios still earns its place when you want automatic JSON transforms, request/response interceptors, or built-in timeout and upload-progress handling without writing wrappers yourself."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I cancel an in-flight fetch request?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Keep the AbortController you passed in via signal and call controller.abort() — from a cancel button, a component unmount, or a newer request superseding the old one (e.g. typeahead). The promise rejects with an AbortError you can safely ignore or handle."
+            }
+          }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Fetch API Guide",
+          "item": "https://www.webdevworker.com/articles/javascript-fetch-api-complete-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Fetch API Guide</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">⚡ JavaScript</div>
+          <h1 class="guide-title">JavaScript Fetch API: The Complete Guide</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 8 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. Making Your First GET Request</a></li>
+            <li><a href="#sec2" style="color:var(--brand-primary);">2. POST Requests: Sending JSON and Form Data</a></li>
+            <li><a href="#sec3" style="color:var(--brand-primary);">3. Headers, Authentication, and CORS</a></li>
+            <li><a href="#sec4" style="color:var(--brand-primary);">4. Bulletproof Error Handling and Timeouts</a></li>
+            <li><a href="#sec5" style="color:var(--brand-primary);">5. Fetch Options Quick Reference</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+                <section id="sec1" class="guide-section">
+          <h2>1. Making Your First GET Request</h2>
+          <p>fetch() is the modern way to make HTTP requests: pass it a URL and it returns a promise that resolves to a Response object. That response is just metadata plus a readable body stream — you then call .json(), .text(), .blob(), or .formData() to actually consume the body, each returning its own promise. The two-step shape (response, then body) surprises newcomers, but it lets you inspect status and headers before committing to parsing.</p>
+          <p>The single most misunderstood fetch behavior: it only rejects on network failures — DNS errors, refused connections, CORS blocks. An HTTP 404 or 500 still resolves successfully, because from fetch's perspective the server answered. You must check response.ok (true for 200–299) or the status code yourself and throw when the application considers it an error. Every production fetch wrapper starts with this check.</p>
+          <p>Because fetch is promise-based, it composes naturally with async/await: const data = await (await fetch(url)).json(). Extract that into a small helper early — getJSON(url) with the ok-check baked in — and every call site in your app becomes one clean line instead of five lines of ceremony.</p>
+          <pre class="code-box">// Minimal GET with proper error checking
+async function getJSON(url) {
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status} ${res.statusText}`);
+  }
+  return res.json(); // parses body as JSON
+}
+
+// Usage: one clean line per call
+try {
+  const user = await getJSON('https://api.example.com/users/7');
+  console.log(user.name);
+} catch (err) {
+  console.error('Could not load user:', err.message);
+}
+</pre>
+        </section>
+        <section id="sec2" class="guide-section">
+          <h2>2. POST Requests: Sending JSON and Form Data</h2>
+          <p>POST (and PUT, PATCH, DELETE) requests pass a second argument to fetch: an init object with method, headers, and body. For JSON APIs the recipe is fixed — method: 'POST', a Content-Type: application/json header, and body: JSON.stringify(payload). The header matters: without it, many servers will not parse the body as JSON at all.</p>
+          <p>For file uploads and traditional forms, use FormData instead. Construct it with new FormData(formElement) to capture a whole form, or append fields manually — including File objects from &lt;input type="file"&gt;. Crucially, do NOT set Content-Type yourself for FormData: the browser generates a multipart boundary automatically, and a hand-set header will break the upload.</p>
+          <p>Idempotency is worth internalizing: GET, PUT, and DELETE should be safe to retry; POST generally is not (it may create duplicates). Design your client retries accordingly — retry a failed GET freely, but only retry POSTs when the API documents idempotency keys or you can tolerate duplicates.</p>
+          <pre class="code-box">// POST JSON: the standard API recipe
+async function postJSON(url, payload) {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error(`POST failed: ${res.status}`);
+  return res.json();
+}
+
+await postJSON('https://api.example.com/users', {
+  name: 'Ayesha',
+  email: 'ayesha@example.com',
+});
+
+// File upload with FormData (browser sets Content-Type itself)
+async function uploadAvatar(file) {
+  const form = new FormData();
+  form.append('avatar', file, file.name);
+  const res = await fetch('/api/avatar', { method: 'POST', body: form });
+  if (!res.ok) throw new Error('Upload failed');
+  return res.json();
+}
+</pre>
+        </section>
+        <section id="sec3" class="guide-section">
+          <h2>3. Headers, Authentication, and CORS</h2>
+          <p>Headers ride along in the init object and cover authentication, content negotiation, and caching. The dominant auth pattern is the Bearer token: headers: { Authorization: 'Bearer ' + token }. Tokens usually come from a login response and live in memory or secure storage — never hardcode them in client-side code that ships to browsers, where anyone can read them.</p>
+          <p>The Accept header tells the server what response format you want (Accept: application/json), while Content-Type describes what you are sending — confusing the two is a classic bug. Custom headers like X-Request-Id are fine, but know that non-simple headers trigger a CORS preflight (an automatic OPTIONS request), so the server must explicitly allow them.</p>
+          <p>CORS errors — the infamous “blocked by CORS policy” — are server-side configuration issues, not fetch bugs: the browser is protecting the user by requiring the server's opt-in (Access-Control-Allow-Origin) before exposing a cross-origin response to your script. During development, proxy the API through your dev server rather than disabling browser security. For cookies and HTTP auth on cross-origin requests, set credentials: 'include' — fetch omits credentials by default.</p>
+          <pre class="code-box">// Authenticated request with custom headers
+const token = sessionStorage.getItem('api_token');
+
+const res = await fetch('https://api.example.com/me', {
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Accept': 'application/json',
+    'X-Request-Id': crypto.randomUUID(),
+  },
+  credentials: 'include', // send cookies on cross-origin requests
+});
+
+// Reading response headers (e.g. pagination, rate limits)
+const totalPages = res.headers.get('X-Total-Pages');
+const remaining  = res.headers.get('X-RateLimit-Remaining');
+console.log(`Page 1 of ${totalPages} \u2014 ${remaining} requests left`);
+</pre>
+        </section>
+        <section id="sec4" class="guide-section">
+          <h2>4. Bulletproof Error Handling and Timeouts</h2>
+          <p>A production-grade fetch wrapper handles four failure modes: network errors (fetch rejects), HTTP errors (check response.ok), malformed bodies (res.json() throws on invalid JSON), and hangs (no response ever arrives). The first three are handled with try/catch plus the ok-check; hangs need AbortController, because fetch has no built-in timeout.</p>
+          <p>AbortController pairs a signal with the request: pass signal into fetch, then call controller.abort() from a setTimeout to cancel. Aborting rejects the fetch promise with an AbortError (name === 'AbortError'), which you detect and translate into a friendly “request timed out” message. Always clearTimeout in a finally block so successful requests do not leak timers.</p>
+          <p>Add retries only where they are safe: retry idempotent GETs with exponential backoff (1s, 2s, 4s), never blindly retry POSTs. And surface failures honestly in the UI — a skeleton that never resolves is worse than an error message with a retry button. The wrapper below bundles all of this into one reusable function.</p>
+          <pre class="code-box">// fetch with timeout + retries for idempotent requests
+async function fetchJSON(url, { timeout = 8000, retries = 2 } = {}) {
+  for (let attempt = 0; attempt &lt;= retries; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() =&gt; controller.abort(), timeout);
+    try {
+      const res = await fetch(url, { signal: controller.signal });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    } catch (err) {
+      const isTimeout = err.name === 'AbortError';
+      const lastAttempt = attempt === retries;
+      if (lastAttempt) {
+        throw new Error(isTimeout ? `Timed out after ${timeout}ms: ${url}`
+                                  : `Failed: ${err.message}`);
+      }
+      await new Promise(r =&gt; setTimeout(r, 1000 * 2 ** attempt)); // backoff
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+}
+</pre>
+        </section>
+        <section id="sec5" class="guide-section">
+          <h2>5. Fetch Options Quick Reference</h2>
+          <p>The init object is fetch's entire configuration surface. Most requests need only method, headers, and body — but knowing the rest lets you handle caching, redirects, credentials, and cancellation correctly instead of cargo-culting snippets. The table below summarizes every option with its common values and the exact situation that calls for each one.</p>
+          <p>Two options deserve special attention. cache controls the HTTP cache interaction ('no-store' for always-fresh data like stock prices, 'force-cache' for immutable assets). redirect: 'manual' versus 'follow' matters when you need to inspect redirect responses yourself, such as OAuth flows.</p>
+          <p>Keep this table as a reference card. Combined with the timeout wrapper above and the ok-check discipline from section one, you now have everything needed for reliable browser-to-API communication — no library required.</p>
+          <table class="data-table">
+          <thead>
+          <tr><th>Option</th><th>Common values</th><th>When to use it</th></tr>
+          </thead>
+          <tbody>
+          <tr><td>method</td><td>'GET' 'POST' 'PUT' 'PATCH' 'DELETE'</td><td>Anything other than a simple GET</td></tr>
+          <tr><td>headers</td><td>{ 'Content-Type': 'application/json' }</td><td>Auth tokens, content types, custom metadata</td></tr>
+          <tr><td>body</td><td>JSON.stringify(data) / FormData</td><td>Sending a payload with POST/PUT/PATCH</td></tr>
+          <tr><td>signal</td><td>AbortController signal</td><td>Timeouts and user-cancelled requests</td></tr>
+          <tr><td>credentials</td><td>'omit' 'same-origin' 'include'</td><td>'include' to send cookies cross-origin</td></tr>
+          <tr><td>cache</td><td>'default' 'no-store' 'force-cache'</td><td>'no-store' for always-fresh data</td></tr>
+          <tr><td>redirect</td><td>'follow' 'manual' 'error'</td><td>'manual' to handle redirects yourself</td></tr>
+          <tr><td>mode</td><td>'cors' 'no-cors' 'same-origin'</td><td>Rarely set manually; 'no-cors' gives opaque responses</td></tr>
+          <tr><td>keepalive</td><td>true</td><td>Fire-and-forget beacons (analytics) on page unload</td></tr>
+          </tbody>
+          </table>
+        </section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Why doesn't fetch throw an error on 404 or 500 responses?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">By design, fetch only rejects on network-level failures (DNS, connection refused, CORS blocks). HTTP error statuses still resolve because the server responded. Always check response.ok or the status code yourself and throw when your application treats it as an error.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I add a timeout to a fetch request?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Use AbortController: create a controller, pass its signal into fetch, and call controller.abort() from a setTimeout. The fetch rejects with an AbortError, which you catch and convert into a timeout message. Remember to clearTimeout in a finally block.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I send cookies with fetch?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Set credentials: 'include' in the init object for cross-origin requests (same-origin requests send cookies by default with 'same-origin'). The server must also respond with Access-Control-Allow-Credentials: true, and its Allow-Origin header cannot be a wildcard when credentials are involved.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Should I use fetch or Axios in 2026?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">For most projects, native fetch is enough — it is promise-based, universally supported, and needs no dependency. Axios still earns its place when you want automatic JSON transforms, request/response interceptors, or built-in timeout and upload-progress handling without writing wrappers yourself.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I cancel an in-flight fetch request?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Keep the AbortController you passed in via signal and call controller.abort() — from a cancel button, a component unmount, or a newer request superseding the old one (e.g. typeahead). The promise rejects with an AbortError you can safely ignore or handle.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

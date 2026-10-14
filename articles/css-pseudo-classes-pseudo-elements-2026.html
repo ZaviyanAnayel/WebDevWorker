@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSS Pseudo-Classes & Pseudo-Elements: The 2026 Power Guide | WebDevWorker</title>
+  <meta name="description" content="Unlock CSS pseudo-classes (:hover, :focus-visible, :nth-child) and pseudo-elements (::before, ::after) in 2026. Real patterns, specificity tips, and pro tricks."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/css-pseudo-classes-pseudo-elements-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="CSS Pseudo-Classes & Pseudo-Elements: The 2026 Power Guide | WebDevWorker"/>
+  <meta property="og:description" content="Unlock CSS pseudo-classes (:hover, :focus-visible, :nth-child) and pseudo-elements (::before, ::after) in 2026. Real patterns, specificity tips, and pro tricks."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/css-pseudo-classes-pseudo-elements-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "CSS Pseudo-Classes and Pseudo-Elements 2026: Dynamic Styling Without Extra Markup",
+      "description": "Unlock CSS pseudo-classes (:hover, :focus-visible, :nth-child) and pseudo-elements (::before, ::after) in 2026. Real patterns, specificity tips, and pro tricks.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/css-pseudo-classes-pseudo-elements-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the difference between : and :: in CSS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Single colon denotes pseudo-classes (element states like :hover). Double colon denotes pseudo-elements (parts of elements like ::before). Legacy pseudo-elements accept single colon for backwards compatibility."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why isn't my ::before showing up?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You probably forgot content: \"\" \u2014 generated pseudo-elements require a content property to render, even if empty. Also check it isn't on a replaced element like img or input."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does :has() do?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It styles a parent based on its children \u2014 e.g. article:has(figure) targets articles containing figures. It's the long-awaited 'parent selector', supported in all modern browsers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When should I use :where() instead of :is()?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use :where() when you want selector grouping with zero specificity (resets, defaults). Use :is() when you want the natural specificity of the matched selectors."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are pseudo-elements accessible to screen readers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Generated content is generally announced inconsistently \u2014 keep ::before/::after decorative. Put meaningful content in real HTML elements."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Pseudo-Classes & Elements",
+          "item": "https://www.webdevworker.com/articles/css-pseudo-classes-pseudo-elements-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Pseudo-Classes & Elements</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🎨 CSS & Layout</div>
+          <h1 class="guide-title">CSS Pseudo-Classes & Pseudo-Elements: The 2026 Power Guide</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 7 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <!-- <div class="tool-embed-banner">
+          <h3><span>📚</span> Style Without Extra Divs</h3>
+          <p>Pseudo-elements shine for decorative details — pair these techniques with our box-shadow and gradient guides for rich UI.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides →</a>
+        </div>: one banner linking to /articles/ Guides Hub with 1-2 sentence teaser relevant to the topic -->
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. Pseudo-Classes: Styling by State</a></li>
+            <li><a href="#sec2" style="color:var(--brand-primary);">2. Structural Pseudo-Classes</a></li>
+            <li><a href="#sec3" style="color:var(--brand-primary);">3. Pseudo-Elements: ::before and ::after</a></li>
+            <li><a href="#sec4" style="color:var(--brand-primary);">4. Modern Gems: :is(), :where(), :has()</a></li>
+            <li><a href="#sec5" style="color:var(--brand-primary);">5. Specificity and Gotchas</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+          <h2>1. Pseudo-Classes: Styling by State</h2>
+          <p>Pseudo-classes style elements based on <em>state</em> rather than markup: <code>:hover</code>, <code>:focus</code>, <code>:active</code>, <code>:disabled</code>, <code>:checked</code>. They let interfaces react without JavaScript — a checkbox hack can power tabs, toggles, and accordions with pure CSS.</p><p>The accessibility star is <code>:focus-visible</code>: it shows focus rings only for keyboard navigation, not mouse clicks. In 2026, styling <code>:focus</code> alone (rings on every click) or removing outlines entirely are both considered bugs — <code>:focus-visible</code> is the correct primitive.</p>
+          <pre class="code-box">/* Accessible focus: keyboard users get rings, mouse users don't */
+.btn:focus { outline: none; }
+.btn:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+/* Pure-CSS toggle */
+.toggle input:checked + .track { background: #10b981; }</pre>
+        </section><section id="sec2" class="guide-section">
+          <h2>2. Structural Pseudo-Classes</h2>
+          <p><code>:nth-child()</code>, <code>:first-child</code>, <code>:last-child</code>, and <code>:only-child</code> target elements by position among siblings. The <code>an+b</code> microsyntax (<code>:nth-child(2n)</code> for even, <code>:nth-child(3n+1)</code> for every third starting at first) handles striping, grids, and staggered animations.</p><p>Remember <code>:nth-child</code> counts <em>all</em> siblings, not just matching ones — <code>li:nth-child(2)</code> fails if the second child is a div. <code>:nth-of-type()</code> counts only siblings of the same element type, which is usually what you actually want.</p>
+          
+        </section><section id="sec3" class="guide-section">
+          <h2>3. Pseudo-Elements: ::before and ::after</h2>
+          <p>Pseudo-elements style <em>parts</em> of elements: <code>::before</code> and <code>::after</code> generate decorative boxes without extra markup, <code>::first-letter</code> creates drop caps, <code>::selection</code> styles highlighted text, and <code>::placeholder</code> styles input hints.</p><p>The generated-content workhorses require <code>content: ""</code> (even empty) to render. Classic uses: decorative underlines, custom bullets, quotation marks, clearfix replacements, and tooltip arrows — all without polluting HTML. Keep them decorative: content critical to understanding belongs in real markup for screen readers.</p>
+          <pre class="code-box">/* Decorative link underline that grows on hover */
+.link {
+  position: relative;
+}
+.link::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -2px;
+  height: 2px; width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 250ms ease;
+}
+.link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}</pre>
+        </section><section id="sec4" class="guide-section">
+          <h2>4. Modern Gems: :is(), :where(), :has()</h2>
+          <p><code>:is()</code> groups selectors while taking the specificity of its most specific argument: <code>:is(header, footer) a</code> beats writing both out. <code>:where()</code> is identical but contributes <em>zero</em> specificity — perfect for resets and defaults that should be easy to override.</p><p><code>:has()</code> — the 'parent selector' — styles an element based on its descendants: <code>form:has(input:invalid)</code> highlights invalid forms, <code>.card:has(img)</code> adjusts cards containing images. Supported in all modern browsers, it eliminated whole categories of JavaScript.</p>
+          <table class="data-table">
+<thead><tr><th>Selector</th><th>What it does</th><th>Specificity note</th></tr></thead>
+<tbody><tr><td><strong>:is(a, b)</strong></td><td>Matches either</td><td>Takes max argument specificity</td></tr><tr><td><strong>:where(a, b)</strong></td><td>Matches either</td><td>Always zero specificity</td></tr><tr><td><strong>:has(> img)</strong></td><td>Parent with img child</td><td>Full support in 2026</td></tr><tr><td><strong>:not(.x)</strong></td><td>Negation</td><td>Takes argument specificity</td></tr></tbody>
+</table>
+        </section><section id="sec5" class="guide-section">
+          <h2>5. Specificity and Gotchas</h2>
+          <p>Pseudo-classes count as classes in specificity; pseudo-elements count as elements. So <code>a:hover</code> (0,1,1) beats <code>a</code> (0,0,1) — which is why hover styles 'just work' when declared after base styles, and why <code>:where()</code> exists for when you want grouping <em>without</em> the boost.</p><p>Gotchas: <code>::before</code>/<code>::after</code> don't work on replaced elements like <code>&lt;img&gt;</code> and <code>&lt;input&gt;</code> (no content box to attach to). Double-colon is the modern syntax; single-colon still works for legacy pseudo-elements but prefer <code>::</code> in new code.</p>
+          
+        </section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between : and :: in CSS?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Single colon denotes pseudo-classes (element states like :hover). Double colon denotes pseudo-elements (parts of elements like ::before). Legacy pseudo-elements accept single colon for backwards compatibility.</p>
+          </details>
+        </div>
+        <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Why isn't my ::before showing up?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">You probably forgot content: "" — generated pseudo-elements require a content property to render, even if empty. Also check it isn't on a replaced element like img or input.</p>
+          </details>
+        </div>
+        <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What does :has() do?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">It styles a parent based on its children — e.g. article:has(figure) targets articles containing figures. It's the long-awaited 'parent selector', supported in all modern browsers.</p>
+          </details>
+        </div>
+        <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">When should I use :where() instead of :is()?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Use :where() when you want selector grouping with zero specificity (resets, defaults). Use :is() when you want the natural specificity of the matched selectors.</p>
+          </details>
+        </div>
+        <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Are pseudo-elements accessible to screen readers?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Generated content is generally announced inconsistently — keep ::before/::after decorative. Put meaningful content in real HTML elements.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                <!-- <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Keep leveling up</h3>
+          <p>Selectors are CSS superpowers — keep going with specificity and architecture guides in the Hub.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub →</a>
+        </div>: CTA banner linking to /articles/ Guides Hub with a topic-relevant teaser line -->
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

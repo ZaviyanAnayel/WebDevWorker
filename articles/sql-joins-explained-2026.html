@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- : replace TITLE, DESC (150-160 chars), and SLUG everywhere -->
+  <title>SQL JOINs Explained: INNER, LEFT, RIGHT & FULL with Examples (2026) | WebDevWorker</title>
+  <meta name="description" content="Master SQL JOINs: INNER, LEFT, RIGHT, and FULL OUTER JOIN with clear examples, plus self joins and multi-table queries. Learn which join to use and when."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/sql-joins-explained-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="SQL JOINs Explained: INNER, LEFT, RIGHT & FULL with Examples (2026) | WebDevWorker"/>
+  <meta property="og:description" content="Master SQL JOINs: INNER, LEFT, RIGHT, and FULL OUTER JOIN with clear examples, plus self joins and multi-table queries. Learn which join to use and when."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/sql-joins-explained-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "SQL JOINs Explained: INNER, LEFT, RIGHT & FULL with Examples",
+      "description": "Master SQL JOINs: INNER, LEFT, RIGHT, and FULL OUTER JOIN with clear examples, plus self joins and multi-table queries. Learn which join to use and when.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/sql-joins-explained-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "Which JOIN should I use?", "acceptedAnswer": {"@type": "Answer", "text": "Use INNER JOIN when you only want rows that match in both tables. Use LEFT JOIN when you need every row from the first table even if nothing matches on the other side. Use FULL OUTER JOIN when you need everything from both tables, including orphans on either side."}},
+      {"@type": "Question", "name": "Why am I getting NULLs in my JOIN results?", "acceptedAnswer": {"@type": "Answer", "text": "That is normal for outer joins: NULL marks the side with no matching row. It is genuinely useful — WHERE right_table.id IS NULL after a LEFT JOIN finds records missing a relationship, like customers who never ordered."}},
+      {"@type": "Question", "name": "Does MySQL support FULL OUTER JOIN?", "acceptedAnswer": {"@type": "Answer", "text": "No, MySQL has no native FULL OUTER JOIN syntax. Emulate it with a LEFT JOIN combined via UNION with a RIGHT JOIN (or swapped LEFT JOIN) filtered to rows missing from the first half. PostgreSQL, SQL Server, and SQLite support it directly."}},
+      {"@type": "Question", "name": "Are JOINs slow?", "acceptedAnswer": {"@type": "Answer", "text": "Not inherently. Slow joins are usually caused by missing indexes on the join columns, SELECT * pulling unnecessary data, or the N+1 query pattern in application code. Index your foreign keys and JOINs are typically the fastest way to combine related data."}},
+      {"@type": "Question", "name": "What is the difference between LEFT JOIN and RIGHT JOIN?", "acceptedAnswer": {"@type": "Answer", "text": "Only perspective: RIGHT JOIN keeps all rows from the second table, LEFT JOIN from the first. Every RIGHT JOIN can be rewritten as a LEFT JOIN by swapping the table order, which is why most teams standardize on LEFT JOIN for readability."}}
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "SQL JOINs Explained",
+          "item": "https://www.webdevworker.com/articles/sql-joins-explained-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">SQL JOINs Explained</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🗄️ Databases & SQL</div>
+          <h1 class="guide-title">SQL JOINs Explained: INNER, LEFT, RIGHT & FULL with Examples (2026)</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 8 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <!-- <div class="tool-embed-banner">
+  <h3><span>🗄️</span> Master the Database Layer</h3>
+  <p>JOINs are just the start — learn indexing to make them fast, normalization to design tables right, and compare PostgreSQL vs MySQL in the Guides Hub.</p>
+  <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides &rarr;</a>
+</div>: one banner linking to /articles/ Guides Hub with 1-2 sentence teaser relevant to the topic -->
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. INNER JOIN: Only the Matches</a></li>
+<li><a href="#sec2" style="color:var(--brand-primary);">2. LEFT JOIN: Keep Every Left-Table Row</a></li>
+<li><a href="#sec3" style="color:var(--brand-primary);">3. RIGHT JOIN & FULL OUTER JOIN</a></li>
+<li><a href="#sec4" style="color:var(--brand-primary);">4. Self Joins, Multi-Table & CROSS JOINs</a></li>
+<li><a href="#sec5" style="color:var(--brand-primary);">5. JOIN Performance & Pitfalls to Avoid</a></li>
+<li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. INNER JOIN: Only the Matches</h2>
+<p>A JOIN combines rows from two tables based on a related column — almost always a foreign key pointing at a primary key. INNER JOIN, the default when you write just JOIN, returns only rows where the match exists on both sides. Customers who placed orders appear; customers who never ordered vanish from the result. Think of it as the intersection of the two tables.</p>
+<p>The ON clause defines the match: ON orders.customer_id = customers.id pairs each order with its customer. Table aliases (customers AS c, orders AS o) keep queries readable once table names get long — o.customer_id = c.id says the same thing with far less noise. Get comfortable with aliases now; every real-world query uses them.</p>
+<p>INNER JOIN is your workhorse: order listings with customer names, posts with author details, line items with product info. Whenever you need columns from two related tables and only care about rows that exist in both, this is the join you reach for without thinking.</p><pre class="code-box">-- Sample schema used throughout this guide
+CREATE TABLE customers (
+  id INT PRIMARY KEY,
+  name VARCHAR(50)
+);
+CREATE TABLE orders (
+  id INT PRIMARY KEY,
+  customer_id INT,
+  total DECIMAL(10,2)
+);
+
+-- INNER JOIN: only customers who actually placed orders
+SELECT c.name, o.id AS order_id, o.total
+FROM customers AS c
+INNER JOIN orders AS o ON o.customer_id = c.id;
+
+-- Result: one row per order, each with its customer name.
+-- Customers with zero orders do NOT appear.</pre>
+</section>
+
+<section id="sec2" class="guide-section">
+<h2>2. LEFT JOIN: Keep Every Left-Table Row</h2>
+<p>LEFT JOIN keeps every row from the left table (the one named first) and attaches matching rows from the right table — or NULLs when no match exists. Every customer appears, order or not, with NULL order columns for customers who never bought anything. It answers "show me everything, plus related data where it exists."</p>
+<p>Those NULLs are a feature, not a bug: filtering WHERE o.id IS NULL after a LEFT JOIN finds exactly the customers with no orders — the classic "missing relationship" query behind churn reports and cleanup jobs. This pattern alone justifies learning LEFT JOIN properly.</p>
+<p>One subtle trap: conditions on the right table belong in the ON clause for outer joins, not WHERE. Putting o.total &gt; 100 in WHERE turns your LEFT JOIN into an INNER JOIN in disguise, because NULL rows fail the comparison and get filtered out. Keep right-table filters in ON to preserve the outer-join semantics you asked for.</p><pre class="code-box">-- LEFT JOIN: ALL customers, with order data where it exists
+SELECT c.name, o.id AS order_id, o.total
+FROM customers AS c
+LEFT JOIN orders AS o ON o.customer_id = c.id;
+-- Customers without orders show NULL for order_id and total.
+
+-- The famous “find what's missing” pattern:
+SELECT c.name
+FROM customers AS c
+LEFT JOIN orders AS o ON o.customer_id = c.id
+WHERE o.id IS NULL;  -- customers who never ordered
+
+-- Correct: filter the right table inside ON, not WHERE
+SELECT c.name, o.total
+FROM customers AS c
+LEFT JOIN orders AS o
+  ON o.customer_id = c.id AND o.total &gt; 100;</pre>
+</section>
+
+<section id="sec3" class="guide-section">
+<h2>3. RIGHT JOIN & FULL OUTER JOIN</h2>
+<p>RIGHT JOIN is the mirror image: it keeps every row from the right table and NULL-fills the left side. It exists for symmetry, but in practice nearly every RIGHT JOIN is clearer rewritten as a LEFT JOIN with the tables swapped — teams standardize on LEFT precisely so readers never have to mentally flip direction mid-query.</p>
+<p>FULL OUTER JOIN keeps everything from both tables, NULL-filling whichever side lacks a match. It answers reconciliation questions: "show me all customers and all orders, highlighting orphans on either side." Unmatched orders (bad customer_id references) and order-less customers appear together, making data-quality audits almost trivial.</p>
+<p>One portability gotcha: MySQL has no native FULL OUTER JOIN. Emulate it by UNIONing a LEFT JOIN with a RIGHT JOIN (or a second LEFT JOIN with tables swapped), filtering the second half to rows missing from the first. PostgreSQL, SQL Server, and SQLite support it natively.</p><pre class="code-box">-- FULL OUTER JOIN (PostgreSQL, SQL Server, SQLite)
+SELECT c.name, o.id AS order_id, o.total
+FROM customers AS c
+FULL OUTER JOIN orders AS o ON o.customer_id = c.id;
+-- Every customer AND every order appears; orphans show NULLs.
+
+-- MySQL emulation of FULL OUTER JOIN:
+SELECT c.name, o.id AS order_id
+FROM customers AS c
+LEFT JOIN orders AS o ON o.customer_id = c.id
+UNION
+SELECT c.name, o.id AS order_id
+FROM customers AS c
+RIGHT JOIN orders AS o ON o.customer_id = c.id
+WHERE c.id IS NULL;</pre>
+</section>
+
+<section id="sec4" class="guide-section">
+<h2>4. Self Joins, Multi-Table & CROSS JOINs</h2>
+<p>Real queries rarely stop at two tables. Chaining joins — customers to orders to order_items to products — follows the foreign-key path step by step, one ON clause per relationship. Read the chain aloud ("customers have orders, orders have items, items reference products") and the query practically writes itself; each join only needs to make sense locally.</p>
+<p>A self join joins a table to itself, which sounds odd until you meet hierarchical data: an employees table where manager_id references employees.id. Alias the table twice — e for the employee, m for the manager — and the query reads naturally. Org charts, category trees, and friend relationships all live on this pattern.</p>
+<p>CROSS JOIN is the odd one out: it pairs every row with every row, with no ON clause. A hundred colors times a hundred sizes is ten thousand combinations — occasionally exactly what you want (configurators, test matrices), usually an accident from a forgotten ON clause. If a query returns far more rows than expected, a missing join condition is the first suspect.</p><pre class="code-box">-- Three-table chain: customer → order → items → product names
+SELECT c.name, p.title, oi.qty
+FROM customers AS c
+JOIN orders AS o       ON o.customer_id = c.id
+JOIN order_items AS oi ON oi.order_id = o.id
+JOIN products AS p     ON p.id = oi.product_id
+WHERE c.id = 7;
+
+-- Self join: employees and their managers
+SELECT e.name AS employee, m.name AS manager
+FROM employees AS e
+LEFT JOIN employees AS m ON m.id = e.manager_id;
+
+-- CROSS JOIN: every color with every size (use deliberately!)
+SELECT color, size FROM colors CROSS JOIN sizes;</pre>
+</section>
+
+<section id="sec5" class="guide-section">
+<h2>5. JOIN Performance & Pitfalls to Avoid</h2>
+<p>JOINs are not inherently slow — slow joins almost always mean missing indexes. The database must match rows between tables, and without an index on the join columns it scans entire tables for every query. Foreign-key columns should essentially always be indexed; it is the cheapest performance win in relational databases and the first thing to check when a join query drags.</p>
+<p>Select only the columns you need. SELECT * across four joined tables drags every column through memory and the network, including TEXT blobs you never display. Naming columns explicitly also protects your application from breaking when someone adds a column to a table — a real production hazard.</p>
+<p>Finally, watch for the N+1 problem in application code: fetching 100 orders, then running one query per order to get its customer, turns 1 query into 101. A single JOIN (or your ORM's eager-loading feature) collapses that back to one round trip. When a page feels slow, count the queries before blaming the database — the fix is usually fewer, smarter queries, not a bigger server.</p><table class="data-table">
+<thead><tr><th>Join type</th><th>Keeps</th><th>NULLs appear for</th><th>Typical use</th></tr></thead>
+<tbody>
+<tr><td>INNER JOIN</td><td>Only matching rows</td><td>Neither side</td><td>Orders with customer names</td></tr><tr><td>LEFT JOIN</td><td>All left-table rows</td><td>Right side, when no match</td><td>All customers incl. those with no orders</td></tr><tr><td>RIGHT JOIN</td><td>All right-table rows</td><td>Left side, when no match</td><td>Rare — rewrite as LEFT JOIN</td></tr><tr><td>FULL OUTER JOIN</td><td>All rows from both</td><td>Either side, when no match</td><td>Reconciliation, orphan detection</td></tr><tr><td>CROSS JOIN</td><td>Every combination</td><td>Never</td><td>Configurators, deliberate cartesian products</td></tr>
+</tbody>
+</table>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+  <details style="padding:14px 18px;">
+    <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Which JOIN should I use?</summary>
+    <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Use INNER JOIN when you only want rows that match in both tables. Use LEFT JOIN when you need every row from the first table even if nothing matches on the other side. Use FULL OUTER JOIN when you need everything from both tables, including orphans on either side.</p>
+  </details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+  <details style="padding:14px 18px;">
+    <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Why am I getting NULLs in my JOIN results?</summary>
+    <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">That is normal for outer joins: NULL marks the side with no matching row. It is genuinely useful — WHERE right_table.id IS NULL after a LEFT JOIN finds records missing a relationship, like customers who never ordered.</p>
+  </details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+  <details style="padding:14px 18px;">
+    <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Does MySQL support FULL OUTER JOIN?</summary>
+    <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No, MySQL has no native FULL OUTER JOIN syntax. Emulate it with a LEFT JOIN combined via UNION with a RIGHT JOIN (or swapped LEFT JOIN) filtered to rows missing from the first half. PostgreSQL, SQL Server, and SQLite support it directly.</p>
+  </details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+  <details style="padding:14px 18px;">
+    <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Are JOINs slow?</summary>
+    <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Not inherently. Slow joins are usually caused by missing indexes on the join columns, SELECT * pulling unnecessary data, or the N+1 query pattern in application code. Index your foreign keys and JOINs are typically the fastest way to combine related data.</p>
+  </details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+  <details style="padding:14px 18px;">
+    <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between LEFT JOIN and RIGHT JOIN?</summary>
+    <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Only perspective: RIGHT JOIN keeps all rows from the second table, LEFT JOIN from the first. Every RIGHT JOIN can be rewritten as a LEFT JOIN by swapping the table order, which is why most teams standardize on LEFT JOIN for readability.</p>
+  </details>
+</div>
+          </div>
+        </section>
+
+                <!-- <div class="tool-embed-banner" style="margin-top: 48px;">
+  <h3><span>&#x1F680;</span> Keep leveling up</h3>
+  <p>Next: speed up these queries with proper indexing, then make sure your schema is normalized before it grows.</p>
+  <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub &rarr;</a>
+</div>: CTA banner linking to /articles/ Guides Hub with a topic-relevant teaser line -->
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

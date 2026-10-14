@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <title>HTML Email Templates: The Definitive Guide 2026 | WebDevWorker</title>
+  <meta name="description" content="Build HTML emails that render everywhere: table layouts, inline CSS, the 600px rule, dark mode, and client testing. Battle-tested techniques for 2026 inboxes."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/html-email-templates-guide-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="HTML Email Templates: The Definitive Guide 2026 | WebDevWorker"/>
+  <meta property="og:description" content="Build HTML emails that render everywhere: table layouts, inline CSS, the 600px rule, dark mode, and client testing. Battle-tested techniques for 2026 inboxes."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/html-email-templates-guide-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "HTML Email Templates: The Definitive Guide for 2026",
+      "description": "Build HTML emails that render everywhere: table layouts, inline CSS, the 600px rule, dark mode, and client testing. Battle-tested techniques for 2026 inboxes.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/html-email-templates-guide-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        
+          {
+                    "@type": "Question",
+                    "name": "Why do HTML emails still use tables in 2026?",
+                    "acceptedAnswer": {
+                              "@type": "Answer",
+                              "text": "Because Outlook desktop renders HTML with the Microsoft Word engine, which lacks flexbox and grid support. Nested tables are the only layout technique that works reliably across all major clients, so they remain the foundation of email templates."
+                    }
+          },
+          {
+                    "@type": "Question",
+                    "name": "Should I use inline CSS or a style block in emails?",
+                    "acceptedAnswer": {
+                              "@type": "Answer",
+                              "text": "Both. Inline critical CSS on every element for Gmail and other clients that strip style blocks, and keep a style block for media queries, dark mode, and enhancements. Automate inlining with a build tool so you author clean CSS."
+                    }
+          },
+          {
+                    "@type": "Question",
+                    "name": "What is the 600px rule in email design?",
+                    "acceptedAnswer": {
+                              "@type": "Answer",
+                              "text": "Email content containers are traditionally capped at 600px wide so they fit desktop preview panes without horizontal scrolling and scale down gracefully on mobile. Wider designs risk clipping in clients with narrow reading panes."
+                    }
+          },
+          {
+                    "@type": "Question",
+                    "name": "How do I make emails look right in dark mode?",
+                    "acceptedAnswer": {
+                              "@type": "Answer",
+                              "text": "Use transparent PNGs for logos, define dark-mode overrides with prefers-color-scheme media queries plus [data-ogsc] selectors for Outlook.com, and preview both schemes. Never assume the client will invert your colors gracefully."
+                    }
+          },
+          {
+                    "@type": "Question",
+                    "name": "What is a bulletproof button?",
+                    "acceptedAnswer": {
+                              "@type": "Answer",
+                              "text": "A call-to-action built as a real link inside a table cell, with VML (Vector Markup Language) fallback code wrapped in Outlook conditional comments. It renders as a proper button even in Word-engine Outlook, where padding-based CSS buttons collapse."
+                    }
+          }
+
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "HTML Email Guide",
+          "item": "https://www.webdevworker.com/articles/html-email-templates-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">HTML Email Guide</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">📧 Email Development</div>
+          <h1 class="guide-title">HTML Email Templates: The Definitive Guide 2026</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 6 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+<h3>📧 Your email looks perfect in Gmail — and broken in Outlook.</h3>
+<p style="color: var(--text-muted); margin: 0; line-height: 1.7;">Email clients render HTML like it is 1999. Learn the table layouts, inline CSS, and testing workflows that make one template survive 90+ inboxes.</p>
+<a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides &rarr;</a>
+</div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. Why Email Development Is Stuck in 1999</a></li>
+<li><a href="#sec2" style="color:var(--brand-primary);">2. Table-Based Layouts: The Skeleton</a></li>
+<li><a href="#sec3" style="color:var(--brand-primary);">3. Inline CSS and the 600px Rule</a></li>
+<li><a href="#sec4" style="color:var(--brand-primary);">4. Responsive and Dark Mode Email</a></li>
+<li><a href="#sec5" style="color:var(--brand-primary);">5. Testing Across 90+ Email Clients</a></li>
+<li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. Why Email Development Is Stuck in 1999</h2>
+<p>Web browsers converged on standards; email clients never did. Desktop Outlook still renders HTML with the Microsoft Word engine — no flexbox, no grid, limited CSS, and its own opinions about padding. Gmail strips <code>&lt;style&gt;</code> blocks in some contexts and ignores entire selectors. Apple Mail is the most capable client, which only helps Apple Mail users.</p>
+<p>The result is a discipline with its own physics. You write HTML like it is 1999 — nested tables for layout, attributes like <code>cellpadding</code> and <code>bgcolor</code>, CSS inlined on every element — while layering progressive enhancement for capable clients via media queries and conditional comments. It feels archaic until your first campaign renders identically in Outlook 2019 and Gmail, and then it feels like a superpower.</p>
+<p>The mindset shift: design for the lowest common denominator, enhance for the best clients. A beautiful email that breaks in Outlook (still massive in B2B) is a failed email. Start every template from a tested boilerplate, change one thing at a time, and test in real clients — screenshots from testing services, not just your own inbox.</p>
+</section>
+<section id="sec2" class="guide-section">
+<h2>2. Table-Based Layouts: The Skeleton</h2>
+<p>Tables are the only layout mechanism every client supports reliably. The standard skeleton is a full-width wrapper table (for background color) containing a centered 600px container table, with rows for preheader, header, hero, content blocks, and footer. Nested tables create columns; <code>align</code> attributes and ghost tables handle Outlook's quirks.</p>
+<pre class="code-box">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Newsletter&lt;/title&gt;
+  &lt;!--[if mso]&gt;
+  &lt;xml&gt;&lt;o:OfficeDocumentSettings&gt;&lt;o:PixelsPerInch&gt;96&lt;/o:PixelsPerInch&gt;&lt;/o:OfficeDocumentSettings&gt;&lt;/xml&gt;
+  &lt;![endif]--&gt;
+&lt;/head&gt;
+&lt;body style=&quot;margin:0; padding:0; background-color:#f1f5f9;&quot;&gt;
+  &lt;table role=&quot;presentation&quot; width=&quot;100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot;&gt;
+    &lt;tr&gt;
+      &lt;td align=&quot;center&quot; style=&quot;padding:24px 12px;&quot;&gt;
+        &lt;table role=&quot;presentation&quot; width=&quot;600&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot;
+               style=&quot;width:600px; max-width:100%; background:#ffffff;&quot;&gt;
+          &lt;tr&gt;
+            &lt;td style=&quot;padding:32px; font-family:Arial,sans-serif; font-size:16px; color:#0f172a;&quot;&gt;
+              Hello, reader — your content goes here.
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/table&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>Key details in that skeleton: <code>role="presentation"</code> keeps screen readers from announcing layout tables as data, the MSO conditional comment fixes Outlook's DPI scaling, and every table zeroes <code>cellpadding</code>/<code>cellspacing</code> so spacing comes only from explicit padding you control. Two-column sections use a nested table with two <code>&lt;td&gt;</code> cells — or the hybrid technique (below) for responsive stacking.</p>
+</section>
+<section id="sec3" class="guide-section">
+<h2>3. Inline CSS and the 600px Rule</h2>
+<p>Because Gmail and others mangle or strip <code>&lt;style&gt;</code> blocks, production email inlines critical CSS onto every element — typically automated with a tool like Juice or your ESP's inliner, so you author clean CSS and inline at build time. Keep a <code>&lt;style&gt;</code> block anyway for media queries and interactive enhancements that capable clients will honor.</p>
+<p>The <strong>600px rule</strong>: constrain your content container to 600px wide. It fits desktop preview panes without horizontal scrolling and scales down cleanly on mobile. Buttons must be <strong>bulletproof</strong> — real links styled as buttons, with VML fallbacks for Outlook, because padding-based buttons collapse in Word-engine Outlook.</p>
+<pre class="code-box">&lt;!-- Bulletproof button: works in Outlook via VML, everywhere else via styled link --&gt;
+&lt;table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot;&gt;
+  &lt;tr&gt;
+    &lt;td align=&quot;center&quot; bgcolor=&quot;#2563eb&quot; style=&quot;border-radius:8px;&quot;&gt;
+      &lt;!--[if mso]&gt;
+      &lt;v:roundrect xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; href=&quot;https://example.com&quot;
+        style=&quot;height:48px; width:220px;&quot; arcsize=&quot;15%&quot; fillcolor=&quot;#2563eb&quot; strokecolor=&quot;#2563eb&quot;&gt;
+        &lt;v:textbox inset=&quot;0,0,0,0&quot;&gt;&lt;center style=&quot;color:#ffffff; font-family:Arial;&quot;&gt;
+      &lt;![endif]--&gt;
+      &lt;a href=&quot;https://example.com&quot;
+         style=&quot;display:inline-block; padding:14px 32px; font-family:Arial,sans-serif;
+                font-size:16px; font-weight:bold; color:#ffffff; text-decoration:none;&quot;&gt;
+        Read the guide
+      &lt;/a&gt;
+      &lt;!--[if mso]&gt;&lt;/center&gt;&lt;/v:textbox&gt;&lt;/v:roundrect&gt;&lt;![endif]--&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</pre>
+<p>Web fonts are a progressive enhancement: declare them in <code>&lt;style&gt;</code> for Apple Mail and modern clients, but always end every <code>font-family</code> stack with a bulletproof fallback (Arial, Georgia) because Outlook and many Gmail apps will ignore your custom font. Design the fallback first; the web font is a bonus.</p>
+</section>
+<section id="sec4" class="guide-section">
+<h2>4. Responsive and Dark Mode Email</h2>
+<p>Over half of email opens happen on phones, so templates must adapt. The <strong>fluid hybrid</strong> technique makes columns stack without media queries: table cells with <code>display:inline-block</code> and max-widths naturally wrap when the viewport narrows, working even in clients that strip <code>&lt;style&gt;</code>. Layer media queries on top for capable clients to fine-tune padding and font sizes.</p>
+<pre class="code-box">&lt;style&gt;
+  @media only screen and (max-width: 620px) {
+    .container { width: 100% !important; }
+    .stack { display: block !important; width: 100% !important; }
+    .hero-title { font-size: 28px !important; }
+  }
+  /* Dark mode: supported clients only */
+  @media (prefers-color-scheme: dark) {
+    .body-bg { background-color: #0f172a !important; }
+    .card { background-color: #1e293b !important; }
+    .text { color: #f1f5f9 !important; }
+  }
+  /* Outlook.com / Apple dark-mode targeting */
+  [data-ogsc] .body-bg { background-color: #0f172a !important; }
+  [data-ogsc] .text { color: #f1f5f9 !important; }
+&lt;/style&gt;
+
+&lt;!-- Hybrid two-column: stacks on narrow screens without media queries --&gt;
+&lt;table role=&quot;presentation&quot; width=&quot;100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot;&gt;
+  &lt;tr&gt;
+    &lt;td class=&quot;stack&quot; style=&quot;display:inline-block; width:100%; max-width:290px; vertical-align:top;&quot;&gt;
+      Column one
+    &lt;/td&gt;
+    &lt;td class=&quot;stack&quot; style=&quot;display:inline-block; width:100%; max-width:290px; vertical-align:top;&quot;&gt;
+      Column two
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</pre>
+<p>Dark mode deserves deliberate design, not hope. Clients handle it three ways: no change, partial inversion (text/backgrounds flipped, images untouched), or full custom-scheme support. Use transparent-background PNGs for logos so they survive inversion, add <code>[data-ogsc]</code> overrides for Outlook.com, and always preview both schemes — dark-mode rendering bugs (invisible dark text on forced-dark backgrounds) are among the most common email defects in 2026.</p>
+</section>
+<section id="sec5" class="guide-section">
+<h2>5. Testing Across 90+ Email Clients</h2>
+<p>You cannot own 90 email clients, so rent them: <strong>Litmus</strong> and <strong>Email on Acid</strong> render your template in dozens of real clients and return screenshots in minutes. Test every template change — email CSS is so client-specific that a one-line tweak can break Outlook while fixing Gmail. Build a checklist and run it before every send.</p>
+<table class="data-table"><thead><tr><th>Feature</th><th>Apple Mail</th><th>Gmail (web/app)</th><th>Outlook desktop</th></tr></thead><tbody><tr><td>Flexbox / Grid</td><td>Supported</td><td>Not supported</td><td>Not supported</td></tr><tr><td><code>&lt;style&gt;</code> in head</td><td>Supported</td><td>Partially stripped</td><td>Supported</td></tr><tr><td>Media queries</td><td>Supported</td><td>Supported (mostly)</td><td>Not supported</td></tr><tr><td>Dark mode queries</td><td>Supported</td><td>Partial</td><td>Via <code>[data-ogsc]</code></td></tr><tr><td>Web fonts</td><td>Supported</td><td>Not supported</td><td>Not supported</td></tr><tr><td>Animated GIF</td><td>Plays</td><td>Plays (first frame in some)</td><td>First frame only</td></tr></tbody></table>
+<p>Beyond rendering, validate the unglamorous checklist: plain-text version present, images have alt text and defined dimensions (blocked images should not collapse layout), links use UTM parameters, unsubscribe is one click and obvious (Gmail now penalizes bulk senders who hide it), and total size stays under ~102KB to avoid Gmail clipping your message.</p>
+<p>Finally, seed-test deliverability: send to seed addresses across providers and check spam placement before the real send. The most beautiful template in the world earns nothing from the spam folder.</p>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Why do HTML emails still use tables in 2026?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Because Outlook desktop renders HTML with the Microsoft Word engine, which lacks flexbox and grid support. Nested tables are the only layout technique that works reliably across all major clients, so they remain the foundation of email templates.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Should I use inline CSS or a style block in emails?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Both. Inline critical CSS on every element for Gmail and other clients that strip style blocks, and keep a style block for media queries, dark mode, and enhancements. Automate inlining with a build tool so you author clean CSS.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the 600px rule in email design?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Email content containers are traditionally capped at 600px wide so they fit desktop preview panes without horizontal scrolling and scale down gracefully on mobile. Wider designs risk clipping in clients with narrow reading panes.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I make emails look right in dark mode?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Use transparent PNGs for logos, define dark-mode overrides with prefers-color-scheme media queries plus [data-ogsc] selectors for Outlook.com, and preview both schemes. Never assume the client will invert your colors gracefully.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is a bulletproof button?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">A call-to-action built as a real link inside a table cell, with VML (Vector Markup Language) fallback code wrapped in Outlook conditional comments. It renders as a proper button even in Word-engine Outlook, where padding-based CSS buttons collapse.</p>
+</details>
+</div>
+          </div>
+        </section>
+
+                <div class="tool-embed-banner" style="margin-top: 48px;">
+<h3>Keep leveling up</h3>
+<p style="color: var(--text-muted); margin: 0; line-height: 1.7;">Email is its own strange wonderful discipline — find more specialized web development guides in the hub.</p>
+<a href="/articles/" class="tool-launch-btn">Explore the Guides Hub &rarr;</a>
+</div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

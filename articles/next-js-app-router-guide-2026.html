@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Next.js App Router Guide: Server Components, Routing & Data Fetching | WebDevWorker</title>
+  <meta name="description" content="Master the Next.js App Router: server vs client components, file-based routing with layouts, data fetching, caching, and server actions with examples."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/next-js-app-router-guide-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Next.js App Router Guide: Server Components, Routing & Data Fetching | WebDevWorker"/>
+  <meta property="og:description" content="Master the Next.js App Router: server vs client components, file-based routing with layouts, data fetching, caching, and server actions with examples."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/next-js-app-router-guide-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Next.js App Router Guide: Server Components, Routing & Data Fetching (2026)",
+      "description": "Master the Next.js App Router: server vs client components, file-based routing with layouts, data fetching, caching, and server actions with examples.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/next-js-app-router-guide-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+            {
+      "@type": "Question",
+      "name": "When do I need 'use client' in Next.js?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Add 'use client' to any file using hooks (useState, useEffect), event handlers, or browser APIs. Everything else should stay a server component: they ship zero JavaScript, fetch data directly, and keep secrets server-side. Push the client boundary as deep as possible — often just the interactive widget, not the whole page."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can server components use hooks like useState?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Server components run once on the server and never hydrate, so hooks, event handlers, and browser APIs are unavailable. Fetch data with async/await directly in the component instead, and delegate interactivity to a 'use client' child component."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does caching work with fetch in the App Router?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Extended fetch options control it: the default caches statically until redeploy, next: { revalidate: N } enables Incremental Static Regeneration refreshing every N seconds, and cache: 'no-store' forces dynamic rendering. Identical requests within a render are automatically deduped."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are server actions?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Async functions marked 'use server' that mutate data directly — database writes, form processing — without an API route. They run on the server with secret access, can be used as form actions with progressive enhancement, and pair with revalidatePath to refresh cached pages after writes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I migrate from the Pages Router to the App Router?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For new projects, start with the App Router — it receives all framework investment. For existing apps, migrate incrementally: both routers coexist, so move leaf routes first and shared layouts last. The biggest wins come from replacing useEffect data fetching with server components."
+      }
+    }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Next.js App Router Guide",
+          "item": "https://www.webdevworker.com/articles/next-js-app-router-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Next.js App Router Guide</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">▲ Next.js</div>
+          <h1 class="guide-title">Next.js App Router Guide: Server Components, Routing & Data Fetching</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 9 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <!-- <div class="tool-embed-banner">
+          <h3>🔗 Related: React & Next.js Ecosystem</h3>
+          <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.6;">The App Router builds on React fundamentals. The Guides Hub covers React hooks, performance, routing, and state management to complete your full-stack picture.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides →</a>
+        </div>: one banner linking to /articles/ Guides Hub with 1-2 sentence teaser relevant to the topic -->
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. From Pages to App: The New Mental Model</a></li><li><a href="#sec2" style="color:var(--brand-primary);">2. Server vs Client Components</a></li><li><a href="#sec3" style="color:var(--brand-primary);">3. File-Based Routing: Layouts, Pages, and Loading States</a></li><li><a href="#sec4" style="color:var(--brand-primary);">4. Data Fetching, Caching, and Server Actions</a></li><li><a href="#sec5" style="color:var(--brand-primary);">5. Common Gotchas and Migration Tips</a></li><li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+          <h2>1. From Pages to App: The New Mental Model</h2>
+          
+<p>The App Router (in the <code>app/</code> directory) replaced the Pages Router's simple "file = route" model with something more powerful: <strong>every component is a server component by default</strong>, routes are defined by folders, and special files (<code>page.js</code>, <code>layout.js</code>, <code>loading.js</code>, <code>error.js</code>) declare UI states conventionally. The mental shift is from "fetch in the browser, then render" to "render on the server with data already in hand."</p>
+<p>Why it matters: server components send zero JavaScript for themselves to the browser, fetch data with direct backend access (no API round-trip from the client), and keep secrets server-side. The result is smaller bundles, faster first paints, and SEO-friendly HTML without giving up interactivity — you add <code>'use client'</code> precisely where interactivity lives.</p>
+<p>If you're coming from the Pages Router, map the concepts: <code>getServerSideProps</code> becomes an async server component, <code>getStaticProps</code> becomes fetch with caching options, and <code>_app.js</code> becomes the root <code>layout.js</code>. The two routers can coexist during migration, but new projects should start on the App Router — it's where all framework investment goes.</p>
+
+        </section>
+
+        <section id="sec2" class="guide-section">
+          <h2>2. Server vs Client Components</h2>
+          
+<p>The single most important App Router concept: <strong>server components run on the server</strong> (no <code>useState</code>, no event handlers, no browser APIs), while <strong>client components</strong> (marked with <code>'use client'</code>) hydrate in the browser and get all the interactivity. The art is pushing client boundaries as deep as possible — a page can be a server component that renders one small interactive widget:</p>
+<pre class="code-box">// app/products/page.js — SERVER component (default, no directive)
+import AddToCart from './AddToCart'; // client component, used below
+
+async function getProducts() {
+  // Runs on the server: direct DB/API access, secrets stay secret
+  const res = await fetch('https://api.example.com/products', {
+    next: { revalidate: 60 }, // cache 60s, then regenerate (ISR)
+  });
+  return res.json();
+}
+
+export default async function ProductsPage() {
+  const products = await getProducts(); // await directly in the component!
+  return (
+    &lt;main&gt;
+      &lt;h1&gt;Products&lt;/h1&gt;
+      {products.map((p) =&gt; (
+        &lt;article key={p.id}&gt;
+          &lt;h2&gt;{p.name}&lt;/h2&gt;
+          {/* Only this button ships JavaScript */}
+          &lt;AddToCart productId={p.id} /&gt;
+        &lt;/article&gt;
+      ))}
+    &lt;/main&gt;
+  );
+}</pre>
+<pre class="code-box">// app/products/AddToCart.js — CLIENT component (interactive island)
+'use client';
+
+import { useState } from 'react';
+
+export default function AddToCart({ productId }) {
+  const [added, setAdded] = useState(false);
+  return (
+    &lt;button onClick={() =&gt; { api.cart.add(productId); setAdded(true); }}
+            disabled={added}&gt;
+      {added ? 'Added ✓' : 'Add to cart'}
+    &lt;/button&gt;
+  );
+}</pre>
+<table class="data-table">
+<thead><tr><th></th><th>Server Component</th><th>Client Component (<code>'use client'</code>)</th></tr></thead>
+<tbody>
+<tr><td>Runs on</td><td>Server only</td><td>Server (prerender) + browser (hydrate)</td></tr>
+<tr><td>State, effects, handlers</td><td>No</td><td>Yes</td></tr>
+<tr><td>Ships JavaScript</td><td>No</td><td>Yes</td></tr>
+<tr><td>Can fetch directly</td><td>Yes (DB, secrets safe)</td><td>Only via API routes/client fetch</td></tr>
+<tr><td>Use for</td><td>Data fetching, static content, SEO</td><td>Interactivity, browser APIs</td></tr>
+</tbody>
+</table>
+<p>Data flows one way across the boundary: server components can pass props (including serializable data) <em>down</em> to client components, but a client component can never import a server component — doing so would drag server code into the browser bundle. Composition inverts instead: the server component renders the client component and passes other server components to it as <code>children</code>.</p>
+
+        </section>
+
+        <section id="sec3" class="guide-section">
+          <h2>3. File-Based Routing: Layouts, Pages, and Loading States</h2>
+          
+<p>In the App Router, <strong>folders define routes</strong> and special files define UI: <code>page.js</code> is the route's content, <code>layout.js</code> wraps it (and persists across navigation), <code>loading.js</code> shows during loads, and <code>error.js</code> catches failures. Dynamic segments use brackets — <code>app/blog/[slug]/page.js</code>:</p>
+<pre class="code-box">// app/dashboard/layout.js — persists while children navigate
+export default function DashboardLayout({ children }) {
+  return (
+    &lt;div className="dashboard"&gt;
+      &lt;Sidebar /&gt;      {/* mounted once, never refetched on tab switches */}
+      &lt;section&gt;{children}&lt;/section&gt;
+    &lt;/div&gt;
+  );
+}
+
+// app/dashboard/reports/loading.js — instant skeleton UI
+export default function Loading() {
+  return &lt;div className="skeleton-list"&gt;Loading reports…&lt;/div&gt;;
+}
+
+// app/blog/[slug]/page.js — dynamic route with metadata
+export async function generateMetadata({ params }) {
+  const post = await getPost(params.slug);
+  return { title: post.title, description: post.excerpt };
+}
+
+export default async function PostPage({ params, searchParams }) {
+  const post = await getPost(params.slug); // params from the URL
+  return &lt;article&gt;&lt;h1&gt;{post.title}&lt;/h1&gt;{post.body}&lt;/article&gt;;
+}</pre>
+<p><strong>Layouts preserve state</strong> — navigating between <code>/dashboard/reports</code> and <code>/dashboard/settings</code> keeps the layout mounted, unlike the old pattern of re-rendering shared UI per page. <strong>Loading states stream</strong>: wrap slow parts in <code>&lt;Suspense&gt;</code> and Next.js sends the fast HTML first, streaming the rest in — the <code>loading.js</code> convention is just Suspense with file-based ergonomics.</p>
+<p>Route groups (<code>(marketing)</code>) organize files without affecting URLs, and <code>page.js</code> files are required for a route to be publicly accessible — folders with only a layout don't create pages. Colocate route-specific components next to their pages (private folders prefixed with <code>_</code> are excluded from routing) so each route's code lives with its URL.</p>
+
+        </section>
+
+        <section id="sec4" class="guide-section">
+          <h2>4. Data Fetching, Caching, and Server Actions</h2>
+          
+<p>Server components fetch with the extended <code>fetch</code> API, where caching is declarative: <code>cache: 'force-cache'</code> (default — static), <code>next: { revalidate: N }</code> (ISR — refresh every N seconds), or <code>cache: 'no-store'</code> (always dynamic). Identical requests are automatically deduped within a render, so multiple components can each fetch what they need without waterfalling:</p>
+<pre class="code-box">// Static (cached until redeploy), revalidated, and dynamic patterns
+const static_ = await fetch('https://api.example.com/docs'); // force-cache default
+const fresh = await fetch('https://api.example.com/prices',
+  { next: { revalidate: 30 } });            // ISR: at most 30s stale
+const live = await fetch('https://api.example.com/session',
+  { cache: 'no-store' });                   // dynamic: never cached
+
+// Server Action: mutate data without an API route ('use server')
+async function subscribe(formData) {
+  'use server';
+  const email = formData.get('email');
+  if (typeof email !== 'string' || !email.includes('@')) {
+    return { error: 'Enter a valid email address.' };
+  }
+  await db.subscribers.create({ email }); // direct DB access, secrets safe
+  revalidatePath('/newsletter');          // refresh cached pages showing this
+}
+
+// Used directly as a form action — progressive enhancement included
+export default function NewsletterForm() {
+  return (
+    &lt;form action={subscribe}&gt;
+      &lt;input type="email" name="email" required /&gt;
+      &lt;button type="submit"&gt;Subscribe&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</pre>
+<p><strong>Server Actions</strong> replace API routes for mutations: async functions marked <code>'use server'`</code> that forms and event handlers call directly, with direct database access and no client bundle cost. They work with plain HTML forms too (progressive enhancement), and <code>revalidatePath</code>/<code>revalidateTag</code> refresh affected caches after writes.</p>
+<p>Choose your rendering per route, not per app: static for marketing pages, ISR for catalogs and blogs, dynamic for personalized dashboards. The App Router's granularity — down to individual <code>fetch</code> calls — means one page can mix cached product data with a live cart without compromise.</p>
+
+        </section>
+
+        <section id="sec5" class="guide-section">
+          <h2>5. Common Gotchas and Migration Tips</h2>
+          
+<p><strong>"You're importing a component that needs useState"</strong> — you used a hook or event handler in a server component. Add <code>'use client'</code> at the top of the file containing the interactivity, and push that boundary as deep as the component tree allows. <strong>Event handlers silently not working</strong> is the same root cause: server components never hydrate, so <code>onClick</code> there does nothing.</p>
+<p><strong>Stale data after mutations:</strong> cached fetches don't know your database changed — call <code>revalidatePath</code> or <code>revalidateTag</code> in the server action that performed the write. <strong>Client components can't be async</strong> and can't await data; fetch in the parent server component and pass data down as props. <strong>Third-party libraries</strong> that touch <code>window</code> during import must live behind <code>'use client'</code> — or dynamic import with <code>ssr: false</code> for browser-only widgets like maps.</p>
+<p>Migration strategy: run both routers side by side (App Router takes precedence on conflicting paths), migrate leaf routes first, and keep shared UI in the root layout last. Move data fetching out of <code>useEffect</code> into server components as you go — that's where the biggest performance wins hide. And test the production build early: caching behavior only fully manifests in <code>next build</code>, not in dev mode where everything is dynamic.</p>
+
+        </section>
+
+        
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">When do I need 'use client' in Next.js?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Add 'use client' to any file using hooks (useState, useEffect), event handlers, or browser APIs. Everything else should stay a server component: they ship zero JavaScript, fetch data directly, and keep secrets server-side. Push the client boundary as deep as possible — often just the interactive widget, not the whole page.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can server components use hooks like useState?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No. Server components run once on the server and never hydrate, so hooks, event handlers, and browser APIs are unavailable. Fetch data with async/await directly in the component instead, and delegate interactivity to a 'use client' child component.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How does caching work with fetch in the App Router?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Extended fetch options control it: the default caches statically until redeploy, next: { revalidate: N } enables Incremental Static Regeneration refreshing every N seconds, and cache: 'no-store' forces dynamic rendering. Identical requests within a render are automatically deduped.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What are server actions?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Async functions marked 'use server' that mutate data directly — database writes, form processing — without an API route. They run on the server with secret access, can be used as form actions with progressive enhancement, and pair with revalidatePath to refresh cached pages after writes.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Should I migrate from the Pages Router to the App Router?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">For new projects, start with the App Router — it receives all framework investment. For existing apps, migrate incrementally: both routers coexist, so move leaf routes first and shared layouts last. The biggest wins come from replacing useEffect data fetching with server components.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                <!-- <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>🚀 Keep leveling up</h3>
+          <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.6;">You now understand server vs client components, file-based routing, caching, and server actions. Keep mastering modern web development with 90+ tutorials in the Guides Hub.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub →</a>
+        </div>: CTA banner linking to /articles/ Guides Hub with a topic-relevant teaser line -->
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- SEO: replace TITLE, DESC (150-160 chars), and SLUG everywhere -->
+  <title>Tailwind CSS Complete Guide 2026: Setup, Utility Classes &amp; Configuration | WebDevWorker</title>
+  <meta name="description" content="Learn Tailwind CSS from scratch in 2026: install with Vite or the Play CDN, master utility classes, customize theme tokens, and ship optimized production CSS."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/tailwind-css-complete-guide-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Tailwind CSS Complete Guide 2026: Setup, Utility Classes &amp; Configuration | WebDevWorker"/>
+  <meta property="og:description" content="Learn Tailwind CSS from scratch in 2026: install with Vite or the Play CDN, master utility classes, customize theme tokens, and ship optimized production CSS."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/tailwind-css-complete-guide-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Tailwind CSS Complete Guide 2026: Setup, Utility Classes and Configuration",
+      "description": "Learn Tailwind CSS from scratch in 2026: install with Vite or the Play CDN, master utility classes, customize theme tokens, and ship optimized production CSS.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/tailwind-css-complete-guide-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+    "@type": "Question",
+    "name": "What is the difference between Tailwind CSS v3 and v4?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tailwind v4 is a ground-up rewrite: configuration moved from tailwind.config.js to CSS-first @theme directives, builds are significantly faster via a new engine, and the Vite plugin is the recommended install. v3 remains supported and stable, but new projects in 2026 should start on v4."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "Does Tailwind CSS bloat my stylesheet?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No — Tailwind scans your source files and generates CSS only for the utilities you actually use, so production builds are typically under 20KB gzipped. Bloat only appears when content paths miss files or when classes are constructed dynamically so the scanner cannot see them."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "Can I use Tailwind alongside a component library like shadcn or MUI?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Tailwind handles layout and custom styling while the library provides component behavior; this combination is extremely common. Use the library's theming tokens alongside your Tailwind theme so colors and radii stay consistent across both."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "Why isn't my dynamically generated class like bg-${color}-500 working?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tailwind's compiler extracts complete class name strings from your source files at build time — it cannot evaluate template literals. Write out full class names (even in ternaries or lookup objects) or add the pattern to the safelist so those utilities are always generated."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "Is Tailwind CSS a good choice for large teams?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It can be excellent, because the constrained token scale enforces visual consistency without constant code review. Success depends on a well-maintained theme (brand colors, type scale, spacing) and conventions for component extraction, so invest in those early."
+    }
+}
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Tailwind CSS Guide",
+          "item": "https://www.webdevworker.com/articles/tailwind-css-complete-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Tailwind CSS Guide</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🎨 CSS &amp; Styling</div>
+          <h1 class="guide-title">Tailwind CSS Complete Guide 2026: Setup, Utility Classes &amp; Configuration</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 9 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3><span>🎨</span> Master Utility-First CSS</h3>
+          <p>Styling is only half the craft — our Guides Hub pairs Tailwind walkthroughs with responsive design patterns, CSS architecture guides, and frontend tooling tutorials.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides →</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. What Tailwind CSS Is (and Isn't)</a></li>
+            <li><a href="#sec2" style="color:var(--brand-primary);">2. Installing Tailwind: Vite, CDN, and Frameworks</a></li>
+            <li><a href="#sec3" style="color:var(--brand-primary);">3. Utility Classes: The Core Building Blocks</a></li>
+            <li><a href="#sec4" style="color:var(--brand-primary);">4. Customizing the Theme</a></li>
+            <li><a href="#sec5" style="color:var(--brand-primary);">5. Going to Production: Optimization and Best Practices</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. What Tailwind CSS Is (and Isn't)</h2>
+<p>Tailwind CSS is a <strong>utility-first</strong> CSS framework: instead of predefined components like Bootstrap's <code>.btn-primary</code>, it gives you hundreds of single-purpose classes — <code>flex</code>, <code>pt-4</code>, <code>text-center</code>, <code>bg-blue-500</code> — that you compose directly in your markup. You style by combining utilities rather than by writing custom CSS or naming new classes.</p><p>The payoff is speed and consistency. Spacing, colors, and type all come from a shared design-token scale, so <code>p-4</code> is always the same 1rem everywhere and your palette stays limited to deliberate choices. The common objection — that markup gets cluttered — fades with practice: extracting repeated patterns into components (React, Vue, Blade, or even template partials) keeps templates clean while the design system stays centralized.</p><p>Tailwind is not a component library and not a replacement for CSS knowledge. You still need to understand flexbox, grid, and the cascade — Tailwind just lets you apply that knowledge without context-switching to a stylesheet. Teams that already know CSS tend to adopt it fastest; teams that don't sometimes produce inconsistent UIs until they learn the underlying properties the utilities map to.</p><pre class="code-box">&lt;!-- A card built entirely from utilities: no custom CSS file needed --&gt;
+&lt;div class="max-w-sm rounded-xl bg-white p-6 shadow-lg ring-1 ring-slate-900/5"&gt;
+  &lt;div class="flex items-center gap-4"&gt;
+    &lt;div class="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-xl"&gt;🚀&lt;/div&gt;
+    &lt;div&gt;
+      &lt;h3 class="text-lg font-semibold text-slate-900"&gt;Utility-first workflow&lt;/h3&gt;
+      &lt;p class="text-sm text-slate-500"&gt;Style in markup, ship faster&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;p class="mt-4 text-sm leading-6 text-slate-600"&gt;
+    Every class maps to one CSS declaration. Compose them, extract
+    components, and your design system stays consistent by default.
+  &lt;/p&gt;
+  &lt;button class="mt-4 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"&gt;
+    Get started
+  &lt;/button&gt;
+&lt;/div&gt;</pre>
+</section>
+
+        <section id="sec2" class="guide-section">
+<h2>2. Installing Tailwind: Vite, CDN, and Frameworks</h2>
+<p>As of v4, the recommended install for Vite projects is the dedicated <code>@tailwindcss/vite</code> plugin — no PostCSS config file required. You install two packages, add the plugin to <code>vite.config</code>, and import <code>"tailwindcss"</code> in your CSS entry. The older PostCSS-based setup (<code>tailwindcss</code> + <code>autoprefixer</code> + <code>tailwind.config.js</code>) still works and remains the path for webpack, Next.js pages setups, and other bundlers.</p><p>For prototypes, documentation pages, or quick experiments, the Play CDN (<code>https://cdn.tailwindcss.com</code>) compiles utilities in the browser — add the script tag and start writing classes immediately. It is genuinely useful for demos but not for production: it ships a runtime compiler and cannot tree-shake, so use a real build for anything users will load.</p><p>Framework-specific starters (Next.js, Nuxt, Astro, Laravel) all document their Tailwind integration; the pattern is always the same — install the right adapter package, wire it into the build, import the CSS entry. If your framework has an official Tailwind plugin, prefer it over hand-rolling PostCSS config.</p><pre class="code-box"># Tailwind v4 + Vite (recommended)
+npm install -D tailwindcss @tailwindcss/vite
+
+# vite.config.js
+import { defineConfig } from 'vite'
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineConfig({
+  plugins: [tailwindcss()],
+})
+
+# src/index.css — v4 entry (CSS-first, no config file needed)
+@import "tailwindcss";</pre><pre class="code-box">&lt;!-- Play CDN: prototypes and experiments only --&gt;
+&lt;!doctype html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8" /&gt;
+  &lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body class="bg-slate-100"&gt;
+  &lt;h1 class="text-3xl font-bold text-slate-900"&gt;It works instantly&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</section>
+
+        <section id="sec3" class="guide-section">
+<h2>3. Utility Classes: The Core Building Blocks</h2>
+<p>Utilities are grouped by CSS concern, and learning the naming patterns matters more than memorizing classes. Layout uses <code>flex</code>, <code>grid</code>, <code>block</code>, <code>hidden</code>; spacing follows a single scale where the number is a multiple of 0.25rem (<code>p-4</code> = 1rem, <code>mt-8</code> = 2rem margin-top, <code>gap-6</code> = 1.5rem); typography combines <code>text-{size}</code>, <code>font-{weight}</code>, and <code>leading-{x}</code>; colors are <code>{property}-{color}-{shade}</code> like <code>bg-emerald-500</code> or <code>text-slate-700</code>.</p><p>Variants modify when a utility applies. Responsive variants (<code>md:</code>, <code>lg:</code>) are mobile-first min-width breakpoints; state variants (<code>hover:</code>, <code>focus:</code>, <code>disabled:</code>, <code>group-hover:</code>) handle interaction; <code>dark:</code> handles color schemes. Variants stack — <code>md:hover:bg-indigo-700</code> is valid and reads exactly like it behaves.</p><p>Arbitrary values in square brackets cover everything the scale doesn't: <code>w-[732px]</code>, <code>text-[13px]</code>, <code>bg-[#0f172a]</code>, <code>grid-cols-[1fr_2fr]</code>. Use them for one-off values, but promote anything repeated into the theme so it stays consistent and searchable.</p><table class="data-table"><thead><tr><th>Category</th><th>Example classes</th><th>What they do</th></tr></thead><tbody><tr><td>Layout</td><td><code>flex, grid, block, hidden</code></td><td>Display and positioning primitives</td></tr><tr><td>Spacing</td><td><code>p-4, mt-8, gap-6, space-y-2</code></td><td>Padding, margin, gaps on the 0.25rem scale</td></tr><tr><td>Typography</td><td><code>text-lg, font-bold, leading-6, tracking-wide</code></td><td>Size, weight, line-height, letter-spacing</td></tr><tr><td>Color</td><td><code>bg-indigo-600, text-slate-700</code></td><td>Backgrounds, text, borders from the palette</td></tr><tr><td>Sizing</td><td><code>w-full, max-w-7xl, h-screen, aspect-video</code></td><td>Widths, heights, aspect ratios</td></tr><tr><td>Effects</td><td><code>shadow-lg, rounded-xl, ring-1, opacity-75</code></td><td>Shadows, radii, rings, transparency</td></tr></tbody></table><pre class="code-box">&lt;!-- Variants: responsive + state, stacked --&gt;
+&lt;button class="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white
+               hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500
+               disabled:cursor-not-allowed disabled:opacity-50
+               md:w-auto"&gt;
+  Save changes
+&lt;/button&gt;
+
+&lt;!-- Arbitrary values for one-off design tokens --&gt;
+&lt;div class="mx-auto w-[min(100%-2rem,72rem)] bg-[#0f172a] text-[15px] leading-[1.7]"&gt;
+  Custom width, color, and type scale without touching CSS.
+&lt;/div&gt;</pre>
+</section>
+
+        <section id="sec4" class="guide-section">
+<h2>4. Customizing the Theme</h2>
+<p>Tailwind v4 moved configuration into CSS with the <code>@theme</code> directive — design tokens are now plain CSS custom properties, which means your theme values work in regular CSS too, not just in utilities. Define <code>--color-brand-500</code> inside <code>@theme</code> and you instantly get <code>bg-brand-500</code>, <code>text-brand-500</code>, <code>border-brand-500</code>, and every other color utility for free.</p><p>If you are on v3, the same job happens in <code>tailwind.config.js</code> under <code>theme.extend</code>: custom colors, fonts, spacing, breakpoints, and animations. The key discipline in both versions is restraint — add tokens for your actual brand palette and type scale, and resist redefining the whole scale. A theme file should read like a brand guide, not a second framework.</p><p>Dark mode in v4 defaults to the <code>prefers-color-scheme</code> media query; add <code>@custom-variant dark (&:where(.dark, .dark *));</code> to switch it to class-based toggling. For fonts, register <code>--font-display</code> in <code>@theme</code> and use <code>font-display</code> anywhere — then set fallbacks once instead of repeating font stacks.</p><pre class="code-box">/* Tailwind v4: CSS-first theme in your stylesheet */
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #eef2ff;
+  --color-brand-500: #6366f1;
+  --color-brand-700: #4338ca;
+
+  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --spacing-card: 1.75rem;      /* enables p-card, m-card, gap-card ... */
+}
+
+/* Class-based dark mode (v4) */
+@custom-variant dark (&amp;:where(.dark, .dark *));</pre><pre class="code-box">// Tailwind v3 equivalent: tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ['./src/**/*.{html,js,jsx,vue}'],
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        brand: { 50: '#eef2ff', 500: '#6366f1', 700: '#4338ca' },
+      },
+      fontFamily: {
+        display: ['Sora', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
+    },
+  },
+  plugins: [],
+}</pre>
+</section>
+
+        <section id="sec5" class="guide-section">
+<h2>5. Going to Production: Optimization and Best Practices</h2>
+<p>Tailwind scans your source files for class names and generates only the CSS you actually use — this is why a full-featured Tailwind build typically ships under 20KB gzipped. The critical requirement is that the <code>content</code> paths (v3) or automatic content detection (v4) cover every file containing classes. If a utility seems to do nothing in production but worked in dev, a missing content path is the first suspect.</p><p>The most common production bug is <strong>dynamic class construction</strong>: <code>bg-${color}-500</code> never works because the compiler only sees complete class strings in your source. Always write full class names, even in ternaries — <code>isActive ? 'bg-indigo-600' : 'bg-slate-200'</code> — or add truly dynamic values to the <code>safelist</code>.</p><p>Two style rules keep large codebases healthy. First, prefer component extraction over <code>@apply</code>: <code>@apply</code> in a stylesheet recreates the specificity and ordering problems utilities were designed to avoid, while a real component keeps the design system in one place. Second, establish variant order conventions (<code>responsive → state → dark</code>) so class strings stay scannable. Run your build with minification enabled and confirm the output size — if it ballooned, something is generating classes outside the scanner's view.</p><pre class="code-box">// ❌ Broken: the compiler never sees the full class name
+const color = 'indigo'
+&lt;span className={`bg-${color}-600`}&gt;Never styled&lt;/span&gt;
+
+// ✅ Correct: complete class strings the scanner can find
+const styles = { indigo: 'bg-indigo-600', emerald: 'bg-emerald-600' }
+&lt;span className={styles[color]}&gt;Always styled&lt;/span&gt;
+
+// ✅ Safelist for genuinely dynamic values (v3 config / v4 @source)
+// tailwind.config.js: safelist: [{ pattern: /bg-(indigo|emerald|rose)-600/ }]</pre>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between Tailwind CSS v3 and v4?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Tailwind v4 is a ground-up rewrite: configuration moved from tailwind.config.js to CSS-first @theme directives, builds are significantly faster via a new engine, and the Vite plugin is the recommended install. v3 remains supported and stable, but new projects in 2026 should start on v4.</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Does Tailwind CSS bloat my stylesheet?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No — Tailwind scans your source files and generates CSS only for the utilities you actually use, so production builds are typically under 20KB gzipped. Bloat only appears when content paths miss files or when classes are constructed dynamically so the scanner cannot see them.</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can I use Tailwind alongside a component library like shadcn or MUI?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes. Tailwind handles layout and custom styling while the library provides component behavior; this combination is extremely common. Use the library's theming tokens alongside your Tailwind theme so colors and radii stay consistent across both.</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Why isn't my dynamically generated class like bg-${color}-500 working?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Tailwind's compiler extracts complete class name strings from your source files at build time — it cannot evaluate template literals. Write out full class names (even in ternaries or lookup objects) or add the pattern to the safelist so those utilities are always generated.</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Is Tailwind CSS a good choice for large teams?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">It can be excellent, because the constrained token scale enforces visual consistency without constant code review. Success depends on a well-maintained theme (brand colors, type scale, spacing) and conventions for component extraction, so invest in those early.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Keep leveling up</h3>
+          <p>Utility-first styling rewards practice — explore the Guides Hub for responsive patterns, CSS deep-dives, and the rest of the modern frontend stack.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub →</a>
+        </div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

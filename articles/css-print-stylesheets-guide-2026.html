@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSS Print Stylesheets: The Complete Guide | WebDevWorker</title>
+  <meta name="description" content="Master CSS print stylesheets in 2026: @media print basics, page breaks, @page rules, print-friendly layouts, and debugging tips. Full code examples included."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/css-print-stylesheets-guide-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="CSS Print Stylesheets: The Complete Guide | WebDevWorker"/>
+  <meta property="og:description" content="Master CSS print stylesheets in 2026: @media print basics, page breaks, @page rules, print-friendly layouts, and debugging tips. Full code examples included."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/css-print-stylesheets-guide-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "CSS Print Stylesheets: The Complete Guide (2026)",
+      "description": "Master CSS print stylesheets in 2026: @media print basics, page breaks, @page rules, print-friendly layouts, and debugging tips. Full code examples included.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/css-print-stylesheets-guide-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+                  {
+            "@type": "Question",
+            "name": "Do background colors and images print by default?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Browsers strip backgrounds unless the user enables “Background graphics” in the print dialog. Design print output to work without them, and only use print-color-adjust: exact for small critical elements like a logo — never for large areas, which waste ink."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I repeat table headers on every printed page?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Add thead { display: table-header-group; } inside your @media print block. This works with real <table> markup and is supported across browsers. Pair it with break-inside: avoid on rows so a single row never splits across the page boundary."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I force a page break before a specific element?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes: break-before: page (with the legacy alias page-break-before: page for older engines). Apply it to the element that should start on a fresh page, such as each chapter of a report or each invoice in a batch print."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I test print styles without wasting paper?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Use DevTools media emulation (Rendering panel → Emulate CSS media type → print) for fast iteration, then check real pagination in the browser's print preview dialog (Ctrl+P). Never ship print CSS tested only by looking at the screen styles."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why do my flexbox and grid layouts break when printing?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Fragmentation (splitting content across pages) is unreliable for flex and grid containers in several browsers. The standard fix is to flatten them to display: block inside @media print and let the content flow as a simple vertical column."
+            }
+          }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Print Stylesheets Guide",
+          "item": "https://www.webdevworker.com/articles/css-print-stylesheets-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Print Stylesheets Guide</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🎨 CSS &amp; Layout</div>
+          <h1 class="guide-title">CSS Print Stylesheets: The Complete Guide</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 7 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. Why Print Stylesheets Still Matter in 2026</a></li>
+            <li><a href="#sec2" style="color:var(--brand-primary);">2. @media print Fundamentals</a></li>
+            <li><a href="#sec3" style="color:var(--brand-primary);">3. Controlling Page Breaks</a></li>
+            <li><a href="#sec4" style="color:var(--brand-primary);">4. @page Rules and Print Layout</a></li>
+            <li><a href="#sec5" style="color:var(--brand-primary);">5. Testing and Debugging Print CSS</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+                <section id="sec1" class="guide-section">
+          <h2>1. Why Print Stylesheets Still Matter in 2026</h2>
+          <p>Nobody prints homepages anymore, but the web still runs on printed and PDF output: invoices, boarding passes, medical forms, shipping labels, restaurant receipts, and financial reports. Most of these are generated from HTML and turned into PDFs via the browser's print pipeline, which means @media print is quietly one of the most business-critical CSS features in existence.</p>
+          <p>A print stylesheet is simply a set of rules that apply only when the page is printed or saved as PDF. Its job is translation: strip the app chrome (navigation, sidebars, ads, footers, cookie banners), flatten the layout into a single readable column, force dark-on-light colors, and control exactly where pages break. Without it, users get a shrunk screenshot of your app — with it, they get a professional document.</p>
+          <p>The good news is that print CSS is small. A solid print stylesheet is usually 40–80 lines, lives in the same CSS file as everything else, and needs no build tooling. The patterns below cover nearly every real-world case, from a one-page receipt to a fifty-page generated report.</p>
+          <pre class="code-box">/* The skeleton every print stylesheet starts from */
+@media print {
+  /* Hide everything that is not the document itself */
+  header, nav, aside, footer,
+  .ads, .cookie-banner, .no-print {
+    display: none !important;
+  }
+
+  /* Force readable, ink-friendly colors */
+  body {
+    background: #fff !important;
+    color: #000;
+    font-size: 12pt;
+  }
+}</pre>
+        </section>
+        <section id="sec2" class="guide-section">
+          <h2>2. @media print Fundamentals</h2>
+          <p>The first rule of print CSS: hide ruthlessly. Navigation menus, hero images, social buttons, comment sections, and sticky headers all waste paper and confuse the reader. Give printable regions a class like .print-area and hide everything else, or invert the approach with .no-print on chrome elements. Using !important is acceptable here — print overrides must beat screen styles reliably.</p>
+          <p>Second, reset the visual language for paper. Screens are backlit; paper is not. Force black text on white, remove text-shadows and translucent overlays, and expand shortened links so the URL is visible: a[href]::after { content: " (" attr(href) ")"; } turns “Read more” into “Read more (https://…)”. Skip this for anchor links and javascript: URLs with a :not() filter so internal page jumps do not print garbage.</p>
+          <p>Third, think in physical units. Pixels are meaningless on paper; points (pt) and millimeters (mm) are the native units of print. Set body type around 11–12pt, keep line-height generous (1.5+), and constrain the content width — a 1200px app layout squeezed onto A4 becomes unreadably small, so let the print layout flow at 100% width in a single column.</p>
+          <pre class="code-box">@media print {
+  /* Make link destinations visible on paper */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    word-break: break-all;
+  }
+  /* ...but not for in-page anchors */
+  a[href^="#"]::after { content: ""; }
+
+  main, .print-area {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}</pre>
+        </section>
+        <section id="sec3" class="guide-section">
+          <h2>3. Controlling Page Breaks</h2>
+          <p>Bad page breaks are what separate amateur print output from professional documents: a table split mid-row, a heading stranded at the bottom of a page with its paragraph on the next, a chart orphaned from its caption. CSS gives you precise control with the break-* properties (and their legacy page-break-* aliases, which older engines still need).</p>
+          <p>The workhorse is break-inside: avoid, applied to cards, table rows, figures, and any component that must stay together. Use break-before: page on major sections (each invoice, each chapter) to force a fresh page, and break-after: avoid on headings so a heading never sits alone at the bottom of a page. The orphans and widows properties set the minimum lines that must stay together at the start and end of a paragraph — orphans: 3; widows: 3; is a sane default for body text.</p>
+          <p>One caution: break-inside: avoid is a request, not a command. If a component is taller than the page itself, the browser must break it somewhere. Design printable components (especially tables) to fragment gracefully: repeat table headers on each page and avoid fixed heights that fight the page box.</p>
+          <pre class="code-box">@media print {
+  /* Never split these across pages */
+  .invoice-card, figure, pre, blockquote {
+    break-inside: avoid;
+  }
+
+  /* Each major section starts on a fresh page */
+  .report-chapter {
+    break-before: page;
+  }
+
+  /* Keep headings glued to the content that follows */
+  h1, h2, h3 {
+    break-after: avoid;
+  }
+
+  p, li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Repeat table headers on every printed page */
+  thead { display: table-header-group; }
+  tfoot { display: table-footer-group; }
+}</pre>
+        </section>
+        <section id="sec4" class="guide-section">
+          <h2>4. @page Rules and Print Layout</h2>
+          <p>The @page rule controls the page box itself: its size and margins. @page { size: A4; margin: 20mm; } is the most common declaration, and size: landscape is handy for wide tables and dashboards. Margins set here combine with the browser's own print dialog margins, so keep them modest and let users fine-tune in the dialog.</p>
+          <p>Complex screen layouts rarely survive printing. Multi-column grids, sticky sidebars, and flex rows designed for 1440px collapse badly on an A4 page. The pragmatic move is to flatten: inside @media print, switch grids and flex containers to display: block, stack sections vertically, and let content flow naturally. A print layout should be boring — boring prints perfectly.</p>
+          <p>Running headers and footers (page numbers, document titles on every page) are theoretically possible with @page margin boxes like @top-center, but browser support remains spotty — Chrome only recently improved it. For reliable page numbers today, most teams generate PDFs server-side or accept the browser's built-in header/footer options in the print dialog instead of fighting CSS.</p>
+          <pre class="code-box">/* Page box: size and margins */
+@page {
+  size: A4;
+  margin: 18mm 15mm;
+}
+
+@page landscape-sheet {
+  size: A4 landscape;
+}
+
+@media print {
+  /* Flatten fancy screen layouts into a printable column */
+  .dashboard-grid, .flex-row {
+    display: block !important;
+  }
+
+  /* Wide tables get their own landscape page */
+  .wide-report {
+    page: landscape-sheet;
+    break-before: page;
+  }
+}</pre>
+        </section>
+        <section id="sec5" class="guide-section">
+          <h2>5. Testing and Debugging Print CSS</h2>
+          <p>Never test print CSS by actually printing. Every Chromium-based browser lets you emulate print media: open DevTools, press Ctrl+Shift+P, type “rendering”, and set “Emulate CSS media type” to print. The page instantly renders with your @media print rules applied, and you can inspect elements, tweak values live, and iterate in seconds. Firefox offers the same under its document print preview with media emulation.</p>
+          <p>The browser print preview dialog (Ctrl+P) is the second tool: it shows real pagination, page counts, and margin behavior. Toggle “Background graphics” on and off to see what users with default settings will get — most users leave it off, which is why you must never rely on background colors or images to convey meaning in print.</p>
+          <p>Common gotchas to sweep for: flex and grid containers that refuse to fragment (flatten them), absolutely positioned elements overlapping content across pages, and web fonts that fail when offline (print output should fall back to system serif/sans gracefully). A final checklist pass through the table below catches 90% of print bugs before your users do.</p>
+          <table class="data-table">
+          <thead>
+          <tr><th>Property / rule</th><th>What it does</th><th>Watch out for</th></tr>
+          </thead>
+          <tbody>
+          <tr><td>@media print</td><td>Scopes rules to printing / PDF</td><td>Screen styles still cascade in — override explicitly</td></tr>
+          <tr><td>break-inside: avoid</td><td>Keeps a block on one page</td><td>Ignored if the block is taller than the page</td></tr>
+          <tr><td>break-before: page</td><td>Forces a page break before the element</td><td>Creates blank space if used carelessly in flow</td></tr>
+          <tr><td>thead { display: table-header-group; }</td><td>Repeats header row on each page</td><td>Only works on real &lt;table&gt; markup</td></tr>
+          <tr><td>print-color-adjust: exact</td><td>Forces backgrounds to print</td><td>Wastes ink; most users disable background graphics</td></tr>
+          <tr><td>@page { size; margin }</td><td>Sets paper size and margins</td><td>Adds to (not replaces) the print dialog's margins</td></tr>
+          </tbody>
+          </table>
+        </section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Do background colors and images print by default?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No. Browsers strip backgrounds unless the user enables “Background graphics” in the print dialog. Design print output to work without them, and only use print-color-adjust: exact for small critical elements like a logo — never for large areas, which waste ink.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I repeat table headers on every printed page?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Add thead { display: table-header-group; } inside your @media print block. This works with real &lt;table&gt; markup and is supported across browsers. Pair it with break-inside: avoid on rows so a single row never splits across the page boundary.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can I force a page break before a specific element?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes: break-before: page (with the legacy alias page-break-before: page for older engines). Apply it to the element that should start on a fresh page, such as each chapter of a report or each invoice in a batch print.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I test print styles without wasting paper?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Use DevTools media emulation (Rendering panel → Emulate CSS media type → print) for fast iteration, then check real pagination in the browser's print preview dialog (Ctrl+P). Never ship print CSS tested only by looking at the screen styles.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Why do my flexbox and grid layouts break when printing?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Fragmentation (splitting content across pages) is unreliable for flex and grid containers in several browsers. The standard fix is to flatten them to display: block inside @media print and let the content flow as a simple vertical column.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

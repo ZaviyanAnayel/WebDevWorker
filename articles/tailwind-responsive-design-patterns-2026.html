@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- SEO: replace TITLE, DESC (150-160 chars), and SLUG everywhere -->
+  <title>Tailwind CSS Responsive Design Patterns 2026: Breakpoints &amp; Layouts | WebDevWorker</title>
+  <meta name="description" content="Build responsive layouts with Tailwind CSS in 2026: mobile-first breakpoints, responsive type and spacing, grid patterns, container queries, and key pitfalls."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/tailwind-responsive-design-patterns-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Tailwind CSS Responsive Design Patterns 2026: Breakpoints &amp; Layouts | WebDevWorker"/>
+  <meta property="og:description" content="Build responsive layouts with Tailwind CSS in 2026: mobile-first breakpoints, responsive type and spacing, grid patterns, container queries, and key pitfalls."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/tailwind-responsive-design-patterns-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Tailwind CSS Responsive Design Patterns 2026: Breakpoints and Layouts",
+      "description": "Build responsive layouts with Tailwind CSS in 2026: mobile-first breakpoints, responsive type and spacing, grid patterns, container queries, and key pitfalls.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/tailwind-responsive-design-patterns-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+    "@type": "Question",
+    "name": "What are Tailwind CSS's default breakpoints?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "sm: 640px, md: 768px, lg: 1024px, xl: 1280px, and 2xl: 1536px. All are min-width (mobile-first), so md: applies at 768px and wider. You can customize or extend them in the theme (v4 @theme or v3 tailwind.config.js)."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "How do I add a custom breakpoint in Tailwind?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In v4, define --breakpoint-tablet: 900px inside @theme to get a tablet: variant; in v3, add it under theme.extend.screens in tailwind.config.js. Name it semantically (tablet, wide) rather than by device, since devices change."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "Is Tailwind mobile-first or desktop-first?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Mobile-first by design: unprefixed classes are the base (mobile) styles and prefixed variants layer on enhancements at larger widths. For desktop-first exceptions, use max-* variants like max-md:hidden, but keep them rare for readability."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "How do container queries work in Tailwind CSS?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Add the @container class to a parent element, then use @sm:, @md:, @lg: variants on its children — they respond to the container's width instead of the viewport's. This is ideal for reusable components like cards that appear in sidebars and main columns."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "Why isn't my responsive class having any effect?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Check three things: (1) the base (unprefixed) style exists and isn't being overridden later in the cascade, (2) the class name is a complete literal string the compiler can detect — dynamic construction like md:text-${size} won't work, and (3) your content paths include the file so the utility is generated."
+    }
+}
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Tailwind Responsive Patterns",
+          "item": "https://www.webdevworker.com/articles/tailwind-responsive-design-patterns-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Tailwind Responsive Patterns</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🎨 CSS &amp; Styling</div>
+          <h1 class="guide-title">Tailwind CSS Responsive Design Patterns 2026: Breakpoints &amp; Layouts</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 8 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3><span>📱</span> Design for Every Screen</h3>
+          <p>Responsive technique compounds with the fundamentals — browse the Guides Hub for the full Tailwind setup guide, CSS architecture walkthroughs, and frontend best practices.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides →</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. How Tailwind Breakpoints Work</a></li>
+            <li><a href="#sec2" style="color:var(--brand-primary);">2. Responsive Typography and Spacing</a></li>
+            <li><a href="#sec3" style="color:var(--brand-primary);">3. Layout Patterns: Grids, Navbars, and Heroes</a></li>
+            <li><a href="#sec4" style="color:var(--brand-primary);">4. Showing, Hiding, and Reordering Content</a></li>
+            <li><a href="#sec5" style="color:var(--brand-primary);">5. Common Pitfalls and Performance</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. How Tailwind Breakpoints Work</h2>
+<p>Tailwind's responsive system is <strong>mobile-first</strong>: unprefixed utilities apply at every screen size, and prefixed variants like <code>md:</code> apply from that breakpoint <em>upward</em> (min-width). You design the mobile layout first with base classes, then layer on adjustments for larger screens. This matches how the modern web is actually consumed and keeps your smallest, most constrained layout the default rather than an afterthought.</p><p>The default scale has five breakpoints — <code>sm</code> (640px), <code>md</code> (768px), <code>lg</code> (1024px), <code>xl</code> (1280px), and <code>2xl</code> (1536px). Because variants are min-width, <code>md:grid-cols-2</code> means 'two columns at 768px and wider' — it does not turn off at <code>lg</code>. Stacking is additive: <code>grid-cols-1 md:grid-cols-2 lg:grid-cols-4</code> gives one, two, then four columns as the viewport grows.</p><p>For the occasional desktop-first exception, Tailwind supports <code>max-*</code> variants (<code>max-md:hidden</code> hides below 768px). Use them sparingly — mixing min and max variants in one class string gets confusing fast. If your design genuinely needs many custom breakpoints, define them once in the theme rather than scattering arbitrary values.</p><table class="data-table"><thead><tr><th>Breakpoint</th><th>Min width</th><th>Typical target</th></tr></thead><tbody><tr><td>(none — base)</td><td>0px</td><td>Mobile portrait; your default styles</td></tr><tr><td><code>sm:</code></td><td>640px</td><td>Large phones, small tablets portrait</td></tr><tr><td><code>md:</code></td><td>768px</td><td>Tablets, small laptops</td></tr><tr><td><code>lg:</code></td><td>1024px</td><td>Laptops, tablets landscape</td></tr><tr><td><code>xl:</code></td><td>1280px</td><td>Desktops</td></tr><tr><td><code>2xl:</code></td><td>1536px</td><td>Large desktops, wide monitors</td></tr></tbody></table><pre class="code-box">&lt;!-- Mobile-first stacking: 1 col -&gt; 2 cols -&gt; 4 cols --&gt;
+&lt;div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4"&gt;
+  &lt;article class="rounded-lg bg-white p-4 shadow"&gt;Card 1&lt;/article&gt;
+  &lt;article class="rounded-lg bg-white p-4 shadow"&gt;Card 2&lt;/article&gt;
+  &lt;article class="rounded-lg bg-white p-4 shadow"&gt;Card 3&lt;/article&gt;
+  &lt;article class="rounded-lg bg-white p-4 shadow"&gt;Card 4&lt;/article&gt;
+&lt;/div&gt;
+
+&lt;!-- Desktop-first exception with max-* --&gt;
+&lt;aside class="hidden lg:block"&gt;         &lt;!-- visible ≥1024px --&gt;
+&lt;aside class="lg:hidden"&gt;               &lt;!-- visible &lt;1024px --&gt;
+&lt;div class="max-md:text-center md:text-left"&gt;  &lt;!-- centered only on small screens --&gt;</pre>
+</section>
+
+        <section id="sec2" class="guide-section">
+<h2>2. Responsive Typography and Spacing</h2>
+<p>Type scales should breathe with the viewport. The idiomatic Tailwind pattern is stepping type sizes up at breakpoints: <code>text-2xl md:text-4xl lg:text-5xl</code> on a hero headline, <code>text-sm md:text-base</code> on body copy. Because these are discrete steps, pick sizes that create clear hierarchy at each breakpoint rather than nudging every element at every breakpoint — restraint keeps the type system legible.</p><p>For truly fluid type that scales continuously, use an arbitrary <code>clamp()</code> value: <code>text-[clamp(1.75rem,4vw+1rem,3.5rem)]</code>. This is ideal for display headlines where stepped sizes would jump awkwardly. Combine it with stepped fallbacks only if you need to support very old browsers; <code>clamp()</code> support is universal in modern browsers.</p><p>Spacing follows the same philosophy. Generous mobile padding (<code>px-4</code>) can widen at desktop (<code>md:px-8 lg:px-12</code>), and section rhythm grows with <code>py-12 md:py-20 lg:py-28</code>. The spacing scale keeps these proportional by construction. One tip: set responsive spacing on layout containers rather than on every child — a section's padding and a grid's gap do most of the responsive work for everything inside them.</p><pre class="code-box">&lt;!-- Hero headline: stepped type + fluid alternative --&gt;
+&lt;h1 class="text-3xl font-extrabold tracking-tight text-slate-900
+           sm:text-4xl md:text-5xl lg:text-6xl"&gt;
+  Design once, adapt everywhere
+&lt;/h1&gt;
+
+&lt;!-- Fluid display type with clamp(): smooth scaling, no steps --&gt;
+&lt;h1 class="font-extrabold tracking-tight text-slate-900
+           text-[clamp(2rem,1rem+4vw,4rem)]"&gt;
+  Fluid by default
+&lt;/h1&gt;
+
+&lt;!-- Section rhythm that grows with the viewport --&gt;
+&lt;section class="px-4 py-12 sm:px-6 md:px-8 md:py-20 lg:py-28"&gt;
+  &lt;!-- content --&gt;
+&lt;/section&gt;</pre>
+</section>
+
+        <section id="sec3" class="guide-section">
+<h2>3. Layout Patterns: Grids, Navbars, and Heroes</h2>
+<p>Three patterns cover most responsive layouts. The <strong>card grid</strong> (<code>grid-cols-1 sm:grid-cols-2 lg:grid-cols-3</code>) handles listings, features, and galleries. The <strong>split hero</strong> stacks text above media on mobile (<code>flex-col</code>) and sits them side by side on desktop (<code>lg:flex-row</code>). The <strong>sidebar layout</strong> collapses navigation into a top bar on small screens and reveals the sidebar at <code>lg</code>.</p><p>The responsive <strong>navbar</strong> deserves special attention because it combines several techniques: a hamburger button visible only on mobile (<code>md:hidden</code>), a link row visible only on desktop (<code>hidden md:flex</code>), and a dropdown panel toggled with a tiny bit of JavaScript. Getting the show/hide pair right — <code>hidden</code> as the base, <code>md:flex</code> as the override — is the single most-used responsive idiom in Tailwind.</p><p>For heroes, the <code>order</code> utilities let you reorder visually without touching DOM order: image first on mobile for impact (<code>order-first lg:order-last</code>), text first on desktop. Keep DOM order semantic for screen readers and use <code>order</code> purely for visual arrangement — accessibility tooling follows the DOM, not the visual order.</p><pre class="code-box">&lt;!-- Responsive navbar: hamburger on mobile, links on desktop --&gt;
+&lt;nav class="flex items-center justify-between bg-slate-900 px-4 py-3"&gt;
+  &lt;span class="text-lg font-bold text-white"&gt;Acme&lt;/span&gt;
+  &lt;button id="menuBtn" class="rounded p-2 text-white hover:bg-slate-700 md:hidden" aria-label="Menu"&gt;
+    ☰
+  &lt;/button&gt;
+  &lt;div class="hidden items-center gap-6 md:flex"&gt;
+    &lt;a href="#" class="text-sm text-slate-300 hover:text-white"&gt;Features&lt;/a&gt;
+    &lt;a href="#" class="text-sm text-slate-300 hover:text-white"&gt;Pricing&lt;/a&gt;
+    &lt;a href="#" class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white"&gt;Sign up&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;
+&lt;div id="mobileMenu" class="hidden flex-col gap-1 bg-slate-900 px-4 pb-4 md:hidden"&gt;
+  &lt;a href="#" class="rounded px-2 py-2 text-sm text-slate-300 hover:bg-slate-800"&gt;Features&lt;/a&gt;
+  &lt;a href="#" class="rounded px-2 py-2 text-sm text-slate-300 hover:bg-slate-800"&gt;Pricing&lt;/a&gt;
+&lt;/div&gt;
+&lt;script&gt;
+  menuBtn.addEventListener('click', () =&gt; mobileMenu.classList.toggle('hidden'));
+  mobileMenu.classList.add('flex'); // keep flex-col layout when shown
+&lt;/script&gt;</pre><pre class="code-box">&lt;!-- Split hero: stacked on mobile, side-by-side on desktop --&gt;
+&lt;section class="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:py-24"&gt;
+  &lt;div&gt;
+    &lt;h1 class="text-3xl font-extrabold md:text-5xl"&gt;Ship responsive sites faster&lt;/h1&gt;
+    &lt;p class="mt-4 text-slate-600"&gt;Utility-first CSS with a mobile-first breakpoint system.&lt;/p&gt;
+    &lt;div class="mt-6 flex flex-col gap-3 sm:flex-row"&gt;
+      &lt;a href="#" class="rounded-lg bg-indigo-600 px-6 py-3 text-center text-white"&gt;Start free&lt;/a&gt;
+      &lt;a href="#" class="rounded-lg border px-6 py-3 text-center"&gt;Live demo&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;img src="/hero.png" alt="Product screenshot"
+       class="order-first w-full rounded-xl shadow-xl md:order-last" /&gt;
+&lt;/section&gt;</pre>
+</section>
+
+        <section id="sec4" class="guide-section">
+<h2>4. Showing, Hiding, and Reordering Content</h2>
+<p>Conditional visibility is the workhorse of responsive design: <code>hidden md:block</code> reveals an element at medium screens and up, while <code>md:hidden</code> removes it there. Common uses include swapping a data table for cards on mobile, showing abbreviated vs. full navigation labels, and serving different hero artwork per breakpoint. Remember that <code>hidden</code> removes the element from layout entirely (display: none), unlike <code>invisible</code> which preserves space.</p><p>When a component's responsive behavior depends on its <em>container</em> rather than the viewport — a card that appears in both a sidebar and a main column — reach for <strong>container queries</strong>. Mark the parent with <code>@container</code> and use <code>@md:</code>, <code>@lg:</code> variants on children. This is the correct tool for truly reusable components, and Tailwind v4 supports it natively.</p><p>The <code>order</code> utilities (<code>order-1</code> through <code>order-12</code>, <code>order-first</code>, <code>order-last</code>) rearrange flex and grid children visually at specific breakpoints: <code>order-2 md:order-1</code>. Use them for visual priority shifts, but never to fix a confusing DOM order — screen readers and keyboard tab order follow the source, so keep the DOM logical first.</p><pre class="code-box">&lt;!-- Container queries: component adapts to its parent, not the viewport --&gt;
+&lt;div class="@container rounded-xl border p-4"&gt;
+  &lt;div class="flex flex-col gap-4 @md:flex-row @md:items-center"&gt;
+    &lt;img src="/avatar.png" class="h-16 w-16 rounded-full" alt="" /&gt;
+    &lt;div class="flex-1"&gt;
+      &lt;h3 class="font-semibold"&gt;Profile card&lt;/h3&gt;
+      &lt;!-- Stacked in narrow containers, side-by-side in wide ones --&gt;
+      &lt;p class="@md:hidden text-sm text-slate-500"&gt;Compact bio…&lt;/p&gt;
+      &lt;p class="hidden @md:block text-sm text-slate-500"&gt;Full bio with details…&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Reordering: image leads on mobile, trails on desktop --&gt;
+&lt;div class="flex flex-col md:flex-row"&gt;
+  &lt;img src="/shot.png" class="order-first md:order-last" alt="Screenshot" /&gt;
+  &lt;div class="order-last md:order-first"&gt;&lt;!-- copy --&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+</section>
+
+        <section id="sec5" class="guide-section">
+<h2>5. Common Pitfalls and Performance</h2>
+<p>The number-one beginner mistake is <strong>skipping the base style</strong>: writing <code>md:text-lg</code> with no unprefixed <code>text-base</code> leaves mobile unstyled by accident rather than by design. Always write the mobile style first, then enhance. The second classic is <strong>breakpoint soup</strong> — specifying <code>sm:</code>, <code>md:</code>, <code>lg:</code>, and <code>xl:</code> variants on the same property when two would do. Each variant you add is a design decision to maintain; fewer is better.</p><p>Watch out for <strong>overriding conflicts</strong>: <code>block md:hidden lg:block</code> is legal but hard to reason about — simplify the logic or restructure the markup. And remember that responsive variants only work on classes the compiler can see; the dynamic-class-name rule (<code>bg-${c}-500</code>) from the main Tailwind guide applies to prefixed variants too.</p><p>Performance-wise, responsive utilities cost nothing extra at runtime — they compile to ordinary media queries in the same tree-shaken stylesheet. The real performance lever is restraint in <em>design</em>: every breakpoint-specific image, font, or heavy component you conditionally show still downloads unless you handle it. Use responsive <code>srcset</code> images and <code>loading="lazy"</code> so the mobile experience stays fast even when the desktop layout is rich.</p>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What are Tailwind CSS's default breakpoints?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">sm: 640px, md: 768px, lg: 1024px, xl: 1280px, and 2xl: 1536px. All are min-width (mobile-first), so md: applies at 768px and wider. You can customize or extend them in the theme (v4 @theme or v3 tailwind.config.js).</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I add a custom breakpoint in Tailwind?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">In v4, define --breakpoint-tablet: 900px inside @theme to get a tablet: variant; in v3, add it under theme.extend.screens in tailwind.config.js. Name it semantically (tablet, wide) rather than by device, since devices change.</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Is Tailwind mobile-first or desktop-first?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Mobile-first by design: unprefixed classes are the base (mobile) styles and prefixed variants layer on enhancements at larger widths. For desktop-first exceptions, use max-* variants like max-md:hidden, but keep them rare for readability.</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do container queries work in Tailwind CSS?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Add the @container class to a parent element, then use @sm:, @md:, @lg: variants on its children — they respond to the container's width instead of the viewport's. This is ideal for reusable components like cards that appear in sidebars and main columns.</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Why isn't my responsive class having any effect?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Check three things: (1) the base (unprefixed) style exists and isn't being overridden later in the cascade, (2) the class name is a complete literal string the compiler can detect — dynamic construction like md:text-${size} won't work, and (3) your content paths include the file so the utility is generated.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Keep leveling up</h3>
+          <p>Every screen size is a design decision — keep sharpening your responsive craft with more CSS and frontend guides in the Guides Hub.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub →</a>
+        </div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

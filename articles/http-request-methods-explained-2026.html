@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- SEO meta: title, description, canonical URL -->
+  <title>HTTP Request Methods Explained: GET, POST, PUT, PATCH, DELETE | WebDevWorker</title>
+  <meta name="description" content="HTTP methods explained with real examples: GET vs POST, PUT vs PATCH, DELETE, idempotency, and safe methods. Build correct REST APIs with this 2026 guide."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/http-request-methods-explained-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="HTTP Request Methods Explained: GET, POST, PUT, PATCH, DELETE | WebDevWorker"/>
+  <meta property="og:description" content="HTTP methods explained with real examples: GET vs POST, PUT vs PATCH, DELETE, idempotency, and safe methods. Build correct REST APIs with this 2026 guide."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/http-request-methods-explained-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "HTTP Request Methods Explained: GET, POST, PUT, PATCH, DELETE",
+      "description": "HTTP methods explained with real examples: GET vs POST, PUT vs PATCH, DELETE, idempotency, and safe methods. Build correct REST APIs with this 2026 guide.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/http-request-methods-explained-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+                {
+          "@type": "Question",
+          "name": "What is the difference between PUT and PATCH?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "PUT replaces the entire resource with the representation you send — omitted fields are typically cleared. PATCH applies a partial update, changing only the fields you include. Use PUT when the client manages the full resource state, PATCH for targeted edits."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is POST idempotent?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Repeating a POST generally creates additional resources or triggers the action again — submitting an order form twice may create two orders. If safe retries matter, use PUT or add an idempotency key to your POST requests."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can GET requests have a body?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Technically the spec does not forbid it, but in practice many servers, proxies, and clients ignore or reject GET bodies. Pass parameters in the query string instead — it is cacheable, bookmarkable, and universally supported."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which HTTP method should I use to delete a resource?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "DELETE. Send it to the resource's URL, like DELETE /api/users/42. Return 204 No Content on success. Avoid GET-based deletion links, since crawlers and prefetchers can trigger them unintentionally."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does idempotent mean in simple terms?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Doing it twice has the same result as doing it once. Deleting a user twice leaves the user deleted either way, so DELETE is idempotent. Placing the same order twice creates two orders, so that POST is not."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "HTTP Request Methods",
+          "item": "https://www.webdevworker.com/articles/http-request-methods-explained-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">HTTP Request Methods</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🌐 Web Fundamentals</div>
+          <h1 class="guide-title">HTTP Request Methods Explained: GET, POST, PUT, PATCH, DELETE</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 7 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3>🌐 Methods are the grammar of the web</h3>
+          <p style="color: var(--text-muted); margin: 0;">HTTP semantics power every API you build. Continue with DNS basics, Nginx reverse proxies, and Linux networking guides in the Guides Hub.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides →</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. What HTTP Request Methods Are</a></li>
+            <li><a href="#sec2" style="color:var(--brand-primary);">2. GET and POST: Reading vs Creating</a></li>
+            <li><a href="#sec3" style="color:var(--brand-primary);">3. PUT, PATCH, and DELETE: Updating and Removing</a></li>
+            <li><a href="#sec4" style="color:var(--brand-primary);">4. Safe and Idempotent: The Two Properties That Matter</a></li>
+            <li><a href="#sec5" style="color:var(--brand-primary);">5. Using Methods Correctly in REST APIs</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+          <h2>1. What HTTP Request Methods Are</h2>
+          <p>Every HTTP request starts with a <strong>request line</strong>: a method, a path, and a protocol version. The <strong>method</strong> (also called the verb) tells the server what kind of operation the client wants — read data, create something, update, or delete.</p>
+<pre class="code-box">GET /api/users/42 HTTP/1.1
+Host: example.com
+Accept: application/json</pre>
+<p>The method is a contract. When your frontend sends <code>DELETE /api/users/42</code>, every layer — browser, CDN, proxy, framework — understands the intent without reading your documentation. Using methods correctly is what makes an API <strong>RESTful</strong>; using <code>POST</code> for everything is what makes it a guessing game.</p>
+<p>HTTP defines nine standard methods, but five do nearly all the work in web development: <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, and <code>DELETE</code>. Master these five and you have mastered REST semantics.</p>
+<p>The remaining four — <code>HEAD</code>, <code>OPTIONS</code>, <code>TRACE</code>, and <code>CONNECT</code> — play supporting roles: <code>HEAD</code> fetches headers without a body (great for checking whether a resource changed), and <code>OPTIONS</code> powers the CORS preflight requests your browser sends automatically. You will encounter them, but rarely define them yourself.</p>
+        </section>
+
+        <section id="sec2" class="guide-section">
+          <h2>2. GET and POST: Reading vs Creating</h2>
+          <p><strong>GET</strong> retrieves a resource and must not change anything on the server. Parameters travel in the URL query string, responses are cacheable, and browsers can safely retry GETs — which is why refreshing a page never creates a duplicate order.</p>
+<p><strong>POST</strong> submits data to be processed, most commonly creating a new resource. The payload travels in the request <strong>body</strong>, keeping URLs clean and allowing large or sensitive data that should never appear in logs or browser history.</p>
+<pre class="code-box">// GET: read a user (cacheable, no side effects)
+const user = await fetch('/api/users/42').then(r =&gt; r.json());
+
+// POST: create a user (body carries the data)
+const created = await fetch('/api/users', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'Ada', email: 'ada@example.com' }),
+}).then(r =&gt; r.json());</pre>
+<p>The rule of thumb: if the operation only reads, it is a GET. If it creates something new (or triggers a process like sending an email), it is a POST. A successful POST conventionally returns <strong>201 Created</strong> with the new resource's URL.</p>
+        </section>
+
+        <section id="sec3" class="guide-section">
+          <h2>3. PUT, PATCH, and DELETE: Updating and Removing</h2>
+          <p><strong>PUT</strong> replaces an entire resource: you send the complete new representation, and the server swaps it in. <strong>PATCH</strong> applies a partial update: you send only the fields that changed. This distinction matters for APIs — PUT with missing fields typically clears them, while PATCH leaves untouched fields alone.</p>
+<p><strong>DELETE</strong> removes the resource at the URL. Successful deletes return <strong>204 No Content</strong> (nothing to show) or <strong>200</strong> with a confirmation.</p>
+<pre class="code-box">import express from 'express';
+const app = express();
+app.use(express.json());
+
+// PUT: full replacement — client sends the ENTIRE user object
+app.put('/api/users/:id', (req, res) =&gt; {
+  users[req.params.id] = { id: req.params.id, ...req.body };
+  res.json(users[req.params.id]);
+});
+
+// PATCH: partial update — only the provided fields change
+app.patch('/api/users/:id', (req, res) =&gt; {
+  Object.assign(users[req.params.id], req.body);
+  res.json(users[req.params.id]);
+});
+
+// DELETE: remove the resource
+app.delete('/api/users/:id', (req, res) =&gt; {
+  delete users[req.params.id];
+  res.status(204).end();
+});</pre>
+<p>Notice the URL pattern: the resource (<code>/api/users/42</code>) stays constant while the method expresses the action. That is REST's core elegance — nouns in the URL, verbs in the method.</p>
+        </section>
+
+        <section id="sec4" class="guide-section">
+          <h2>4. Safe and Idempotent: The Two Properties That Matter</h2>
+          <p>Two formal properties determine how infrastructure treats your requests. A method is <strong>safe</strong> if it never modifies server state — safe requests can be prefetched, cached, and retried freely. A method is <strong>idempotent</strong> if making the same request N times has the same effect as making it once — idempotent requests can be safely retried after network failures.</p>
+<table class="data-table">
+<thead><tr><th>Method</th><th>Safe</th><th>Idempotent</th><th>Has Body</th><th>Typical Use</th></tr></thead>
+<tbody>
+<tr><td><strong>GET</strong></td><td>Yes</td><td>Yes</td><td>No</td><td>Read a resource</td></tr>
+<tr><td><strong>POST</strong></td><td>No</td><td>No</td><td>Yes</td><td>Create a resource</td></tr>
+<tr><td><strong>PUT</strong></td><td>No</td><td>Yes</td><td>Yes</td><td>Replace a resource</td></tr>
+<tr><td><strong>PATCH</strong></td><td>No</td><td>Usually*</td><td>Yes</td><td>Partial update</td></tr>
+<tr><td><strong>DELETE</strong></td><td>No</td><td>Yes</td><td>No</td><td>Remove a resource</td></tr>
+</tbody></table>
+<p>Why idempotency matters in practice: if a <code>PUT</code> request times out, the client can retry without fear — setting the price to $19 twice still leaves it at $19. Retrying a <code>POST</code> might charge the customer twice, which is why payment APIs use <strong>idempotency keys</strong> to make even POSTs safe to retry.</p>
+        </section>
+
+        <section id="sec5" class="guide-section">
+          <h2>5. Using Methods Correctly in REST APIs</h2>
+          <p>Correct method usage is a checklist, not a philosophy. Name resources with plural nouns (<code>/api/orders</code>, not <code>/api/getOrders</code>), let the method carry the verb, and return the right status codes: <code>200</code> for success, <code>201</code> for created, <code>204</code> for deleted, <code>400</code> for bad input, <code>404</code> for missing resources.</p>
+<pre class="code-box"># Explore any API's method semantics with curl
+curl -X GET https://api.example.com/users/42
+curl -X POST https://api.example.com/users \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Ada"}'
+curl -X DELETE https://api.example.com/users/42 -i</pre>
+<p>Common mistakes to avoid: using GET for actions with side effects (a <code>GET /delete-account</code> link can be triggered by a crawler or prefetcher), tunneling everything through POST, and returning <code>200</code> for errors instead of proper 4xx codes. Get the methods right and your API becomes self-documenting.</p>
+<p>One last habit: document your methods with an OpenAPI spec. When the spec declares that <code>PATCH /api/users/{id}</code> accepts a partial user object, client SDKs, docs, and validation can all be generated from that single source of truth.</p>
+        </section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between PUT and PATCH?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">PUT replaces the entire resource with the representation you send — omitted fields are typically cleared. PATCH applies a partial update, changing only the fields you include. Use PUT when the client manages the full resource state, PATCH for targeted edits.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Is POST idempotent?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No. Repeating a POST generally creates additional resources or triggers the action again — submitting an order form twice may create two orders. If safe retries matter, use PUT or add an idempotency key to your POST requests.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can GET requests have a body?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Technically the spec does not forbid it, but in practice many servers, proxies, and clients ignore or reject GET bodies. Pass parameters in the query string instead — it is cacheable, bookmarkable, and universally supported.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Which HTTP method should I use to delete a resource?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">DELETE. Send it to the resource's URL, like DELETE /api/users/42. Return 204 No Content on success. Avoid GET-based deletion links, since crawlers and prefetchers can trigger them unintentionally.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What does idempotent mean in simple terms?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Doing it twice has the same result as doing it once. Deleting a user twice leaves the user deleted either way, so DELETE is idempotent. Placing the same order twice creates two orders, so that POST is not.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+        <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Keep leveling up</h3>
+          <p style="color: var(--text-muted); margin: 0;">APIs need a front door and a home — learn to serve them behind Nginx and deploy on Linux.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub →</a>
+        </div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

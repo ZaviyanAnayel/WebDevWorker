@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JavaScript ES6+ Features: The Essential Guide | WebDevWorker</title>
+  <meta name="description" content="Master ES6+ JavaScript in 2026: arrow functions, destructuring, spread, template literals, let/const, optional chaining, and modules. Real code examples."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/javascript-es6-features-guide-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="JavaScript ES6+ Features: The Essential Guide | WebDevWorker"/>
+  <meta property="og:description" content="Master ES6+ JavaScript in 2026: arrow functions, destructuring, spread, template literals, let/const, optional chaining, and modules. Real code examples."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/javascript-es6-features-guide-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "JavaScript ES6+ Features: The Essential Guide (2026)",
+      "description": "Master ES6+ JavaScript in 2026: arrow functions, destructuring, spread, template literals, let/const, optional chaining, and modules. Real code examples.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/javascript-es6-features-guide-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+                  {
+            "@type": "Question",
+            "name": "When should I use const vs let?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Default to const for every declaration. Switch to let only when the variable genuinely needs reassignment later, like a counter or accumulator. Never use var in new code — its function scoping and hoisting cause bugs that let and const eliminate by design."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do arrow functions have their own this?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No — that is their defining trait. Arrow functions inherit this lexically from the enclosing scope, which is why they are perfect for callbacks inside methods. For object methods or event handlers that need dynamic this, use a regular function or method shorthand instead."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the difference between spread and rest?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "They are the same ... syntax used in opposite directions: spread expands a collection into individual elements ([...arr, x], f(...args)), while rest collects individual elements into an array (function f(...args), const { a, ...rest } = obj). Position in the code tells you which one you are looking at."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is ES6 supported in all browsers now?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Every feature in this guide — including ES2020 additions like optional chaining — is supported natively in all current browsers. You only need a transpiler if you must support legacy environments such as Internet Explorer."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Should I still learn ES5 patterns?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Learn to recognize them, not to write them. You will encounter var, function expressions, and callback pyramids in older codebases, so understanding them helps you read and migrate legacy code — but all new code should use the modern equivalents."
+            }
+          }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "ES6+ Features Guide",
+          "item": "https://www.webdevworker.com/articles/javascript-es6-features-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">ES6+ Features Guide</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">⚡ JavaScript</div>
+          <h1 class="guide-title">JavaScript ES6+ Features: The Essential Guide</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 8 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. let, const, and Block Scoping</a></li>
+            <li><a href="#sec2" style="color:var(--brand-primary);">2. Arrow Functions and Template Literals</a></li>
+            <li><a href="#sec3" style="color:var(--brand-primary);">3. Destructuring, Spread, and Rest</a></li>
+            <li><a href="#sec4" style="color:var(--brand-primary);">4. Modern Essentials: Optional Chaining, Modules, and More</a></li>
+            <li><a href="#sec5" style="color:var(--brand-primary);">5. ES6+ Feature Quick Reference</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+                <section id="sec1" class="guide-section">
+          <h2>1. let, const, and Block Scoping</h2>
+          <p>The var keyword declares function-scoped variables that hoist to the top of their function, which produced an entire generation of subtle bugs: loop counters leaking, accidental redeclarations, variables usable before their declaration line. ES6 replaced this model with let and const, which are block-scoped — they exist only inside the nearest curly braces — and cannot be used before declaration thanks to the temporal dead zone.</p>
+          <p>The rule of thumb is simple: default to const, use let only when reassignment is genuinely needed, and never use var in new code. const does not make values immutable — it makes the binding immutable. You can still push to a const array or mutate a const object's properties; you just cannot reassign the variable itself to something else. This catches an entire class of accidental-reassignment bugs at the moment they are written.</p>
+          <p>Block scoping also fixed the classic loop problem. With var, a for loop's counter was one shared variable, so asynchronous callbacks inside the loop all saw the final value. With let, each iteration gets its own binding, and closures capture the value you expect. If you only adopt one ES6 habit, make it this one — it eliminates more bugs per keystroke than any other feature on this list.</p>
+          <pre class="code-box">// var: function-scoped, hoisted, leaky
+for (var i = 0; i &lt; 3; i++) {
+  setTimeout(() =&gt; console.log('var:', i), 10); // 3, 3, 3
+}
+
+// let: block-scoped, one binding per iteration
+for (let j = 0; j &lt; 3; j++) {
+  setTimeout(() =&gt; console.log('let:', j), 10); // 0, 1, 2
+}
+
+const API_URL = 'https://api.example.com'; // never reassigned
+let retries = 0;                            // reassigned later: fine
+// API_URL = 'x'; -&gt; TypeError: Assignment to constant variable
+</pre>
+        </section>
+        <section id="sec2" class="guide-section">
+          <h2>2. Arrow Functions and Template Literals</h2>
+          <p>Arrow functions (=&gt;) compress function expressions into a fraction of the code: single-expression bodies return implicitly, and single parameters can skip their parentheses. More importantly, arrows do not bind their own this — they inherit it lexically from the surrounding scope. That one change killed the const self = this; workaround that littered every pre-ES6 callback.</p>
+          <p>Template literals (backticks) ended string-concatenation spaghetti. ${} interpolates any expression directly into the string, and literals can span multiple lines without \n hacks or awkward plus-sign chains. They are the natural way to build HTML strings, log messages, and dynamic URLs — and tagged templates (a function prefixing the backtick string) power libraries like styled-components and lit-html under the hood.</p>
+          <p>One caution: arrow functions are not drop-in replacements everywhere. Because they lack their own this and arguments, they make poor object methods and event handlers that rely on dynamic this (use a regular function or method shorthand there), and they cannot be used as constructors. Reach for arrows in callbacks, array methods, and short utilities — exactly where lexical this is what you want.</p>
+          <pre class="code-box">// Arrow functions: concise + lexical `this`
+const prices = [19.99, 4.5, 12.0];
+const withTax = prices.map(p =&gt; p * 1.2);   // implicit return
+
+class Cart {
+  constructor() { this.items = []; }
+  add(item) {
+    // `this` inside the arrow = the Cart instance. No .bind() needed.
+    setTimeout(() =&gt; this.items.push(item), 100);
+  }
+}
+
+// Template literals: interpolation + multiline
+const user = { name: 'Ayesha', orders: 3 };
+const email = `
+  Hi ${user.name},
+  You have ${user.orders} orders shipping ${user.orders &gt; 1 ? 'today' : 'tomorrow'}.
+`;
+console.log(email.trim());
+</pre>
+        </section>
+        <section id="sec3" class="guide-section">
+          <h2>3. Destructuring, Spread, and Rest</h2>
+          <p>Destructuring unpacks arrays and objects into individual variables in one statement: const { name, email } = user; replaces three lines of property access. It shines in function parameters, where you can destructure the argument directly and supply defaults at the same time — function createUser({ name = 'Guest', role = 'member' } = {}) is self-documenting in a way positional parameters never were.</p>
+          <p>Spread (...) expands an iterable into individual elements, and rest (...) collects individual elements into an array — same syntax, opposite directions, distinguished by position. Spread clones and merges arrays and objects immutably ([...old, newItem], {...defaults, ...overrides}); rest gathers leftover function arguments (...args) or leftover object properties (const { id, ...rest } = record) without mutating the original.</p>
+          <p>Together these three make immutable updates ergonomic, which is why every React and Redux codebase leans on them. The mental model to keep: spread pours a collection out, rest scoops values up, and destructuring names what you scoop. Master that sentence and you will read modern JavaScript fluently.</p>
+          <pre class="code-box">// Destructuring with defaults + renaming
+const response = { data: { id: 7 }, status: 200 };
+const { data: { id: userId }, status = 500 } = response;
+console.log(userId, status); // 7 200
+
+// Spread: immutable merge &amp; clone
+const defaults = { theme: 'light', lang: 'en' };
+const prefs = { ...defaults, theme: 'dark' }; // { theme:'dark', lang:'en' }
+const queue = ['a', 'b'];
+const next = [...queue, 'c'];                // queue untouched
+
+// Rest: gather the leftovers
+function log(level, ...messages) {
+  console[level](`[${level}]`, ...messages);
+}
+log('warn', 'low disk', 'retrying...'); // [warn] low disk retrying...
+</pre>
+        </section>
+        <section id="sec4" class="guide-section">
+          <h2>4. Modern Essentials: Optional Chaining, Modules, and More</h2>
+          <p>ES2020's optional chaining (?.) ended the pyramid of &amp;&amp; guards: user?.profile?.avatar safely short-circuits to undefined instead of throwing when any link in the chain is missing. Its partner, nullish coalescing (??), supplies defaults only for null/undefined — unlike ||, it keeps meaningful falsy values like 0 and '' intact, which fixes a whole category of “setting vanished” bugs in configuration code.</p>
+          <p>ES modules (import/export) gave JavaScript a real module system: explicit dependencies, static analysis for tree-shaking, and no more script-tag ordering roulette. Default exports (export default) suit single-purpose modules; named exports suit utility collections and are friendlier to refactoring tools. Modern bundlers and browsers both speak ESM natively now, so new projects should start there.</p>
+          <p>Round out the toolkit with a few more ES6+ staples: default parameters, the for...of loop (which iterates values, unlike for...in which iterates keys), classes as sugar over prototypes, Promises and async/await for asynchronous work, and Set/Map for collections with sane semantics. You do not need all of them on day one — but recognizing each on sight is what separates reading modern code from guessing at it.</p>
+          <pre class="code-box">// Optional chaining + nullish coalescing
+const settings = { volume: 0, theme: null };
+const vol   = settings.volume ?? 50;  // 0  (kept! || would give 50)
+const theme = settings.theme ?? 'dark'; // 'dark'
+const avatar = user?.profile?.avatar ?? '/img/default.png';
+
+// ES modules
+// utils.js
+export const TAX_RATE = 0.2;
+export function withTax(price) { return price * (1 + TAX_RATE); }
+export default function format(n) { return '$' + n.toFixed(2); }
+
+// app.js
+import format, { withTax, TAX_RATE } from './utils.js';
+console.log(format(withTax(100))); // $120.00
+</pre>
+        </section>
+        <section id="sec5" class="guide-section">
+          <h2>5. ES6+ Feature Quick Reference</h2>
+          <p>Use this table as a desk reference while you internalize the syntax. Each row pairs the feature with its most common real-world use so you can recognize the pattern in other people's code and reach for the right tool in your own.</p>
+          <p>A practical adoption order if you are modernizing an older codebase: first swap var for let/const, then convert callbacks to arrows, then introduce template literals and destructuring in new code, and finally adopt modules and optional chaining where they remove the most noise. Incremental migration beats big-bang rewrites.</p>
+          <p>Everything in this guide is supported natively in all current browsers, so no transpiler is required for browser-targeted code in 2026. Transpilation still matters only when you must support legacy environments — and even then, tools like esbuild handle it in milliseconds.</p>
+          <table class="data-table">
+          <thead>
+          <tr><th>Feature</th><th>Syntax sketch</th><th>Reach for it when</th></tr>
+          </thead>
+          <tbody>
+          <tr><td>let / const</td><td>const x = 1; let y = 2;</td><td>Declaring anything — default to const</td></tr>
+          <tr><td>Arrow function</td><td>(a, b) =&gt; a + b</td><td>Callbacks, array methods, short utilities</td></tr>
+          <tr><td>Template literal</td><td>`Hi ${name}`</td><td>Building strings with values or multiline text</td></tr>
+          <tr><td>Destructuring</td><td>const { a, b } = obj;</td><td>Unpacking objects/arrays, function params</td></tr>
+          <tr><td>Spread / rest</td><td>[...a, x] / (...args)</td><td>Cloning, merging, gathering leftovers</td></tr>
+          <tr><td>Optional chaining</td><td>user?.profile?.name</td><td>Safely reading deep, possibly-missing data</td></tr>
+          <tr><td>Nullish coalescing</td><td>value ?? fallback</td><td>Defaults that must preserve 0 and ''</td></tr>
+          <tr><td>ES modules</td><td>import { x } from './m.js'</td><td>Organizing any project beyond one file</td></tr>
+          <tr><td>for...of</td><td>for (const v of arr)</td><td>Iterating array values cleanly</td></tr>
+          <tr><td>Class</td><td>class A extends B {}</td><td>Prototypal OOP with readable syntax</td></tr>
+          </tbody>
+          </table>
+        </section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">When should I use const vs let?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Default to const for every declaration. Switch to let only when the variable genuinely needs reassignment later, like a counter or accumulator. Never use var in new code — its function scoping and hoisting cause bugs that let and const eliminate by design.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Do arrow functions have their own this?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No — that is their defining trait. Arrow functions inherit this lexically from the enclosing scope, which is why they are perfect for callbacks inside methods. For object methods or event handlers that need dynamic this, use a regular function or method shorthand instead.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between spread and rest?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">They are the same ... syntax used in opposite directions: spread expands a collection into individual elements ([...arr, x], f(...args)), while rest collects individual elements into an array (function f(...args), const { a, ...rest } = obj). Position in the code tells you which one you are looking at.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Is ES6 supported in all browsers now?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes. Every feature in this guide — including ES2020 additions like optional chaining — is supported natively in all current browsers. You only need a transpiler if you must support legacy environments such as Internet Explorer.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Should I still learn ES5 patterns?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Learn to recognize them, not to write them. You will encounter var, function expressions, and callback pyramids in older codebases, so understanding them helps you read and migrate legacy code — but all new code should use the modern equivalents.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

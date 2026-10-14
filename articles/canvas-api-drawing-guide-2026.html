@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <title>Canvas API Drawing Guide: Shapes, Paths and Animation 2026 | WebDevWorker</title>
+  <meta name="description" content="Master the HTML Canvas API: drawing shapes and paths, gradients, images, text, and smooth requestAnimationFrame animation loops with performance best practices."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/canvas-api-drawing-guide-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Canvas API Drawing Guide: Shapes, Paths and Animation 2026 | WebDevWorker"/>
+  <meta property="og:description" content="Master the HTML Canvas API: drawing shapes and paths, gradients, images, text, and smooth requestAnimationFrame animation loops with performance best practices."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/canvas-api-drawing-guide-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Canvas API Drawing: Shapes, Paths and Animation — 2026 Guide",
+      "description": "Master the HTML Canvas API: drawing shapes and paths, gradients, images, text, and smooth requestAnimationFrame animation loops with performance best practices.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/canvas-api-drawing-guide-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        
+          {
+                    "@type": "Question",
+                    "name": "What is the difference between Canvas and SVG?",
+                    "acceptedAnswer": {
+                              "@type": "Answer",
+                              "text": "Canvas is an immediate-mode bitmap API: you paint pixels and the browser forgets the shapes, making it ideal for games and thousands of objects. SVG is retained-mode: every shape is a DOM node, better for accessible, styleable, interactive graphics."
+                    }
+          },
+          {
+                    "@type": "Question",
+                    "name": "Why does my canvas look blurry on some screens?",
+                    "acceptedAnswer": {
+                              "@type": "Answer",
+                              "text": "The canvas backing store defaults to CSS-pixel resolution. Multiply width and height by window.devicePixelRatio and ctx.scale() by the same factor so drawing stays sharp on Retina and HiDPI displays."
+                    }
+          },
+          {
+                    "@type": "Question",
+                    "name": "Should I use setInterval or requestAnimationFrame for animation?",
+                    "acceptedAnswer": {
+                              "@type": "Answer",
+                              "text": "Always requestAnimationFrame. It syncs with the display's refresh rate, pauses in background tabs to save battery, and avoids the tearing and drift that setInterval causes. Drive motion with delta time for consistent speed."
+                    }
+          },
+          {
+                    "@type": "Question",
+                    "name": "How do I make canvas content accessible?",
+                    "acceptedAnswer": {
+                              "@type": "Answer",
+                              "text": "Canvas pixels are invisible to screen readers, so provide fallback content inside the canvas element, mirror key state in ARIA live regions, ensure keyboard equivalents for interactions, and consider SVG for content that must be natively accessible."
+                    }
+          },
+          {
+                    "@type": "Question",
+                    "name": "What is canvas tainting and how do I avoid it?",
+                    "acceptedAnswer": {
+                              "@type": "Answer",
+                              "text": "Drawing a cross-origin image without CORS approval taints the canvas, permanently blocking toDataURL() and getImageData(). Set img.crossOrigin = 'anonymous' and serve the image with CORS headers, or host images on the same origin."
+                    }
+          }
+
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Canvas API Guide",
+          "item": "https://www.webdevworker.com/articles/canvas-api-drawing-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Canvas API Guide</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🎨 Graphics & Media</div>
+          <h1 class="guide-title">Canvas API Drawing Guide: Shapes, Paths and Animation 2026</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 6 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+<h3>🎨 Draw anything — games, charts, generative art.</h3>
+<p style="color: var(--text-muted); margin: 0; line-height: 1.7;">The Canvas API gives you a pixel-level drawing surface with no DOM overhead. Learn shapes, paths, gradients, and buttery animation loops from scratch.</p>
+<a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides &rarr;</a>
+</div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. Setup and the Coordinate System</a></li>
+<li><a href="#sec2" style="color:var(--brand-primary);">2. Shapes, Paths and Styles</a></li>
+<li><a href="#sec3" style="color:var(--brand-primary);">3. Gradients, Images and Text</a></li>
+<li><a href="#sec4" style="color:var(--brand-primary);">4. The Animation Loop: requestAnimationFrame</a></li>
+<li><a href="#sec5" style="color:var(--brand-primary);">5. Performance and HiDPI Best Practices</a></li>
+<li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. Setup and the Coordinate System</h2>
+<p>The <code>&lt;canvas&gt;</code> element is a blank bitmap; the 2D rendering context (<code>getContext("2d")</code>) is your brush. Coordinates start at the top-left corner (0,0), x grows rightward, y grows downward — the opposite of math-class convention, which trips up every beginner exactly once. Everything you draw is immediate-mode: once a shape is painted, the canvas forgets it, so animation means clearing and redrawing every frame.</p>
+<pre class="code-box">&lt;canvas id=&quot;stage&quot; width=&quot;800&quot; height=&quot;450&quot;&gt;&lt;/canvas&gt;
+&lt;script&gt;
+  const canvas = document.getElementById(&quot;stage&quot;);
+  const ctx = canvas.getContext(&quot;2d&quot;);
+
+  // Crisp rendering on Retina/HiDPI displays
+  function setupHiDPI(canvas, ctx) {
+    const dpr = window.devicePixelRatio || 1;
+    const { width, height } = canvas.getBoundingClientRect();
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr); // draw in CSS pixels from here on
+    return { width, height };
+  }
+  const { width: W, height: H } = setupHiDPI(canvas, ctx);
+
+  ctx.fillStyle = &quot;#0f172a&quot;;
+  ctx.fillRect(0, 0, W, H); // paint the background
+&lt;/script&gt;</pre>
+<p>HiDPI handling is not optional polish — without scaling by <code>devicePixelRatio</code>, canvas graphics look blurry on every modern phone and laptop. The pattern above sizes the backing store in device pixels while keeping your drawing code in CSS pixels. Re-run setup on window resize so the canvas stays sharp at any viewport.</p>
+</section>
+<section id="sec2" class="guide-section">
+<h2>2. Shapes, Paths and Styles</h2>
+<p>Rectangles are one-liners (<code>fillRect</code>, <code>strokeRect</code>, <code>clearRect</code>), but everything interesting goes through <strong>paths</strong>: <code>beginPath()</code> starts one, then you add sub-paths with <code>moveTo</code>, <code>lineTo</code>, <code>arc</code>, and Bézier curves, finishing with <code>fill()</code> or <code>stroke()</code>. Forgetting <code>beginPath()</code> is the classic bug — without it, new shapes join the previous path and inherit its styling.</p>
+<pre class="code-box">// Rectangles, circles, and a custom path
+ctx.fillStyle = &quot;#eab308&quot;;
+ctx.fillRect(40, 40, 120, 80);            // filled rectangle
+
+ctx.strokeStyle = &quot;#38bdf8&quot;;
+ctx.lineWidth = 6;
+ctx.strokeRect(200, 40, 120, 80);         // outlined rectangle
+
+ctx.beginPath();                          // start a fresh path!
+ctx.arc(400, 80, 50, 0, Math.PI * 2);    // full circle
+ctx.fillStyle = &quot;#10b981&quot;;
+ctx.fill();
+
+// A speech-bubble-ish polygon with rounded joins
+ctx.beginPath();
+ctx.moveTo(500, 40);
+ctx.lineTo(620, 40);
+ctx.lineTo(620, 100);
+ctx.lineTo(560, 100);
+ctx.lineTo(540, 125);
+ctx.lineTo(530, 100);
+ctx.lineTo(500, 100);
+ctx.closePath();
+ctx.fillStyle = &quot;#f472b6&quot;;
+ctx.fill();
+ctx.lineJoin = &quot;round&quot;;
+ctx.strokeStyle = &quot;#9d174d&quot;;
+ctx.lineWidth = 4;
+ctx.stroke();</pre>
+<p>Styling controls live on the context: <code>fillStyle</code>/<code>strokeStyle</code> accept any CSS color, gradient, or pattern; <code>lineWidth</code>, <code>lineCap</code> (<code>butt</code>/<code>round</code>/<code>square</code>), and <code>lineJoin</code> shape strokes; <code>globalAlpha</code> and <code>globalCompositeOperation</code> control transparency and blending. Save and restore context state with <code>ctx.save()</code>/<code>ctx.restore()</code> around transforms so one shape's rotation never leaks into the next.</p>
+</section>
+<section id="sec3" class="guide-section">
+<h2>3. Gradients, Images and Text</h2>
+<p>Gradients elevate flat shapes instantly. <code>createLinearGradient(x0,y0,x1,y1)</code> blends along a line; <code>createRadialGradient</code> radiates from a circle — add color stops with <code>addColorStop(offset, color)</code> and assign the gradient to <code>fillStyle</code>. Images draw with <code>drawImage()</code> in three flavors: whole image, scaled, or cropped from a source rectangle (the basis of sprite-sheet animation).</p>
+<pre class="code-box">// Linear gradient sky + radial glow
+const sky = ctx.createLinearGradient(0, 0, 0, H);
+sky.addColorStop(0, &quot;#0c4a6e&quot;);
+sky.addColorStop(1, &quot;#082f49&quot;);
+ctx.fillStyle = sky;
+ctx.fillRect(0, 0, W, H);
+
+const glow = ctx.createRadialGradient(400, 200, 10, 400, 200, 120);
+glow.addColorStop(0, &quot;rgba(234,179,8,0.9)&quot;);
+glow.addColorStop(1, &quot;rgba(234,179,8,0)&quot;);
+ctx.fillStyle = glow;
+ctx.fillRect(0, 0, W, H);
+
+// Draw an image (wait for load!) with cover-style cropping
+const img = new Image();
+img.src = &quot;/assets/hero.png&quot;;
+img.onload = () =&gt; {
+  ctx.drawImage(img, 0, 0, W, H); // stretched; compute crop for cover fit
+};
+
+// Crisp text with alignment control
+ctx.font = &quot;700 42px system-ui, sans-serif&quot;;
+ctx.textAlign = &quot;center&quot;;
+ctx.textBaseline = &quot;middle&quot;;
+ctx.fillStyle = &quot;#f8fafc&quot;;
+ctx.fillText(&quot;Hello, Canvas!&quot;, W / 2, 60);</pre>
+<p>Two image gotchas: always draw inside <code>onload</code> (drawing before load silently paints nothing), and respect CORS — drawing a cross-origin image without <code>crossOrigin="anonymous"</code> taints the canvas, permanently blocking <code>toDataURL()</code> and pixel reads. For text, set <code>font</code> with the full CSS shorthand each time; canvas has no inherited styles.</p>
+</section>
+<section id="sec4" class="guide-section">
+<h2>4. The Animation Loop: requestAnimationFrame</h2>
+<p><code>requestAnimationFrame</code> (rAF) is the heartbeat of canvas animation: the browser calls your function before each repaint, typically 60 times per second, and pauses automatically when the tab is hidden. The loop pattern is always the same — update state, clear, draw, request the next frame. Crucially, drive motion with <strong>delta time</strong> (seconds since the last frame) so animation speed stays constant on 60Hz, 120Hz, and throttled displays alike.</p>
+<pre class="code-box">const ball = { x: 100, y: 100, vx: 260, vy: 180, r: 24 };
+let last = performance.now();
+
+function loop(now) {
+  const dt = Math.min((now - last) / 1000, 0.05); // seconds, clamped
+  last = now;
+
+  // 1. update physics with delta time
+  ball.x += ball.vx * dt;
+  ball.y += ball.vy * dt;
+  if (ball.x &lt; ball.r || ball.x &gt; W - ball.r) ball.vx *= -1;
+  if (ball.y &lt; ball.r || ball.y &gt; H - ball.r) ball.vy *= -1;
+
+  // 2. clear and redraw
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = &quot;#0f172a&quot;;
+  ctx.fillRect(0, 0, W, H);
+
+  const g = ctx.createRadialGradient(
+    ball.x - 8, ball.y - 8, 4, ball.x, ball.y, ball.r);
+  g.addColorStop(0, &quot;#fde68a&quot;);
+  g.addColorStop(1, &quot;#d97706&quot;);
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 3. schedule next frame
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);</pre>
+<p>Clamping delta time (here to 50ms) prevents physics explosions after tab-switch pauses. For games, separate your fixed-timestep simulation from rendering; for visualizations, easing functions (<code>easeInOutCubic</code> and friends) turn linear interpolation into natural motion. Never use <code>setInterval</code> for animation — it desyncs from repaints and keeps running in background tabs, wasting battery.</p>
+</section>
+<section id="sec5" class="guide-section">
+<h2>5. Performance and HiDPI Best Practices</h2>
+<p>Canvas is fast until it is not. The biggest wins: batch draws by style (changing <code>fillStyle</code> is expensive — group same-colored shapes), avoid shadowBlur in hot loops (it is one of the slowest canvas operations), and pre-render static layers to <strong>offscreen canvases</strong> once, then <code>drawImage</code> them each frame instead of redrawing hundreds of shapes.</p>
+<pre class="code-box">// Pre-render a static starfield once, blit it every frame
+const bg = document.createElement(&quot;canvas&quot;);
+bg.width = W; bg.height = H;
+const bctx = bg.getContext(&quot;2d&quot;);
+for (let i = 0; i &lt; 300; i++) {
+  bctx.fillStyle = `rgba(255,255,255,${Math.random() * 0.8})`;
+  bctx.fillRect(Math.random() * W, Math.random() * H, 2, 2);
+}
+// in the loop: ctx.drawImage(bg, 0, 0);  // one cheap blit
+
+// Only redraw regions that changed (dirty rectangles)
+// ctx.clearRect(x - r - 2, y - r - 2, r * 2 + 4, r * 2 + 4);</pre>
+<table class="data-table"><thead><tr><th></th><th>Canvas</th><th>SVG</th></tr></thead><tbody><tr><td>Rendering model</td><td>Immediate-mode bitmap</td><td>Retained-mode DOM nodes</td></tr><tr><td>Best for</td><td>Games, particle systems, image processing</td><td>Icons, charts, interactive diagrams</td></tr><tr><td>Thousands of objects</td><td>Excellent — no per-object overhead</td><td>Slow — each shape is a DOM node</td></tr><tr><td>Accessibility</td><td>Manual (fallback content, ARIA)</td><td>Native (focusable, screen-reader friendly)</td></tr><tr><td>Resolution independence</td><td>Manual HiDPI scaling needed</td><td>Vector — sharp at any size</td></tr></tbody></table>
+<p>Choose Canvas when you have many moving objects, per-pixel manipulation, or game-style frame loops; choose SVG when you need accessibility, CSS styling, or DOM event handling on shapes. They compose well — a dashboard might render its animated background on canvas with SVG chart overlays on top.</p>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between Canvas and SVG?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Canvas is an immediate-mode bitmap API: you paint pixels and the browser forgets the shapes, making it ideal for games and thousands of objects. SVG is retained-mode: every shape is a DOM node, better for accessible, styleable, interactive graphics.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Why does my canvas look blurry on some screens?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">The canvas backing store defaults to CSS-pixel resolution. Multiply width and height by window.devicePixelRatio and ctx.scale() by the same factor so drawing stays sharp on Retina and HiDPI displays.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Should I use setInterval or requestAnimationFrame for animation?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Always requestAnimationFrame. It syncs with the display's refresh rate, pauses in background tabs to save battery, and avoids the tearing and drift that setInterval causes. Drive motion with delta time for consistent speed.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I make canvas content accessible?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Canvas pixels are invisible to screen readers, so provide fallback content inside the canvas element, mirror key state in ARIA live regions, ensure keyboard equivalents for interactions, and consider SVG for content that must be natively accessible.</p>
+</details>
+</div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+<details style="padding:14px 18px;">
+<summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is canvas tainting and how do I avoid it?</summary>
+<p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Drawing a cross-origin image without CORS approval taints the canvas, permanently blocking toDataURL() and getImageData(). Set img.crossOrigin = 'anonymous' and serve the image with CORS headers, or host images on the same origin.</p>
+</details>
+</div>
+          </div>
+        </section>
+
+                <div class="tool-embed-banner" style="margin-top: 48px;">
+<h3>Keep leveling up</h3>
+<p style="color: var(--text-muted); margin: 0; line-height: 1.7;">Canvas is where code meets visual creativity — keep exploring graphics, animation, and media guides in the hub.</p>
+<a href="/articles/" class="tool-launch-btn">Explore the Guides Hub &rarr;</a>
+</div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

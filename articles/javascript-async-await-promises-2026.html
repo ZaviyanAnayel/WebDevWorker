@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JavaScript Async/Await and Promises: The Complete Guide | WebDevWorker</title>
+  <meta name="description" content="Master async JavaScript in 2026: promises, async/await, error handling with try/catch, Promise.all, allSettled, and race. Complete guide with real code."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/javascript-async-await-promises-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="JavaScript Async/Await and Promises: The Complete Guide | WebDevWorker"/>
+  <meta property="og:description" content="Master async JavaScript in 2026: promises, async/await, error handling with try/catch, Promise.all, allSettled, and race. Complete guide with real code."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/javascript-async-await-promises-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "JavaScript Async/Await and Promises: The Complete Guide (2026)",
+      "description": "Master async JavaScript in 2026: promises, async/await, error handling with try/catch, Promise.all, allSettled, and race. Complete guide with real code.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/javascript-async-await-promises-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+                  {
+            "@type": "Question",
+            "name": "What is the difference between a promise and async/await?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A promise is the underlying object representing a future value; async/await is syntax for working with promises. An async function always returns a promise, and await unwraps a promise's value. They are the same machinery — async/await just reads like synchronous code."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I handle one failing request in Promise.all?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "You cannot — Promise.all rejects entirely on the first failure. For partial-failure tolerance, use Promise.allSettled (which reports every outcome) or attach a .catch() to each individual promise before passing them to Promise.all so none of them reject."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does await block the main thread?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. await pauses only the current async function; the event loop keeps processing timers, events, and rendering while it waits. True blocking comes only from long synchronous computation, which await does nothing to fix."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use await at the top level of a module?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, in ES modules — top-level await is supported in all modern browsers and Node.js. In classic scripts you still need to wrap the code in an async function (or an async IIFE) because await is only valid inside async functions there."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What happens if I forget .catch() on a promise?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The rejection becomes “unhandled”: browsers log a loud console warning and Node.js may terminate the process. Add a global unhandledrejection listener as a safety net, but fix the root cause — every promise chain needs a terminal error handler."
+            }
+          }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Async/Await &amp; Promises",
+          "item": "https://www.webdevworker.com/articles/javascript-async-await-promises-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Async/Await &amp; Promises</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">⚡ JavaScript</div>
+          <h1 class="guide-title">JavaScript Async/Await and Promises: The Complete Guide</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 9 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. Promises: The Foundation</a></li>
+            <li><a href="#sec2" style="color:var(--brand-primary);">2. async/await: Writing Async Code That Reads Sync</a></li>
+            <li><a href="#sec3" style="color:var(--brand-primary);">3. Error Handling Done Right</a></li>
+            <li><a href="#sec4" style="color:var(--brand-primary);">4. Running Things in Parallel: all, allSettled, race, any</a></li>
+            <li><a href="#sec5" style="color:var(--brand-primary);">5. Async Patterns and Pitfalls</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+                <section id="sec1" class="guide-section">
+          <h2>1. Promises: The Foundation</h2>
+          <p>A Promise is JavaScript's standard container for a value that does not exist yet: the result of a network request, a file read, a timer. Every promise lives in one of three states — pending, fulfilled, or rejected — and moves from pending to exactly one settled state, once. That single-settlement guarantee is what makes promises trustworthy: unlike raw callbacks, a promise cannot resolve twice or silently swallow its outcome.</p>
+          <p>You consume promises with .then() for the success value and .catch() for failures, and each .then() returns a new promise — which is what enables chaining. A value returned from one .then() becomes the input of the next, so a multi-step pipeline (fetch user → fetch their orders → render) reads as a vertical chain instead of nested callbacks. The chain also centralizes errors: a single .catch() at the end handles a rejection from any step.</p>
+          <p>You will also create promises, most often to wrap older callback APIs. The Promise constructor takes an executor function with resolve and reject callbacks — call resolve(value) on success, reject(error) on failure. Wrap setTimeout-based utilities, geolocation, or IndexedDB calls this way and they compose cleanly with the rest of your async code.</p>
+          <pre class="code-box">// Creating a promise: wrap a callback API
+function delay(ms, value) {
+  return new Promise((resolve, reject) =&gt; {
+    if (ms &lt; 0) return reject(new Error('ms must be positive'));
+    setTimeout(() =&gt; resolve(value), ms);
+  });
+}
+
+// Chaining: each .then() feeds the next
+delay(300, 21)
+  .then(n =&gt; n * 2)          // 42
+  .then(n =&gt; `Answer: ${n}`) // 'Answer: 42'
+  .then(console.log)
+  .catch(err =&gt; console.error('Failed:', err.message));
+// One .catch() handles a rejection from ANY step above
+</pre>
+        </section>
+        <section id="sec2" class="guide-section">
+          <h2>2. async/await: Writing Async Code That Reads Sync</h2>
+          <p>async/await is syntax sugar over promises that removes the chaining ceremony. Mark a function async and it always returns a promise; inside it, await pauses execution until a promise settles, then unwraps its value. Code that needed three nested .then() calls becomes three sequential-looking lines — same behavior, dramatically easier to read, debug, and step through.</p>
+          <p>The mental model that prevents most mistakes: await only pauses the current async function, never the whole program. While one function waits on a network response, the event loop keeps running timers, handling clicks, and painting frames. And because async functions return promises, they compose with everything else — you can await an async function, .then() it, or feed it to Promise.all without any adapter code.</p>
+          <p>Use await for sequential dependencies (you need the user before you can fetch their orders) and reach for the parallel combinators in the next sections when steps are independent. A common performance bug is awaiting independent requests one after another — three 200ms requests become 600ms instead of ~200ms. Start all the promises first, then await them together.</p>
+          <pre class="code-box">// The same pipeline, written with async/await
+async function getOrderSummary(userId) {
+  const user = await fetch(`/api/users/${userId}`).then(r =&gt; r.json());
+  // ^ sequential: we need the user first
+  const orders = await fetch(`/api/users/${user.id}/orders`).then(r =&gt; r.json());
+  return { name: user.name, total: orders.length };
+}
+
+// Independent requests: start together, await together
+async function getDashboard() {
+  const usersP = fetch('/api/users').then(r =&gt; r.json());
+  const statsP = fetch('/api/stats').then(r =&gt; r.json());
+  const [users, stats] = await Promise.all([usersP, statsP]);
+  return { users, stats }; // ~1x slowest, not the sum
+}
+</pre>
+        </section>
+        <section id="sec3" class="guide-section">
+          <h2>3. Error Handling Done Right</h2>
+          <p>With async/await, error handling looks like synchronous code: wrap awaits in try/catch. A rejected promise inside the try block jumps straight to catch, where you get a normal Error object with a stack trace pointing at the failing await — far more debuggable than a rejection surfacing three .then() calls away from its cause.</p>
+          <p>Structure your catches deliberately. Catch around the narrowest unit you can meaningfully recover from: per-request handling lets one failed fetch fall back to cached data while the rest of the flow continues, while a single outer catch is right for “if anything fails, show the error screen” flows. Always rethrow (or return a rejected promise) when you cannot actually recover — silently swallowing errors is how “blank page, no error” bugs are born.</p>
+          <p>Unhandled rejections are the async equivalent of uncaught exceptions: in modern runtimes they log loud warnings and in Node.js they crash the process. Every promise chain needs a terminal .catch(), and every top-level async call needs a try/catch or .catch(). A global safety net — window.addEventListener('unhandledrejection') — is worth adding in production apps so nothing fails silently.</p>
+          <pre class="code-box">async function loadProfile(userId) {
+  try {
+    const res = await fetch(`/api/users/${userId}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    // Narrow recovery: fall back to cached data for network errors
+    console.warn('Live fetch failed, using cache:', err.message);
+    const cached = localStorage.getItem('profile:' + userId);
+    if (cached) return JSON.parse(cached);
+    throw err; // cannot recover -&gt; let the caller handle it
+  }
+}
+
+// Global safety net: never let a rejection die silently
+window.addEventListener('unhandledrejection', (e) =&gt; {
+  console.error('Unhandled rejection:', e.reason);
+});
+</pre>
+        </section>
+        <section id="sec4" class="guide-section">
+          <h2>4. Running Things in Parallel: all, allSettled, race, any</h2>
+          <p>Promise.all takes an array of promises and resolves with an array of their results in order — but it is all-or-nothing: the first rejection rejects the whole thing, discarding the other results. That is exactly right for “everything must succeed” flows like loading the pieces of a dashboard, and exactly wrong when partial results are acceptable.</p>
+          <p>Promise.allSettled never rejects. It waits for every promise to settle and reports each outcome as { status: 'fulfilled', value } or { status: 'rejected', reason }. It is the tool for batch jobs where one failure must not poison the rest — syncing ten feeds, validating a form's independent checks, or preloading assets where you want to know which ones failed.</p>
+          <p>Promise.race settles with the first promise to settle, win or lose — the classic use is racing a fetch against a timeout. Promise.any is its optimistic sibling: it resolves with the first fulfillment and only rejects if everything fails, which suits “first healthy mirror wins” patterns. Pick the combinator that matches your failure semantics and half your async bugs disappear.</p>
+          <pre class="code-box">// allSettled: batch job where partial failure is OK
+const urls = ['/api/a', '/api/b', '/api/c'];
+const results = await Promise.allSettled(urls.map(u =&gt; fetch(u).then(r =&gt; r.json())));
+const good = results.filter(r =&gt; r.status === 'fulfilled').map(r =&gt; r.value);
+const failed = results.filter(r =&gt; r.status === 'rejected');
+console.log(`Loaded ${good.length}, failed ${failed.length}`);
+
+// race: fetch with a timeout
+function withTimeout(promise, ms) {
+  const timeout = new Promise((_, reject) =&gt;
+    setTimeout(() =&gt; reject(new Error('Timed out')), ms));
+  return Promise.race([promise, timeout]);
+}
+
+const data = await withTimeout(fetch('/api/slow').then(r =&gt; r.json()), 5000);
+</pre>
+        </section>
+        <section id="sec5" class="guide-section">
+          <h2>5. Async Patterns and Pitfalls</h2>
+          <p>The most common async/await bug is using it inside forEach: arr.forEach(async x =&gt; { await work(x); }) fires all the callbacks without waiting for any of them, because forEach ignores the promises your callback returns. When order or completion matters, use for...of with await inside — it genuinely waits per iteration — or map to an array of promises and await Promise.all for parallelism.</p>
+          <p>Sequential awaits in a loop are sometimes correct (rate-limited APIs, dependent steps) but often an accidental performance cliff: five 300ms requests become 1.5 seconds instead of ~300ms. Default to starting all promises first and awaiting them together; drop to sequential only when the steps truly depend on each other or the API demands it.</p>
+          <p>Finally, keep async boundaries thin. Marking everything async “just in case” litters code with pointless awaits and makes stack traces harder to read. Async functions should sit at I/O boundaries — fetching, timers, storage — while pure computation stays synchronous. The table below is a quick reference for the patterns in this guide.</p>
+          <table class="data-table">
+          <thead>
+          <tr><th>Pattern</th><th>Use it when</th><th>Watch out for</th></tr>
+          </thead>
+          <tbody>
+          <tr><td>await in for...of</td><td>Steps must run in order, each awaited</td><td>Slow if steps are independent — consider Promise.all</td></tr>
+          <tr><td>Promise.all</td><td>Independent tasks; all must succeed</td><td>One rejection discards every result</td></tr>
+          <tr><td>Promise.allSettled</td><td>Independent tasks; partial failure OK</td><td>You must inspect each status yourself</td></tr>
+          <tr><td>Promise.race</td><td>First settlement wins (e.g. timeouts)</td><td>A fast rejection beats a slow success</td></tr>
+          <tr><td>Promise.any</td><td>First success wins (e.g. mirrors)</td><td>Rejects only if ALL fail — AggregateError</td></tr>
+          <tr><td>try/catch around await</td><td>Recovering from a specific failure</td><td>Do not swallow errors you cannot handle</td></tr>
+          </tbody>
+          </table>
+        </section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between a promise and async/await?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">A promise is the underlying object representing a future value; async/await is syntax for working with promises. An async function always returns a promise, and await unwraps a promise's value. They are the same machinery — async/await just reads like synchronous code.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I handle one failing request in Promise.all?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">You cannot — Promise.all rejects entirely on the first failure. For partial-failure tolerance, use Promise.allSettled (which reports every outcome) or attach a .catch() to each individual promise before passing them to Promise.all so none of them reject.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Does await block the main thread?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No. await pauses only the current async function; the event loop keeps processing timers, events, and rendering while it waits. True blocking comes only from long synchronous computation, which await does nothing to fix.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can I use await at the top level of a module?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes, in ES modules — top-level await is supported in all modern browsers and Node.js. In classic scripts you still need to wrap the code in an async function (or an async IIFE) because await is only valid inside async functions there.</p>
+          </details>
+        </div>
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What happens if I forget .catch() on a promise?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">The rejection becomes “unhandled”: browsers log a loud console warning and Node.js may terminate the process. Add a global unhandledrejection listener as a safety net, but fix the root cause — every promise chain needs a terminal error handler.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <title>Webhooks Implementation Guide: Sending, Receiving, and Security (2026) | WebDevWorker</title>
+  <meta name="description" content="Build reliable webhooks end to end: sending signed JSON payloads, verifying HMAC signatures, handling retries, and designing idempotent receiver endpoints."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/webhooks-implementation-guide-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Webhooks Implementation Guide: Sending, Receiving, and Security (2026) | WebDevWorker"/>
+  <meta property="og:description" content="Build reliable webhooks end to end: sending signed JSON payloads, verifying HMAC signatures, handling retries, and designing idempotent receiver endpoints."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/webhooks-implementation-guide-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Webhooks Implementation Guide: Sending, Receiving, and Security (2026)",
+      "description": "Build reliable webhooks end to end: sending signed JSON payloads, verifying HMAC signatures, handling retries, and designing idempotent receiver endpoints.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/webhooks-implementation-guide-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+                {
+          "@type": "Question",
+          "name": "What is the difference between a webhook and an API?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An API is request-response: the client asks, the server answers. A webhook reverses this \u2014 your server sends an HTTP POST to the client's URL when an event happens, so the client learns about it immediately without polling. Webhooks are for event notifications; APIs are for on-demand data access. Most integrations use both."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I secure my webhook receiver endpoint?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Verify the HMAC signature of every payload against the raw request body using a per-subscriber secret, enforce HTTPS, reject events with stale timestamps to limit replay, and return 401 for bad signatures. Never trust a webhook payload that fails signature verification \u2014 treat it as hostile input."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why am I receiving duplicate webhook events?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Because webhook delivery is at-least-once: senders retry on timeouts and network errors, and a slow receiver can trigger a retry even though the first attempt succeeded. Design receivers to be idempotent by deduplicating on the event ID, and acknowledge (HTTP 200) before doing slow work."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should webhooks be sent synchronously in the request handler?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Enqueue webhook deliveries in a background job queue and send them asynchronously with retries. Sending inline couples your response time to every subscriber's endpoint speed \u2014 one slow or dead subscriber would delay your own requests and eventually exhaust your workers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How should I version webhook event payloads?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Version the event type (payment.succeeded.v2), never remove or rename fields without a version bump, and keep old versions working for a documented deprecation period. Include the event ID and timestamp in every version so receivers can build version-agnostic deduplication and ordering logic."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Webhooks Implementation Guide",
+          "item": "https://www.webdevworker.com/articles/webhooks-implementation-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Webhooks Implementation Guide</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🔌 APIs & Data</div>
+          <h1 class="guide-title">Webhooks Implementation Guide: Sending, Receiving, and Security (2026)</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 9 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3><span>🔌</span> Event-Driven APIs Done Right</h3>
+          <p>Webhooks are how modern services talk in real time. Pair this with the rate limiting and pagination guides for a complete API design toolkit.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides &rarr;</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. Webhooks vs Polling vs WebSockets</a></li>
+<li><a href="#sec2" style="color:var(--brand-primary);">2. Sending Webhooks from Your Application</a></li>
+<li><a href="#sec3" style="color:var(--brand-primary);">3. Building a Receiver Endpoint</a></li>
+<li><a href="#sec4" style="color:var(--brand-primary);">4. Verifying Signatures with HMAC</a></li>
+<li><a href="#sec5" style="color:var(--brand-primary);">5. Retries, Idempotency, and Operational Reliability</a></li>
+<li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. Webhooks vs Polling vs WebSockets</h2>
+<p>A webhook is an HTTP callback: instead of clients repeatedly asking "anything new?" (polling), your server pushes an HTTP POST to a URL the client registered when an event occurs. A payment succeeds, a build finishes, a row changes — your system fires a signed JSON payload at the subscriber's endpoint within seconds. It is the standard pattern for event notifications between services precisely because it is simple, decoupled, and near-real-time.</p>
+<p>Polling still wins when events are rare and latency does not matter, or when the subscriber cannot receive inbound connections (behind strict firewalls, or a mobile app). WebSockets win for bidirectional, high-frequency streams like live dashboards or chat. Webhooks win for discrete business events between servers: payment status changes, CI results, CRM updates. Choose by the shape of the data, not by fashion.</p>
+<table class="data-table"><thead><tr><th>Pattern</th><th>Direction</th><th>Latency</th><th>Best For</th></tr></thead><tbody><tr><td>Webhooks</td><td>Server pushes to client URL</td><td>Seconds</td><td>Discrete business events (payments, deploys, alerts)</td></tr><tr><td>Polling</td><td>Client asks repeatedly</td><td>Minutes (typical)</td><td>Rare events; clients behind firewalls</td></tr><tr><td>WebSockets</td><td>Bidirectional stream</td><td>Milliseconds</td><td>Live dashboards, chat, gaming</td></tr><tr><td>Server-Sent Events</td><td>Server streams to browser</td><td>Seconds</td><td>One-way live updates to web UIs</td></tr></tbody></table>
+<p>One more consideration: webhooks invert the trust direction. With polling, your server only answers; with webhooks, your server makes outbound requests to third-party URLs — which means you must validate those URLs (no internal addresses, to prevent SSRF) and sign every payload so receivers can verify it really came from you.</p>
+</section>
+
+<section id="sec2" class="guide-section">
+<h2>2. Sending Webhooks from Your Application</h2>
+<p>Sending webhooks well is mostly about the envelope: a stable event schema, a unique event ID, a timestamp, and an HMAC signature. Here is a sender implementation in Node.js:</p>
+<pre class="code-box">const crypto = require('crypto');
+
+async function sendWebhook(url, eventType, data, secret) {
+  const payload = JSON.stringify({
+    id: crypto.randomUUID(),          // unique per delivery attempt batch
+    type: eventType,                   // e.g. "payment.succeeded"
+    created_at: new Date().toISOString(),
+    data,
+  });
+  const signature = crypto
+    .createHmac('sha256', secret)
+    .update(payload)
+    .digest('hex');
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Webhook-Signature': `sha256=${signature}`,
+      'X-Webhook-Event': eventType,
+      'X-Webhook-Delivery': crypto.randomUUID(), // unique per attempt
+    },
+    body: payload,
+    signal: AbortSignal.timeout(10000), // never hang forever on a dead URL
+  });
+  if (!res.ok) throw new Error(`Webhook failed: ${res.status}`);
+  return res;
+}</pre>
+<p>Design decisions that pay off: version your event types (<code>payment.succeeded.v2</code>) so schema changes do not break subscribers; never delete or rename fields without a version bump; include the event ID so receivers can deduplicate; and store every delivery attempt with its response so you have an audit trail when a subscriber says "we never got it". Send from a job queue, never inline in the request that triggered the event — a slow subscriber must never slow down your checkout.</p>
+</section>
+
+<section id="sec3" class="guide-section">
+<h2>3. Building a Receiver Endpoint</h2>
+<p>The receiver's job is to accept fast, verify, and process asynchronously. Acknowledge receipt immediately (HTTP 200) and do the real work in a background job — webhook senders retry aggressively on timeouts, and slow endpoints cause duplicate deliveries:</p>
+<pre class="code-box">// Express receiver: verify, acknowledge fast, process async
+app.post('/webhooks/payments', express.raw({ type: 'application/json' }),
+  async (req, res) =&gt; {
+    const signature = req.headers['x-webhook-signature'];
+    if (!verifySignature(req.body, signature, process.env.WEBHOOK_SECRET)) {
+      return res.status(401).send('bad signature');
+    }
+    const event = JSON.parse(req.body.toString());
+    await jobQueue.add('process-webhook', event); // async processing
+    res.status(200).send('ok'); // acknowledge BEFORE heavy work
+  }
+);</pre>
+<p>Note <code>express.raw()</code>: signature verification must run against the exact raw bytes the sender signed, so parse the body yourself after verifying — middleware that parses JSON first will normalize whitespace and break the signature. Also enforce a timestamp tolerance (reject events older than five minutes) to narrow the replay window, and always use HTTPS for receiver endpoints so signatures and payloads are not exposed in transit.</p>
+</section>
+
+<section id="sec4" class="guide-section">
+<h2>4. Verifying Signatures with HMAC</h2>
+<p>HMAC signature verification is what stops attackers from forging events to your endpoint. The sender and receiver share a secret; the sender signs the raw payload bytes; the receiver recomputes the signature and compares. Anyone without the secret cannot produce a valid signature, so forged "payment succeeded" events get rejected:</p>
+<pre class="code-box">const crypto = require('crypto');
+
+function verifySignature(rawBody, header, secret) {
+  if (!header || !header.startsWith('sha256=')) return false;
+  const expected = 'sha256=' + crypto
+    .createHmac('sha256', secret)
+    .update(rawBody) // raw bytes, exactly as received
+    .digest('hex');
+  // timingSafeEqual prevents timing attacks on the comparison
+  const a = Buffer.from(header), b = Buffer.from(expected);
+  return a.length === b.length &amp;&amp; crypto.timingSafeEqual(a, b);
+}</pre>
+<p>Operational rules for secrets: generate a unique secret per subscriber (so rotating one does not affect others), allow each subscriber to rotate theirs from your dashboard, and support a grace period where two secrets are valid during rotation. Log verification failures without logging the secret itself, and alert on sudden spikes — they often indicate a misconfigured subscriber rather than an attack, but either way you want to know.</p>
+</section>
+
+<section id="sec5" class="guide-section">
+<h2>5. Retries, Idempotency, and Operational Reliability</h2>
+<p>Networks fail, so webhooks must be delivered with at-least-once semantics: retry failed deliveries with exponential backoff (e.g. after 1 minute, 5 minutes, 30 minutes, a few hours), cap the retry window (24–72 hours is typical), and then dead-letter the event for manual inspection. Tell subscribers your retry policy up front so they can design for duplicates — because retries plus at-least-once delivery means duplicates are guaranteed, not hypothetical.</p>
+<p>Idempotency is the receiver-side answer to duplicates. Key your processing on the event ID: record processed event IDs (with a TTL) and skip any event you have already handled. For state-changing effects like "credit the account", also make the effect itself idempotent — a database upsert keyed on the event ID, or a check-then-act inside a transaction:</p>
+<pre class="code-box">// Idempotent receiver: the event ID is the dedupe key
+async function handleEvent(event) {
+  const seen = await db.processedEvents.findUnique({ where: { id: event.id } });
+  if (seen) return; // duplicate delivery — already handled, ack quietly
+
+  await db.$transaction(async (tx) =&gt; {
+    await tx.orders.update({ where: { id: event.data.orderId },
+                             data: { status: 'paid' } });
+    await tx.processedEvents.create({ data: { id: event.id } });
+  });
+}</pre>
+<p>Finally, give subscribers observability: a dashboard showing recent deliveries, response codes, and retry state, plus a "replay event" button. When something goes wrong at 2 AM, the difference between a five-minute self-service fix and a support ticket is whether the subscriber can see and redrive their own events.</p>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between a webhook and an API?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">An API is request-response: the client asks, the server answers. A webhook reverses this — your server sends an HTTP POST to the client's URL when an event happens, so the client learns about it immediately without polling. Webhooks are for event notifications; APIs are for on-demand data access. Most integrations use both.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I secure my webhook receiver endpoint?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Verify the HMAC signature of every payload against the raw request body using a per-subscriber secret, enforce HTTPS, reject events with stale timestamps to limit replay, and return 401 for bad signatures. Never trust a webhook payload that fails signature verification — treat it as hostile input.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Why am I receiving duplicate webhook events?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Because webhook delivery is at-least-once: senders retry on timeouts and network errors, and a slow receiver can trigger a retry even though the first attempt succeeded. Design receivers to be idempotent by deduplicating on the event ID, and acknowledge (HTTP 200) before doing slow work.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Should webhooks be sent synchronously in the request handler?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No. Enqueue webhook deliveries in a background job queue and send them asynchronously with retries. Sending inline couples your response time to every subscriber's endpoint speed — one slow or dead subscriber would delay your own requests and eventually exhaust your workers.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How should I version webhook event payloads?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Version the event type (payment.succeeded.v2), never remove or rename fields without a version bump, and keep old versions working for a documented deprecation period. Include the event ID and timestamp in every version so receivers can build version-agnostic deduplication and ordering logic.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+        <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Keep leveling up</h3>
+          <p>Combine signed, idempotent webhooks with well-designed REST endpoints and clear rate limits to build integrations developers trust.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub &rarr;</a>
+        </div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

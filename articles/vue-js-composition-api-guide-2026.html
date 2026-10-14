@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- SEO: replace TITLE, DESC (150-160 chars), and SLUG everywhere -->
+  <title>Vue 3 Composition API Guide 2026: ref, reactive, computed, watch &amp; Lifecycle | WebDevWorker</title>
+  <meta name="description" content="Master the Vue 3 Composition API in 2026: ref vs reactive, computed, watch and watchEffect, lifecycle hooks, and reusable composables — practical code examples."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/vue-js-composition-api-guide-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Vue 3 Composition API Guide 2026: ref, reactive, computed, watch &amp; Lifecycle | WebDevWorker"/>
+  <meta property="og:description" content="Master the Vue 3 Composition API in 2026: ref vs reactive, computed, watch and watchEffect, lifecycle hooks, and reusable composables — practical code examples."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/vue-js-composition-api-guide-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Vue 3 Composition API Guide 2026: ref, reactive, computed, watch and Lifecycle Hooks",
+      "description": "Master the Vue 3 Composition API in 2026: ref vs reactive, computed, watch and watchEffect, lifecycle hooks, and reusable composables — practical code examples.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/vue-js-composition-api-guide-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+    "@type": "Question",
+    "name": "Should I use ref or reactive for form state?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use reactive for grouped form state — form.email reads more naturally than form.value.email, and you typically mutate fields rather than replace the whole object. Use ref for primitives like strings and numbers, and for any value you plan to reassign wholesale. Many teams standardize on ref everywhere for consistency; either convention works if applied consistently."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "Is the Options API deprecated in Vue 3?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The Options API is fully supported and will remain so — it is still a fine choice for simple components and for developers coming from Vue 2. The Composition API is recommended for complex components, shared logic, and TypeScript-heavy codebases because it colocates related logic and types cleanly."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "Why do I need .value in script but not in the template?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In <script setup>, a ref is a plain JavaScript object, so you must access its .value property explicitly. Templates are compiled by Vue, which automatically unwraps top-level refs when rendering. This is intentional: explicit in logic, ergonomic in markup."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "What is the difference between watch and watchEffect?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "watch observes an explicit source — a ref, getter, or array of sources — runs lazily by default, and gives you old and new values. watchEffect runs immediately, automatically tracks every reactive value read inside it, and re-runs when any of them change. Prefer watch for data fetching and predictable side effects; use watchEffect for simple reactive synchronization."
+    }
+},
+      {
+    "@type": "Question",
+    "name": "Can I mix the Options API and Composition API in one app?",
+    "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. You can even use setup() inside an Options API component, and the two styles interoperate. In practice, keep one style per component for readability, and adopt <script setup> for new components — it is the most concise and best-supported authoring style in 2026."
+    }
+}
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Vue Composition API",
+          "item": "https://www.webdevworker.com/articles/vue-js-composition-api-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Vue Composition API</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🟩 Vue &amp; Frontend</div>
+          <h1 class="guide-title">Vue 3 Composition API Guide 2026: ref, reactive, computed, watch &amp; Lifecycle</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 8 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3><span>⚡</span> From Learning to Building</h3>
+          <p>Pair these Composition API patterns with our other frontend guides — component architecture, state management strategies, and modern build tooling walkthroughs for real projects.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides →</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. Why the Composition API Exists</a></li>
+            <li><a href="#sec2" style="color:var(--brand-primary);">2. ref() vs reactive(): Managing State</a></li>
+            <li><a href="#sec3" style="color:var(--brand-primary);">3. computed() and watch(): Derived State and Side Effects</a></li>
+            <li><a href="#sec4" style="color:var(--brand-primary);">4. Lifecycle Hooks and Component Communication</a></li>
+            <li><a href="#sec5" style="color:var(--brand-primary);">5. Composables: Reusable Logic</a></li>
+            <li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. Why the Composition API Exists</h2>
+<p>In Vue 2 and the Vue 3 Options API, component logic is organized by option type: data, methods, computed, and watchers. For small components this works beautifully, but as a component grows, a single feature's logic gets scattered across all four sections. A search filter, for example, might have its query string in <code>data</code>, its filtering logic in <code>computed</code>, and its debounced fetch in <code>watch</code> — three places to read to understand one feature.</p><p>The Composition API solves this by organizing code by <strong>logical concern</strong> instead of by option type. Everything related to the search filter — state, derived values, and side effects — lives together inside <code>setup()</code> or a <code>&lt;script setup&gt;</code> block. It also fixes the two biggest pain points of mixins: naming collisions and invisible dependencies. With composables, every piece of reused logic is an explicit function call whose inputs and outputs you can see.</p><p>It is also a far better story for TypeScript. The Options API relies on <code>this</code> magic that type inference struggles with; the Composition API is plain functions and variables, so types flow naturally. Since Vue 3.2, <code>&lt;script setup&gt;</code> is the recommended authoring style, and this guide assumes it throughout.</p><pre class="code-box">&lt;script setup&gt;
+import { ref, computed } from 'vue'
+
+// All state for ONE feature, declared together
+const query = ref('')
+const items = ref(['Vue', 'React', 'Svelte', 'Solid'])
+
+const filtered = computed(() =&gt;
+  items.value.filter(i =&gt; i.toLowerCase().includes(query.value.toLowerCase()))
+)
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;input v-model="query" placeholder="Filter frameworks..." /&gt;
+  &lt;ul&gt;
+    &lt;li v-for="item in filtered" :key="item"&gt;{{ item }}&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/template&gt;</pre><p>The snippet above is the entire feature: two pieces of state and one derived value, declared in four lines. In the Options API the same logic would span <code>data</code> and <code>computed</code> with <code>this</code> wiring between them. That density is the whole point — related logic stays related.</p>
+</section>
+
+        <section id="sec2" class="guide-section">
+<h2>2. ref() vs reactive(): Managing State</h2>
+<p><code>ref()</code> wraps any value — primitive or object — in a reactive container with a <code>.value</code> property. <code>reactive()</code> turns a plain object (or array) into a deeply reactive proxy you access directly, with no <code>.value</code>. The rule of thumb: use <code>ref</code> for primitives and for anything you will reassign wholesale; use <code>reactive</code> for grouped object state like a form.</p><p>The <code>.value</code> requirement trips up every beginner, but there is a reason for it: JavaScript cannot make a reassigned variable reactive, so <code>ref</code> stores the value on an object whose property access can be tracked. In templates, Vue unwraps refs automatically, so <code>{{ count }}</code> works without <code>.value</code> — one of the small kindnesses of <code>&lt;script setup&gt;</code>.</p><p>Destructuring a <code>reactive</code> object breaks reactivity because you pull plain values out of the proxy. If you need individual properties, use <code>toRefs()</code> to convert each property into a ref. For large or performance-sensitive data that should not be deeply observed, reach for <code>shallowRef()</code> or <code>shallowReactive()</code>.</p><table class="data-table"><thead><tr><th>Aspect</th><th>ref()</th><th>reactive()</th></tr></thead><tbody><tr><td>Best for</td><td>Primitives, single values, reassignment</td><td>Grouped object/array state (forms, stores)</td></tr><tr><td>Access</td><td>Requires <code>.value</code> in script</td><td>Direct property access</td></tr><tr><td>Template</td><td>Auto-unwrapped</td><td>Direct access</td></tr><tr><td>Reassign</td><td>Yes: <code>state.value = newObj</code></td><td>No — mutating is fine, replacing loses reactivity</td></tr><tr><td>Destructuring</td><td>Safe (it's already a ref)</td><td>Breaks reactivity — use <code>toRefs()</code></td></tr></tbody></table><pre class="code-box">&lt;script setup&gt;
+import { ref, reactive, toRefs } from 'vue'
+
+// Primitive: ref is the only option
+const count = ref(0)
+const increment = () =&gt; count.value++
+
+// Grouped state: reactive reads naturally
+const form = reactive({ email: '', password: '', remember: false })
+const resetForm = () =&gt; {
+  form.email = ''
+  form.password = ''
+  form.remember = false
+}
+
+// Safe destructuring with toRefs
+const { email, password } = toRefs(form)
+&lt;/script&gt;</pre>
+</section>
+
+        <section id="sec3" class="guide-section">
+<h2>3. computed() and watch(): Derived State and Side Effects</h2>
+<p><code>computed()</code> creates a value derived from reactive state, cached until its dependencies change. It is the right tool whenever a template expression gets complex or a value is consumed in multiple places. Computed properties are lazy — they only recalculate when something actually reads them after a dependency changed — which makes them cheap even in hot render paths.</p><p><code>watch()</code> is for side effects: fetching data when an ID changes, persisting to localStorage, or syncing with a third-party library. It takes an explicit source (a ref, a getter function, or an array of sources) and a callback receiving <code>(newValue, oldValue)</code>. Use the <code>{ deep: true }</code> option to observe nested mutations and <code>{ immediate: true }</code> to run the callback on setup.</p><p><code>watchEffect()</code> is the automatic alternative: it runs immediately and re-runs whenever any reactive value read inside it changes. It is perfect for one-off synchronization logic, but for most data-fetching you want <code>watch</code> — explicit sources make behavior predictable and give you old values for comparison. Inside either watcher, <code>onInvalidate()</code> registers cleanup, typically to cancel a stale request when the source changes again.</p><pre class="code-box">&lt;script setup&gt;
+import { ref, computed, watch, onInvalidate } from 'vue'
+
+const price = ref(100)
+const quantity = ref(2)
+
+// Derived state: cached, only recalculates when price/quantity change
+const total = computed(() =&gt; price.value * quantity.value)
+const summary = computed(() =&gt; `${quantity.value} items at $${price.value} = $${total.value}`)
+
+// Side effect: react to a specific change, with cleanup
+const productId = ref(1)
+const product = ref(null)
+
+watch(productId, async (id, _oldId, onCleanup) =&gt; {
+  let cancelled = false
+  onCleanup(() =&gt; { cancelled = true }) // cancel stale request
+  const res = await fetch(`/api/products/${id}`)
+  if (!cancelled) product.value = await res.json()
+}, { immediate: true })
+&lt;/script&gt;</pre>
+</section>
+
+        <section id="sec4" class="guide-section">
+<h2>4. Lifecycle Hooks and Component Communication</h2>
+<p>Lifecycle hooks in the Composition API are imported functions called inside <code>setup()</code>: <code>onMounted</code>, <code>onUpdated</code>, and <code>onUnmounted</code> cover the vast majority of needs, with <code>onBeforeMount</code> and <code>onErrorCaptured</code> for special cases. There is no <code>onCreated</code> — code at the top of <code>&lt;script setup&gt;</code> already runs during creation. Unlike the Options API, you can register the same hook multiple times, which keeps feature-related setup code together.</p><p>Component communication uses compiler macros in <code>&lt;script setup&gt;</code>. <code>defineProps()</code> declares incoming props (with full TypeScript support via a type argument), <code>defineEmits()</code> declares events, and <code>defineExpose()</code> controls what a parent can reach through a template ref. For deeply nested data like themes or locale, <code>provide()</code> and <code>inject()</code> pass values down the tree without prop drilling.</p><p>One rule that bites newcomers: hooks and <code>provide</code> must be called synchronously during setup. You cannot call <code>onMounted</code> inside a <code>setTimeout</code> or after an <code>await</code> at the top level and expect it to register — by then the component instance context is gone.</p><pre class="code-box">&lt;script setup&gt;
+import { ref, onMounted, onUnmounted, provide, defineProps, defineEmits } from 'vue'
+
+const props = defineProps({ userId: { type: Number, required: true } })
+const emit = defineEmits(['loaded'])
+
+// provide() for descendants — no prop drilling
+provide('theme', 'dark')
+
+const user = ref(null)
+let timer = null
+
+onMounted(async () =&gt; {
+  const res = await fetch(`/api/users/${props.userId}`)
+  user.value = await res.json()
+  emit('loaded', user.value)
+  timer = setInterval(() =&gt; console.log('tick'), 5000)
+})
+
+onUnmounted(() =&gt; clearInterval(timer))
+&lt;/script&gt;</pre>
+</section>
+
+        <section id="sec5" class="guide-section">
+<h2>5. Composables: Reusable Logic</h2>
+<p>A composable is a plain function that uses Composition API primitives and returns reactive state and methods — the Composition API's answer to mixins, without their drawbacks. Because a composable is just a function call, its inputs are explicit arguments and its outputs are explicitly returned; there are no magic merged properties and no naming collisions. The convention is a <code>use</code> prefix: <code>useCounter</code>, <code>useFetch</code>, <code>useLocalStorage</code>.</p><p>The canonical example is data fetching. A <code>useFetch(url)</code> composable encapsulates the loading/error/data trio plus the watcher that refetches when the URL changes — logic you would otherwise copy into every list component. Each call creates independent state, so two components using <code>useFetch</code> never share data unless you deliberately hoist the state to module scope, which is also how tiny global stores are born.</p><p>VueUse, the community composable collection, is worth knowing: it ships battle-tested composables for local storage, event listeners, async state, and hundreds more. Before writing your own, check whether VueUse already covers it — but write your own for domain logic, where the reuse is inside your app.</p><pre class="code-box">// composables/useFetch.js
+import { ref, watch } from 'vue'
+
+export function useFetch(url) {
+  const data = ref(null)
+  const error = ref(null)
+  const loading = ref(true)
+
+  const load = async (target) =&gt; {
+    loading.value = true
+    error.value = null
+    try {
+      const res = await fetch(target)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      data.value = await res.json()
+    } catch (e) {
+      error.value = e
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // Accepts a ref so callers can change the URL reactively
+  const source = typeof url === 'function' ? url : () =&gt; url
+  watch(source, load, { immediate: true })
+
+  return { data, error, loading, reload: () =&gt; load(source()) }
+}
+
+// Usage in a component:
+// const { data: users, loading, error } = useFetch(() =&gt; `/api/users?page=${page.value}`)</pre>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Should I use ref or reactive for form state?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Use reactive for grouped form state — form.email reads more naturally than form.value.email, and you typically mutate fields rather than replace the whole object. Use ref for primitives like strings and numbers, and for any value you plan to reassign wholesale. Many teams standardize on ref everywhere for consistency; either convention works if applied consistently.</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Is the Options API deprecated in Vue 3?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No. The Options API is fully supported and will remain so — it is still a fine choice for simple components and for developers coming from Vue 2. The Composition API is recommended for complex components, shared logic, and TypeScript-heavy codebases because it colocates related logic and types cleanly.</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Why do I need .value in script but not in the template?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">In <script setup>, a ref is a plain JavaScript object, so you must access its .value property explicitly. Templates are compiled by Vue, which automatically unwraps top-level refs when rendering. This is intentional: explicit in logic, ergonomic in markup.</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between watch and watchEffect?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">watch observes an explicit source — a ref, getter, or array of sources — runs lazily by default, and gives you old and new values. watchEffect runs immediately, automatically tracks every reactive value read inside it, and re-runs when any of them change. Prefer watch for data fetching and predictable side effects; use watchEffect for simple reactive synchronization.</p>
+          </details>
+        </div>
+          <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can I mix the Options API and Composition API in one app?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes. You can even use setup() inside an Options API component, and the two styles interoperate. In practice, keep one style per component for readability, and adopt <script setup> for new components — it is the most concise and best-supported authoring style in 2026.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Keep leveling up</h3>
+          <p>Keep building reactive, maintainable UIs — the Guides Hub has more frontend tutorials, from component design to production build setups, waiting for you.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub →</a>
+        </div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

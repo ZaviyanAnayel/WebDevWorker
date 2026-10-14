@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <title>SEO Basics for Developers: Crawlability, Meta Tags & Sitemaps (2026) | WebDevWorker</title>
+  <meta name="description" content="A developer-first SEO primer for 2026: how crawling and indexing work, robots.txt, XML sitemaps, meta tags, and URL structure — build search-friendly sites."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/seo-basics-for-developers-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="SEO Basics for Developers: Crawlability, Meta Tags & Sitemaps (2026) | WebDevWorker"/>
+  <meta property="og:description" content="A developer-first SEO primer for 2026: how crawling and indexing work, robots.txt, XML sitemaps, meta tags, and URL structure — build search-friendly sites."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/seo-basics-for-developers-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "SEO Basics for Developers: Crawlability, Meta Tags, and Sitemaps",
+      "description": "A developer-first SEO primer for 2026: how crawling and indexing work, robots.txt, XML sitemaps, meta tags, and URL structure — build search-friendly sites.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/seo-basics-for-developers-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Do developers really need to learn SEO?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes \u2014 most SEO failures are engineering failures. Blocked resources, JavaScript-only content, missing canonicals, and slow pages are all code problems. A developer who ships SEO-safe defaults prevents more damage than any post-launch audit can fix."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is the meta keywords tag still used?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Google has ignored meta keywords since 2009, and Bing treats it as a spam signal at best. Spend that effort on the title tag, meta description, and structured data instead \u2014 those actually influence rankings and click-through rates."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does it take Google to index a new page?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Typically a few days to a few weeks for a new site, and hours to days for established sites with good crawl budgets. You can speed it up by submitting the URL in Search Console, linking to it from an already-indexed page, and including it in your XML sitemap."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can JavaScript-heavy sites rank well?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "They can, but it costs crawl budget. Google renders JavaScript, but rendering happens in a second wave \u2014 days after the initial crawl for some pages. Server-side rendering or static generation removes the delay and is the safer architecture for content you need indexed fast."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the most important on-page SEO factor for developers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Crawlability and indexability \u2014 making sure the right pages can be found, rendered, and indexed. No title tag tweak can rescue a page that Googlebot cannot reach, cannot render, or is told not to index."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "SEO Basics",
+          "item": "https://www.webdevworker.com/articles/seo-basics-for-developers-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">SEO Basics</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🔍 SEO</div>
+          <h1 class="guide-title">SEO Basics for Developers: Crawlability, Meta Tags & Sitemaps (2026)</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 8 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3><span>🔍</span> SEO Is an Engineering Discipline</h3>
+          <p>Crawlability is just the foundation. Continue with our technical SEO checklist and structured data guides to complete your search stack.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides &#8594;</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. How Search Engines Actually Work</a></li><li><a href="#sec2" style="color:var(--brand-primary);">2. Crawlability: Robots.txt and XML Sitemaps</a></li><li><a href="#sec3" style="color:var(--brand-primary);">3. Meta Tags That Still Matter</a></li><li><a href="#sec4" style="color:var(--brand-primary);">4. URLs, Site Structure & Internal Linking</a></li><li><a href="#sec5" style="color:var(--brand-primary);">5. Developer SEO Quick Wins Checklist</a></li><li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. How Search Engines Actually Work</h2>
+<p>Search engines run a three-stage pipeline: crawling, indexing, and ranking. Crawling is discovery — Googlebot follows links, reads sitemaps, and fetches pages. Indexing is understanding — the fetched HTML is parsed, rendered (including JavaScript, in a delayed second pass), and stored with its extracted content, links, and structured data. Ranking happens at query time, when hundreds of signals score the indexed pages against the searcher's intent.</p>
+<p>The developer's leverage point is the first two stages, because they are almost entirely determined by code. If Googlebot cannot fetch a page (blocked by robots.txt, behind authentication, or requiring interaction), it cannot rank — full stop. If your content only appears after client-side JavaScript executes, it enters the index late and with less crawl budget to spare. Every architectural choice — SSR vs CSR, URL design, redirect chains — is an SEO decision whether you intended it or not.</p>
+<p>Ranking, by contrast, is dominated by content quality and authority signals outside the developer's direct control. Your job is to make the technical foundation invisible: fast, crawlable, correctly canonicalized pages that let great content compete on merit instead of fighting the plumbing.</p>
+</section>
+
+<section id="sec2" class="guide-section">
+<h2>2. Crawlability: Robots.txt and XML Sitemaps</h2>
+<p>Robots.txt is the first file Googlebot reads on your domain. It declares which crawlers may fetch which paths — use it to keep bots out of admin panels, internal search results, and infinite filter combinations that waste crawl budget. It is a request, not security: anyone can ignore it, so never use it to hide sensitive content. Sensitive pages need authentication, not robots.txt.</p>
+<p>The XML sitemap is the complementary positive signal: a machine-readable list of the URLs you want indexed, with last-modified dates and priorities. Keep it under 50,000 URLs and 50MB per file, split large sites into sitemap indexes, and reference it from robots.txt so every crawler finds it. Update lastmod honestly — lying about freshness trains crawlers to ignore your sitemap.</p>
+<p>For JavaScript-rendered pages, also mind the render budget. Googlebot executes JavaScript, but heavy client-side apps can wait days between the HTML crawl and the render pass. If a page matters for search, serve its core content in the initial HTML via SSR or static generation rather than betting on the render queue.</p><pre class="code-box"># robots.txt — guide crawlers, protect crawl budget
+User-agent: *
+Disallow: /admin/
+Disallow: /cart/
+Disallow: /*?sort=      # infinite filter combinations
+Disallow: /search/      # internal search results
+
+Sitemap: https://www.example.com/sitemap.xml</pre><pre class="code-box">&lt;!-- sitemap.xml — the canonical list of URLs worth indexing --&gt;
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://www.example.com/articles/seo-basics/&lt;/loc&gt;
+    &lt;lastmod&gt;2026-10-14&lt;/lastmod&gt;
+    &lt;changefreq&gt;monthly&lt;/changefreq&gt;
+    &lt;priority&gt;0.8&lt;/priority&gt;
+  &lt;/url&gt;
+&lt;/urlset&gt;</pre>
+</section>
+
+<section id="sec3" class="guide-section">
+<h2>3. Meta Tags That Still Matter</h2>
+<p>Few meta tags matter, but the ones that do matter enormously. The <code>&lt;title&gt;</code> is the single most influential on-page element: keep it under 60 characters, front-load the primary keyword, and make every page's title unique. The meta description does not directly rank, but it is your ad copy in the search results — a compelling 150-160 character description measurably lifts click-through rate, which is traffic you earn without ranking higher.</p>
+<p>The robots meta tag controls indexing per page: <code>index, follow</code> is the default, <code>noindex</code> keeps thin or duplicate pages out of the index, and <code>max-image-preview:large</code> allows large image thumbnails in results. Open Graph and Twitter Card tags do not affect Google rankings, but they control how your page looks when shared — broken social previews silently cost you referral traffic.</p>
+<p>Viewport, charset, and canonical tags are non-negotiable infrastructure. A missing viewport tag fails mobile-friendliness; a missing canonical invites duplicate-content dilution across URL variants. The head snippet below is the minimum viable SEO head for any page.</p><table class="data-table">
+<thead><tr><th>Tag</th><th>Purpose</th><th>Ranking impact</th></tr></thead>
+<tbody>
+<tr><td>&lt;title&gt;</td><td>Result headline + topical signal</td><td>High — primary on-page factor</td></tr><tr><td>meta description</td><td>Result snippet / ad copy</td><td>Indirect — drives CTR</td></tr><tr><td>meta robots</td><td>Index/noindex, snippet controls</td><td>High — controls indexation</td></tr><tr><td>link canonical</td><td>Declares the master URL</td><td>High — consolidates signals</td></tr><tr><td>Open Graph / Twitter</td><td>Social share previews</td><td>None for Google, high for social CTR</td></tr><tr><td>meta keywords</td><td>Obsolete keyword list</td><td>None — ignored since 2009</td></tr>
+</tbody>
+</table><pre class="code-box">&lt;!-- Minimum viable SEO head --&gt;
+&lt;meta charset="utf-8" /&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;
+&lt;title&gt;SEO Basics for Developers (2026 Guide) | Example&lt;/title&gt;
+&lt;meta name="description" content="Learn how crawling, meta tags, and sitemaps work — the developer's SEO foundation for building search-friendly sites." /&gt;
+&lt;link rel="canonical" href="https://www.example.com/articles/seo-basics/" /&gt;
+&lt;meta name="robots" content="index, follow, max-image-preview:large" /&gt;
+&lt;meta property="og:title" content="SEO Basics for Developers" /&gt;
+&lt;meta property="og:type" content="article" /&gt;
+&lt;meta property="og:image" content="https://www.example.com/img/seo-cover.png" /&gt;</pre>
+</section>
+
+<section id="sec4" class="guide-section">
+<h2>4. URLs, Site Structure & Internal Linking</h2>
+<p>URLs are a user interface and a ranking input. Good URLs are short, lowercase, hyphen-separated, and descriptive: <code>/articles/seo-basics/</code> tells humans and crawlers what to expect, while <code>/p?id=48291&amp;ref=nav</code> tells them nothing. Keep them stable — every URL change without a proper 301 redirect bleeds the authority the old URL earned.</p>
+<p>Site structure should be shallow and logical: important pages within three clicks of the homepage, grouped in topical silos with descriptive category pages. Flat structures distribute crawl budget and link equity efficiently; deep, orphaned pages get crawled rarely and rank poorly. Your navigation is the crawler's map — if humans need five clicks to find it, so does Googlebot.</p>
+<p>Internal linking is the most underused SEO lever developers control. Every new page should receive contextual links from relevant existing pages with descriptive anchor text — not "click here." Breadcrumb navigation reinforces the hierarchy for both users and crawlers, and a well-linked site lets authority flow to the pages that need it instead of pooling on the homepage.</p>
+</section>
+
+<section id="sec5" class="guide-section">
+<h2>5. Developer SEO Quick Wins Checklist</h2>
+<p>Ship these defaults and most SEO audits become boring. First, guarantee every page returns the right status code: 200 for live pages, 301 for moved URLs, 404 for genuinely gone content, 410 for deliberately removed pages. Soft-404s — 200 pages with "not found" text — are worse than real 404s because they pollute the index.</p>
+<p>Second, enforce one canonical version of every URL: pick HTTPS, pick www or non-www, redirect everything else, and declare it with canonical tags. Third, make the site fast and mobile-usable — Core Web Vitals and mobile-friendliness are confirmed ranking inputs, and the fixes (compression, image sizing, viewport meta) are all code.</p>
+<p>Finally, instrument from day one: Search Console for crawl and index coverage, structured data for rich results, and semantic HTML so headings and landmarks give crawlers a clean document outline. SEO done at build time costs nearly nothing; SEO retrofitted after launch costs sprints.</p><pre class="code-box">&lt;!-- BreadcrumbList: hierarchy for users AND crawlers --&gt;
+&lt;nav aria-label="Breadcrumb"&gt;
+  &lt;ol&gt;
+    &lt;li&gt;&lt;a href="/"&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="/articles/"&gt;Guides&lt;/a&gt;&lt;/li&gt;
+    &lt;li aria-current="page"&gt;SEO Basics&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;
+
+&lt;!-- One URL, one version: enforce in server config --&gt;
+# Redirect http + non-www to canonical https://www
+# (nginx)
+server {
+  listen 80; server_name example.com www.example.com;
+  return 301 https://www.example.com$request_uri;
+}</pre>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Do developers really need to learn SEO?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes — most SEO failures are engineering failures. Blocked resources, JavaScript-only content, missing canonicals, and slow pages are all code problems. A developer who ships SEO-safe defaults prevents more damage than any post-launch audit can fix.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Is the meta keywords tag still used?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No. Google has ignored meta keywords since 2009, and Bing treats it as a spam signal at best. Spend that effort on the title tag, meta description, and structured data instead — those actually influence rankings and click-through rates.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How long does it take Google to index a new page?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Typically a few days to a few weeks for a new site, and hours to days for established sites with good crawl budgets. You can speed it up by submitting the URL in Search Console, linking to it from an already-indexed page, and including it in your XML sitemap.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can JavaScript-heavy sites rank well?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">They can, but it costs crawl budget. Google renders JavaScript, but rendering happens in a second wave — days after the initial crawl for some pages. Server-side rendering or static generation removes the delay and is the safer architecture for content you need indexed fast.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the most important on-page SEO factor for developers?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Crawlability and indexability — making sure the right pages can be found, rendered, and indexed. No title tag tweak can rescue a page that Googlebot cannot reach, cannot render, or is told not to index.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Keep leveling up</h3>
+          <p>Search-friendly code compounds over time — keep building your SEO engineering skills with our guides.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub &#8594;</a>
+        </div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

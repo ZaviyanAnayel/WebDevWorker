@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <title>HTTPS and SSL Setup Guide: Let's Encrypt, HSTS, and TLS in 2026 | WebDevWorker</title>
+  <meta name="description" content="Set up HTTPS the right way: free Let's Encrypt certificates with Certbot, TLS configuration for Nginx and Apache, safe HSTS rollout, and mixed-content fixes."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/https-ssl-setup-guide-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="HTTPS and SSL Setup Guide: Let's Encrypt, HSTS, and TLS in 2026 | WebDevWorker"/>
+  <meta property="og:description" content="Set up HTTPS the right way: free Let's Encrypt certificates with Certbot, TLS configuration for Nginx and Apache, safe HSTS rollout, and mixed-content fixes."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/https-ssl-setup-guide-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "HTTPS and SSL Setup Guide: Let's Encrypt, HSTS, and TLS in 2026",
+      "description": "Set up HTTPS the right way: free Let's Encrypt certificates with Certbot, TLS configuration for Nginx and Apache, safe HSTS rollout, and mixed-content fixes.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/https-ssl-setup-guide-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+                {
+          "@type": "Question",
+          "name": "Is a free Let's Encrypt certificate as secure as a paid one?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Browsers trust Let's Encrypt certificates exactly like paid domain-validated certificates, and the encryption strength is identical. Paid certificates mainly add extended validation branding or longer lifetimes; for transport security, Let's Encrypt is the standard choice for the vast majority of sites."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How often do Let's Encrypt certificates need renewal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Every 90 days. The short lifetime is intentional \u2014 it limits exposure if a key is compromised. Certbot automates renewal with a twice-daily check, so in practice you set it up once and never think about it again, as long as you verify the renewal timer is running."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between TLS 1.2 and TLS 1.3?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "TLS 1.3 is faster (one fewer round trip in the handshake), simpler (obsolete cipher suites removed), and more secure by design. Enable both 1.2 and 1.3 for compatibility, but disable TLS 1.0 and 1.1 entirely \u2014 they have known weaknesses and no modern client needs them."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is mixed content and how do I fix it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Mixed content happens when an HTTPS page loads subresources (images, scripts, stylesheets) over HTTP, which browsers block or flag. Fix it by updating hardcoded http:// URLs in your templates, database, and CMS content to https://, and add the upgrade-insecure-requests CSP directive as a transitional safety net."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I enable HSTS preload?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only when you are certain every subdomain \u2014 including future ones \u2014 will serve HTTPS permanently. Preload bakes your domain into browsers themselves and takes months to remove. Start with a short max-age, extend to a year with includeSubDomains, and add preload only after months of stable HTTPS everywhere."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "HTTPS and SSL Setup",
+          "item": "https://www.webdevworker.com/articles/https-ssl-setup-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">HTTPS and SSL Setup</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🔐 Auth & Security</div>
+          <h1 class="guide-title">HTTPS and SSL Setup Guide: Let's Encrypt, HSTS, and TLS in 2026</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 7 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3><span>🔐</span> Transport Security Done Right</h3>
+          <p>HTTPS is the foundation every other defense builds on. Continue with security headers and HSTS deep-dives to finish hardening your deployments.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides &rarr;</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. Why HTTPS Is Non-Negotiable in 2026</a></li>
+<li><a href="#sec2" style="color:var(--brand-primary);">2. Free Certificates with Let's Encrypt and Certbot</a></li>
+<li><a href="#sec3" style="color:var(--brand-primary);">3. Configuring TLS on Nginx and Apache</a></li>
+<li><a href="#sec4" style="color:var(--brand-primary);">4. Enabling HSTS the Safe Way</a></li>
+<li><a href="#sec5" style="color:var(--brand-primary);">5. Renewals, Monitoring, and Mixed-Content Fixes</a></li>
+<li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. Why HTTPS Is Non-Negotiable in 2026</h2>
+<p>HTTPS is no longer a premium feature — it is the baseline expectation of the modern web. Browsers now mark plain HTTP pages as "Not Secure", search engines rank HTTPS sites higher, and features like geolocation, service workers, and credential management APIs are restricted to secure contexts entirely. If your site still serves traffic over HTTP, you are losing trust, traffic, and functionality at once.</p>
+<p>The security case is straightforward: without TLS, everything between your server and the user — passwords, session cookies, form submissions — travels in plaintext, readable by anyone on the network path. Coffee-shop Wi-Fi sniffing, ISP injection of ads or scripts, and corporate middleboxes all become trivially effective against HTTP. TLS encrypts the channel, authenticates the server via its certificate, and guarantees the data has not been tampered with in transit.</p>
+<p>The cost objection died years ago. Certificates are free through Let's Encrypt, issuance is automated, and the performance overhead of modern TLS (especially with TLS 1.3's faster handshakes and HTTP/2 multiplexing) is negligible. There is simply no reason left to ship HTTP in 2026.</p>
+</section>
+
+<section id="sec2" class="guide-section">
+<h2>2. Free Certificates with Let's Encrypt and Certbot</h2>
+<p>Let's Encrypt is a free, automated certificate authority trusted by all major browsers, and Certbot is its official client. On a typical Ubuntu server running Nginx, going from HTTP to HTTPS takes two commands:</p>
+<pre class="code-box"># Install certbot with the Nginx plugin
+sudo apt update &amp;&amp; sudo apt install -y certbot python3-certbot-nginx
+
+# Obtain a certificate and auto-configure Nginx for HTTPS
+sudo certbot --nginx -d example.com -d www.example.com
+
+# Test automatic renewal (certificates last 90 days; renewals are automatic)
+sudo certbot renew --dry-run</pre>
+<p>Certbot validates that you control the domain (usually via an HTTP challenge), issues the certificate, rewrites your Nginx configuration to serve HTTPS, and sets up a redirect from HTTP to HTTPS. The 90-day certificate lifetime is deliberate — it limits the damage of a compromised key and forces automation, which is why the renewal timer matters more than the certificate itself.</p>
+<p>For servers where you prefer manual control, use <code>certbot certonly --webroot</code> or DNS-based validation for wildcard certificates (<code>-d "*.example.com"</code>), then point your web server at the certificate files in <code>/etc/letsencrypt/live/</code>. Never copy private keys across servers over insecure channels, and restrict key file permissions to root.</p>
+</section>
+
+<section id="sec3" class="guide-section">
+<h2>3. Configuring TLS on Nginx and Apache</h2>
+<p>If Certbot's automatic configuration is not an option, the manual Nginx setup is only a few lines. The key decisions: listen on 443 with <code>ssl</code>, point to your certificate and key, enable only TLS 1.2 and 1.3, and redirect all HTTP traffic to HTTPS:</p>
+<pre class="code-box">server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name example.com www.example.com;
+
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;          # disable TLS 1.0/1.1 entirely
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:10m;
+
+    # ... your normal location blocks ...
+}
+
+server {
+    listen 80;
+    server_name example.com www.example.com;
+    return 301 https://$host$request_uri;   # permanent redirect to HTTPS
+}</pre>
+<p>For Apache, the equivalent uses <code>SSLEngine on</code> with <code>SSLCertificateFile</code> and <code>SSLCertificateKeyFile</code> inside a <code>&lt;VirtualHost *:443&gt;</code> block, plus a mod_rewrite rule for the HTTP-to-HTTPS redirect. After configuring either server, verify with SSL Labs' test (ssllabs.com/ssltest) and aim for an A rating: it checks protocol versions, cipher suites, certificate chains, and common misconfigurations in one pass.</p>
+</section>
+
+<section id="sec4" class="guide-section">
+<h2>4. Enabling HSTS the Safe Way</h2>
+<p>HTTP Strict Transport Security (HSTS) is a response header that tells browsers to only ever contact your domain over HTTPS — even if the user types <code>http://</code> or clicks an old HTTP link. This closes the gap where an attacker strips the initial HTTP-to-HTTPS redirect (SSL stripping) before the user ever reaches your secure page. Without HSTS, that first insecure request is a permanent weak point.</p>
+<p>Enable it cautiously, because HSTS is cached by browsers for the duration you specify and is difficult to undo quickly. Roll it out in stages:</p>
+<pre class="code-box"># Stage 1: short max-age to verify nothing breaks (1 day)
+add_header Strict-Transport-Security "max-age=86400" always;
+
+# Stage 2: after a week of no issues, extend to 6-12 months with subdomains
+add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+# Stage 3 (optional, irreversible-ish): submit to the HSTS preload list
+# add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;</pre>
+<p>The <code>preload</code> directive is for submission to the browser preload list, which ships inside browsers themselves — powerful, but removal takes months, so only do it when you are certain every subdomain supports HTTPS. Always serve the HSTS header on HTTPS responses only, and test with <code>curl -I https://example.com</code> to confirm it is present.</p>
+</section>
+
+<section id="sec5" class="guide-section">
+<h2>5. Renewals, Monitoring, and Mixed-Content Fixes</h2>
+<p>Certificates expire — Let's Encrypt's every 90 days — so automation is the whole game. Certbot installs a systemd timer or cron job that runs <code>certbot renew</code> twice daily; verify it exists and that your web server reloads after renewal (Certbot's Nginx and Apache plugins handle this, but manual setups need a <code>--deploy-hook "systemctl reload nginx"</code>). Set up external monitoring too: a free uptime monitor that alerts on certificate expiry catches the failure modes automation misses.</p>
+<table class="data-table"><thead><tr><th>Task</th><th>How</th><th>Frequency</th></tr></thead><tbody><tr><td>Certificate renewal</td><td>certbot renew via systemd timer</td><td>Automatic, twice daily checks</td></tr><tr><td>Expiry alerting</td><td>Uptime monitor with cert-expiry checks</td><td>Alert 14+ days before expiry</td></tr><tr><td>Configuration audit</td><td>SSL Labs test (ssllabs.com/ssltest)</td><td>After every TLS config change</td></tr><tr><td>Mixed-content scan</td><td>Browser console + crawler</td><td>After migrations and deploys</td></tr></tbody></table>
+<p>The most common post-migration issue is mixed content: your page loads over HTTPS but pulls images, scripts, or fonts over HTTP, which browsers block or warn about. Find offenders fast in the browser console (look for "Mixed Content" warnings), then fix them at the source — update hardcoded <code>http://</code> URLs in templates and the database, and consider adding <code>upgrade-insecure-requests</code> to your Content Security Policy as a safety net during cleanup:</p>
+<pre class="code-box"># Find hardcoded http:// asset URLs in your project
+grep -rn "http://" templates/ static/ --include="*.html" --include="*.js"
+
+# CSP directive that auto-upgrades insecure subresource requests
+add_header Content-Security-Policy "upgrade-insecure-requests;" always;</pre>
+<p>HTTPS done right is a chain: valid certificate, strong TLS configuration, permanent redirects, HSTS, automated renewals, and clean subresources. Each link is simple; together they are what "secure" actually means in the browser.</p>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Is a free Let's Encrypt certificate as secure as a paid one?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes. Browsers trust Let's Encrypt certificates exactly like paid domain-validated certificates, and the encryption strength is identical. Paid certificates mainly add extended validation branding or longer lifetimes; for transport security, Let's Encrypt is the standard choice for the vast majority of sites.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How often do Let's Encrypt certificates need renewal?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Every 90 days. The short lifetime is intentional — it limits exposure if a key is compromised. Certbot automates renewal with a twice-daily check, so in practice you set it up once and never think about it again, as long as you verify the renewal timer is running.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between TLS 1.2 and TLS 1.3?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">TLS 1.3 is faster (one fewer round trip in the handshake), simpler (obsolete cipher suites removed), and more secure by design. Enable both 1.2 and 1.3 for compatibility, but disable TLS 1.0 and 1.1 entirely — they have known weaknesses and no modern client needs them.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is mixed content and how do I fix it?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Mixed content happens when an HTTPS page loads subresources (images, scripts, stylesheets) over HTTP, which browsers block or flag. Fix it by updating hardcoded http:// URLs in your templates, database, and CMS content to https://, and add the upgrade-insecure-requests CSP directive as a transitional safety net.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Should I enable HSTS preload?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Only when you are certain every subdomain — including future ones — will serve HTTPS permanently. Preload bakes your domain into browsers themselves and takes months to remove. Start with a short max-age, extend to a year with includeSubDomains, and add preload only after months of stable HTTPS everywhere.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+        <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Keep leveling up</h3>
+          <p>Finish the job with strict security headers, HSTS preload planning, and automated certificate monitoring so your HTTPS setup stays strong year after year.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub &rarr;</a>
+        </div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

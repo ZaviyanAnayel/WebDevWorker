@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>React Router Tutorial: Routes, Nested Routes, Params & Navigation | WebDevWorker</title>
+  <meta name="description" content="Learn React Router from setup to advanced: routes, nested layouts, URL params, programmatic navigation, data loading, and protected routes, with examples."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/react-router-tutorial-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="React Router Tutorial: Routes, Nested Routes, Params & Navigation | WebDevWorker"/>
+  <meta property="og:description" content="Learn React Router from setup to advanced: routes, nested layouts, URL params, programmatic navigation, data loading, and protected routes, with examples."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/react-router-tutorial-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "React Router Tutorial: Routes, Nested Routes, Params & Navigation (2026)",
+      "description": "Learn React Router from setup to advanced: routes, nested layouts, URL params, programmatic navigation, data loading, and protected routes, with examples.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/react-router-tutorial-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+            {
+      "@type": "Question",
+      "name": "Should I use React Router or Next.js file-based routing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use React Router when building a client-rendered SPA, embedding React in an existing site, or needing full control over the routing setup. Choose Next.js App Router when you want server rendering, server components, and SEO-friendly pages with zero routing configuration."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I protect routes so logged-out users can't access them?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Create a guard layout component that checks authentication and renders <Navigate to=\"/login\" replace> when unauthenticated, otherwise renders <Outlet />. Nest all private routes under it, and pass the original destination in navigation state so login can redirect back."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I read URL parameters in a component?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use useParams() for dynamic segments like /products/:productId, and useSearchParams() for query strings like ?sort=price&page=2. Both are reactive: the component re-renders when the URL changes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is an Outlet in React Router?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Outlet is the placeholder where a parent layout route renders its matched child route. It enables nested routes with persistent UI — the layout mounts once while children swap inside the outlet on navigation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I show a 404 page for unknown URLs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Add a catch-all route with path=\"*\" rendering your NotFound component at the end of your route config. For data routers, you can also throw a Response with status 404 from a loader to render the route's errorElement."
+      }
+    }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "React Router Tutorial",
+          "item": "https://www.webdevworker.com/articles/react-router-tutorial-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">React Router Tutorial</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">⚛️ React & Frontend</div>
+          <h1 class="guide-title">React Router Tutorial: Routes, Nested Routes, Params & Navigation</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 8 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <!-- <div class="tool-embed-banner">
+          <h3>🔗 Related: React Ecosystem Guides</h3>
+          <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.6;">Routing connects your pages — now master what's inside them. The Guides Hub covers hooks, state management, forms, and performance for complete React apps.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides →</a>
+        </div>: one banner linking to /articles/ Guides Hub with 1-2 sentence teaser relevant to the topic -->
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. Setting Up React Router in a Modern App</a></li><li><a href="#sec2" style="color:var(--brand-primary);">2. Defining Routes: Elements, Links, and Navigation</a></li><li><a href="#sec3" style="color:var(--brand-primary);">3. Nested Routes and Shared Layouts</a></li><li><a href="#sec4" style="color:var(--brand-primary);">4. Dynamic Params, Search Params, and Programmatic Navigation</a></li><li><a href="#sec5" style="color:var(--brand-primary);">5. Data Loading, 404s, and Protected Routes</a></li><li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+          <h2>1. Setting Up React Router in a Modern App</h2>
+          
+<p>React Router is the de facto routing library for React SPAs: it maps URLs to components, manages history, and gives you declarative navigation. Modern React Router (v6.4+) is built around a <strong>data router</strong> — you define routes as objects with loaders and actions, and the router handles data fetching, mutations, and pending states alongside navigation.</p>
+<pre class="code-box">import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+const router = createBrowserRouter([
+  { path: '/', element: &lt;Home /&gt; },
+  { path: '/about', element: &lt;About /&gt; },
+]);
+
+// Mount once at your app root — everything below can use routing hooks
+function App() {
+  return &lt;RouterProvider router={router} /&gt;;
+}</pre>
+<p><code>createBrowserRouter</code> uses the HTML5 history API for clean URLs (<code>/about</code>, no hash). If you deploy to a static host without server rewrites, every deep link 404s on refresh — either configure the server to serve <code>index.html</code> for unknown paths or fall back to <code>createHashRouter</code> during development. The older <code>&lt;BrowserRouter&gt;</code> component API still works, but the data router unlocks loaders, actions, and the best error handling, so prefer it for new apps.</p>
+<p>Install with <code>npm install react-router-dom</code> and define routes centrally — a single route config is easier to audit for auth rules and code-splitting than routes scattered across components. Colocate each route's loader and component in the same file so data requirements live next to the UI that needs them.</p>
+
+        </section>
+
+        <section id="sec2" class="guide-section">
+          <h2>2. Defining Routes: Elements, Links, and Navigation</h2>
+          
+<p>Routes pair a <code>path</code> with an <code>element</code>. Navigation uses <code>&lt;Link&gt;</code> (client-side, no full reload) instead of <code>&lt;a&gt;</code>, and <code>&lt;NavLink&gt;</code> adds active-state styling for menus. Relative links resolve against the current route, which keeps nested UIs portable:</p>
+<pre class="code-box">import { Link, NavLink, Outlet } from 'react-router-dom';
+
+function Navbar() {
+  return (
+    &lt;nav&gt;
+      {/* Client-side navigation: no page reload, state preserved */}
+      &lt;Link to="/"&gt;Home&lt;/Link&gt;
+      &lt;Link to="/products"&gt;Products&lt;/Link&gt;
+      {/* NavLink knows when its route is active — perfect for menus */}
+      &lt;NavLink
+        to="/dashboard"
+        className={({ isActive }) =&gt; (isActive ? 'link active' : 'link')}
+      &gt;
+        Dashboard
+      &lt;/NavLink&gt;
+      {/* Relative link: resolves against the parent route's path */}
+      &lt;Link to="settings"&gt;Settings&lt;/Link&gt;
+    &lt;/nav&gt;
+  );
+}</pre>
+<p>Dynamic segments use the colon syntax — <code>/products/:productId</code> — and match greedily in definition order, so put specific routes before wildcards. The <code>index</code> prop marks a route as the default child rendered when the parent path matches exactly. And <code>path="*"</code> is your catch-all for 404 pages.</p>
+<p>One habit that prevents bugs: never use raw <code>&lt;a href&gt;</code> for in-app navigation. It triggers a full document reload, wiping React state, scroll restoration, and any pending transitions. Reserve anchor tags for genuinely external URLs and downloads.</p>
+
+        </section>
+
+        <section id="sec3" class="guide-section">
+          <h2>3. Nested Routes and Shared Layouts</h2>
+          
+<p>Nested routes are React Router's killer feature: a parent route renders a layout (sidebar, header, tabs) with an <code>&lt;Outlet /&gt;</code> placeholder where the matched child renders. The layout mounts once and persists while children swap — no re-fetching the sidebar on every tab click:</p>
+<pre class="code-box">import { Outlet } from 'react-router-dom';
+
+const router = createBrowserRouter([
+  {
+    path: '/dashboard',
+    element: &lt;DashboardLayout /&gt;,   // header + sidebar, rendered once
+    children: [
+      { index: true, element: &lt;Overview /&gt; },      // /dashboard
+      { path: 'reports', element: &lt;Reports /&gt; },   // /dashboard/reports
+      { path: 'reports/:reportId', element: &lt;ReportDetail /&gt; },
+      { path: 'settings', element: &lt;Settings /&gt; }, // /dashboard/settings
+    ],
+  },
+]);
+
+function DashboardLayout() {
+  return (
+    &lt;div className="dashboard"&gt;
+      &lt;Sidebar /&gt;      {/* persists across child navigation */}
+      &lt;main&gt;
+        &lt;Outlet /&gt;     {/* matched child renders here */}
+      &lt;/main&gt;
+    &lt;/div&gt;
+  );
+}</pre>
+<p>Children paths are relative by default — <code>'reports'</code> under <code>/dashboard</code> becomes <code>/dashboard/reports</code> — which makes route subtrees relocatable: move the whole dashboard under <code>/admin</code> by changing one parent path. Loaders compose too: parent loaders run before child loaders, so the layout can fetch the user while the child fetches its own data, all in parallel where independent.</p>
+<p>Use nesting for any UI with persistent chrome: dashboards, settings pages, multi-step wizards, and tabbed detail views. If a section of UI never changes while the URL segment after it does, that's a layout route waiting to happen.</p>
+
+        </section>
+
+        <section id="sec4" class="guide-section">
+          <h2>4. Dynamic Params, Search Params, and Programmatic Navigation</h2>
+          
+<p>URL params (<code>:productId</code>) identify <em>which</em> resource; search params (<code>?sort=price</code>) describe <em>how</em> to display it — filters, sorting, pagination. Both are reactive: changing them re-renders the route, and search-param changes don't remount the component, so preserve scroll and local state accordingly:</p>
+<pre class="code-box">import {
+  useParams, useSearchParams, useNavigate, useLocation,
+} from 'react-router-dom';
+
+function ProductPage() {
+  const { productId } = useParams(); // /products/:productId
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sort = searchParams.get('sort') ?? 'popular';
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const changeSort = (next) =&gt; {
+    // Updates ?sort= without remounting — shareable, bookmarkable filter state
+    setSearchParams({ sort: next }, { replace: true });
+  };
+
+  const goToCheckout = () =&gt; {
+    // Programmatic navigation: after login, form submit, etc.
+    navigate('/checkout', {
+      state: { from: location.pathname }, // pass data without URL params
+      replace: false,                     // true = replace history entry
+    });
+  };
+}</pre>
+<table class="data-table">
+<thead><tr><th>Hook / Component</th><th>Reads or does</th><th>Typical use</th></tr></thead>
+<tbody>
+<tr><td><code>useParams()</code></td><td>Dynamic segments (<code>:id</code>)</td><td>Which resource to show</td></tr>
+<tr><td><code>useSearchParams()</code></td><td>Query string</td><td>Filters, sort, pagination</td></tr>
+<tr><td><code>useNavigate()</code></td><td>Imperative navigation</td><td>Redirect after submit/login</td></tr>
+<tr><td><code>useLocation()</code></td><td>Current URL + state</td><td>Breadcrumbs, "return here" flows</td></tr>
+<tr><td><code>&lt;Navigate&gt;</code></td><td>Declarative redirect</td><td>Route guards, legacy URLs</td></tr>
+<tr><td><code>useMatch()</code></td><td>Test a path pattern</td><td>Conditional UI by route</td></tr>
+</tbody>
+</table>
+<p>Prefer search params over component state for anything the user might share or bookmark — filters in the URL survive refreshes and can be pasted into chat. And pass transient data (like "came from checkout") via navigation <code>state</code> rather than stuffing it into the URL.</p>
+
+        </section>
+
+        <section id="sec5" class="guide-section">
+          <h2>5. Data Loading, 404s, and Protected Routes</h2>
+          
+<p>Data routers colocate fetching with routes through <strong>loaders</strong>: functions that run before the route renders, whose return value arrives via <code>useLoaderData()</code>. Navigation waits for loaders, errors route to the nearest <code>errorElement</code>, and pending states come free — no more <code>useEffect</code> fetch waterfalls:</p>
+<pre class="code-box">import { useLoaderData, Navigate, Outlet } from 'react-router-dom';
+
+async function productLoader({ params }) {
+  const res = await fetch('/api/products/' + params.productId);
+  if (res.status === 404) throw new Response('Not found', { status: 404 });
+  if (!res.ok) throw new Error('Failed to load product');
+  return res.json();
+}
+
+function ProductPage() {
+  const product = useLoaderData(); // data is ready — no loading state needed
+  return &lt;ProductDetail product={product} /&gt;;
+}
+
+// Route guard: redirect unauthenticated users, preserving destination
+function RequireAuth() {
+  const user = useCurrentUser();
+  if (!user) return &lt;Navigate to="/login" replace state={{ from: location.pathname }} /&gt;;
+  return &lt;Outlet /&gt;;
+}
+
+const router = createBrowserRouter([
+  { path: '/products/:productId', element: &lt;ProductPage /&gt;,
+    loader: productLoader, errorElement: &lt;ProductError /&gt; },
+  { element: &lt;RequireAuth /&gt;, children: [
+    { path: '/account', element: &lt;Account /&gt; },
+  ]},
+  { path: '*', element: &lt;NotFound /&gt; }, // catch-all 404
+]);</pre>
+<p>Throwing a <code>Response</code> from a loader renders the nearest <code>errorElement</code> instead of crashing — that's your per-route 404 and error boundary in one. For protected routes, wrap private routes in a guard layout that renders <code>&lt;Navigate&gt;</code> when unauthenticated; stashing the original destination in navigation state lets the login page send users back where they were headed.</p>
+<p>Finally, handle the scroll and focus basics: React Router restores scroll on back/forward automatically, and you should move focus to the new page heading on navigation for screen-reader users. Routing isn't done until keyboard and assistive-tech users can follow it too.</p>
+
+        </section>
+
+        
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Should I use React Router or Next.js file-based routing?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Use React Router when building a client-rendered SPA, embedding React in an existing site, or needing full control over the routing setup. Choose Next.js App Router when you want server rendering, server components, and SEO-friendly pages with zero routing configuration.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I protect routes so logged-out users can't access them?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Create a guard layout component that checks authentication and renders <Navigate to="/login" replace> when unauthenticated, otherwise renders <Outlet />. Nest all private routes under it, and pass the original destination in navigation state so login can redirect back.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I read URL parameters in a component?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Use useParams() for dynamic segments like /products/:productId, and useSearchParams() for query strings like ?sort=price&page=2. Both are reactive: the component re-renders when the URL changes.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is an Outlet in React Router?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Outlet is the placeholder where a parent layout route renders its matched child route. It enables nested routes with persistent UI — the layout mounts once while children swap inside the outlet on navigation.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How do I show a 404 page for unknown URLs?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Add a catch-all route with path="*" rendering your NotFound component at the end of your route config. For data routers, you can also throw a Response with status 404 from a loader to render the route's errorElement.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                <!-- <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>🚀 Keep leveling up</h3>
+          <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.6;">You can now build nested, data-loading, auth-guarded React Router apps with confidence. Continue with 90+ hands-on web development tutorials in the Guides Hub.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub →</a>
+        </div>: CTA banner linking to /articles/ Guides Hub with a topic-relevant teaser line -->
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

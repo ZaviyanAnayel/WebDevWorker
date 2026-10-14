@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Service Workers Guide (2026): Lifecycle, Caching Strategies and Offline Apps | WebDevWorker</title>
+  <meta name="description" content="Master service workers in 2026: lifecycle and registration, caching strategies, offline fallbacks, and background sync — with practical code examples for PWAs."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/service-workers-pwa-guide-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Service Workers Guide (2026): Lifecycle, Caching Strategies and Offline Apps | WebDevWorker"/>
+  <meta property="og:description" content="Master service workers in 2026: lifecycle and registration, caching strategies, offline fallbacks, and background sync — with practical code examples for PWAs."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/service-workers-pwa-guide-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Service Workers Explained: Lifecycle, Caching Strategies and Offline Web Apps",
+      "description": "Master service workers in 2026: lifecycle and registration, caching strategies, offline fallbacks, and background sync — with practical code examples for PWAs.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/service-workers-pwa-guide-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+      "@type": "Question",
+      "name": "Do service workers work on iOS Safari?",
+      "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Safari has supported service workers since iOS 11.3, so caching and offline pages work on iPhones. Historically, background sync and push notifications were limited or unavailable on iOS, so verify current platform support before depending on those features."
+      }
+},
+{
+      "@type": "Question",
+      "name": "Why is my service worker update not taking effect?",
+      "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Three usual causes: the browser only installs a new version when the script bytes differ, the new worker waits in the waiting state until all controlled tabs close unless you call skipWaiting, or the worker script itself is being cached by HTTP headers so the browser never sees the new bytes."
+      }
+},
+{
+      "@type": "Question",
+      "name": "Can a service worker access the DOM?",
+      "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Service workers run on a separate thread with no DOM or localStorage access. They communicate with pages via postMessage and persist data with the Cache API and IndexedDB, which are both available in the worker context."
+      }
+},
+{
+      "@type": "Question",
+      "name": "How much can a service worker cache?",
+      "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Cache Storage shares the origin storage quota, which is typically hundreds of megabytes to several gigabytes depending on the browser and disk space. Prioritize the app shell and critical assets, and handle QuotaExceededError gracefully."
+      }
+},
+{
+      "@type": "Question",
+      "name": "Do I need HTTPS for service workers?",
+      "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, service workers require a secure context. The only exception is localhost, which browsers treat as secure for development. This requirement exists because a worker can intercept all of an origin's network traffic."
+      }
+}
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Service Workers Guide",
+          "item": "https://www.webdevworker.com/articles/service-workers-pwa-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Service Workers Guide</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">📦 PWA and Offline</div>
+          <h1 class="guide-title">Service Workers Guide (2026): Lifecycle, Caching Strategies and Offline Apps</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 8 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+
+        <div class="tool-embed-banner">
+          <h3>🛠️ Test Your Offline Strategy</h3>
+          <p>Once your service worker is caching the app shell, use WebDevWorker's client-side utilities to simulate offline conditions, inspect Cache Storage, and verify every fallback route before you ship.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides →</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. Lifecycle: Install, Activate and Waiting</a></li>
+<li><a href="#sec2" style="color:var(--brand-primary);">2. Registration and Safe Updates</a></li>
+<li><a href="#sec3" style="color:var(--brand-primary);">3. Caching Strategies Compared</a></li>
+<li><a href="#sec4" style="color:var(--brand-primary);">4. Offline Fallbacks and Background Sync</a></li>
+<li><a href="#sec5" style="color:var(--brand-primary);">5. Debugging and Production Checklist</a></li>
+<li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. The Service Worker Lifecycle: Install, Activate, and Waiting</h2>
+<p>A service worker is a JavaScript file that runs on a separate thread from your page, with no access to the DOM. It acts as a programmable network proxy: every fetch your page makes can be intercepted, served from a cache, modified, or queued. Because it lives outside any single page, it keeps running logic — like caching and background sync — even after the tab closes.</p>
+<p>The lifecycle has three main phases. During <code>install</code>, the worker typically precaches the app shell — the HTML, CSS, and JavaScript needed for the first paint. Installation only succeeds if every precache request succeeds, which makes it an all-or-nothing transaction. Calling <code>skipWaiting()</code> here lets the new worker activate immediately instead of waiting for old tabs to close.</p>
+<p>During <code>activate</code>, you clean up caches from previous versions and can call <code>clients.claim()</code> to take control of open pages right away. If you skip these steps, the new worker sits in the <code>waiting</code> state until every tab using the old version is closed — the number one reason developers think their service worker update is broken when it is actually behaving exactly as designed.</p>
+<pre class="code-box">// sw.js — install, precache, and activate with cleanup
+const CACHE = "app-v3";
+const APP_SHELL = ["/", "/styles.css", "/app.js", "/offline.html"];
+
+self.addEventListener("install", (event) =&gt; {
+  event.waitUntil(
+    caches.open(CACHE).then((cache) =&gt; cache.addAll(APP_SHELL))
+      .then(() =&gt; self.skipWaiting())
+  );
+});
+
+self.addEventListener("activate", (event) =&gt; {
+  event.waitUntil(
+    caches.keys()
+      .then((keys) =&gt; Promise.all(
+        keys.filter((k) =&gt; k !== CACHE).map((k) =&gt; caches.delete(k))
+      ))
+      .then(() =&gt; self.clients.claim())
+  );
+});</pre>
+</section>
+
+<section id="sec2" class="guide-section">
+<h2>2. Registering and Updating Service Workers Safely</h2>
+<p>Registration happens from your page JavaScript, and scope matters: a worker registered at <code>/sw.js</code> controls the whole origin, while one at <code>/blog/sw.js</code> only controls <code>/blog/*</code>. Register after the page loads so the worker's installation never competes with your critical rendering path, and always guard the call with a feature check.</p>
+<p>Updates are byte-compared: the browser re-fetches the worker script on navigation and installs a new version only if the bytes differ. The new worker then waits until all controlled tabs close, unless you call <code>skipWaiting()</code>. For the best user experience, listen for the <code>updatefound</code> event and show a discreet toast — new version available, refresh to update — instead of force-reloading under the user's feet.</p>
+<p>One critical rule: never cache the service worker script itself with long TTLs. Serve it with <code>Cache-Control: no-cache</code> (or a very short max-age) so the browser's byte-difference check sees fresh code. A cached worker script is the classic way to strand users on an old version for days.</p>
+<pre class="code-box">// Register after load; prompt the user when an update is waiting
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () =&gt; {
+    const reg = await navigator.serviceWorker.register("/sw.js");
+    reg.addEventListener("updatefound", () =&gt; {
+      const worker = reg.installing;
+      worker.addEventListener("statechange", () =&gt; {
+        if (worker.state === "installed" &amp;&amp; navigator.serviceWorker.controller) {
+          showToast("New version available — refresh to update.");
+        }
+      });
+    });
+  });
+}</pre>
+</section>
+
+<section id="sec3" class="guide-section">
+<h2>3. Caching Strategies: Choosing the Right One</h2>
+<p>There is no single best caching strategy — the right choice depends on how often the resource changes and how stale it is allowed to be. Five patterns cover nearly every case: cache-first, network-first, stale-while-revalidate, network-only, and cache-only. A well-built worker routes different request types to different strategies inside one <code>fetch</code> handler.</p>
+<p>Use <strong>cache-first</strong> for versioned, fingerprinted assets that never change without a new URL — it is the fastest option and cannot serve stale content by construction. Use <strong>network-first</strong> for HTML navigations and API calls where freshness matters; fall back to the cache when the network fails so the app still works offline.</p>
+<p><strong>Stale-while-revalidate</strong> is the balanced default for resources like user avatars, stylesheets, or product data: serve the cached copy instantly while refreshing it in the background for next time. Reserve <strong>network-only</strong> for non-GET requests and analytics beacons, and <strong>cache-only</strong> for precached app-shell assets you know are always present.</p>
+<table class="data-table">
+<tr><th>Strategy</th><th>Best for</th><th>Strength</th><th>Watch out for</th></tr>
+<tr><td>Cache-first</td><td>Fingerprinted JS, CSS, fonts</td><td>Fastest; never stale</td><td>Needs versioned URLs</td></tr>
+<tr><td>Network-first</td><td>HTML pages, API data</td><td>Always fresh when online</td><td>Slower; needs offline fallback</td></tr>
+<tr><td>Stale-while-revalidate</td><td>Avatars, feeds, config</td><td>Instant plus fresh next time</td><td>First load after change is stale</td></tr>
+<tr><td>Network-only</td><td>POST requests, analytics</td><td>Simple and correct</td><td>No offline support</td></tr>
+<tr><td>Cache-only</td><td>Precached app shell</td><td>Guaranteed instant</td><td>Breaks if precache missed it</td></tr>
+</table>
+<pre class="code-box">// Strategy router inside the fetch handler
+self.addEventListener("fetch", (event) =&gt; {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  if (request.method !== "GET") return; // let POSTs pass through
+
+  if (/\.[a-f0-9]{8}\.(js|css|woff2)$/.test(url.pathname)) {
+    event.respondWith(cacheFirst(request));            // versioned assets
+  } else if (url.pathname.startsWith("/api/")) {
+    event.respondWith(networkFirst(request));          // fresh data, offline fallback
+  } else {
+    event.respondWith(staleWhileRevalidate(request));   // everything else
+  }
+});
+
+async function cacheFirst(request) {
+  const cached = await caches.match(request);
+  if (cached) return cached;
+  const res = await fetch(request);
+  const cache = await caches.open(CACHE);
+  cache.put(request, res.clone());
+  return res;
+}
+
+async function networkFirst(request) {
+  try {
+    const res = await fetch(request);
+    const cache = await caches.open(CACHE);
+    cache.put(request, res.clone());
+    return res;
+  } catch (err) {
+    const cached = await caches.match(request);
+    return cached || caches.match("/offline.html");
+  }
+}
+
+async function staleWhileRevalidate(request) {
+  const cached = await caches.match(request);
+  const network = fetch(request).then(async (res) =&gt; {
+    const cache = await caches.open(CACHE);
+    cache.put(request, res.clone());
+    return res;
+  });
+  return cached || network;
+}</pre>
+</section>
+
+<section id="sec4" class="guide-section">
+<h2>4. Offline Fallbacks and Background Sync</h2>
+<p>A cache without a fallback plan still shows a blank screen when both network and cache miss. Ship an <code>offline.html</code> page and serve it for failed navigations, return a placeholder SVG for failed images, and return empty-but-valid JSON for failed API calls so your UI can render its empty states instead of crashing.</p>
+<p>Background Sync solves the harder problem: mutations made while offline. When the user submits a form with no connection, store the payload in IndexedDB and register a sync event. The browser retries the sync when connectivity returns — even if the tab was closed — and your worker replays the queued requests in order.</p>
+<p>Design your sync queue to be idempotent: give each queued mutation a client-generated ID so a retried request cannot create duplicates server-side. On supporting browsers, Periodic Background Sync can also refresh content silently on a schedule, which is perfect for news or dashboard apps that should feel fresh on every open.</p>
+<pre class="code-box">// Queue a mutation while offline, replay on sync
+async function queueMutation(payload) {
+  const db = await openQueueDb();
+  await db.add("outbox", { id: crypto.randomUUID(), payload, ts: Date.now() });
+  const reg = await navigator.serviceWorker.ready;
+  await reg.sync.register("replay-outbox");
+}
+
+// Inside the service worker:
+self.addEventListener("sync", (event) =&gt; {
+  if (event.tag === "replay-outbox") {
+    event.waitUntil(replayOutbox());
+  }
+});
+
+async function replayOutbox() {
+  const db = await openQueueDb();
+  const items = await db.getAll("outbox");
+  for (const item of items) {
+    await fetch("/api/mutations", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Idempotency-Key": item.id },
+      body: JSON.stringify(item.payload)
+    });
+    await db.delete("outbox", item.id);
+  }
+}</pre>
+</section>
+
+<section id="sec5" class="guide-section">
+<h2>5. Debugging, Pitfalls, and Production Checklist</h2>
+<p>Browser DevTools is your service worker laboratory: the Application panel shows registrations, lets you update, unregister, and simulate offline mode, and exposes Cache Storage contents for inspection. During development, enable Update on reload so every refresh installs the latest worker, and keep the console filter on the worker's context to see its logs separately from the page.</p>
+<p>The classic production pitfalls are all avoidable. Scope mistakes happen when the worker file lives in a subdirectory but needs to control the whole site — keep it at the root. Opaque responses from cross-origin <code>no-cors</code> requests consume quota without being readable, so cache them deliberately or not at all. And storage quota is shared per origin: always wrap cache writes so a <code>QuotaExceededError</code> degrades gracefully instead of breaking the worker.</p>
+<p>Before you ship, run the checklist: versioned precache list, old-cache cleanup in activate, update prompt UX, offline fallback page, idempotent background sync, short cache TTL on the worker script itself, and a kill-switch plan — a no-op worker you can deploy instantly if a bad version ever ships to production.</p>
+<pre class="code-box">// Defensive cache write: never let quota errors break the worker
+async function safeCachePut(request, response) {
+  try {
+    const cache = await caches.open(CACHE);
+    await cache.put(request, response);
+  } catch (err) {
+    if (err.name === "QuotaExceededError") {
+      // Evict the oldest runtime entries and retry once
+      const cache = await caches.open(CACHE);
+      const keys = await cache.keys();
+      await Promise.all(keys.slice(0, 10).map((k) =&gt; cache.delete(k)));
+      try { await cache.put(request, response); } catch (_) { /* give up gracefully */ }
+    }
+  }
+}
+
+// Check how much storage your origin is using
+if (navigator.storage &amp;&amp; navigator.storage.estimate) {
+  const { usage, quota } = await navigator.storage.estimate();
+  console.log(`Using ${(usage / 1048576).toFixed(1)} MB of ${(quota / 1048576).toFixed(0)} MB`);
+}</pre>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Do service workers work on iOS Safari?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes. Safari has supported service workers since iOS 11.3, so caching and offline pages work on iPhones. Historically, background sync and push notifications were limited or unavailable on iOS, so verify current platform support before depending on those features.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Why is my service worker update not taking effect?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Three usual causes: the browser only installs a new version when the script bytes differ, the new worker waits in the waiting state until all controlled tabs close unless you call skipWaiting, or the worker script itself is being cached by HTTP headers so the browser never sees the new bytes.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can a service worker access the DOM?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No. Service workers run on a separate thread with no DOM or localStorage access. They communicate with pages via postMessage and persist data with the Cache API and IndexedDB, which are both available in the worker context.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How much can a service worker cache?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Cache Storage shares the origin storage quota, which is typically hundreds of megabytes to several gigabytes depending on the browser and disk space. Prioritize the app shell and critical assets, and handle QuotaExceededError gracefully.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Do I need HTTPS for service workers?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes, service workers require a secure context. The only exception is localhost, which browsers treat as secure for development. This requirement exists because a worker can intercept all of an origin's network traffic.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+
+<div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Keep leveling up</h3>
+          <p>Service workers reward careful versioning and thorough testing. Nail the lifecycle once and every PWA you build afterwards gets offline support almost for free.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub →</a>
+        </div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

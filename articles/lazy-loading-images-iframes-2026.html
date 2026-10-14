@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <title>Lazy Loading Images & Iframes: loading=lazy and IntersectionObserver (2026) | WebDevWorker</title>
+  <meta name="description" content="Defer offscreen images, iframes, and videos with loading=lazy and IntersectionObserver. Complete guide with real code, fallbacks, and CLS-safe techniques."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/lazy-loading-images-iframes-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Lazy Loading Images & Iframes: loading=lazy and IntersectionObserver (2026) | WebDevWorker"/>
+  <meta property="og:description" content="Defer offscreen images, iframes, and videos with loading=lazy and IntersectionObserver. Complete guide with real code, fallbacks, and CLS-safe techniques."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/lazy-loading-images-iframes-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Lazy Loading Images and Iframes: Native loading=lazy and IntersectionObserver",
+      "description": "Defer offscreen images, iframes, and videos with loading=lazy and IntersectionObserver. Complete guide with real code, fallbacks, and CLS-safe techniques.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/lazy-loading-images-iframes-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does lazy loading hurt SEO?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, when done correctly. Googlebot renders pages and scrolls, so it discovers natively lazy-loaded images. Problems only arise with JavaScript-only lazy loaders that hide image URLs from the initial HTML \u2014 keep real src or srcset values present and use native loading=lazy where possible."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I lazy load above-the-fold images?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Never. Lazy-loading the hero or LCP image delays your most important content and directly harms Largest Contentful Paint. Mark above-the-fold images loading=eager with fetchpriority=high, and lazy-load everything below the fold."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is loading=lazy supported in all browsers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, effectively. Native lazy loading for images and iframes is supported in all modern browsers since 2022, covering over 97% of traffic. For the tiny remainder, images simply load eagerly \u2014 a safe, silent fallback."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does lazy loading help Core Web Vitals?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It cuts initial page weight and network contention, which improves LCP by letting critical resources download first. It has no direct effect on CLS or INP, but combined with width/height attributes it prevents layout shifts from late-loading media."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between lazy loading and infinite scroll?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Lazy loading defers individual offscreen resources on an existing page, while infinite scroll appends new content as the user scrolls. Infinite scroll needs extra SEO care \u2014 paginated URLs or a sitemap \u2014 so crawlers can discover content beyond the first screen."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Lazy Loading",
+          "item": "https://www.webdevworker.com/articles/lazy-loading-images-iframes-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">Lazy Loading</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">⚡ Performance</div>
+          <h1 class="guide-title">Lazy Loading Images & Iframes: loading=lazy and IntersectionObserver (2026)</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 7 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3><span>⏳</span> Load Only What the User Sees</h3>
+          <p>Lazy loading pairs perfectly with modern formats and responsive images. Continue with our image optimization and speed guides.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides &#8594;</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. Why Lazy Loading Slashes Initial Page Weight</a></li><li><a href="#sec2" style="color:var(--brand-primary);">2. Native Lazy Loading with loading="lazy"</a></li><li><a href="#sec3" style="color:var(--brand-primary);">3. IntersectionObserver for Full Control</a></li><li><a href="#sec4" style="color:var(--brand-primary);">4. Lazy Loading Iframes, Videos & Backgrounds</a></li><li><a href="#sec5" style="color:var(--brand-primary);">5. Common Pitfalls and Edge Cases</a></li><li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. Why Lazy Loading Slashes Initial Page Weight</h2>
+<p>Most pages load far more than the user ever sees. Analytics consistently shows that a large share of visitors never scroll past the first screen — yet the traditional page load fetches every image, iframe, and video on the entire page upfront. On image-heavy pages, below-the-fold media can account for 60-80% of total page weight, all competing for bandwidth with the content the user is actually looking at.</p>
+<p>Lazy loading flips this: offscreen resources wait until the user scrolls near them, then load just in time. The initial payload shrinks dramatically, the critical rendering path clears, and Largest Contentful Paint improves because the hero image no longer fights a dozen invisible thumbnails for network priority. For users on metered mobile connections, it also saves real data — images never scrolled to are never downloaded at all.</p>
+<p>The economics are simple to verify: compare total page weight against the weight of above-the-fold resources in your waterfall. If the gap is large, lazy loading is your highest-ROI performance task. Implementation takes minutes with native browser support, as the next section shows.</p>
+</section>
+
+<section id="sec2" class="guide-section">
+<h2>2. Native Lazy Loading with loading="lazy"</h2>
+<p>Native lazy loading is a single HTML attribute — no JavaScript, no libraries, no layout code. Add <code>loading="lazy"</code> to any <code>&lt;img&gt;</code> or <code>&lt;iframe&gt;</code> and the browser defers fetching until the element approaches the viewport, using its own tuned distance threshold. It works with <code>srcset</code>, <code>&lt;picture&gt;</code>, and CSS-sized images, and unsupported browsers simply ignore the attribute and load eagerly.</p>
+<p>Three details make the difference between correct and sloppy. First, never lazy-load above-the-fold content — use <code>loading="eager"</code> (the default) plus <code>fetchpriority="high"</code> for your LCP image. Second, always include <code>width</code> and <code>height</code> so the browser reserves space and lazy images do not cause layout shift when they pop in. Third, add <code>decoding="async"</code> so image decoding never blocks the main thread.</p>
+<p>One subtlety: browsers may skip lazy-loading images hidden with <code>display: none</code> or inside closed <code>&lt;details&gt;</code> until they become visible, which is usually what you want. But carousels that preload upcoming slides via JavaScript should manage their own loading rather than relying on the attribute.</p><pre class="code-box">&lt;!-- Below the fold: lazy, sized, non-blocking decode --&gt;
+&lt;img src="/img/gallery-3.webp"
+     srcset="/img/gallery-3-480.webp 480w, /img/gallery-3-960.webp 960w"
+     sizes="(max-width: 600px) 100vw, 480px"
+     width="960" height="640"
+     loading="lazy"
+     decoding="async"
+     alt="Gallery photo 3: workshop interior" /&gt;
+
+&lt;!-- Above the fold: eager, high priority, never lazy --&gt;
+&lt;img src="/img/hero.avif"
+     width="1600" height="900"
+     loading="eager"
+     fetchpriority="high"
+     alt="Product hero" /&gt;</pre>
+</section>
+
+<section id="sec3" class="guide-section">
+<h2>3. IntersectionObserver for Full Control</h2>
+<p>Native lazy loading covers images and iframes, but sometimes you need finer control: custom thresholds, placeholder animations, background images, or components that should mount only when visible. The IntersectionObserver API is the right tool — it notifies you when an element enters the viewport without the scroll-event listeners that used to jank pages.</p>
+<p>The pattern is straightforward: mark placeholders with a <code>data-src</code> attribute, observe them, and swap in the real source when the observer fires — then unobserve so it runs once. The <code>rootMargin</code> option preloads content slightly before it becomes visible (200px is a good default), eliminating the flash of empty space for fast scrollers.</p>
+<p>Always include a no-JavaScript fallback. If your observer script fails, the <code>&lt;noscript&gt;</code> block still renders the image, and search crawlers see real image URLs in the HTML. Progressive enhancement is not optional for content that matters.</p><pre class="code-box">// Full-control lazy loader with early prefetch margin
+const io = new IntersectionObserver((entries) =&gt; {
+  for (const entry of entries) {
+    if (!entry.isIntersecting) continue;
+    const el = entry.target;
+    el.src = el.dataset.src;              // swap in the real image
+    el.srcset = el.dataset.srcset || '';
+    el.classList.add('is-loaded');        // trigger fade-in CSS
+    io.unobserve(el);
+  }
+}, { rootMargin: '200px 0px', threshold: 0.01 });
+
+document.querySelectorAll('img[data-src]').forEach(img =&gt; io.observe(img));
+
+/* CSS: blur-up placeholder that sharpens on load */
+img[data-src] { filter: blur(12px); transition: filter 0.4s ease; }
+img.is-loaded { filter: blur(0); }</pre><pre class="code-box">&lt;!-- Fallback so content survives without JavaScript --&gt;
+&lt;img data-src="/img/photo-9.avif" data-srcset="/img/photo-9-480.avif 480w"
+     src="/img/photo-9-tiny.jpg" width="960" height="640"
+     alt="Conference stage" /&gt;
+&lt;noscript&gt;
+  &lt;img src="/img/photo-9.avif" width="960" height="640" alt="Conference stage" /&gt;
+&lt;/noscript&gt;</pre>
+</section>
+
+<section id="sec4" class="guide-section">
+<h2>4. Lazy Loading Iframes, Videos & Backgrounds</h2>
+<p>Iframes are the heaviest lazy-loading win most sites ignore. A single YouTube embed pulls in half a megabyte of player JavaScript before the user ever presses play; a Google Map, a tweet, or a chat widget is no better. <code>loading="lazy"</code> works on iframes natively, but the elite technique is the facade pattern: render a lightweight thumbnail with a play button, and inject the real iframe only when clicked.</p>
+<p>Video elements deserve the same treatment. Never autoplay a full video file below the fold — use <code>preload="none"</code> with a poster image, and load the source on user interaction or intersection. For background videos, consider whether a compressed poster image or a short muted loop achieves the effect at a fraction of the cost.</p>
+<p>CSS background images cannot use <code>loading="lazy"</code>, so handle them with IntersectionObserver by toggling a class that applies the <code>background-image</code>. This is the cleanest way to defer decorative below-the-fold backgrounds without restructuring your markup.</p><table class="data-table">
+<thead><tr><th>Resource</th><th>Native lazy support</th><th>Recommended technique</th></tr></thead>
+<tbody>
+<tr><td>Content images</td><td>Yes — loading="lazy"</td><td>Native attribute + width/height</td></tr><tr><td>Iframes (maps, videos)</td><td>Yes — loading="lazy"</td><td>Facade pattern (click-to-load) for heavy embeds</td></tr><tr><td>Video files</td><td>No (use preload="none")</td><td>Poster image + load on interaction</td></tr><tr><td>CSS backgrounds</td><td>No</td><td>IntersectionObserver toggling a class</td></tr><tr><td>Above-the-fold hero</td><td>N/A — never lazy</td><td>loading="eager" + fetchpriority="high"</td></tr>
+</tbody>
+</table><pre class="code-box">&lt;!-- YouTube facade: ~10KB thumbnail instead of ~500KB player --&gt;
+&lt;div class="video-facade" data-video-id="dQw4w9WgXcQ"&gt;
+  &lt;img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg"
+       width="480" height="360" loading="lazy" alt="Video thumbnail" /&gt;
+  &lt;button aria-label="Play video"&gt;▶&lt;/button&gt;
+&lt;/div&gt;
+&lt;script&gt;
+document.querySelectorAll('.video-facade').forEach(f =&gt; {
+  f.querySelector('button').addEventListener('click', () =&gt; {
+    f.innerHTML = `&lt;iframe width="480" height="360"
+      src="https://www.youtube.com/embed/${f.dataset.videoId}?autoplay=1"
+      allow="autoplay; encrypted-media" allowfullscreen&gt;&lt;/iframe&gt;`;
+  });
+});
+&lt;/script&gt;</pre>
+</section>
+
+<section id="sec5" class="guide-section">
+<h2>5. Common Pitfalls and Edge Cases</h2>
+<p>The number-one lazy loading mistake is deferring the LCP element. If your hero image carries <code>loading="lazy"</code>, the browser waits until layout settles before even starting the download — adding a full second or more to LCP. Audit with Lighthouse: if the LCP element is lazy-loaded, the report flags it explicitly. Fix it the same day.</p>
+<p>The second mistake is layout shift. A lazy image without dimensions collapses to zero height, then shoves content down when it arrives — trading a performance win for a CLS failure. Width and height attributes (or CSS <code>aspect-ratio</code>) are mandatory on every lazy image, no exceptions.</p>
+<p>Finally, watch out for print and SEO edge cases. Browsers typically load all lazy images when printing, but verify your print stylesheet. For SEO, keep image URLs discoverable: native lazy loading is crawler-safe, but exotic JavaScript loaders that inject <code>src</code> from data attributes without fallbacks can hide images from less capable crawlers. When in doubt, prefer the native attribute.</p>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Does lazy loading hurt SEO?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No, when done correctly. Googlebot renders pages and scrolls, so it discovers natively lazy-loaded images. Problems only arise with JavaScript-only lazy loaders that hide image URLs from the initial HTML — keep real src or srcset values present and use native loading=lazy where possible.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Should I lazy load above-the-fold images?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Never. Lazy-loading the hero or LCP image delays your most important content and directly harms Largest Contentful Paint. Mark above-the-fold images loading=eager with fetchpriority=high, and lazy-load everything below the fold.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Is loading=lazy supported in all browsers?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes, effectively. Native lazy loading for images and iframes is supported in all modern browsers since 2022, covering over 97% of traffic. For the tiny remainder, images simply load eagerly — a safe, silent fallback.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How does lazy loading help Core Web Vitals?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">It cuts initial page weight and network contention, which improves LCP by letting critical resources download first. It has no direct effect on CLS or INP, but combined with width/height attributes it prevents layout shifts from late-loading media.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between lazy loading and infinite scroll?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Lazy loading defers individual offscreen resources on an existing page, while infinite scroll appends new content as the user scrolls. Infinite scroll needs extra SEO care — paginated URLs or a sitemap — so crawlers can discover content beyond the first screen.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+                <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Keep leveling up</h3>
+          <p>Defer the non-critical, prioritize the essential — keep sharpening your performance skills with our guides.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub &#8594;</a>
+        </div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>

