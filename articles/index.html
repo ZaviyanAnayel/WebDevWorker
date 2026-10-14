@@ -1,2139 +1,317 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-<script>/* WDW early theme: apply saved theme before first paint (prevents theme flash) */(function(){try{var ks=['wdw_theme','webdevworker_theme','calcworker_theme','theme'],t='dark';for(var i=0;i<ks.length;i++){var v=null;try{v=localStorage.getItem(ks[i]);}catch(_){}if(v){t=v;break;}}if(['dark','dim'].indexOf(t)<0)t='dark';document.documentElement.setAttribute('data-theme',t);if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}})();</script>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Developer &amp; Webmaster Guides Hub (2026) | WebDevWorker</title>
-  <meta name="description" content="Explore 85+ in-depth, expert-reviewed developer guides covering CSS, APIs, cryptography, DevOps, Docker, and frontend architecture with interactive sandbox tools."/>
+  <title>Developer Guides &amp; Engineering Tutorials | WebDevWorker</title>
+  <meta name="description" content="In-depth, practical engineering tutorials covering JSON Web Tokens (JWT), regular expressions, cryptographic hashing, UUID v4 standards, and AI-assisted development."/>
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
   <link rel="canonical" href="https://www.webdevworker.com/articles/"/>
   <link rel="icon" type="image/png" href="/assets/favicon.png"/>
   <meta name="theme-color" content="#eab308"/>
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="WebDevWorker Guides &amp; Tutorials Hub (2026)"/>
-  <meta property="og:description" content="85+ in-depth web developer, CSS, API, and DevOps guides with interactive client-side sandbox tools."/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://www.webdevworker.com/articles/"/>
-  <meta property="og:image" content="https://www.webdevworker.com/assets/logo.png"/>
-
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7358272532329016" crossorigin="anonymous"></script>
 
-  <link rel="stylesheet" href="/css/webdevworker.css?v=2026-wdw-v45"/>
-  <link rel="stylesheet" href="/css/ai-widget.css?v=2026-wdw-v45"/>
-
   <style>
-    .hub-container {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 24px 16px 80px 16px;
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #111827;
+      --card-border: rgba(234, 179, 8, 0.22);
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent: #eab308;
     }
-    .hub-hero {
-      margin-bottom: 36px;
-    }
-    .hub-title {
-      font-size: clamp(2.2rem, 4vw, 3rem);
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      color: var(--text-main);
-      margin-bottom: 12px;
-    }
-    .hub-subtitle {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-      max-width: 820px;
-    }
-    .search-filter-box {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px 22px;
-      margin: 28px 0;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      gap: 16px;
     }
-    .live-search-input {
-      width: 100%;
-      background: var(--bg-subtle);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 18px 12px 42px;
-      color: var(--text-main);
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .live-search-input:focus {
-      border-color: var(--brand-primary);
-    }
-    .filter-chips {
+    a { color: #facc15; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    
+    .site-nav {
+      background: rgba(17, 24, 39, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 14px 24px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
     }
-    .filter-chip {
+    .brand {
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #f9fafb;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-links { display: flex; gap: 20px; font-size: 0.9rem; }
+    .nav-links a { color: var(--text-muted); font-weight: 500; }
+    .nav-links a:hover { color: #ffffff; }
+
+    .hub-container {
+      max-width: 1180px;
+      margin: 40px auto;
+      padding: 0 20px;
+      flex: 1;
+      width: 100%;
+    }
+
+    .hub-hero {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .hub-badge {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
       padding: 6px 14px;
       border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      border: 1px solid var(--border);
-      background: var(--bg-subtle);
+      background: rgba(234, 179, 8, 0.12);
+      color: #facc15;
+      border: 1px solid rgba(234, 179, 8, 0.3);
+      margin-bottom: 16px;
+    }
+    .hub-hero h1 {
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 14px;
+      color: #f9fafb;
+    }
+    .hub-hero p {
       color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.15s ease;
+      font-size: 1.05rem;
+      max-width: 680px;
+      margin: 0 auto;
     }
-    .filter-chip:hover, .filter-chip.active {
-      background: var(--brand-primary);
-      border-color: #ca8a04;
-      color: #0f172a;
-      font-weight: 700;
-    }
-    .articles-grid {
+
+    .guides-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
       gap: 24px;
-      margin-top: 32px;
     }
-    .article-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
+    .guide-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 14px;
       padding: 24px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    .article-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--brand-primary);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    .guide-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(234, 179, 8, 0.5);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
     }
-    .card-tag {
-      font-size: 0.72rem;
+    .guide-category {
+      font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--brand-primary);
-      background: rgba(234, 179, 8, 0.1);
-      padding: 3px 8px;
-      border-radius: 6px;
-      align-self: flex-start;
-      margin-bottom: 12px;
+      letter-spacing: 1px;
+      color: #facc15;
+      margin-bottom: 8px;
     }
-    .article-card h2 {
-      font-size: 1.2rem;
-      font-weight: 800;
-      line-height: 1.35;
+    .guide-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #f3f4f6;
       margin-bottom: 10px;
+      line-height: 1.4;
     }
-    .article-card h2 a {
-      color: var(--text-main);
-      text-decoration: none;
-    }
-    .article-card h2 a:hover {
-      color: var(--brand-primary);
-    }
-    .card-desc {
+    .guide-desc {
       font-size: 0.88rem;
       color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 20px;
-      flex-grow: 1;
+      line-height: 1.55;
+      margin-bottom: 18px;
+      flex: 1;
     }
-    .card-footer {
+    .guide-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-top: 1px solid var(--border);
+      font-size: 0.82rem;
+      color: #6b7280;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
       padding-top: 14px;
-      font-size: 0.82rem;
-      color: var(--text-dim);
     }
-    .btn-read {
-      background: linear-gradient(135deg, #ca8a04, #eab308);
-      color: #0f172a !important;
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: 0.82rem;
-      text-decoration: none;
-      transition: filter 0.15s ease;
+    .guide-read-link {
+      color: #facc15;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
-    .btn-read:hover {
-      filter: brightness(1.1);
+
+    footer {
+      background: #080c14;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 36px 20px;
+      margin-top: 60px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
     }
+    .footer-content {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-links { display: flex; gap: 18px; }
   </style>
 </head>
 <body>
-<div class="app-shell">
-  <!-- Sidebar Navigation -->
-  <aside class="sidebar" id="sidebar">
-    <!-- Populated via universal sync -->
-  </aside>
-  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
-  <!-- Main Viewport -->
-  <div class="main-viewport">
-    <header class="topbar">
-      <div class="topbar-left">
-        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">☰</button>
-        <span class="topbar-title">WebDevWorker Guides Hub</span>
-      </div>
-      <div class="topbar-right">
-        <div style="position:relative; display:flex; align-items:center;">
-          <span style="position:absolute; left:12px; font-size:0.85rem; color:var(--text-muted); pointer-events:none;">🔍</span>
-          <input type="text" id="searchToolsInput" placeholder="Search 85+ tools (⌘K)..." style="padding:7px 14px 7px 34px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; color:var(--text-main); font-size:0.82rem; width:220px; outline:none; transition:all 0.2s;" autocomplete="off" spellcheck="false">
-        </div>
-        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
-      </div>
-    </header>
+  <nav class="site-nav">
+    <a href="/" class="brand">
+      <span>🛠️</span> WebDevWorker
+    </a>
+    <div class="nav-links">
+      <a href="/">Developer Tools</a>
+      <a href="/articles/" style="color:#facc15; font-weight:700;">Guides</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+  </nav>
 
-    <main class="page-container">
-      <div class="hub-container">
-        <nav aria-label="Breadcrumb" style="margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim);">
-          <a href="/" style="color: var(--brand-primary); text-decoration: none;">Home</a>
-          <span style="margin: 0 8px; color: var(--border);">/</span>
-          <span style="color: var(--text-muted);">Guides Hub</span>
-        </nav>
+  <main class="hub-container">
+    <div class="hub-hero">
+      <div class="hub-badge">Software Engineering &amp; Web Standards</div>
+      <h1>Web Development Tutorials &amp; Technical Guides</h1>
+      <p>In-depth, specifications-grounded guides covering auth tokens, cryptography, regex patterns, and modern web developer workflows.</p>
+    </div>
 
-        <header class="hub-hero">
-          <h1 class="hub-title">Web Developer Guides &amp; Tutorials (2026)</h1>
-          <p class="hub-subtitle">
-            Explore 85+ comprehensive, mathematically verified developer guides covering CSS layout, API design, Web Cryptography, containerized DevOps, and media optimization with embedded interactive sandbox tools.
-          </p>
-        </header>
-
-        <!-- Live Search and Category Filter -->
-        <div class="search-filter-box">
-          <div style="position: relative;">
-            <span style="position: absolute; left: 14px; top: 12px; font-size: 1.1rem; color: var(--text-muted);">🔍</span>
-            <input type="text" id="articleSearchInput" class="live-search-input" placeholder="Search all 103 developer guides (e.g. tailwind, jwt, clamp, docker, zod, bcrypt)..." autocomplete="off" spellcheck="false"/>
-          </div>
-          <div class="filter-chips" id="filterChips">
-            <button class="filter-chip active" data-filter="all">All Guides (103)</button>
-            <button class="filter-chip" data-filter="CSS & Visual UI">CSS &amp; Visual UI (24)</button>
-            <button class="filter-chip" data-filter="Code, Data & APIs">Code, Data &amp; APIs (45)</button>
-            <button class="filter-chip" data-filter="Security & Cryptography">Security &amp; Cryptography (11)</button>
-            <button class="filter-chip" data-filter="DevOps & Webmaster">DevOps &amp; Webmaster (18)</button>
-            <button class="filter-chip" data-filter="Media, Assets & Viral">Media, Assets &amp; Viral (5)</button>
-          </div>
-        </div>
-
-        <!-- Articles Grid -->
-        <div class="articles-grid" id="articlesGrid">
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/html5-semantic-elements-complete-guide-2026.html">HTML5 Semantic Elements: The Complete 2026 Guide</a></h2>
-        <p class="card-desc">Master HTML5 semantic elements in 2026: header, nav, main, article, section, aside, footer. Real examples, SEO benefits, and accessibility wins explained.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/html5-semantic-elements-complete-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/css-grid-complete-tutorial-2026.html">CSS Grid Complete Tutorial: From Basics to Advanced Layouts (2026)</a></h2>
-        <p class="card-desc">Learn CSS Grid from scratch in 2026: grid-template, fr units, repeat(), minmax(), placement, areas. Real layouts, code examples, and pro patterns included.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/css-grid-complete-tutorial-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/css-flexbox-vs-grid-when-to-use-2026.html">Flexbox vs CSS Grid: When to Use Each (2026 Decision Guide)</a></h2>
-        <p class="card-desc">Confused by Flexbox vs CSS Grid? This 2026 decision guide shows exactly when to use each layout system, with side-by-side examples and a quick cheat sheet.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/css-flexbox-vs-grid-when-to-use-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/css-animations-transitions-mastery-2026.html">CSS Animations &amp; Transitions Mastery: The 2026 Practical Guide</a></h2>
-        <p class="card-desc">Master CSS transitions and @keyframes animations in 2026: timing functions, cubic-bezier, performance tips, reduced-motion support, and real UI examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/css-animations-transitions-mastery-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/responsive-design-mobile-first-2026.html">Mobile-First Responsive Design: The 2026 Workflow Guide</a></h2>
-        <p class="card-desc">Build truly responsive sites in 2026 with a mobile-first workflow: fluid type, flexible grids, breakpoints, container queries, and testing strategies that work.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/responsive-design-mobile-first-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/css-custom-properties-variables-guide-2026.html">CSS Custom Properties (Variables): Complete 2026 Guide</a></h2>
-        <p class="card-desc">Master CSS custom properties in 2026: declaration, scoping, fallbacks, theming with dark mode, JavaScript integration, and design token architecture.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/css-custom-properties-variables-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/css-positioning-explained-2026.html">CSS Positioning Explained: Static to Sticky (2026 Visual Guide)</a></h2>
-        <p class="card-desc">Finally understand CSS positioning in 2026: static, relative, absolute, fixed, sticky, containing blocks, and z-index stacking — with visual examples and pitfalls.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/css-positioning-explained-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/css-pseudo-classes-pseudo-elements-2026.html">CSS Pseudo-Classes &amp; Pseudo-Elements: The 2026 Power Guide</a></h2>
-        <p class="card-desc">Unlock CSS pseudo-classes (:hover, :focus-visible, :nth-child) and pseudo-elements (::before, ::after) in 2026. Real patterns, specificity tips, and pro tricks.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/css-pseudo-classes-pseudo-elements-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/css-box-model-deep-dive-2026.html">CSS Box Model Deep Dive: Master Sizing in 2026</a></h2>
-        <p class="card-desc">Demystify the CSS box model in 2026: content-box vs border-box, margin collapse, box-sizing resets, and sizing bugs — with fixes that actually work.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/css-box-model-deep-dive-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/modern-css-layout-patterns-2026.html">10 Modern CSS Layout Patterns Every Developer Should Know (2026)</a></h2>
-        <p class="card-desc">10 production-ready CSS layout patterns for 2026: holy grail, card grids, split screens, sticky sidebars, centered heroes — with copy-paste code for each.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/modern-css-layout-patterns-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/css-dark-mode-implementation-2026.html">CSS Dark Mode: The Complete Implementation Guide</a></h2>
-        <p class="card-desc">Learn CSS dark mode in 2026: prefers-color-scheme, CSS custom properties, a persistent theme toggle with localStorage, and contrast best practices with code.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/css-dark-mode-implementation-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/css-print-stylesheets-guide-2026.html">CSS Print Stylesheets: The Complete Guide</a></h2>
-        <p class="card-desc">Master CSS print stylesheets in 2026: @media print basics, page breaks, @page rules, print-friendly layouts, and debugging tips. Full code examples included.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/css-print-stylesheets-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/javascript-es6-features-guide-2026.html">JavaScript ES6+ Features: The Essential Guide</a></h2>
-        <p class="card-desc">Master ES6+ JavaScript in 2026: arrow functions, destructuring, spread, template literals, let/const, optional chaining, and modules. Real code examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/javascript-es6-features-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/javascript-async-await-promises-2026.html">JavaScript Async/Await and Promises: The Complete Guide</a></h2>
-        <p class="card-desc">Master async JavaScript in 2026: promises, async/await, error handling with try/catch, Promise.all, allSettled, and race. Complete guide with real code.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/javascript-async-await-promises-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/javascript-dom-manipulation-guide-2026.html">JavaScript DOM Manipulation: The Complete Guide</a></h2>
-        <p class="card-desc">Learn DOM manipulation in 2026: selecting elements, creating nodes, event listeners, traversal, and performance techniques. Complete guide with code examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/javascript-dom-manipulation-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/javascript-fetch-api-complete-guide-2026.html">JavaScript Fetch API: The Complete Guide</a></h2>
-        <p class="card-desc">Master the Fetch API in 2026: GET and POST requests, custom headers, JSON handling, timeouts with AbortController, and error handling. Full code examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/javascript-fetch-api-complete-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/javascript-event-delegation-explained-2026.html">JavaScript Event Delegation Explained with Examples</a></h2>
-        <p class="card-desc">Understand event delegation in 2026: bubbling vs capturing, the delegation pattern with closest(), dynamic elements, and performance wins. Real code examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/javascript-event-delegation-explained-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/javascript-closures-scope-guide-2026.html">JavaScript Closures and Scope: The Complete Guide</a></h2>
-        <p class="card-desc">Demystify JavaScript closures in 2026: lexical scope, private state, function factories, memoization, and the classic loop gotcha. Code examples included.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/javascript-closures-scope-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/javascript-array-methods-mastery-2026.html">JavaScript Array Methods: map, filter, reduce Mastery</a></h2>
-        <p class="card-desc">Master JavaScript array methods in 2026: map, filter, reduce, find, some, every, and sort done right. Real-world examples and chaining patterns included.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/javascript-array-methods-mastery-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/javascript-debounce-throttle-guide-2026.html">JavaScript Debounce vs Throttle: Implementations Guide</a></h2>
-        <p class="card-desc">Debounce vs throttle explained with from-scratch implementations: search inputs, scroll handlers, resize events, and when to use each. 2026 guide with code.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/javascript-debounce-throttle-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/javascript-localstorage-sessionstorage-2026.html">localStorage vs sessionStorage vs Cookies: Complete JavaScript Storage Guide</a></h2>
-        <p class="card-desc">localStorage vs sessionStorage vs cookies explained: capacity, lifetime, security trade-offs, and JSON storage patterns with practical code examples for 2026.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/javascript-localstorage-sessionstorage-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/javascript-modules-import-export-2026.html">JavaScript Modules: ES import/export and Dynamic import() Explained</a></h2>
-        <p class="card-desc">Master JavaScript ES modules: named and default import/export, live bindings, module scope rules, and dynamic import() for code splitting with examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/javascript-modules-import-export-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/javascript-error-handling-best-practices-2026.html">JavaScript Error Handling: try/catch, Custom Errors &amp; Global Handlers</a></h2>
-        <p class="card-desc">JavaScript error handling done right: try/catch patterns, custom error classes, async error traps, and global handlers for production-ready apps in 2026.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/javascript-error-handling-best-practices-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/javascript-form-validation-guide-2026.html">JavaScript Form Validation Guide: Constraint Validation API &amp; Custom Rules</a></h2>
-        <p class="card-desc">Client-side form validation done right: HTML constraints, the Constraint Validation API, custom rules, and accessible UX patterns with code examples in 2026.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/javascript-form-validation-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/react-hooks-complete-guide-2026.html">React Hooks Complete Guide: useState, useEffect, useRef &amp; Custom Hooks</a></h2>
-        <p class="card-desc">Master React hooks: useState, useEffect, useRef, useMemo, useCallback, the Rules of Hooks, and building custom hooks with practical code examples in 2026.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/react-hooks-complete-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/react-state-management-guide-2026.html">React State Management Guide: Context, Redux &amp; Zustand Compared</a></h2>
-        <p class="card-desc">React state management explained: lifting state, Context API, and when to reach for Redux Toolkit or Zustand — with code and a decision framework in 2026.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/react-state-management-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/react-router-tutorial-2026.html">React Router Tutorial: Routes, Nested Routes, Params &amp; Navigation</a></h2>
-        <p class="card-desc">Learn React Router from setup to advanced: routes, nested layouts, URL params, programmatic navigation, data loading, and protected routes, with examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/react-router-tutorial-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/react-performance-optimization-2026.html">React Performance Optimization: Memoization, Lazy Loading &amp; Virtualization</a></h2>
-        <p class="card-desc">Speed up React apps in 2026: measure with the Profiler, memoize with React.memo and hooks, split code with lazy loading, and virtualize long lists effectively.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/react-performance-optimization-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/react-forms-handling-guide-2026.html">React Forms Handling Guide: Controlled, Uncontrolled &amp; Form Libraries</a></h2>
-        <p class="card-desc">React forms explained: controlled vs uncontrolled components, validation strategies, React Hook Form, and real-world patterns like multi-step forms in 2026.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/react-forms-handling-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/next-js-app-router-guide-2026.html">Next.js App Router Guide: Server Components, Routing &amp; Data Fetching</a></h2>
-        <p class="card-desc">Master the Next.js App Router: server vs client components, file-based routing with layouts, data fetching, caching, and server actions with examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/next-js-app-router-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/vue-js-composition-api-guide-2026.html">Vue 3 Composition API Guide 2026: ref, reactive, computed, watch &amp; Lifecycle</a></h2>
-        <p class="card-desc">Master the Vue 3 Composition API in 2026: ref vs reactive, computed, watch and watchEffect, lifecycle hooks, and reusable composables — practical code examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/vue-js-composition-api-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/tailwind-css-complete-guide-2026.html">Tailwind CSS Complete Guide 2026: Setup, Utility Classes &amp; Configuration</a></h2>
-        <p class="card-desc">Learn Tailwind CSS from scratch in 2026: install with Vite or the Play CDN, master utility classes, customize theme tokens, and ship optimized production CSS.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/tailwind-css-complete-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/tailwind-responsive-design-patterns-2026.html">Tailwind CSS Responsive Design Patterns 2026: Breakpoints &amp; Layouts</a></h2>
-        <p class="card-desc">Build responsive layouts with Tailwind CSS in 2026: mobile-first breakpoints, responsive type and spacing, grid patterns, container queries, and key pitfalls.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/tailwind-responsive-design-patterns-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/typescript-beginners-guide-2026.html">TypeScript Beginner&#x27;s Guide 2026: Setup, Types, tsc &amp; tsconfig</a></h2>
-        <p class="card-desc">Start TypeScript in 2026: install and configure tsc, understand tsconfig.json, learn basic types, functions, type narrowing, and compile your first project.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/typescript-beginners-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/typescript-interfaces-vs-types-2026.html">TypeScript Interfaces vs Types 2026: Differences &amp; When to Use Each</a></h2>
-        <p class="card-desc">Interfaces vs type aliases in TypeScript: declaration merging, unions, tuples, and performance. Clear rules for when to use each, with real-world code examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/typescript-interfaces-vs-types-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/typescript-generics-explained-2026.html">TypeScript Generics Explained 2026: Functions, Interfaces &amp; Constraints</a></h2>
-        <p class="card-desc">Understand TypeScript generics in 2026: generic functions, interfaces and classes, type constraints, keyof patterns, and real-world typed API response examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/typescript-generics-explained-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/node-js-express-rest-api-2026.html">Build a REST API with Node.js &amp; Express 2026: Routes, Middleware &amp; CRUD</a></h2>
-        <p class="card-desc">Build a REST API with Node.js and Express in 2026: project setup, CRUD routes, custom middleware, validation, error handling, and production-ready structure.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/node-js-express-rest-api-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/node-js-file-system-guide-2026.html">Node.js File System (fs) Guide 2026: Read, Write, Streams &amp; Paths</a></h2>
-        <p class="card-desc">Master the Node.js fs module in 2026: fs/promises vs sync, reading and writing files, path handling, directory ops, streams for large files, and file watching.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/node-js-file-system-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/rest-api-design-best-practices-2026.html">REST API Design Best Practices 2026: Status Codes, Versioning &amp; Pagination</a></h2>
-        <p class="card-desc">Design better REST APIs in 2026: resource naming, HTTP status codes, versioning strategies, pagination and filtering, error envelopes, and security essentials.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/rest-api-design-best-practices-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/graphql-vs-rest-comparison-2026.html">GraphQL vs REST 2026: Schema, Queries &amp; Which API Style to Choose</a></h2>
-        <p class="card-desc">GraphQL vs REST compared in 2026: how each works, schema and query examples, over-fetching, caching, tooling, and a practical decision guide for your next API.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/graphql-vs-rest-comparison-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/python-flask-web-app-tutorial-2026.html">Flask Tutorial: Build Your First Python Web App from Scratch (2026)</a></h2>
-        <p class="card-desc">Learn Flask in 2026: install it, build routes, render Jinja2 templates, process HTML forms, and structure a real Python web app. Full code examples included.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/python-flask-web-app-tutorial-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/python-fastapi-complete-guide-2026.html">FastAPI Complete Guide: Build Blazing-Fast Python APIs (2026)</a></h2>
-        <p class="card-desc">Master FastAPI in 2026: path operations, Pydantic validation, automatic docs, dependencies, and production patterns. Build fast, type-safe Python APIs.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/python-fastapi-complete-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/php-basics-web-developers-2026.html">PHP Basics for Web Developers: Syntax, Forms &amp; Superglobals (2026)</a></h2>
-        <p class="card-desc">Learn PHP basics fast: syntax, variables, control flow, superglobals like $_GET and $_POST, and safe form handling. Modern PHP 8 code examples included.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/php-basics-web-developers-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/php-mysql-crud-tutorial-2026.html">PHP MySQL CRUD Tutorial: Build a Secure App with PDO (2026)</a></h2>
-        <p class="card-desc">Build a secure PHP MySQL CRUD app with PDO prepared statements: create, read, update, delete plus transactions and error handling. Modern PHP 8 code examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/php-mysql-crud-tutorial-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/sql-joins-explained-2026.html">SQL JOINs Explained: INNER, LEFT, RIGHT &amp; FULL with Examples (2026)</a></h2>
-        <p class="card-desc">Master SQL JOINs: INNER, LEFT, RIGHT, and FULL OUTER JOIN with clear examples, plus self joins and multi-table queries. Learn which join to use and when.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/sql-joins-explained-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/sql-indexing-performance-guide-2026.html">SQL Indexing &amp; Query Optimization: A Practical Performance Guide (2026)</a></h2>
-        <p class="card-desc">Speed up slow SQL queries with proper indexing: B-tree basics, composite index column order, reading EXPLAIN output, and anti-patterns that disable indexes.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/sql-indexing-performance-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/postgresql-vs-mysql-comparison-2026.html">PostgreSQL vs MySQL in 2026: Features, Data Types &amp; Which to Choose</a></h2>
-        <p class="card-desc">PostgreSQL vs MySQL compared: data types, JSON support, performance, replication, and licensing. A practical guide to choosing the right database in 2026.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/postgresql-vs-mysql-comparison-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/mongodb-crud-operations-guide-2026.html">MongoDB CRUD Operations: The Complete Beginner&#x27;s Guide (2026)</a></h2>
-        <p class="card-desc">Learn MongoDB CRUD fast: insert, find, update, and delete with mongosh and the Node.js driver. Query operators, upserts, array updates, and essential indexes.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/mongodb-crud-operations-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/database-normalization-explained-2026.html">Database Normalization Explained: 1NF, 2NF &amp; 3NF with Examples (2026)</a></h2>
-        <p class="card-desc">Database normalization explained with real examples: 1NF atomic values, 2NF full dependencies, 3NF no transitive dependencies — plus when to denormalize.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/database-normalization-explained-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/authentication-jwt-vs-sessions-2026.html">JWT vs Session Authentication: Tradeoffs &amp; Implementation Guide (2026)</a></h2>
-        <p class="card-desc">JWT vs session authentication compared in depth: how each works, security tradeoffs, revocation, and scaling — plus safe implementation code to choose wisely.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/authentication-jwt-vs-sessions-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/git-branching-strategies-2026.html">Git Branching Strategies: Git Flow vs GitHub Flow vs Trunk-Based Development</a></h2>
-        <p class="card-desc">Compare Git Flow, GitHub Flow, and trunk-based development in 2026. Learn commands, workflows, and how to pick the right Git branching strategy for your team.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/git-branching-strategies-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/git-merge-vs-rebase-explained-2026.html">Git Merge vs Rebase Explained: Commands, Examples, and When to Use Each</a></h2>
-        <p class="card-desc">Git merge vs rebase finally explained with real command examples. Learn how each combines branches, when rebasing is safe, and the golden rule of rebasing.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/git-merge-vs-rebase-explained-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/github-actions-ci-cd-guide-2026.html">GitHub Actions CI/CD Guide: Build Pipelines with YAML from Scratch</a></h2>
-        <p class="card-desc">Learn GitHub Actions CI/CD from scratch: workflows, jobs, steps, and runners. Complete YAML examples for testing Node.js apps and deploying to production.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/github-actions-ci-cd-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/docker-basics-web-developers-2026.html">Docker Basics for Web Developers: Images, Containers, and Volumes Explained</a></h2>
-        <p class="card-desc">Docker basics for web developers: images vs containers, writing a Dockerfile, volumes, networking, and Docker Compose. Practical examples for Node.js apps.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/docker-basics-web-developers-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/nginx-reverse-proxy-setup-2026.html">Nginx Reverse Proxy Setup: Config Guide for Node.js Apps (2026)</a></h2>
-        <p class="card-desc">Set up Nginx as a reverse proxy for Node.js apps: install, server blocks, proxy_pass, SSL with Certbot, caching, and security hardening. Full config examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/nginx-reverse-proxy-setup-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/linux-commands-web-developers-2026.html">Essential Linux Commands for Web Developers: The 2026 Cheat Sheet</a></h2>
-        <p class="card-desc">Master the Linux commands every web developer needs: files, permissions, processes, networking, logs, SSH, and cron. Real examples and a cheat sheet for 2026.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/linux-commands-web-developers-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/ssh-keys-setup-guide-2026.html">SSH Keys Setup Guide: Generate, Configure, and Use Them Like a Pro</a></h2>
-        <p class="card-desc">Set up SSH keys the right way: generate an ed25519 key pair, use ssh-agent, add keys to GitHub and servers, and fix common errors. Complete 2026 walkthrough.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/ssh-keys-setup-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/environment-variables-best-practices-2026.html">Environment Variables Best Practices: .env Files and Secrets Done Right</a></h2>
-        <p class="card-desc">Environment variable best practices for web developers: .env conventions, 12-factor config, validation in Node.js, and secrets management in production.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/environment-variables-best-practices-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/http-request-methods-explained-2026.html">HTTP Request Methods Explained: GET, POST, PUT, PATCH, DELETE</a></h2>
-        <p class="card-desc">HTTP methods explained with real examples: GET vs POST, PUT vs PATCH, DELETE, idempotency, and safe methods. Build correct REST APIs with this 2026 guide.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/http-request-methods-explained-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/dns-basics-web-developers-2026.html">DNS Basics for Web Developers: Records, Propagation, and Troubleshooting</a></h2>
-        <p class="card-desc">DNS basics for web developers: A, CNAME, MX, TXT records, TTL and propagation, plus dig and nslookup troubleshooting. Everything you need to ship domains.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/dns-basics-web-developers-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/core-web-vitals-optimization-2026.html">Core Web Vitals Optimization: LCP, INP &amp; CLS Explained (2026)</a></h2>
-        <p class="card-desc">Master Core Web Vitals in 2026: measure and fix LCP, INP, and CLS with field-tested tactics, real code examples, and field-data strategies that lift rankings.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/core-web-vitals-optimization-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/website-speed-optimization-guide-2026.html">Website Speed Optimization: The Complete 2026 Playbook</a></h2>
-        <p class="card-desc">Speed up your website in 2026 with minification, Brotli compression, code splitting, and CDN caching — practical, deployable techniques with real code.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/website-speed-optimization-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/image-optimization-web-guide-2026.html">Image Optimization for the Web: Formats, srcset &amp; Compression (2026)</a></h2>
-        <p class="card-desc">Cut image weight by up to 80% with AVIF and WebP, responsive srcset markup, smart compression settings, and adaptive CDN delivery — the complete 2026 guide.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/image-optimization-web-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/lazy-loading-images-iframes-2026.html">Lazy Loading Images &amp; Iframes: loading=lazy and IntersectionObserver (2026)</a></h2>
-        <p class="card-desc">Defer offscreen images, iframes, and videos with loading=lazy and IntersectionObserver. Complete guide with real code, fallbacks, and CLS-safe techniques.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/lazy-loading-images-iframes-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/seo-basics-for-developers-2026.html">SEO Basics for Developers: Crawlability, Meta Tags &amp; Sitemaps (2026)</a></h2>
-        <p class="card-desc">A developer-first SEO primer for 2026: how crawling and indexing work, robots.txt, XML sitemaps, meta tags, and URL structure — build search-friendly sites.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/seo-basics-for-developers-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/technical-seo-checklist-2026.html">Technical SEO Checklist: Robots, Canonicals, Hreflang &amp; Status Codes (2026)</a></h2>
-        <p class="card-desc">The complete 2026 technical SEO checklist: robots.txt, canonical tags, hreflang, HTTP status codes, redirects, and HTTPS — with copy-paste code examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/technical-seo-checklist-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/structured-data-schema-guide-2026.html">Structured Data &amp; Schema.org: JSON-LD Implementation Guide (2026)</a></h2>
-        <p class="card-desc">Implement Schema.org JSON-LD structured data for rich results: Article, FAQ, Breadcrumb, Product, and HowTo markup with practical validated code examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/structured-data-schema-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/web-accessibility-wcag-guide-2026.html">Web Accessibility &amp; WCAG: Principles and Practical Fixes (2026)</a></h2>
-        <p class="card-desc">Make your site WCAG-compliant in 2026: the four POUR principles, color contrast, keyboard navigation, accessible forms, and media — with practical code fixes.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/web-accessibility-wcag-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/aria-labels-roles-explained-2026.html">ARIA Roles, Labels &amp; Live Regions Explained with Examples (2026)</a></h2>
-        <p class="card-desc">Master ARIA in 2026: landmark roles, aria-label vs aria-labelledby, live regions, and widget states — correct, copy-paste examples for real interfaces.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/aria-labels-roles-explained-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/semantic-html-seo-benefits-2026.html">Semantic HTML: Elements, SEO Benefits &amp; Accessibility Wins (2026)</a></h2>
-        <p class="card-desc">Semantic HTML boosts SEO and accessibility: landmark elements, clean heading structure, and text-level semantics — with before-and-after code examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/semantic-html-seo-benefits-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/web-security-basics-developers-2026.html">Web Security Fundamentals Every Developer Must Know in 2026</a></h2>
-        <p class="card-desc">Master web security fundamentals: threat modeling, defense in depth, the OWASP Top 10, secure coding habits, and testing workflows every developer needs.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/web-security-basics-developers-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/xss-attacks-prevention-guide-2026.html">XSS Attacks Explained: Types, Examples, and Prevention Guide (2026)</a></h2>
-        <p class="card-desc">Learn cross-site scripting (XSS): stored, reflected, and DOM-based attacks with real examples, output escaping, CSP headers, and sanitization strategies.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/xss-attacks-prevention-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/csrf-protection-explained-2026.html">CSRF Protection Explained: How Token-Based Defenses Work (2026)</a></h2>
-        <p class="card-desc">Learn how cross-site request forgery (CSRF) attacks work and stop them: synchronizer tokens, SameSite cookies, Origin checks, and Express/Django implementation.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/csrf-protection-explained-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/sql-injection-prevention-2026.html">SQL Injection Prevention: Parameterized Queries Done Right (2026)</a></h2>
-        <p class="card-desc">Stop SQL injection attacks with parameterized queries, safe ORM usage, least-privilege database users, and testing techniques — with Node, Python, and PHP code.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/sql-injection-prevention-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/https-ssl-setup-guide-2026.html">HTTPS and SSL Setup Guide: Let&#x27;s Encrypt, HSTS, and TLS in 2026</a></h2>
-        <p class="card-desc">Set up HTTPS the right way: free Let&#x27;s Encrypt certificates with Certbot, TLS configuration for Nginx and Apache, safe HSTS rollout, and mixed-content fixes.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/https-ssl-setup-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/secure-headers-implementation-2026.html">Security Headers Implementation Guide: CSP, HSTS, and More (2026)</a></h2>
-        <p class="card-desc">Implement essential HTTP security headers step by step: Content Security Policy, X-Frame-Options, Referrer-Policy, Permissions-Policy, and HSTS on any stack.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/secure-headers-implementation-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/json-complete-guide-2026.html">JSON Complete Guide: Syntax, Parsing, Stringify, and Schema (2026)</a></h2>
-        <p class="card-desc">Master JSON from the ground up: strict syntax rules, safe parsing with JSON.parse and json.loads, stringify replacers, edge cases, and JSON Schema validation.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/json-complete-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/api-rate-limiting-explained-2026.html">API Rate Limiting Explained: Algorithms and Implementation (2026)</a></h2>
-        <p class="card-desc">Compare API rate limiting algorithms — fixed window, sliding window, token bucket, leaky bucket — then implement them in Node.js with proper 429 headers.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/api-rate-limiting-explained-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/webhooks-implementation-guide-2026.html">Webhooks Implementation Guide: Sending, Receiving, and Security (2026)</a></h2>
-        <p class="card-desc">Build reliable webhooks end to end: sending signed JSON payloads, verifying HMAC signatures, handling retries, and designing idempotent receiver endpoints.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/webhooks-implementation-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/api-pagination-design-guide-2026.html">API Pagination Design Guide: Offset, Cursor, and Keyset (2026)</a></h2>
-        <p class="card-desc">Design better API pagination: offset vs cursor vs keyset strategies compared, response metadata design, Link headers, and choosing the right approach for data.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/api-pagination-design-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/caching-strategies-web-apps-2026.html">Caching Strategies for Web Apps (2026): Browser, CDN, Redis and Invalidation</a></h2>
-        <p class="card-desc">Master caching strategies for web apps in 2026: browser cache headers, CDN edge caching, Redis patterns, and invalidation techniques that cut load times fast.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/caching-strategies-web-apps-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/service-workers-pwa-guide-2026.html">Service Workers Guide (2026): Lifecycle, Caching Strategies and Offline Apps</a></h2>
-        <p class="card-desc">Master service workers in 2026: lifecycle and registration, caching strategies, offline fallbacks, and background sync — with practical code examples for PWAs.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/service-workers-pwa-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/progressive-web-apps-complete-guide-2026.html">Progressive Web Apps (PWA): The Complete 2026 Guide to Installable Web Apps</a></h2>
-        <p class="card-desc">The complete PWA guide for 2026: web app manifests, service workers, installability criteria, offline support, and push notifications for app-like web apps.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/progressive-web-apps-complete-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/web-components-custom-elements-2026.html">Web Components (2026 Guide): Custom Elements, Shadow DOM and Templates</a></h2>
-        <p class="card-desc">Build with Web Components in 2026: custom elements, shadow DOM encapsulation, HTML templates and slots — framework-free reusable UI with real code examples.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/web-components-custom-elements-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/freelance-web-developer-guide-2026.html">Freelance Web Developer Guide: Clients, Contracts and Workflow That Works</a></h2>
-        <p class="card-desc">The 2026 freelance web developer guide: finding high-value clients, writing contracts, pricing projects, and building a workflow that delivers without burnout.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/freelance-web-developer-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/developer-portfolio-building-2026.html">Developer Portfolio Guide: Build a Portfolio That Gets You Hired in 2026</a></h2>
-        <p class="card-desc">Build a developer portfolio that gets you hired in 2026: project selection, case studies, performance, SEO, and design details hiring managers actually notice.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/developer-portfolio-building-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/web-developer-resume-tips-2026.html">Web Developer Resume Tips: Format, Skills and Examples That Get Interviews</a></h2>
-        <p class="card-desc">Web developer resume tips for 2026: ATS-friendly formatting, metric-driven bullet points, skills sections, and project examples that win interviews fast.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/web-developer-resume-tips-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/coding-interview-preparation-2026.html">Coding Interview Preparation: DSA Patterns and System Design Basics</a></h2>
-        <p class="card-desc">Ace coding interviews in 2026: DSA patterns like sliding window and two pointers, data structure deep-dives, system design basics, and mock strategies.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/coding-interview-preparation-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/how-to-price-web-projects-2026.html">How to Price Web Projects: Hourly vs Fixed Pricing and Scoping Guide</a></h2>
-        <p class="card-desc">Learn how to price web projects in 2026: hourly vs fixed vs value-based pricing, scoping and discovery, rate formulas, deposits, and raising prices confidently.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/how-to-price-web-projects-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/client-communication-freelancers-2026.html">Client Communication for Freelancers: Emails, Meetings and Boundaries</a></h2>
-        <p class="card-desc">Master communication as a freelancer in 2026: onboarding emails, meeting rhythms, status updates, difficult conversations, and boundaries that protect you.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/client-communication-freelancers-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/design-systems-component-libraries-2026.html">Design Systems and Component Libraries: Complete Guide 2026</a></h2>
-        <p class="card-desc">Design systems that scale: design tokens, component libraries, documentation, and governance. A practical 2026 guide for web teams shipping consistent UI.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/design-systems-component-libraries-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/css-architecture-bem-smacss-2026.html">CSS Architecture Guide: BEM, SMACSS and OOCSS in 2026</a></h2>
-        <p class="card-desc">Master CSS architecture: BEM naming, SMACSS categories, and OOCSS principles with real code. Compare methodologies and pick the right one for your 2026 project.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/css-architecture-bem-smacss-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/monorepo-vs-multirepo-explained-2026.html">Monorepo vs Multirepo Explained: Turborepo and Nx Guide 2026</a></h2>
-        <p class="card-desc">Monorepo or multirepo? Compare Turborepo and Nx with real configs, caching, and CI strategies, plus a framework for picking the right repo strategy in 2026.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/monorepo-vs-multirepo-explained-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/testing-javascript-jest-guide-2026.html">Testing JavaScript with Jest: Complete Guide 2026</a></h2>
-        <p class="card-desc">Learn Jest from setup to mocks: unit tests, matchers, module mocking, async testing, and coverage. Practical examples for JavaScript and TypeScript projects.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/testing-javascript-jest-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/end-to-end-testing-playwright-2026.html">End-to-End Testing with Playwright: Practical Guide 2026</a></h2>
-        <p class="card-desc">Automate real browsers with Playwright: auto-waiting locators, assertions, fixtures, auth setup, and CI. A hands-on 2026 guide to reliable end-to-end testing.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/end-to-end-testing-playwright-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/debugging-javascript-chrome-devtools-2026.html">Debugging JavaScript with Chrome DevTools: 2026 Guide</a></h2>
-        <p class="card-desc">Master Chrome DevTools debugging: breakpoints, scope inspection, the Performance profiler, and console power techniques to fix JavaScript bugs faster.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/debugging-javascript-chrome-devtools-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/regex-tutorial-web-developers-2026.html">Regular Expressions for Web Developers: Tutorial 2026</a></h2>
-        <p class="card-desc">A practical regex tutorial for web developers: character classes, quantifiers, groups, lookaheads, flags, and copy-paste patterns for emails, URLs, and slugs.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/regex-tutorial-web-developers-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/html-email-templates-guide-2026.html">HTML Email Templates: The Definitive Guide 2026</a></h2>
-        <p class="card-desc">Build HTML emails that render everywhere: table layouts, inline CSS, the 600px rule, dark mode, and client testing. Battle-tested techniques for 2026 inboxes.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/html-email-templates-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/svg-animation-web-guide-2026.html">SVG Animation Guide: CSS, SMIL and Stroke Effects 2026</a></h2>
-        <p class="card-desc">Animate SVG like a pro: CSS keyframes, SMIL, and the stroke-dashoffset draw effect. Real code, performance tips, and accessibility for motion in 2026.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/svg-animation-web-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-      <article class="article-card" data-category="Tutorials">
-        <span class="card-tag">💻 Tutorials</span>
-        <h2><a href="/articles/canvas-api-drawing-guide-2026.html">Canvas API Drawing Guide: Shapes, Paths and Animation 2026</a></h2>
-        <p class="card-desc">Master the HTML Canvas API: drawing shapes and paths, gradients, images, text, and smooth requestAnimationFrame animation loops with performance best practices.</p>
-        <div class="card-footer">
-          <span>⏱️ 8 min read</span>
-          <a href="/articles/canvas-api-drawing-guide-2026.html" class="btn-read">Read Guide →</a>
-        </div>
-      </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/ai-sql-generator-text-to-sql-2026.html">AI SQL Generator: Text-to-SQL Queries in Your Dialect (2026 Guide)</a></h2>
-          <p class="card-desc">AI SQL Generator: Text-to-SQL Queries in Your Dialect: free online tool, step-by-step workflow, code examples &amp; FAQs. 100% client-side, no signup. (2026 guide)</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/ai-sql-generator-text-to-sql-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/ai-regex-generator-guide-2026.html">AI Regex Generator: Build Regex from Plain English (2026 Guide)</a></h2>
-          <p class="card-desc">AI Regex Generator: Build Regex from Plain English: free online tool, step-by-step workflow, code examples &amp; FAQs. 100% client-side, no signup. (2026 guide)</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/ai-regex-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/ai-refactor-tool-guide-2026.html">AI Refactor Tool: Clean Up Code Automatically (2026 Guide)</a></h2>
-          <p class="card-desc">AI Refactor Tool: Clean Up Code Automatically: free online tool, step-by-step workflow, code examples &amp; FAQs. 100% client-side, no signup. (2026 guide)</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/ai-refactor-tool-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/ai-code-doctor-debug-fix-2026.html">AI Code Doctor: Debug Errors and Fix Code with AI (2026 Guide)</a></h2>
-          <p class="card-desc">AI Code Doctor: Debug Errors and Fix Code with AI: free online tool, step-by-step workflow, code examples &amp; FAQs. 100% client-side, no signup. (2026 guide)</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/ai-code-doctor-debug-fix-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/ai-code-reviewer-online-guide-2026.html">AI Code Reviewer Online: Free Automated Code Review (2026 Guide)</a></h2>
-          <p class="card-desc">AI Code Reviewer Online: Free Automated Code Review: free online tool, step-by-step workflow, code examples &amp; FAQs. 100% client-side, no signup. (2026 guide)</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/ai-code-reviewer-online-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/ai-code-explainer-guide-2026.html">AI Code Explainer: Understand Any Code Instantly (2026 Guide)</a></h2>
-          <p class="card-desc">AI Code Explainer: Understand Any Code Instantly: free online tool, step-by-step workflow, code examples &amp; FAQs. 100% client-side, no signup. (2026 guide)</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/ai-code-explainer-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/uuid-generator-v4-online-2026.html">UUID Generator v4 Online: Free &amp; Instant (2026 Guide)</a></h2>
-          <p class="card-desc">UUID Generator v4 Online: Free &amp; Instant: free online tool, step-by-step workflow, code examples &amp; FAQs. 100% client-side, no signup. (2026 guide)</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/uuid-generator-v4-online-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/unix-timestamp-converter-explained.html">Unix Timestamp Converter: Epoch to Date Explained</a></h2>
-          <p class="card-desc">Free Unix timestamp converter: turn epoch seconds into human-readable dates and back. Learn what Unix time is, milliseconds vs seconds, timezone pitfalls, and code examples in JavaScript, Python, PHP and SQL.</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/unix-timestamp-converter-explained.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/strong-password-generator-guide-2026.html">Strong Password Generator: How Random Passwords Work (2026)</a></h2>
-          <p class="card-desc">Strong Password Generator: How Random Passwords Work: free online tool, step-by-step workflow, code examples &amp; FAQs. 100% client-side, no signup. (2026 guide)</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/strong-password-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/regex-cheat-sheet-2026.html">Regex Cheat Sheet 2026: Complete Reference + Live Tester</a></h2>
-          <p class="card-desc">The ultimate regex cheat sheet for 2026: complete token reference table, 20 copy-paste regex recipes, live testing workflow, and how to fix catastrophic backtracking.</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/regex-cheat-sheet-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/http-status-codes-cheat-sheet.html">HTTP Status Codes Cheat Sheet: Every Code Explained</a></h2>
-          <p class="card-desc">The complete HTTP status codes cheat sheet: every 1xx–5xx code explained with meaning, cause and fix. Free interactive HTTP status code inspector included.</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/http-status-codes-cheat-sheet.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/html-to-jsx-migration-guide-2026.html">Next.js 15 &amp; React 19: Zero‑Runtime JSX Migration Guide</a></h2>
-          <p class="card-desc">Learn how to convert raw HTML/SVG to Next.js 15 Server Components with React 19 JSX, zero‑runtime overhead, and production‑ready best practices.</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/html-to-jsx-migration-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/how-to-decode-jwt-token-tutorial.html">How to Decode a JWT Token: Complete Tutorial (2026)</a></h2>
-          <p class="card-desc">Learn how to decode a JWT token step-by-step in 2026. Understand header, payload &amp; signature, verify tokens in 5 languages, and avoid the 7 most common JWT security pitfalls.</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/how-to-decode-jwt-token-tutorial.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/hash-generator-sha256-md5-2026.html">Hash Generator: SHA-256, MD5 &amp; More Explained (2026)</a></h2>
-          <p class="card-desc">Hash Generator: SHA-256, MD5 &amp; More Explained: free online tool, step-by-step workflow, code examples &amp; FAQs. 100% client-side, no signup. (2026 guide)</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/hash-generator-sha256-md5-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/css-clamp-fluid-typography-guide.html">Fluid Responsive Typography &amp; Spacing with CSS clamp()</a></h2>
-          <p class="card-desc">Learn how to master fluid typography and spacing using CSS clamp()—no media queries, perfect accessibility, and real‑world benchmarks.</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/css-clamp-fluid-typography-guide.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/cron-expression-generator-guide.html">Cron Expression Generator &amp; Explainer: Every Schedule, Plain English</a></h2>
-          <p class="card-desc">Free cron expression generator and explainer: build schedules visually, decode any crontab into plain English, and master the 5-field syntax with examples.</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/cron-expression-generator-guide.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/best-free-online-developer-tools-2026.html">15 Best Free Online Developer Tools in 2026</a></h2>
-          <p class="card-desc">Discover the 15 best free online developer tools in 2026 — JSON formatter, JWT decoder, regex tester, password generator &amp; more. Ranked by speed, privacy &amp; features. No signup.</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/best-free-online-developer-tools-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🤖 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/base64-decode-online-2026.html">Base64 Decode Online: Free Decoder + How It Works (2026)</a></h2>
-          <p class="card-desc">Base64 Decode Online: Free Decoder + How It Works: free online tool, step-by-step workflow, code examples &amp; FAQs. 100% client-side, no signup. (2026 guide)</p>
-          <div class="card-footer">
-            <span>⏱️ 8 min read</span>
-            <a href="/articles/base64-decode-online-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-          
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">⚙️ DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/htaccess-generator-guide-2026.html">How to Use .htaccess Rule Builder &amp; Config Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate battle-tested Apache .htaccess configuration rules online. SSL force redirect, clean URLs, browser caching, gzip compression, and security headers.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/htaccess-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Security &amp; Cryptography">
-          <span class="card-tag">🗝️ Security &amp; Cryptography</span>
-          <h2><a href="/articles/aes-encryption-decryption-tool-guide-2026.html">How to Use AES-GCM Authenticated Encryption &amp; Decryption Studio (2026 Guide)</a></h2>
-          <p class="card-desc">Encrypt and decrypt text client-side using AES-GCM (Galois/Counter Mode) authenticated cryptography with PBKDF2 key derivation (100,000 iterations) and 12-byte IV.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/aes-encryption-decryption-tool-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">☁️ DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/aws-iam-s3-policy-generator-guide-2026.html">How to Use AWS IAM &amp; S3 Bucket Policy Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Visually generate secure, production-ready AWS IAM and S3 Bucket JSON policies. Configure least-privilege permissions, cross-account access, CloudFront OAC, and IP restrictions with zero syntax errors.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/aws-iam-s3-policy-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🔢 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/number-base-converter-guide-2026.html">How to Use Arbitrary Number Base Converter (Binary, Octal, Decimal, Hex) (2026 Guide)</a></h2>
-          <p class="card-desc">Convert numbers across Binary (Base 2), Octal (Base 8), Decimal (Base 10), Hexadecimal (Base 16), and arbitrary Radix (Base 2-36). BigInt support for 128-bit numbers.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/number-base-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🔤 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/base64-encoder-decoder-guide-2026.html">How to Use Base64 Encoder &amp; Decoder (2026 Guide)</a></h2>
-          <p class="card-desc">Encode and decode Base64 text, binary strings, and image files to Data URIs. Fast, client-side RFC 4648 compliant converter.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/base64-encoder-decoder-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Security &amp; Cryptography">
-          <span class="card-tag">🧮 Security &amp; Cryptography</span>
-          <h2><a href="/articles/bcrypt-hash-cost-calculator-guide-2026.html">How to Use Bcrypt Hash &amp; Work Factor Cost Calculator (2026 Guide)</a></h2>
-          <p class="card-desc">Inspect bcrypt hash anatomy ($2a$, $2b$, cost factor, salt, hash), benchmark client CPU hashing latency, and determine optimal work factor rounds for production authentication.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/bcrypt-hash-cost-calculator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">🌐 DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/cidr-subnet-calculator-guide-2026.html">How to Use CIDR &amp; IPv4 Subnet Calculator (IP Matrix) (2026 Guide)</a></h2>
-          <p class="card-desc">Calculate IPv4 subnet masks, wildcard masks, network and broadcast addresses, usable host IP ranges, and 32-bit binary representation from CIDR prefix notations.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/cidr-subnet-calculator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🧊 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-transform-3d-matrix-calculator-guide-2026.html">How to Use CSS 3D Transform &amp; Matrix3d Studio (2026 Guide)</a></h2>
-          <p class="card-desc">Interactive 3D CSS transformation visualizer and 4x4 matrix3d composition engine. Manipulate perspective, rotation, translation, and scale with real-time GPU preview.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-transform-3d-matrix-calculator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">📺 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-aspect-ratio-calculator-guide-2026.html">How to Use CSS Aspect Ratio Calculator &amp; Dimensions Studio (2026 Guide)</a></h2>
-          <p class="card-desc">Calculate proportional dimensions, simplified ratios, modern CSS aspect-ratio properties, and legacy padding-top percentages. Eliminate Cumulative Layout Shift (CLS).</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-aspect-ratio-calculator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🟣 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-border-radius-generator-guide-2026.html">How to Use CSS Border Radius &amp; Organic Blob Shaper (2026 Guide)</a></h2>
-          <p class="card-desc">Generate 8-point asymmetric CSS border-radius and fluid organic morphing blob shapes. Free visual CSS code builder with instant 1-click copy.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-border-radius-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🎨 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-box-shadow-generator-guide-2026.html">How to Use CSS Box Shadow Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate multi-layer realistic CSS box-shadows with blur, spread, inset lighting, and smooth elevation curves. Free online CSS shadow code generator.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-box-shadow-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">✂️ CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-clip-path-generator-guide-2026.html">How to Use CSS Clip-Path Polygon Shaper (2026 Guide)</a></h2>
-          <p class="card-desc">Visually cut organic polygons, stars, hexagons, triangles, and angled banners using CSS clip-path. Free online polygon coordinate generator.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-clip-path-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">⚡ CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-cubic-bezier-generator-guide-2026.html">How to Use CSS Cubic-Bezier Easing Visualizer (2026 Guide)</a></h2>
-          <p class="card-desc">Visually craft custom CSS transition cubic-bezier easing curves. Test ease-in, ease-out, spring bounce, and overshoot physics with live preview.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-cubic-bezier-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🎭 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-filter-effects-generator-guide-2026.html">How to Use CSS Filter Effects Studio (2026 Guide)</a></h2>
-          <p class="card-desc">Visually apply and combine CSS3 image filter effects: blur, brightness, contrast, grayscale, hue-rotate, invert, saturate, and sepia with instant code.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-filter-effects-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">📐 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-flexbox-generator-guide-2026.html">How to Use CSS Flexbox Interactive Builder (2026 Guide)</a></h2>
-          <p class="card-desc">Visually design 1D responsive layouts with CSS Flexbox. Adjust justify-content, align-items, flex-direction, gap, and flex-wrap with instant code output.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-flexbox-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🧊 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-glassmorphism-generator-guide-2026.html">How to Use CSS Glassmorphism Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Design modern frosted glass UI cards with backdrop-filter blur, border glow, transparency, and background saturation. Free online glassmorphism generator.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-glassmorphism-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🌈 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-gradient-generator-guide-2026.html">How to Use CSS Gradient Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Create beautiful linear, radial, and conic CSS gradients with multi-stop color pickers, angle controls, and 1-click CSS code export.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-gradient-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🔲 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-grid-generator-guide-2026.html">How to Use CSS Grid 2D Visual Builder (2026 Guide)</a></h2>
-          <p class="card-desc">Visually create responsive 2D CSS Grid layouts. Design rows, columns, fractional fr units, auto-fit, minmax(), and grid areas with live CSS code.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-grid-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🎬 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-keyframes-animation-generator-guide-2026.html">How to Use CSS Keyframes Animation Studio (2026 Guide)</a></h2>
-          <p class="card-desc">Visually generate CSS @keyframes animations with timing, duration, easing, iterations, and transform controls. Free CSS animation builder.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-keyframes-animation-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">📱 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-media-query-generator-guide-2026.html">How to Use CSS Media &amp; Container Query Builder (2026 Guide)</a></h2>
-          <p class="card-desc">Visually construct responsive CSS media queries, modern range syntax queries, CSS Container Queries, dark mode preferences, print rules, and Tailwind breakpoint configurations.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-media-query-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🌌 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-gradient-mesh-generator-guide-2026.html">How to Use CSS Mesh Gradient Generator &amp; Fluid Canvas Studio (2026 Guide)</a></h2>
-          <p class="card-desc">Generate modern, multi-point fluid CSS mesh gradients. Compose multi-layered radial gradient focal points with custom blur, opacity, and blend modes for ultra-modern SaaS backdrops.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-gradient-mesh-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🔘 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-neumorphism-generator-guide-2026.html">How to Use CSS Neumorphism (Soft UI) Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Design modern neumorphic tactile Soft UI components with light-angle physics, extruded convex surfaces, and inset pressed states.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-neumorphism-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🎯 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-specificity-calculator-guide-2026.html">How to Use CSS Selector Specificity Calculator &amp; Conflict Resolver (2026 Guide)</a></h2>
-          <p class="card-desc">Calculate CSS selector specificity tuples (Inline, IDs, Classes/Attributes, Elements) conforming to W3C Selectors Level 4. Compare selectors side-by-side to debug cascade conflicts.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-specificity-calculator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">✨ CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-text-shadow-generator-guide-2026.html">How to Use CSS Text Shadow &amp; Neon Glow Studio (2026 Guide)</a></h2>
-          <p class="card-desc">Create multi-layer CSS text-shadow effects, 3D extruded lettering, and vibrant neon typography glows with instant CSS code export.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-text-shadow-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">▲ CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-triangle-generator-guide-2026.html">How to Use CSS Triangle &amp; Tooltip Arrow Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate pure CSS geometric triangles and tooltip arrows using border modeling. Zero image files, zero SVGs, instant copy-paste CSS code.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-triangle-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">📐 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-unit-converter-guide-2026.html">How to Use CSS Unit Converter (PX, REM, EM, VW, VH, PT, PC, IN, CM, MM) (2026 Guide)</a></h2>
-          <p class="card-desc">High-precision bidirectional CSS unit calculator. Convert between PX, REM, EM, VW, VH, PT, PC, IN, CM, and MM with custom root base font size and viewport dimensions.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-unit-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🔤 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/css-clamp-calculator-guide-2026.html">How to Use CSS clamp() Fluid Typography Calculator (2026 Guide)</a></h2>
-          <p class="card-desc">Calculate mathematical CSS clamp() fluid font sizes and margins without media queries. Free responsive fluid typography calculator with WCAG accessibility support.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/css-clamp-calculator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🎭 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/color-converter-contrast-guide-2026.html">How to Use Color Converter &amp; WCAG Contrast Tester (2026 Guide)</a></h2>
-          <p class="card-desc">Convert colors between HEX, RGB, HSL, and HSV while evaluating WCAG 2.1 Level AA and AAA color contrast ratios. Free accessibility testing utility.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/color-converter-contrast-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🎨 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/color-palette-harmonies-generator-guide-2026.html">How to Use Color Palette Harmonies &amp; Theory Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate balanced color palettes using classical color theory: complementary, triadic, analogous, and split-complementary harmonies with CSS export.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/color-palette-harmonies-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Security &amp; Cryptography">
-          <span class="card-tag">🛡️ Security &amp; Cryptography</span>
-          <h2><a href="/articles/content-security-policy-generator-guide-2026.html">How to Use Content Security Policy (CSP) Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Visually build robust Content Security Policy (CSP) Level 3 HTTP response headers. Defend against Cross-Site Scripting (XSS), data theft, and clickjacking.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/content-security-policy-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">⏰ DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/cron-expression-generator-guide-2026.html">How to Use Cron Expression Generator &amp; Human Translator (2026 Guide)</a></h2>
-          <p class="card-desc">Visually generate, test, and translate POSIX crontab schedules into plain-English human descriptions. Supports Linux cron, AWS EventBridge, and Quartz.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/cron-expression-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Media, Assets &amp; Viral">
-          <span class="card-tag">📱 Media, Assets &amp; Viral</span>
-          <h2><a href="/articles/qr-code-generator-guide-2026.html">How to Use Custom QR Code Generator Pro (2026 Guide)</a></h2>
-          <p class="card-desc">Generate customized high-resolution QR codes with color control, error correction levels (L, M, Q, H), and instant PNG/SVG downloads. 100% free &amp; private.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/qr-code-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">🌐 DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/dns-record-lookup-generator-guide-2026.html">How to Use DNS Record Generator &amp; SPF/DMARC Builder (2026 Guide)</a></h2>
-          <p class="card-desc">Generate BIND-compliant DNS zone records online. Build SPF email authorization, DKIM records, DMARC security policies, A records, and CNAME aliases.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/dns-record-lookup-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🔠 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/string-case-converter-guide-2026.html">How to Use Developer String Case Converter &amp; Text Formatter (2026 Guide)</a></h2>
-          <p class="card-desc">Transform strings between camelCase, PascalCase, snake_case, CONSTANT_CASE, kebab-case, Title Case, Sentence case, dot.notation, and path/case with live text statistics.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/string-case-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">🐳 DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/dockerfile-compose-generator-guide-2026.html">How to Use Dockerfile &amp; Docker Compose Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Instantly generate hardened, multi-stage production Dockerfiles and docker-compose.yml files. Optimized for Node.js, Python, Go, Rust, and PHP with non-root user security and minimal image size.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/dockerfile-compose-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">🔀 DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/git-command-generator-guide-2026.html">How to Use Git Command &amp; Workflow Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate precise, safe Git terminal commands for interactive rebasing, undoing commits, cherry-picking, stashing, branch renaming, and disaster recovery with step-by-step safety guides.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/git-command-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Security &amp; Cryptography">
-          <span class="card-tag">🔐 Security &amp; Cryptography</span>
-          <h2><a href="/articles/hmac-hash-generator-guide-2026.html">How to Use HMAC Hash &amp; Keyed Signature Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate keyed-hash message authentication codes (HMAC-SHA256, HMAC-SHA512, HMAC-SHA384) using the browser native Web Crypto API. Webhook signature verification.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/hmac-hash-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🔡 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/html-entity-encoder-decoder-guide-2026.html">How to Use HTML Entity Encoder &amp; Decoder (XSS Sanitizer) (2026 Guide)</a></h2>
-          <p class="card-desc">Encode and decode HTML special characters to prevent Cross-Site Scripting (XSS). Supports Named Entities (&amp;amp;), Decimal (&amp;#38;), and Hexadecimal (&amp;#x26;) notations.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/html-entity-encoder-decoder-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">📊 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/html-table-to-json-converter-guide-2026.html">How to Use HTML Table to JSON &amp; CSV Converter (2026 Guide)</a></h2>
-          <p class="card-desc">Parse and convert HTML &lt;table&gt; markup into clean, structured JSON objects and CSV spreadsheets. Free online web scraping and data extraction tool.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/html-table-to-json-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">⚛️ Code, Data &amp; APIs</span>
-          <h2><a href="/articles/html-to-jsx-converter-guide-2026.html">How to Use HTML to JSX / React Component Converter (2026 Guide)</a></h2>
-          <p class="card-desc">Transform raw HTML templates into clean, idiomatic React JSX with automatic attribute camelCasing, inline style object parsing, self-closing tags, and TypeScript component wrapping.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/html-to-jsx-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">🌐 DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/http-status-codes-inspector-guide-2026.html">How to Use HTTP Status Codes Reference &amp; Diagnostic Guide (2026 Guide)</a></h2>
-          <p class="card-desc">Comprehensive reference of all HTTP response status codes. Search, filter, and diagnose 200 OK, 301 Redirect, 400, 401, 403, 404, 500, and 502 errors.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/http-status-codes-inspector-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Security &amp; Cryptography">
-          <span class="card-tag">🔒 Security &amp; Cryptography</span>
-          <h2><a href="/articles/hash-generator-guide-2026.html">How to Use Hash &amp; Checksum Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate cryptographic hash digests (SHA-256, SHA-512, SHA-384, SHA-1, MD5) online using native Web Crypto API. Fast, secure, client-side checksums.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/hash-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Media, Assets &amp; Viral">
-          <span class="card-tag">🎨 Media, Assets &amp; Viral</span>
-          <h2><a href="/articles/image-color-palette-extractor-guide-2026.html">How to Use Image Color Palette Extractor (2026 Guide)</a></h2>
-          <p class="card-desc">Extract dominant color palettes and CSS design tokens from any uploaded image or photograph. Instant HEX, RGB, and HSL copy with color quantization.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/image-color-palette-extractor-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">📋 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/json-formatter-validator-guide-2026.html">How to Use JSON Formatter, Validator &amp; Minifier (2026 Guide)</a></h2>
-          <p class="card-desc">Format, validate, beautify, and minify JSON online. Instant syntax error detection with line and column highlighting, tree navigation, and 1-click copy.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/json-formatter-validator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🛡️ Code, Data &amp; APIs</span>
-          <h2><a href="/articles/json-schema-generator-guide-2026.html">How to Use JSON Schema Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Automatically generate compliant JSON Schema definitions from sample JSON payloads. Supports Draft-07, Draft 2020-12, required fields, and nested validation.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/json-schema-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">📊 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/json-to-csv-converter-guide-2026.html">How to Use JSON to CSV &amp; Excel Converter (Nested Key Flattener) (2026 Guide)</a></h2>
-          <p class="card-desc">Convert JSON arrays of objects into RFC 4180 compliant CSV files with nested key dot-notation flattening, custom delimiters (comma, semicolon, tab), and instant file export.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/json-to-csv-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🐹 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/json-to-go-struct-converter-guide-2026.html">How to Use JSON to Go Struct Generator &amp; Type Inferencer (2026 Guide)</a></h2>
-          <p class="card-desc">Convert arbitrary JSON payloads into idiomatic Golang structs with json struct tags, nested type resolution, pointer options, and inline unmarshaling tests.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/json-to-go-struct-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🐍 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/json-to-python-pydantic-converter-guide-2026.html">How to Use JSON to Python Pydantic v2 Model Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Convert JSON payloads into type-annotated Python Pydantic v2 BaseModel classes. Includes Optional[T], List[T], Field aliases, and FastAPI validation schemas.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/json-to-python-pydantic-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🦀 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/json-to-rust-struct-converter-guide-2026.html">How to Use JSON to Rust Struct (Serde) Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate memory-safe, idiomatic Rust structs with Serde derive macros, Option&lt;T&gt; nullable wrapping, rename attributes, and snake_case field normalization.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/json-to-rust-struct-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🔷 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/json-to-typescript-generator-guide-2026.html">How to Use JSON to TypeScript Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate strict TypeScript interfaces and type aliases from raw JSON payloads. Supports nested objects, array types, optional fields, and 1-click export.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/json-to-typescript-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">📑 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/json-to-yaml-converter-guide-2026.html">How to Use JSON to YAML Converter &amp; Bi-Directional Formatter (2026 Guide)</a></h2>
-          <p class="card-desc">Bi-directional JSON &lt;-&gt; YAML converter with customizable indentation, flow style control, Kubernetes manifest validation, and zero external transmission.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/json-to-yaml-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🛡️ Code, Data &amp; APIs</span>
-          <h2><a href="/articles/json-to-zod-schema-guide-2026.html">How to Use JSON to Zod Schema Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate production-ready Zod runtime validation schemas from arbitrary JSON payloads with recursive type inference, optional and nullable fields, datetime checks, and inferred TypeScript types.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/json-to-zod-schema-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Security &amp; Cryptography">
-          <span class="card-tag">🛡️ Security &amp; Cryptography</span>
-          <h2><a href="/articles/jwt-decoder-guide-2026.html">How to Use JWT Token Inspector &amp; Decoder (2026 Guide)</a></h2>
-          <p class="card-desc">Decode and inspect JSON Web Tokens (JWT) headers and payload claims locally. Evaluate expiration timestamps, subject, issuer, and signature algorithms.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/jwt-decoder-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">⌨️ DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/javascript-keycode-tester-guide-2026.html">How to Use JavaScript KeyCode &amp; Keyboard Event Tester (2026 Guide)</a></h2>
-          <p class="card-desc">Test keyboard events in real time. Inspect event.key, event.code, event.which, modifier keys (Shift, Ctrl, Alt, Meta), and location for web game and shortcut development.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/javascript-keycode-tester-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">🛡️ DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/chmod-permissions-calculator-guide-2026.html">How to Use Linux Chmod Permissions Calculator (2026 Guide)</a></h2>
-          <p class="card-desc">Calculate Linux and Unix chmod file permissions. Interactive visual checkbox matrix for User, Group, and Other with instant octal (755, 644) and symbolic code.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/chmod-permissions-calculator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">📄 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/lorem-ipsum-generator-guide-2026.html">How to Use Lorem Ipsum Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate customizable dummy placeholder text by paragraphs, sentences, or words. Classic Cicero Latin text with HTML tag wrapping and 1-click copy.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/lorem-ipsum-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">📝 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/markdown-html-converter-guide-2026.html">How to Use Markdown to HTML Converter (2026 Guide)</a></h2>
-          <p class="card-desc">Convert GitHub Flavored Markdown (GFM) to clean semantic HTML5 markup. Real-time live split-pane editor with 1-click HTML and Markdown copy.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/markdown-html-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🎲 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/mock-data-generator-guide-2026.html">How to Use Mock Data Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate realistic mock datasets in JSON, CSV, and SQL formats. Custom schemas with names, emails, UUIDs, dates, addresses, and currency fields.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/mock-data-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🧹 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/code-beautifier-minifier-guide-2026.html">How to Use Multi-Language Code Formatter &amp; Minifier (2026 Guide)</a></h2>
-          <p class="card-desc">Format, indent, beautify, and minify HTML, CSS, JavaScript, and JSON code online. Clean whitespace, fix indentation, and compress files for production.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/code-beautifier-minifier-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Media, Assets &amp; Viral">
-          <span class="card-tag">📦 Media, Assets &amp; Viral</span>
-          <h2><a href="/articles/multi-favicon-pwa-generator-guide-2026.html">How to Use Multi-Resolution Favicon &amp; PWA Icon Sizer (2026 Guide)</a></h2>
-          <p class="card-desc">Generate all web, iOS, Android, and PWA favicon sizes from a single master image. Outputs 16x16, 32x32, 180x180 Apple Touch, 192x192, and 512x512 icons.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/multi-favicon-pwa-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">⚡ DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/nginx-config-generator-guide-2026.html">How to Use Nginx Server Block &amp; Reverse Proxy Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Interactive Nginx server block studio: reverse proxy upstream, Let&#x27;s Encrypt SSL/TLS, HTTP/2, SPA routing fallback (try_files), security headers, and gzip compression.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/nginx-config-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Security &amp; Cryptography">
-          <span class="card-tag">🔒 Security &amp; Cryptography</span>
-          <h2><a href="/articles/openssl-command-generator-guide-2026.html">How to Use OpenSSL Command &amp; CSR / Certificate Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Construct verified OpenSSL CLI commands for Certificate Signing Requests (CSR), self-signed TLS certificates, Subject Alternative Names (SAN), and PKCS#12 bundle conversions.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/openssl-command-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">🔍 DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/regex-tester-guide-2026.html">How to Use Regex Tester &amp; Expression Explainer (2026 Guide)</a></h2>
-          <p class="card-desc">Test and debug regular expressions online with real-time match highlighting, capture group extraction, substitution replacement, and plain-English explanations.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/regex-tester-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">🤖 DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/robots-txt-generator-guide-2026.html">How to Use Robots.txt &amp; Search Crawler Builder (2026 Guide)</a></h2>
-          <p class="card-desc">Generate validated robots.txt files for Googlebot, Bingbot, GPTBot, and ClaudeBot. Control crawl budgets, allow/disallow paths, and declare XML sitemaps.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/robots-txt-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">🏷️ DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/meta-tag-generator-guide-2026.html">How to Use SEO &amp; Social Meta Tag Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate complete HTML5 SEO meta tags, Open Graph (og:title, og:image) and Twitter Cards online. Optimize social sharing previews and search rankings.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/meta-tag-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">🔍 DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/seo-keyword-density-analyzer-guide-2026.html">How to Use SEO Keyword Density &amp; N-Gram Analyzer (2026 Guide)</a></h2>
-          <p class="card-desc">Analyze content for keyword density percentage, word frequencies, and 1-word, 2-word, and 3-word n-grams. Prevent Google keyword stuffing penalties.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/seo-keyword-density-analyzer-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🗄️ Code, Data &amp; APIs</span>
-          <h2><a href="/articles/sql-formatter-guide-2026.html">How to Use SQL Query Formatter &amp; Indenter (2026 Guide)</a></h2>
-          <p class="card-desc">Format, beautify, and indent complex SQL queries online. Standardize SELECT, JOIN, WHERE, GROUP BY, and subqueries across PostgreSQL, MySQL, and T-SQL.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/sql-formatter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🔷 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/sql-to-typescript-prisma-converter-guide-2026.html">How to Use SQL to TypeScript Interface &amp; Prisma / Drizzle Converter (2026 Guide)</a></h2>
-          <p class="card-desc">Transform SQL CREATE TABLE statements into strongly typed TypeScript interfaces, Prisma ORM models, Drizzle schemas, and Zod validation objects instantly in your browser.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/sql-to-typescript-prisma-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Media, Assets &amp; Viral">
-          <span class="card-tag">⚡ Media, Assets &amp; Viral</span>
-          <h2><a href="/articles/svg-optimizer-converter-guide-2026.html">How to Use SVG Optimizer &amp; Clean Vector Converter (2026 Guide)</a></h2>
-          <p class="card-desc">Optimize, clean, and minify SVG vector graphics online. Remove bloated metadata, unused namespaces, and convert SVGs to React JSX or CSS Data URIs.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/svg-optimizer-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Media, Assets &amp; Viral">
-          <span class="card-tag">📐 Media, Assets &amp; Viral</span>
-          <h2><a href="/articles/svg-path-visualizer-guide-2026.html">How to Use SVG Path Visualizer &amp; Anchor Editor (2026 Guide)</a></h2>
-          <p class="card-desc">Visualize, inspect, scale, and edit SVG path d=&quot;&quot; strings with interactive anchor points, bezier control handles, bounding box metrics, and instant React component export.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/svg-path-visualizer-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🖼️ CSS &amp; Visual UI</span>
-          <h2><a href="/articles/svg-to-data-uri-converter-guide-2026.html">How to Use SVG to CSS Data URI Converter (2026 Guide)</a></h2>
-          <p class="card-desc">Convert raw SVG vector markup into URL-encoded or Base64 CSS Data URIs. Perfect for background-image, mask-image, and standalone CSS icons.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/svg-to-data-uri-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Security &amp; Cryptography">
-          <span class="card-tag">🔑 Security &amp; Cryptography</span>
-          <h2><a href="/articles/password-generator-guide-2026.html">How to Use Strong Password Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate uncrackable, cryptographically secure passwords and passphrases with custom length, symbols, numbers, and NIST entropy scoring.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/password-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Security &amp; Cryptography">
-          <span class="card-tag">🌐 Security &amp; Cryptography</span>
-          <h2><a href="/articles/subresource-integrity-hash-generator-guide-2026.html">How to Use Subresource Integrity (SRI) Hash Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate W3C Subresource Integrity (SRI) script and stylesheet hash tags. Protect your website from compromised CDN supply-chain attacks.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/subresource-integrity-hash-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="CSS &amp; Visual UI">
-          <span class="card-tag">🎨 CSS &amp; Visual UI</span>
-          <h2><a href="/articles/tailwind-to-css-converter-guide-2026.html">How to Use Tailwind CSS to Pure CSS &amp; Inline Style Converter (2026 Guide)</a></h2>
-          <p class="card-desc">Convert Tailwind CSS utility classes into clean, standard vanilla CSS and inline styles. Perfect for HTML email templates, CSS modules, legacy migrations, and zero-dependency components.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/tailwind-to-css-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">⚖️ DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/text-diff-checker-guide-2026.html">How to Use Text &amp; Code Diff Checker (2026 Guide)</a></h2>
-          <p class="card-desc">Compare two text files or code snippets online with side-by-side line diffing, character highlights, additions, and deletions. Fast, private comparison.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/text-diff-checker-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Security &amp; Cryptography">
-          <span class="card-tag">🆔 Security &amp; Cryptography</span>
-          <h2><a href="/articles/ulid-nanoid-generator-guide-2026.html">How to Use ULID &amp; NanoID Cryptographic Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate Universally Unique Lexicographically Sortable Identifiers (ULID) and NanoID tokens using crypto.getRandomValues(). Inspect timestamps and customize alphabet sets.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/ulid-nanoid-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🔗 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/url-encoder-decoder-guide-2026.html">How to Use URL Encoder &amp; Decoder (2026 Guide)</a></h2>
-          <p class="card-desc">Encode and decode URLs, query parameters, and URI components. Free online tool supporting encodeURI and encodeURIComponent RFC 3986 percent encoding.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/url-encoder-decoder-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Security &amp; Cryptography">
-          <span class="card-tag">🆔 Security &amp; Cryptography</span>
-          <h2><a href="/articles/uuid-generator-guide-2026.html">How to Use UUID / GUID v4 Bulk Generator (2026 Guide)</a></h2>
-          <p class="card-desc">Generate cryptographically secure RFC 4122 Version 4 UUIDs (GUIDs) online. Bulk generation, custom casing, hyphens, and 1-click clipboard export.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/uuid-generator-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">⏱️ Code, Data &amp; APIs</span>
-          <h2><a href="/articles/unix-timestamp-converter-guide-2026.html">How to Use Unix Epoch Timestamp Converter &amp; Timezone Studio (2026 Guide)</a></h2>
-          <p class="card-desc">Bi-directional Unix epoch timestamp converter. Convert between epoch seconds, milliseconds, microseconds, UTC ISO 8601, RFC 2822, and local time with live epoch ticker.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/unix-timestamp-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">📱 DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/user-agent-parser-guide-2026.html">How to Use User-Agent Parser &amp; Device Inspector (2026 Guide)</a></h2>
-          <p class="card-desc">Parse and analyze HTTP User-Agent strings and Client Hints (UA-CH) online. Detect browser engine, operating system, device hardware, and bot crawler identity.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/user-agent-parser-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="DevOps &amp; Webmaster">
-          <span class="card-tag">📡 DevOps &amp; Webmaster</span>
-          <h2><a href="/articles/websocket-client-tester-guide-2026.html">How to Use WebSocket Client &amp; Real-Time Protocol Debugger (2026 Guide)</a></h2>
-          <p class="card-desc">Connect, inspect, and debug live WebSocket servers (ws:// and wss://). Real-time message logs with timestamps, JSON formatting, ping/pong latency tester, and zero telemetry.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/websocket-client-tester-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">⚡ Code, Data &amp; APIs</span>
-          <h2><a href="/articles/webhook-payload-formatter-guide-2026.html">How to Use Webhook Payload &amp; Signature Tester (2026 Guide)</a></h2>
-          <p class="card-desc">Format, inspect, and verify webhook JSON payloads and HMAC-SHA256 signatures for Stripe, GitHub, Shopify, and Slack webhooks online.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/webhook-payload-formatter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">🏷️ Code, Data &amp; APIs</span>
-          <h2><a href="/articles/xml-formatter-json-converter-guide-2026.html">How to Use XML Formatter, Validator &amp; Bi-Directional JSON Converter (2026 Guide)</a></h2>
-          <p class="card-desc">Format, beautify, syntax-validate, and convert XML documents to JSON and vice-versa. Built on the browser native DOMParser with zero external CDN dependencies.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/xml-formatter-json-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">📜 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/yaml-to-json-converter-guide-2026.html">How to Use YAML to JSON &amp; JSON to YAML Converter (2026 Guide)</a></h2>
-          <p class="card-desc">Convert YAML to JSON and JSON to YAML online with syntax validation. Essential tool for Kubernetes manifests, Docker Compose, CI/CD, and OpenAPI specs.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/yaml-to-json-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
-        <article class="article-card" data-category="Code, Data &amp; APIs">
-          <span class="card-tag">💻 Code, Data &amp; APIs</span>
-          <h2><a href="/articles/curl-to-code-converter-guide-2026.html">How to Use cURL to Code Converter (2026 Guide)</a></h2>
-          <p class="card-desc">Instantly convert cURL command lines into JavaScript fetch, Axios, Python Requests, PHP cURL, and Go. Free online API converter.</p>
-          <div class="card-footer">
-            <span>⏱️ 6 min read</span>
-            <a href="/articles/curl-to-code-converter-guide-2026.html" class="btn-read">Read Guide →</a>
-          </div>
-        </article>
+    <div class="guides-grid">
+      <div class="guide-card">
+        <div class="guide-category">Security &amp; Auth</div>
+        <h2 class="guide-title"><a href="/articles/how-to-decode-jwt-token-tutorial.html">How to Inspect &amp; Decode JSON Web Tokens (JWT): Structure, Signatures &amp; Security</a></h2>
+        <p class="guide-desc">Detailed guide to RFC 7519: header, payload claims (iss, exp, sub), cryptographic signatures, and why sensitive credentials must never reside in unencrypted JWTs.</p>
+        <div class="guide-footer">
+          <span>12 min read • RFC 7519</span>
+          <a class="guide-read-link" href="/articles/how-to-decode-jwt-token-tutorial.html">Read Tutorial →</a>
         </div>
       </div>
 
-      <!-- Standard Enterprise Footer -->
-      <footer class="enterprise-footer" style="margin-top: 60px;">
-        <div class="footer-inner">
-          <div class="footer-grid">
-            <div class="footer-brand-col">
-              <a href="/"><img alt="WebDevWorker Logo" height="38" src="/assets/webdevworker-logo-horizontal.svg"/></a>
-              <p>85+ professional developer, CSS, API, and DevOps utilities engineered for modern web teams. 100% private, client-side memory execution with zero telemetry.</p>
-              <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
-                Operated by <strong>Zaviyan LLC</strong> &bull; <a href="mailto:business@zaviyanllc.com" style="color: var(--brand-primary); text-decoration: none;">business@zaviyanllc.com</a>
-              </div>
-            </div>
-            <div>
-              <div class="footer-col-title">Publications &amp; Resources</div>
-              <ul class="footer-col-links">
-                <li><a href="/articles/" style="color: var(--brand-primary); font-weight: 700;">Guides Hub (85 Guides)</a></li>
-                <li><a href="/blog/index.html">Engineering Blog</a></li>
-                <li><a href="/about.html">About WebDevWorker</a></li>
-                <li><a href="/privacy.html">Privacy Policy</a></li>
-                <li><a href="/terms.html">Terms of Service</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="footer-bottom">
-            <div>&copy; 2026 WebDevWorker. Founded and engineered by Zaviyan. Operated by Zaviyan LLC. All Rights Reserved.</div>
-            <div style="display: flex; gap: 16px;">
-              <span>🔒 100% Client-Side Sandbox</span>
-              <span>⚡ Zero Telemetry</span>
-              <span>📲 Offline PWA Capable</span><a href="https://www.facebook.com/webdevworking/" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;"><span>📘 Facebook</span></a>
-            </div>
-          </div>
+      <div class="guide-card">
+        <div class="guide-category">Regular Expressions</div>
+        <h2 class="guide-title"><a href="/articles/regex-cheat-sheet-2026.html">Regular Expressions (RegEx) Definitive Reference: Syntax, Lookaheads &amp; Flags</a></h2>
+        <p class="guide-desc">The complete reference guide for JavaScript and PCRE regex: capture groups, positive/negative lookarounds, greedy vs lazy quantifiers, and common input validators.</p>
+        <div class="guide-footer">
+          <span>14 min read • Practical</span>
+          <a class="guide-read-link" href="/articles/regex-cheat-sheet-2026.html">Read Guide →</a>
         </div>
-      </footer>
-    </main>
-  </div>
-</div>
+      </div>
 
-<script src="/js/webdevworker-common.js?v=2026-wdw-v45" defer></script>
-<script src="/js/ai-widget.js?v=2026-wdw-v45" defer></script>
+      <div class="guide-card">
+        <div class="guide-category">Identifiers &amp; RFCs</div>
+        <h2 class="guide-title"><a href="/articles/uuid-generator-v4-online-2026.html">UUID Version 4: Collision Probability, RFC 4122 Standard &amp; Entropy Modeling</a></h2>
+        <p class="guide-desc">The mathematics of 122-bit cryptographic randomness: why UUID v4 collision is virtually impossible across billions of records and how to generate cryptographically secure IDs.</p>
+        <div class="guide-footer">
+          <span>11 min read • RFC 4122</span>
+          <a class="guide-read-link" href="/articles/uuid-generator-v4-online-2026.html">Read Guide →</a>
+        </div>
+      </div>
 
-<script>
-  // Client-Side Live Search & Category Filter
-  document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('articleSearchInput');
-    const filterChips = document.querySelectorAll('.filter-chip');
-    const cards = document.querySelectorAll('.article-card');
+      <div class="guide-card">
+        <div class="guide-category">Cryptography</div>
+        <h2 class="guide-title"><a href="/articles/hash-generator-sha256-md5-2026.html">Cryptographic Hash Functions: SHA-256 vs SHA-512 vs MD5 Integrity Checks</a></h2>
+        <p class="guide-desc">How one-way cryptographic hash digests ensure data integrity, verify file checksums, and why MD5/SHA-1 must never be used for password storage.</p>
+        <div class="guide-footer">
+          <span>12 min read • Security</span>
+          <a class="guide-read-link" href="/articles/hash-generator-sha256-md5-2026.html">Read Guide →</a>
+        </div>
+      </div>
 
-    let activeFilter = 'all';
+      <div class="guide-card">
+        <div class="guide-category">Developer Productivity</div>
+        <h2 class="guide-title"><a href="/articles/best-free-online-developer-tools-2026.html">Best Free Client-Side Developer Tools: Privacy-First Workstations vs Cloud Uploads</a></h2>
+        <p class="guide-desc">Why running developer formatters, JSON validators, and converters 100% locally in browser V8 sandboxes prevents corporate data leaks and API key exposure.</p>
+        <div class="guide-footer">
+          <span>10 min read • Architecture</span>
+          <a class="guide-read-link" href="/articles/best-free-online-developer-tools-2026.html">Read Guide →</a>
+        </div>
+      </div>
 
-    function filterCards() {
-      const query = (searchInput.value || '').toLowerCase().trim();
+      <div class="guide-card">
+        <div class="guide-category">Databases &amp; SQL</div>
+        <h2 class="guide-title"><a href="/articles/ai-sql-generator-text-to-sql-2026.html">Text-to-SQL Engineering: Writing Performant Queries, Joins &amp; Window Functions</a></h2>
+        <p class="guide-desc">Best practices for prompt-engineering relational SQL queries across PostgreSQL, MySQL, and SQLite, with index optimization and query execution plan fundamentals.</p>
+        <div class="guide-footer">
+          <span>13 min read • Database</span>
+          <a class="guide-read-link" href="/articles/ai-sql-generator-text-to-sql-2026.html">Read Guide →</a>
+        </div>
+      </div>
 
-      cards.forEach(card => {
-        const category = card.getAttribute('data-category');
-        const text = card.innerText.toLowerCase();
+      <div class="guide-card">
+        <div class="guide-category">Code Quality</div>
+        <h2 class="guide-title"><a href="/articles/ai-code-reviewer-free-online-guide-2026.html">Automated Code Review Standards: Clean Architecture, Memory Leaks &amp; Complexity</a></h2>
+        <p class="guide-desc">How modern code analysis tools detect cyclomatic complexity spikes, memory leaks, missing error handlers, and anti-patterns before pull requests hit production.</p>
+        <div class="guide-footer">
+          <span>12 min read • Clean Code</span>
+          <a class="guide-read-link" href="/articles/ai-code-reviewer-free-online-guide-2026.html">Read Guide →</a>
+        </div>
+      </div>
 
-        const matchesCat = (activeFilter === 'all' || category === activeFilter);
-        const matchesQuery = (!query || text.includes(query));
+      <div class="guide-card">
+        <div class="guide-category">Pattern Matching</div>
+        <h2 class="guide-title"><a href="/articles/ai-regex-generator-guide-2026.html">AI-Assisted Regex Construction: Building Safe, Catastrophic-Backtracking-Free Patterns</a></h2>
+        <p class="guide-desc">How to write resilient regular expressions that guard against ReDoS (Regular Expression Denial of Service) through bounded repetitions and atomic grouping.</p>
+        <div class="guide-footer">
+          <span>11 min read • Security</span>
+          <a class="guide-read-link" href="/articles/ai-regex-generator-guide-2026.html">Read Guide →</a>
+        </div>
+      </div>
 
-        if (matchesCat && matchesQuery) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    }
+      <div class="guide-card">
+        <div class="guide-category">Testing &amp; QA</div>
+        <h2 class="guide-title"><a href="/articles/ai-unit-test-generator-guide-2026.html">Unit Testing Best Practices: Edge Cases, Mocking &amp; High Branch Coverage</a></h2>
+        <p class="guide-desc">Strategies for structuring comprehensive unit test suites in Jest, Vitest, and PyTest using the AAA (Arrange-Act-Assert) pattern and dependency injection.</p>
+        <div class="guide-footer">
+          <span>11 min read • QA Testing</span>
+          <a class="guide-read-link" href="/articles/ai-unit-test-generator-guide-2026.html">Read Guide →</a>
+        </div>
+      </div>
 
-    searchInput.addEventListener('input', filterCards);
+      <div class="guide-card">
+        <div class="guide-category">Application Security</div>
+        <h2 class="guide-title"><a href="/articles/ai-security-auditor-code-scan-2026.html">Static Application Security Testing (SAST): OWASP Top 10 Vulnerability Audit Guide</a></h2>
+        <p class="guide-desc">Identifying and eliminating OWASP Top 10 vulnerabilities (SQLi, XSS, CSRF, broken access control) in web applications before deployment.</p>
+        <div class="guide-footer">
+          <span>12 min read • OWASP</span>
+          <a class="guide-read-link" href="/articles/ai-security-auditor-code-scan-2026.html">Read Guide →</a>
+        </div>
+      </div>
+    </div>
+  </main>
 
-    filterChips.forEach(chip => {
-      chip.addEventListener('click', function() {
-        filterChips.forEach(c => c.classList.remove('active'));
-        this.classList.add('active');
-        activeFilter = this.getAttribute('data-filter');
-        filterCards();
-      });
-    });
-  });
-</script>
+  <footer>
+    <div class="footer-content">
+      <div>© 2026 WebDevWorker. A developer workstation property of Zaviyan LLC (United States).</div>
+      <div class="footer-links">
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/terms.html">Terms</a>
+        <a href="/disclaimer.html">Disclaimer</a>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>
