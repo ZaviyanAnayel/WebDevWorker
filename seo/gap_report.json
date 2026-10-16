@@ -2,18 +2,6 @@
   "competitor_new_pages": [],
   "keyword_gaps": [
     {
-      "keyword": "json formatter online",
-      "slug": "json-formatter-online-free-tool-2026.html",
-      "title": "JSON Formatter Online: Free Tool + Complete Guide (2026)",
-      "tool": "json-formatter-validator"
-    },
-    {
-      "keyword": "jwt decoder online",
-      "slug": "jwt-decoder-online-free-2026.html",
-      "title": "JWT Decoder Online: Free, Private & Instant (2026 Guide)",
-      "tool": "jwt-decoder"
-    },
-    {
       "keyword": "regex tester online",
       "slug": "regex-tester-online-free-2026.html",
       "title": "Regex Tester Online: Free Live Debugger (2026 Guide)",
@@ -46,16 +34,16 @@
   ],
   "recommended": [
     {
-      "keyword": "json formatter online",
-      "slug": "json-formatter-online-free-tool-2026.html",
-      "title": "JSON Formatter Online: Free Tool + Complete Guide (2026)",
-      "tool": "json-formatter-validator"
+      "keyword": "regex tester online",
+      "slug": "regex-tester-online-free-2026.html",
+      "title": "Regex Tester Online: Free Live Debugger (2026 Guide)",
+      "tool": "regex-tester"
     },
     {
-      "keyword": "jwt decoder online",
-      "slug": "jwt-decoder-online-free-2026.html",
-      "title": "JWT Decoder Online: Free, Private & Instant (2026 Guide)",
-      "tool": "jwt-decoder"
+      "keyword": "cron expression generator",
+      "slug": "cron-expression-generator-explained-2026.html",
+      "title": "Cron Expression Generator Explained with Examples (2026)",
+      "tool": "cron-expression-generator"
     }
   ]
 }
