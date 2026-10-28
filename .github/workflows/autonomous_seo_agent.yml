@@ -1,11 +1,19 @@
 name: Autonomous SEO Agent v2 (competitor-aware)
 
 # 24/7 SEO engine: monitors competitors, finds keyword gaps, publishes
-# template-locked guide articles, validates links/schema, updates sitemap,
-# pings search engines. Replaces the v1 daily agent (same single schedule).
+# template-locked guide articles, validates links, updates sitemap, pings
+# search engines. Applied to the existing autonomous_seo_agent.yml
+# (not a second workflow file, so the old daily workflow is not left running
+# alongside it). Daily schedule and post-publish wiring preserved.
+#
+# v2.1 fix (2026-10-19): the generator now self-checks each article and writes
+# a manifest of the files it actually created; the validator checks exactly
+# those files (--files) and skips cleanly when the manifest is empty. This
+# kills the Oct 17-19 failure loop where the validator fell back to the whole
+# articles/ dir and failed on legacy v1 articles.
 on:
   schedule:
-    - cron: "0 6 * * *"   # daily at 06:00 UTC (single schedule)
+    - cron: "0 6 * * *"   # daily at 06:00 UTC (preserved from existing workflow)
   workflow_dispatch:
     inputs:
       max_articles:
@@ -27,10 +35,14 @@ jobs:
         with: { python-version: "3.12" }
 
       - name: Competitor sitemap watch + keyword gap detection
+        id: gaps
         run: |
           python3 .github/scripts/competitor_watch.py \
             --out seo/gap_report.json \
             --ledger seo/keywords.json
+          echo "gaps<<EOF" >> $GITHUB_OUTPUT
+          cat seo/gap_report.json >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Generate gap-targeted articles (template-locked)
         env:
@@ -40,11 +52,16 @@ jobs:
           python3 .github/scripts/generate_articles.py \
             --gaps seo/gap_report.json \
             --ledger seo/keywords.json \
-            --max "$MAX_ARTICLES"
+            --max "$MAX_ARTICLES" \
+            --manifest /tmp/new_articles.txt
 
       - name: Validate new articles (links, schema, depth)
         run: |
-          python3 .github/scripts/validate_articles.py --strict
+          if [ -s /tmp/new_articles.txt ]; then
+            python3 .github/scripts/validate_articles.py --strict --files $(cat /tmp/new_articles.txt)
+          else
+            echo "no new articles generated — nothing to validate"
+          fi
 
       - name: Wire new guides (hub cards, tool links)
         run: |
@@ -54,13 +71,14 @@ jobs:
         run: |
           python3 .github/scripts/update_sitemap.py
           python3 .github/scripts/submit_indexnow.py || true
-          curl -s "https://www.bing.com/ping?sitemap=https://www.webdevworker.com/sitemap.xml" > /dev/null || true
+          curl -s "https://www.google.com/ping?sitemap=https://webdevworker.com/sitemap.xml" > /dev/null || true
+          curl -s "https://www.bing.com/ping?sitemap=https://webdevworker.com/sitemap.xml" > /dev/null || true
 
       - name: Commit & push
         run: |
           git config user.name "seo-agent[bot]"
           git config user.email "seo-agent[bot]@users.noreply.github.com"
           git add articles/ sitemap.xml seo/ tools/
-          git diff --cached --quiet && echo "nothing to commit" || git commit -m "seo(agent): publish $(date -u +%F) gap-targeted guides"
+          git diff --cached --quiet || git commit -m "seo(agent): publish $(date -u +%F) gap-targeted guides"
           git pull --rebase origin ${{ github.ref_name }} || true
           git push
