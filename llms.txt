@@ -1,6 +1,9 @@
 # WebDevWorker — AI & LLM Index File
 
-> WebDevWorker is a comprehensive, client-side developer utility platform featuring 85+ high-precision tools for web developers, software engineers, DevOps specialists, and UI/UX designers. All tools execute 100% in-browser with zero telemetry and zero latency.
+> WebDevWorker is a comprehensive, client-side developer utility platform featuring 97 tools for web developers, software engineers, DevOps specialists, and UI/UX designers — led by the AI Automation Audit. All tools execute 100% in-browser with zero telemetry and zero latency.
+
+## AI Automation Audit (Flagship)
+- [AI Automation Audit](https://www.webdevworker.com/tools/ai-automation-audit.html): Paste any n8n, Make or Zapier workflow JSON and get 12 plain-English checks before you activate it — hardcoded secrets, unauthenticated webhooks, SSRF, AI agents wired to payments, missing error handling, cost bombs. 100% in-browser, nothing uploaded, no signup, no API key.
 
 ## Developer & API Tools
 - [JSON to TypeScript Generator](https://www.webdevworker.com/tools/json-to-typescript-generator.html): Automatically convert raw JSON payloads into strict TypeScript interfaces, types, and downloadable .d.ts files.

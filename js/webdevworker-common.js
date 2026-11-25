@@ -660,6 +660,7 @@
       var nav = document.querySelector('.sidebar-nav');
       if (!nav || document.getElementById('wwAiStudioNav')) return;
       var tools = [
+        ['ai-automation-audit', '📋', 'AI Automation Audit'],
         ['ai-micro-app-smith', '🏭', 'AI Micro-App Smith'],
         ['ai-regex-smith', '🔣', 'AI Regex Smith'],
         ['ai-code-doctor', '🩺', 'AI Code Doctor'],
