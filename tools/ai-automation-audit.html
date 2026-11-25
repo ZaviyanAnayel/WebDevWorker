@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html data-theme="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Automation Audit — Check your n8n / Make / Zapier workflow BEFORE you activate it | WebDevWorker</title>
+<meta content="Paste your n8n, Make or Zapier workflow JSON and get a deterministic, in-browser audit before you activate it: unauthenticated webhooks, hardcoded secrets, SSRF, AI agents wired to payments, missing error handling, cost bombs. 100% client-side — your workflow never leaves this page. No signup, no API key." name="description"/>
+<meta name="keywords" content="n8n workflow audit, ai automation audit, vibe code security, zapier security check, make.com workflow audit, webhook security, supabase rls, prompt injection, ai agent audit, webdevworker"/>
+<link href="https://www.webdevworker.com/tools/ai-automation-audit.html" rel="canonical"/>
+<link href="../assets/favicon.png" rel="icon" type="image/png"/>
+<meta content="AI Automation Audit — Check your workflow BEFORE you activate it — WebDevWorker" property="og:title"/>
+<meta content="Paste your n8n / Make / Zapier workflow JSON. Deterministic in-browser audit: secrets, webhooks, SSRF, AI agents wired to payments, cost bombs. Nothing leaves your browser." property="og:description"/>
+<meta content="https://www.webdevworker.com/tools/ai-automation-audit.html" property="og:url"/>
+<meta content="website" property="og:type"/>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"AI Automation Audit","url":"https://www.webdevworker.com/tools/ai-automation-audit.html","description":"Deterministic, client-side audit for n8n, Make and Zapier workflows before activation. Checks webhooks, secrets, SSRF, AI-agent wiring, error handling and cost bombs. No server, no API key.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Organization","name":"Zaviyan LLC","url":"https://www.webdevworker.com"}}
+</script>
+<script>
+  (function(){ try { var t = localStorage.getItem('wdw_theme') || 'dark'; document.documentElement.setAttribute('data-theme', t); } catch(e){} })();
+</script>
+<link href="../css/webdevworker.css?v=2026-wdw-v73" rel="stylesheet"/>
+<style>
+  /* ============ AAA premium layer — extends the site design system ============ */
+  /* ---- Hero ---- */
+  .aaa-hero{position:relative;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius-lg);padding:30px 30px 26px;margin:0 0 18px;background:linear-gradient(135deg,rgba(234,179,8,.10),rgba(56,189,248,.05) 55%,var(--bg-surface) 100%);box-shadow:var(--shadow-card)}
+  .aaa-hero::before{content:"";position:absolute;inset:0;background:radial-gradient(520px 260px at 16% -12%,rgba(234,179,8,.30),transparent 65%),radial-gradient(420px 220px at 88% -6%,rgba(56,189,248,.16),transparent 60%);pointer-events:none}
+  .aaa-hero>*{position:relative;z-index:1}
+  .aaa-hero-pill{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--brand-primary);background:var(--brand-light);border:1px solid rgba(234,179,8,.4);border-radius:999px;padding:6px 14px;box-shadow:0 0 24px var(--brand-glow)}
+  .aaa-pill-dot{width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 10px #10b981}
+  .aaa-hero-head{display:flex;gap:18px;align-items:flex-start;margin:18px 0 10px}
+  .aaa-shield{flex:none;width:58px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,rgba(234,179,8,.22),rgba(234,179,8,.06));border:1px solid rgba(234,179,8,.45);box-shadow:0 8px 24px rgba(234,179,8,.22),inset 0 1px 0 rgba(255,255,255,.12)}
+  .aaa-hero h1{font-size:clamp(1.85rem,3.8vw,2.6rem);line-height:1.12;letter-spacing:-.02em;margin:0}
+  .aaa-hero-sub{font-size:.98rem;color:var(--text-muted);line-height:1.65;max-width:760px;margin:0}
+  .aaa-hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+  .aaa-stat{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:14px 16px;transition:transform .2s ease,border-color .2s ease}
+  .aaa-stat:hover{transform:translateY(-2px);border-color:rgba(234,179,8,.4)}
+  .aaa-stat b{display:block;font-size:1.5rem;font-weight:900;line-height:1.1;color:var(--text-main)}
+  .aaa-stat b em{font-style:normal;color:var(--brand-primary)}
+  .aaa-stat span{font-size:.78rem;color:var(--text-muted);line-height:1.45;display:block;margin-top:4px}
+  [data-theme="light"] .aaa-stat{background:#fff}
+  /* ---- How it works ---- */
+  .aaa-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 18px}
+  .aaa-step{display:flex;gap:14px;align-items:flex-start;background:var(--bg-surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow-card);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+  .aaa-step:hover{transform:translateY(-2px);border-color:rgba(234,179,8,.45);box-shadow:var(--shadow-card-hover)}
+  .aaa-step-num{flex:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.9rem;color:#0f172a;background:linear-gradient(135deg,#facc15,#eab308);box-shadow:0 4px 14px rgba(234,179,8,.35)}
+  .aaa-step h3{font-size:.95rem;margin:2px 0 2px;color:var(--text-main)}
+  .aaa-step p{font-size:.82rem;color:var(--text-muted);line-height:1.55;margin:0}
+  /* ---- Privacy banner + warning note ---- */
+  .aaa-banner{background:linear-gradient(135deg,rgba(16,185,129,.16),rgba(56,189,248,.10));border:1px solid rgba(16,185,129,.45);border-radius:14px;padding:16px 18px;margin:0 0 20px;font-size:.9rem;line-height:1.55;color:var(--text-main);box-shadow:var(--shadow-card)}
+  .aaa-banner b{color:#34d399}
+  .aaa-warn{background:linear-gradient(180deg,rgba(234,179,8,.06),transparent),var(--bg-subtle);border:1px solid var(--border);border-left:3px solid var(--brand-primary);border-radius:14px;padding:16px 18px;margin:18px 0;font-size:.86rem;color:var(--text-muted);line-height:1.6}
+  .aaa-warn b{color:var(--text-main)}
+  /* ---- Input area ---- */
+  .aaa-fmtrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 10px}
+  .aaa-fmtrow-label{font-size:.75rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--text-dim);margin-right:2px}
+  .aaa-fmt{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:700;color:var(--text-muted);background:var(--bg-subtle);border:1px solid var(--border);border-radius:999px;padding:5px 12px}
+  .aaa-fmt i{width:8px;height:8px;border-radius:50%;flex:none}
+  .aaa-fmt-n8n i{background:#ea4b71}
+  .aaa-fmt-make i{background:#7c3aed}
+  .aaa-fmt-zap i{background:#ff4f00}
+  .aaa-textarea{font-family:ui-monospace,'JetBrains Mono','Fira Code',Consolas,monospace !important;min-height:300px !important;border-radius:14px !important;box-shadow:inset 0 2px 10px rgba(0,0,0,.35) !important;transition:border-color .2s ease,box-shadow .2s ease !important}
+  #wfInput:focus{border-color:var(--brand-primary) !important;box-shadow:0 0 0 3px rgba(234,179,8,.28),inset 0 2px 10px rgba(0,0,0,.30) !important}
+  [data-theme="light"] #wfInput:focus{box-shadow:0 0 0 3px rgba(202,138,4,.22),inset 0 1px 3px rgba(0,0,0,.06) !important}
+  .aaa-inputmeta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.78rem;color:var(--text-dim);margin:8px 2px 0}
+  .aaa-inputmeta b{color:var(--text-muted);font-weight:700}
+  /* ---- Buttons ---- */
+  .aaa-btnrow{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+  .aaa-cta{background:linear-gradient(135deg,#facc15 0%,#eab308 55%,#ca8a04 100%) !important;color:#0f172a !important;border:none !important;box-shadow:0 6px 22px rgba(234,179,8,.45),inset 0 1px 0 rgba(255,255,255,.5) !important;font-weight:800 !important;padding:11px 22px !important}
+  .aaa-cta:hover{filter:brightness(1.06) !important;transform:translateY(-1px) !important;box-shadow:0 10px 28px rgba(234,179,8,.55),inset 0 1px 0 rgba(255,255,255,.5) !important}
+  .aaa-cta:active{transform:translateY(1px) scale(.99) !important;box-shadow:0 3px 12px rgba(234,179,8,.4) !important}
+  .aaa-btnrow .aaa-ghost{background:transparent !important;border:1px solid var(--border-strong) !important;color:var(--text-main) !important;box-shadow:none !important}
+  .aaa-btnrow .aaa-ghost:hover{background:var(--bg-subtle) !important;border-color:var(--brand-primary) !important;color:var(--brand-primary) !important;transform:translateY(-1px) !important}
+  [data-theme="light"] .aaa-btnrow .aaa-ghost{background:transparent !important;color:var(--text-main) !important;border-color:var(--border-strong) !important}
+  [data-theme="light"] .aaa-btnrow .aaa-ghost:hover{background:var(--bg-subtle) !important;border-color:var(--brand-primary) !important;color:var(--brand-primary) !important}
+  .aaa-btnrow .btn:focus-visible,.aaa-fixbtn:focus-visible{outline:2px solid var(--brand-primary);outline-offset:2px}
+  /* ---- Error / score / gauge ---- */
+  .aaa-err{display:none;background:rgba(244,63,94,.12);border:1px solid rgba(244,63,94,.5);color:#fda4af;border-radius:12px;padding:12px 14px;margin:12px 0;font-size:.88rem;line-height:1.5;white-space:pre-wrap}
+  .aaa-score{display:none;border:1px solid var(--border);border-radius:16px;padding:24px;margin:18px 0;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent),var(--bg-surface);box-shadow:var(--shadow-card)}
+  .aaa-score-top{display:flex;flex-wrap:wrap;gap:24px;align-items:center}
+  .aaa-gauge{position:relative;width:148px;height:148px;flex:none}
+  .aaa-gauge-svg{width:148px;height:148px;transform:rotate(-90deg);display:block}
+  .aaa-gauge-track{fill:none;stroke:var(--bg-subtle);stroke-width:11}
+  .aaa-gauge-ring{fill:none;stroke:#10b981;stroke-width:11;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset .9s cubic-bezier(.16,1,.3,1),stroke .3s ease}
+  .aaa-gauge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+  .aaa-score-num{font-size:2.3rem;font-weight:900;line-height:1}
+  .aaa-gauge-of{font-size:.78rem;color:var(--text-dim);font-weight:700;margin-top:2px}
+  .aaa-score-info{flex:1;min-width:220px}
+  .aaa-verdict{font-size:1.35rem;font-weight:900;margin:2px 0;letter-spacing:-.01em}
+  .aaa-counts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .aaa-chip{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:700;padding:6px 12px;border-radius:999px;border:1px solid var(--border);color:var(--text-muted);background:var(--bg-subtle)}
+  .aaa-dot{width:8px;height:8px;border-radius:50%;flex:none}
+  .dot-critical{background:#f43f5e;box-shadow:0 0 8px rgba(244,63,94,.7)}
+  .dot-high{background:#f97316;box-shadow:0 0 8px rgba(249,115,22,.7)}
+  .dot-medium{background:#eab308;box-shadow:0 0 8px rgba(234,179,8,.7)}
+  .dot-low{background:#38bdf8;box-shadow:0 0 8px rgba(56,189,248,.7)}
+  .dot-total{background:var(--text-dim)}
+  /* ---- Severity pills ---- */
+  .pill{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+  .pill-critical{background:rgba(244,63,94,.18);color:#fb7185;border:1px solid rgba(244,63,94,.5)}
+  .pill-high{background:rgba(249,115,22,.16);color:#fb923c;border:1px solid rgba(249,115,22,.5)}
+  .pill-medium{background:rgba(234,179,8,.16);color:#facc15;border:1px solid rgba(234,179,8,.5)}
+  .pill-low{background:rgba(56,189,248,.14);color:#38bdf8;border:1px solid rgba(56,189,248,.45)}
+  /* ---- Findings ---- */
+  .aaa-finding{border:1px solid var(--border);border-left:4px solid var(--border-strong);border-radius:16px;padding:20px 22px;margin:16px 0;background:linear-gradient(180deg,rgba(255,255,255,.025),transparent),var(--bg-surface);box-shadow:var(--shadow-card);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+  .aaa-finding:hover{transform:translateY(-2px);box-shadow:var(--shadow-card-hover)}
+  .aaa-finding.sev-critical{border-left-color:#f43f5e}
+  .aaa-finding.sev-high{border-left-color:#f97316}
+  .aaa-finding.sev-medium{border-left-color:#eab308}
+  .aaa-finding.sev-low{border-left-color:#38bdf8}
+  .aaa-finding-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+  .aaa-finding-node{font-size:.78rem;color:var(--text-dim);font-weight:600}
+  .aaa-finding h3{font-size:1.06rem;margin:10px 0 4px;color:var(--text-main)}
+  .aaa-finding p{font-size:.88rem;color:var(--text-muted);line-height:1.6;margin:6px 0}
+  .aaa-finding p b{color:var(--text-main)}
+  .aaa-label{display:block;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin:12px 0 3px}
+  .aaa-ev{font-family:ui-monospace,Consolas,monospace;font-size:.8rem;background:var(--bg-input);border:1px solid var(--border);border-left:3px solid rgba(234,179,8,.5);border-radius:10px;padding:12px 14px;margin:10px 0;white-space:pre-wrap;word-break:break-all;color:var(--text-muted)}
+  .aaa-ev-label{display:block;font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px}
+  .aaa-fixbtn{margin-top:12px;padding:8px 14px !important;font-size:.8rem !important}
+  /* ---- 12-rule grid ---- */
+  .aaa-section-title{font-size:1.15rem;font-weight:900;margin:26px 0 12px;letter-spacing:-.01em;color:var(--text-main)}
+  .aaa-rules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+  .aaa-rule-card{display:flex;gap:12px;align-items:flex-start;background:var(--bg-surface);border:1px solid var(--border);border-radius:14px;padding:15px 16px;box-shadow:var(--shadow-card);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+  .aaa-rule-card:hover{transform:translateY(-2px);border-color:rgba(234,179,8,.4);box-shadow:var(--shadow-card-hover)}
+  .aaa-rule-card>div{flex:1;min-width:0}
+  .aaa-rule-ico{flex:none;width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;background:var(--bg-subtle);border:1px solid var(--border)}
+  .aaa-rule-card.sev-critical .aaa-rule-ico{background:rgba(244,63,94,.14);border-color:rgba(244,63,94,.4)}
+  .aaa-rule-card.sev-high .aaa-rule-ico{background:rgba(249,115,22,.14);border-color:rgba(249,115,22,.4)}
+  .aaa-rule-card.sev-medium .aaa-rule-ico{background:rgba(234,179,8,.14);border-color:rgba(234,179,8,.4)}
+  .aaa-rule-card h3{font-size:.92rem;margin:3px 0 2px;line-height:1.35;color:var(--text-main)}
+  .aaa-rule-card p{font-size:.8rem;color:var(--text-muted);line-height:1.5;margin:0}
+  .aaa-rule-card .pill{margin-left:auto;flex:none}
+  .aaa-rule{font-size:.75rem;color:var(--text-dim);font-weight:700}
+  .aaa-ok{display:none;border:1px solid rgba(16,185,129,.5);background:rgba(16,185,129,.10);border-radius:14px;padding:16px 18px;margin:14px 0;color:#6ee7b7;font-size:.92rem;line-height:1.6}
+  .aaa-muted{font-size:.85rem;color:var(--text-muted);line-height:1.6}
+  .aaa-kbd{font-family:ui-monospace,Consolas,monospace;background:var(--bg-subtle);border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:.82rem}
+  /* ---- Responsive ---- */
+  @media (max-width:820px){
+    .aaa-hero-stats{grid-template-columns:repeat(2,1fr)}
+    .aaa-steps{grid-template-columns:1fr}
+    .aaa-score-top{flex-direction:column;align-items:center;text-align:center}
+    .aaa-score-info{width:100%}
+    .aaa-counts{justify-content:center}
+  }
+  @media (max-width:560px){
+    .aaa-hero{padding:22px 18px}
+    .aaa-hero-head{flex-direction:column;gap:12px}
+    .aaa-btnrow .btn,.aaa-btnrow label.btn{flex:1 1 100%;width:100%}
+    .aaa-score{padding:18px}
+    .aaa-finding{padding:16px}
+    .aaa-hero-stats{grid-template-columns:repeat(2,1fr);gap:8px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .aaa-step,.aaa-finding,.aaa-stat,.aaa-rule-card,.aaa-cta,.aaa-ghost{transition:none !important}
+    .aaa-gauge-ring{transition:none}
+  }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><a href="../index.html"><img alt="WebDevWorker Logo" src="../assets/webdevworker-logo-horizontal.svg"/></a></div>
+    <div class="sidebar-nav">
+      <div class="nav-group-wrapper" style="margin-bottom:14px;">
+        <div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Overview</div>
+        <ul style="list-style:none;margin:0;padding:0;">
+          <li><a href="../index.html" class="nav-item" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:6px;margin:1px 4px;font-weight:600;"><span style="font-size:1.05rem;width:20px;text-align:center;">⚡</span><span>Dashboard</span></a></li>
+          <li><a href="ai-automation-audit.html" class="nav-item active" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:6px;margin:1px 4px;font-weight:600;background:var(--brand-light);"><span style="font-size:1.05rem;width:20px;text-align:center;">🛡️</span><span>AI Automation Audit</span></a></li>
+        </ul>
+      </div>
+      <div class="nav-group-wrapper">
+        <div class="nav-group-title" style="font-size:0.75rem;text-transform:uppercase;color:var(--brand-primary);background:rgba(234,179,8,0.08);border-left:3px solid var(--brand-primary);padding:6px 12px;margin:12px 6px 6px;border-radius:0 6px 6px 0;font-weight:800;letter-spacing:1px;">Also useful</div>
+        <ul style="list-style:none;margin:0;padding:0;">
+          <li><a href="json-formatter-validator.html" class="nav-item" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:6px;margin:1px 4px;font-weight:600;"><span style="font-size:1.05rem;width:20px;text-align:center;">📋</span><span>JSON Formatter &amp; Validator</span></a></li>
+          <li><a href="ai-security-auditor.html" class="nav-item" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:6px;margin:1px 4px;font-weight:600;"><span style="font-size:1.05rem;width:20px;text-align:center;">🔍</span><span>AI Security Auditor</span></a></li>
+          <li><a href="cron-expression-generator.html" class="nav-item" style="display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-main);font-size:0.84rem;border-radius:6px;margin:1px 4px;font-weight:600;"><span style="font-size:1.05rem;width:20px;text-align:center;">⏰</span><span>Cron Expression Generator</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+  <div class="main-viewport">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Menu">☰</button>
+        <span class="topbar-title">AI Automation Audit</span>
+      </div>
+      <div class="topbar-right">
+        <button class="theme-toggle-btn" id="themeToggleBtn"><span>🌙</span> Dark Mode</button>
+      </div>
+    </header>
+    <main class="page-container">
+      <div class="tool-form-card">
+        <section class="aaa-hero">
+          <span class="aaa-hero-pill"><span class="aaa-pill-dot"></span> New &bull; 2026 &bull; Free &mdash; No Signup</span>
+          <div class="aaa-hero-head">
+            <span class="aaa-shield" aria-hidden="true"><svg viewBox="0 0 48 48" width="34" height="34" fill="none"><defs><linearGradient id="aaaGold" x1="0" y1="0" x2="48" y2="48"><stop stop-color="#facc15"/><stop offset="1" stop-color="#eab308"/></linearGradient></defs><path d="M24 3 42 9v13c0 11-7.5 19.5-18 23C13.5 41.5 6 33 6 22V9L24 3Z" fill="rgba(234,179,8,.12)" stroke="url(#aaaGold)" stroke-width="2.5"/><path d="M16 24l6 6 10-12" stroke="url(#aaaGold)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <span style="font-size:0.75rem;text-transform:uppercase;font-weight:700;color:var(--brand-primary);letter-spacing:1px;">AI AUTOMATION AUDIT &nbsp;&bull;&nbsp; n8n / Make / Zapier</span>
+              <h1 class="tool-header-title">Check your workflow BEFORE you activate it</h1>
+            </div>
+          </div>
+          <p class="aaa-hero-sub">AI builders ship fast &mdash; and leak fast. Paste your workflow JSON below. In seconds you get a plain-English verdict: is it safe to activate, or will a stranger read your data, spend your money, or trigger a payment?</p>
+          <div class="aaa-hero-stats">
+            <div class="aaa-stat"><b>12</b><span>checks on every run</span></div>
+            <div class="aaa-stat"><b><em>0</em></b><span>uploads &mdash; nothing leaves your browser</span></div>
+            <div class="aaa-stat"><b>100%</b><span>in-browser &mdash; works offline</span></div>
+            <div class="aaa-stat"><b>No</b><span>signup, no API key, no server</span></div>
+          </div>
+        </section>
+
+        <section class="aaa-steps" aria-label="How it works">
+          <div class="aaa-step"><span class="aaa-step-num">1</span><div><h3>Paste your JSON</h3><p>Export the workflow from n8n, Make or Zapier and paste the whole file. Nothing is uploaded.</p></div></div>
+          <div class="aaa-step"><span class="aaa-step-num">2</span><div><h3>Run the audit</h3><p>Twelve deterministic checks scan webhooks, secrets, AI wiring, errors and costs &mdash; in seconds.</p></div></div>
+          <div class="aaa-step"><span class="aaa-step-num">3</span><div><h3>Fix &amp; re-scan</h3><p>Copy the fix prompt for each finding, patch it in your builder, and re-run until the score is 90+.</p></div></div>
+        </section>
+
+        <div class="aaa-banner">&#128274; <b>100% in your browser.</b> Your workflow never leaves this page. No signup, no API key, no server, nothing uploaded, nothing stored. You can even disconnect your internet and run this page &mdash; it still works.</div>
+
+        <label style="display:block;font-size:0.8rem;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;font-weight:700;">1 &nbsp; Paste your workflow JSON</label>
+        <div class="aaa-fmtrow"><span class="aaa-fmtrow-label">Works with</span><span class="aaa-fmt aaa-fmt-n8n"><i></i>n8n</span><span class="aaa-fmt aaa-fmt-make"><i></i>Make.com</span><span class="aaa-fmt aaa-fmt-zap"><i></i>Zapier</span><span class="aaa-fmt">JSON export &mdash; whole file, exactly as downloaded</span></div>
+        <textarea id="wfInput" class="form-input aaa-textarea" spellcheck="false" placeholder='Paste your exported workflow JSON here…
+
+n8n:  Export → Download → paste the whole file.
+Make:  Scenario → Export blueprint → paste it.
+Zapier: Export your Zap as JSON → paste it.
+
+Tip: not sure what to paste? Click “Try risky sample” below to see what a dangerous workflow looks like.'></textarea>
+        <div class="aaa-inputmeta"><span><b id="charCount">0 characters</b></span><span>Your JSON never leaves this page.</span></div>
+
+        <div class="aaa-btnrow">
+          <button class="btn btn-primary aaa-cta" id="runBtn" type="button">▶&nbsp; Run audit</button>
+          <button class="btn btn-secondary aaa-ghost" id="riskyBtn" type="button">⚠️ Try risky sample</button>
+          <button class="btn btn-secondary aaa-ghost" id="safeBtn" type="button">✅ Try safe sample</button>
+          <button class="btn btn-secondary aaa-ghost" id="clearBtn" type="button">Clear</button>
+          <label class="btn btn-secondary aaa-ghost" for="fileInput" style="cursor:pointer;">📁 Upload .json file</label>
+          <input type="file" id="fileInput" accept=".json,application/json" style="display:none"/>
+        </div>
+        <p class="aaa-muted">Exports: <b>n8n</b> — open the workflow → <span class="aaa-kbd">⋯ → Download</span>. <b>Make</b> — scenario menu → <span class="aaa-kbd">Export blueprint</span>. <b>Zapier</b> — export the Zap as JSON. Paste the whole file, exactly as exported — do not edit out the scary parts, that is what we are checking.</p>
+
+        <div class="aaa-err" id="errBox" role="alert"></div>
+
+        <div class="aaa-score" id="scoreBox">
+          <div class="aaa-score-top">
+            <div class="aaa-gauge">
+              <svg class="aaa-gauge-svg" viewBox="0 0 148 148" width="148" height="148" aria-hidden="true">
+                <circle class="aaa-gauge-track" cx="74" cy="74" r="62"></circle>
+                <circle class="aaa-gauge-ring" id="scoreBar" cx="74" cy="74" r="62" pathLength="100"></circle>
+              </svg>
+              <div class="aaa-gauge-center"><div class="aaa-score-num" id="scoreNum">–</div><div class="aaa-gauge-of">/ 100</div></div>
+            </div>
+            <div class="aaa-score-info">
+              <div class="aaa-verdict" id="verdictText"></div>
+              <div class="aaa-muted" id="verdictSub"></div>
+              <div class="aaa-counts" id="countsRow"></div>
+            </div>
+          </div>
+          <div class="aaa-btnrow" style="margin-bottom:0;">
+            <button class="btn btn-primary aaa-cta" id="copyReportBtn" type="button">📋 Copy full report (Markdown)</button>
+            <button class="btn btn-secondary aaa-ghost" id="copyFixesBtn" type="button">📋 Copy all fix prompts</button>
+          </div>
+        </div>
+
+        <div class="aaa-ok" id="okBox"></div>
+        <div id="findingsBox"></div>
+
+        <div class="aaa-warn"><b>What this is NOT.</b> This is a deterministic pattern check, not a full security audit. It reads the workflow you pasted — it cannot see your server, your database rules, or code hidden in linked files. It can miss obfuscated secrets, encoded payloads, and logic risks that only show up at runtime (for example, an AI agent that is technically gated but given a prompt that tells it to skip the gate). A clean score means “nothing found in this file”, not “provably safe”. If this handles real customer data or real money, get a human review before launch.</div>
+
+        <h2 class="aaa-section-title">What we check — 12 rules</h2>
+        <div class="aaa-rules-grid">
+          <article class="aaa-rule-card sev-critical"><span class="aaa-rule-ico">&#128275;</span><div><span class="aaa-rule">AUTO-001</span><h3>Unauthenticated webhook</h3><p>Anyone on the internet can fire it.</p></div><span class="pill pill-critical">Critical</span></article>
+          <article class="aaa-rule-card sev-critical"><span class="aaa-rule-ico">&#128273;</span><div><span class="aaa-rule">AUTO-002</span><h3>Hardcoded secret</h3><p>Stripe / OpenAI / GitHub / Slack / AWS keys, Bearer tokens in a parameter.</p></div><span class="pill pill-critical">Critical</span></article>
+          <article class="aaa-rule-card sev-critical"><span class="aaa-rule-ico">&#127760;</span><div><span class="aaa-rule">AUTO-003</span><h3>SSRF / private network</h3><p>Requests to 169.254.169.254, localhost, 10.x, 192.168.x.</p></div><span class="pill pill-critical">Critical</span></article>
+          <article class="aaa-rule-card sev-critical"><span class="aaa-rule-ico">&#128187;</span><div><span class="aaa-rule">AUTO-004</span><h3>Dangerous code sink</h3><p>eval, exec, file delete, process.env, external fetch in a Code node.</p></div><span class="pill pill-critical">Critical</span></article>
+          <article class="aaa-rule-card sev-critical"><span class="aaa-rule-ico">&#9881;</span><div><span class="aaa-rule">AUTO-005</span><h3>Execute Command / SSH</h3><p>A node that can run shell commands on the host.</p></div><span class="pill pill-critical">Critical</span></article>
+          <article class="aaa-rule-card sev-critical"><span class="aaa-rule-ico">&#129302;</span><div><span class="aaa-rule">AUTO-006</span><h3>AI &rarr; action, no approval</h3><p>AI Agent / LLM wired straight to a destructive or outbound action.</p></div><span class="pill pill-critical">Critical</span></article>
+          <article class="aaa-rule-card sev-medium"><span class="aaa-rule-ico">&#129693;</span><div><span class="aaa-rule">AUTO-007</span><h3>No error handling</h3><p>No Error Trigger, retry, or fallback anywhere in the workflow.</p></div><span class="pill pill-medium">Medium</span></article>
+          <article class="aaa-rule-card sev-high"><span class="aaa-rule-ico">&#128228;</span><div><span class="aaa-rule">AUTO-008</span><h3>Sensitive data egress</h3><p>Email / password / card / phone / address sent to Gmail, Slack, Telegram, HTTP.</p></div><span class="pill pill-high">High</span></article>
+          <article class="aaa-rule-card sev-high"><span class="aaa-rule-ico">&#128465;</span><div><span class="aaa-rule">AUTO-009</span><h3>Destructive, no approval</h3><p>Delete / drop / truncate / refund with no approval gate.</p></div><span class="pill pill-high">High</span></article>
+          <article class="aaa-rule-card sev-high"><span class="aaa-rule-ico">&#128176;</span><div><span class="aaa-rule">AUTO-010</span><h3>Cost bomb</h3><p>Runs every minute &mdash; and calls an AI model or paid API.</p></div><span class="pill pill-high">High</span></article>
+          <article class="aaa-rule-card sev-high"><span class="aaa-rule-ico">&#128272;</span><div><span class="aaa-rule">AUTO-011</span><h3>Plain-text credentials</h3><p>Credentials typed in parameters instead of the credentials store.</p></div><span class="pill pill-high">High</span></article>
+          <article class="aaa-rule-card sev-high"><span class="aaa-rule-ico">&#128279;</span><div><span class="aaa-rule">AUTO-012</span><h3>GET webhook &rarr; write</h3><p>A GET webhook (or public form) that triggers a write, delete, or payment.</p></div><span class="pill pill-high">High</span></article>
+        </div>
+        <p class="aaa-muted">Scoring: start at 100. Critical &minus;25, High &minus;15, Medium &minus;7, Low &minus;3 (floor 0). <b>90&ndash;100</b> Safe to inspect &mdash; still read the findings. <b>60&ndash;89</b> Review before activating. <b>0&ndash;59</b> Do not activate yet.</p>
+      </div>
+    </main>
+    <footer class="enterprise-footer" style="margin-top:56px;border-top:1px solid var(--border);padding-top:32px;background:var(--bg-surface);">
+      <div style="max-width:1200px;margin:0 auto;padding:0 24px 32px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><img src="../assets/webdevworker-icon.svg" alt="WebDevWorker" width="28" height="28" style="border-radius:8px;"/><span style="font-weight:800;font-size:1.1rem;">WebDevWorker</span></div>
+        <p style="font-size:0.86rem;color:var(--text-muted);line-height:1.6;">AI Automation Audit — a deterministic, client-side check. No data leaves your browser. Founded by Zaviyan • Operated by Zaviyan LLC • <a href="mailto:business@zaviyanllc.com" style="color:var(--text-muted);">business@zaviyanllc.com</a> • <a href="../index.html" style="color:var(--text-muted);">All tools</a></p>
+      </div>
+    </footer>
+  </div>
+</div>
+<script>
+'use strict';
+/* ==========================================================================
+   AI Automation Audit — deterministic, client-side only.
+   No network calls anywhere in this file. No API key. No storage of input.
+   The audit function is pure: auditWorkflow(text) -> result object.
+   ========================================================================== */
+
+/* ---------- helpers ---------- */
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function trunc(s,n){ s=String(s==null?'':s); return s.length>n ? s.slice(0,n)+'…' : s; }
+function isPlaceholder(v){
+  if(!v) return true;
+  var s=String(v).trim().toLowerCase();
+  return s==='' || s.indexOf('your_')===0 || s.indexOf('your-')===0 || s.indexOf('xxx')===0 ||
+    s==='test' || s==='changeme' || s==='change-me' || s==='example' || s==='placeholder' ||
+    s.indexOf('{{')===0 || s.indexOf('={{')===0 || s.indexOf('$env')===0 || s.indexOf('{{$credentials')===0;
+}
+/* Secret shapes. Keep generic on purpose: long random-looking tokens are
+   flagged only when they sit in a secret-looking key or match a known prefix. */
+var SECRET_RES=[
+  {kind:'Stripe secret key', re:/sk_live_[A-Za-z0-9]{12,}/g},
+  {kind:'Stripe secret key (test)', re:/sk_test_[A-Za-z0-9]{12,}/g},
+  {kind:'OpenAI / generic sk- key', re:/sk-proj-[A-Za-z0-9_\-]{12,}/g},
+  {kind:'OpenAI API key', re:/sk-[A-Za-z0-9]{20,}/g},
+  {kind:'GitHub token', re:/(?:ghp_|gho_|ghu_|ghs_|ghr_|github_pat_)[A-Za-z0-9_]{15,}/g},
+  {kind:'Slack token', re:/xox[baprs]-[A-Za-z0-9\-]{10,}/g},
+  {kind:'Google API key', re:/AIza[0-9A-Za-z_\-]{20,}/g},
+  {kind:'AWS access key', re:/AKIA[0-9A-Z]{16}/g},
+  {kind:'Bearer token', re:/Bearer\s+[A-Za-z0-9._\-]{16,}/g},
+  {kind:'Supabase service_role key', re:/eyJ[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}/g}
+];
+/* MANDATORY redaction: never show a full secret anywhere (screen or report).
+   Keep at most the first 4 chars, then bullets. Applied to every evidence
+   string, every report line, and the raw input echo — before display. */
+function redact(s){
+  s=String(s==null?'':s);
+  SECRET_RES.forEach(function(p){
+    s=s.replace(p.re, function(m){
+      var head = m.slice(0,4);
+      return head + '••••';
+    });
+  });
+  /* Long JWT-ish / token-ish blobs that are not a known prefix: mask the tail. */
+  s=s.replace(/\b([A-Za-z0-9_\-]{32,})\b/g, function(m){
+    if(m.indexOf(' ')>=0) return m;
+    return m.slice(0,4)+'••••';
+  });
+  return s;
+}
+function redactEvidence(s){ return trunc(redact(s), 220); }
+
+/* ---------- workflow normalisation ---------- */
+function nodeText(n){ try { return JSON.stringify(n); } catch(e){ return ''; } }
+function walkStrings(obj, fn, path){
+  path = path || '';
+  if(typeof obj==='string'){ fn(obj, path); return; }
+  if(Array.isArray(obj)){ obj.forEach(function(v,i){ walkStrings(v, fn, path+'['+i+']'); }); return; }
+  if(obj && typeof obj==='object'){
+    Object.keys(obj).forEach(function(k){ walkStrings(obj[k], fn, path ? path+'.'+k : k); });
+  }
+}
+function normalise(data, rawText){
+  var nodes=[], format='unknown', note='';
+  function push(name, type, params, raw){
+    nodes.push({name:String(name||'Unnamed node'), type:String(type||'').toLowerCase(), params:params||{}, raw:raw||null});
+  }
+  if(data && Array.isArray(data.nodes)){ /* n8n */
+    format='n8n';
+    data.nodes.forEach(function(n){
+      push(n.name, n.type, n.parameters||{}, n);
+    });
+    note='Detected n8n workflow ('+nodes.length+' nodes).';
+  } else if(data && (Array.isArray(data.flow) || Array.isArray(data.modules))){ /* Make.com blueprint */
+    format='make';
+    var flow = data.flow || data.modules;
+    flow.forEach(function(m, i){
+      var name = m.name || m.label || ('Module '+(i+1));
+      var type = m.module || m.type || '';
+      push(name, type, m.parameters||m.mapper||{}, m);
+    });
+    note='Detected Make.com blueprint ('+nodes.length+' modules). Order is treated as the execution order.';
+  } else if(data && (Array.isArray(data.steps) || Array.isArray(data.actions))){ /* Zapier */
+    format='zapier';
+    var steps = data.steps || [];
+    if(data.trigger) steps.unshift({name:'Trigger', type:String(data.trigger.app||data.trigger.type||'trigger'), parameters:data.trigger});
+    (data.actions||[]).forEach(function(a){ steps.push(a); });
+    steps.forEach(function(s, i){
+      var name = s.name || s.title || ('Step '+(i+1));
+      var type = s.type || s.app || s.action || '';
+      push(name, type, s.parameters||s.fields||s, s);
+    });
+    note='Detected Zapier Zap ('+nodes.length+' steps). Order is treated as the execution order.';
+  } else if(data && typeof data==='object'){
+    note='Format not recognised — only a raw-text scan ran (secrets + private-network URLs). Export the workflow as JSON from n8n, Make or Zapier for the full 12-rule audit.';
+  }
+  return {format:format, note:note, nodes:nodes};
+}
+/* Build adjacency: n8n connections, otherwise array order. */
+function buildGraph(data, norm){
+  var adj={}, nodes=norm.nodes;
+  nodes.forEach(function(n){ adj[n.name]=[]; });
+  function link(a,b){ if(adj[a] && nodes.some(function(n){return n.name===b;}) && adj[a].indexOf(b)<0) adj[a].push(b); }
+  if(norm.format==='n8n' && data && data.connections && typeof data.connections==='object'){
+    Object.keys(data.connections).forEach(function(from){
+      var outs=data.connections[from];
+      Object.keys(outs||{}).forEach(function(kind){
+        (outs[kind]||[]).forEach(function(branch){
+          (branch||[]).forEach(function(edge){ if(edge && edge.node) link(from, edge.node); });
+        });
+      });
+    });
+    /* Any node with no outgoing edge in the map but listed after another node
+       in the array is NOT auto-linked — n8n connections are authoritative. */
+  } else {
+    for(var i=0;i<nodes.length-1;i++) link(nodes[i].name, nodes[i+1].name);
+  }
+  return adj;
+}
+function reachableFrom(adj, start, stopAt){
+  var seen={}, queue=[start], out=[];
+  seen[start]=true;
+  while(queue.length){
+    var cur=queue.shift();
+    (adj[cur]||[]).forEach(function(nx){
+      if(seen[nx]) return;
+      seen[nx]=true; out.push(nx);
+      if(!stopAt || stopAt.indexOf(nx)<0) queue.push(nx);
+    });
+  }
+  return out;
+}
+function pathExistsWithout(adj, start, target, forbidden){
+  /* DFS: is there a path start -> target that never passes a forbidden node? */
+  var stack=[[start, false]], seen={};
+  while(stack.length){
+    var item=stack.pop(), cur=item[0];
+    if(cur===target && cur!==start) return true;
+    if(seen[cur]) continue; seen[cur]=true;
+    (adj[cur]||[]).forEach(function(nx){
+      if(forbidden.indexOf(nx)>=0 && nx!==target) return;
+      stack.push([nx, false]);
+    });
+  }
+  return false;
+}
+function predecessors(adj, target){
+  var preds=[], names=Object.keys(adj);
+  names.forEach(function(n){ if((adj[n]||[]).indexOf(target)>=0) preds.push(n); });
+  return preds;
+}
+function hasApprovalUpstream(adj, nodesByName, target){
+  var approvalNames=nodesByName.filter(function(n){ return isApproval(n); }).map(function(n){ return n.name; });
+  if(!approvalNames.length) return false;
+  /* Any approval node that can reach the target (or is the target's trigger path). */
+  return approvalNames.some(function(a){
+    return a===target || reachableFrom(adj, a).indexOf(target)>=0;
+  });
+}
+
+/* ---------- node classification ---------- */
+function t(n){ return (n.type||'')+' '+(n.name||''); }
+function isWebhook(n){ var s=t(n); if(/respond/.test(n.type||'')) return false; return /webhook|customwebhook|gateway:customwebhook|webhooks|formtrigger|form_trigger/.test(s); }
+function isSchedule(n){ var s=t(n); return /schedule|cron|interval|trigger.*sched|sched.*trigger/.test(s); }
+function isCode(n){ var s=t(n); return /(^|[^a-z])code([^a-z]|$)|function|set.*code|code_node/.test(s) || /n8n-nodes-base\.code|n8n-nodes-base\.function/.test(n.type||''); }
+function isExecute(n){ var s=t(n); return /executecommand|execute_command|ssh|execute command/.test(s); }
+function isAI(n){ var s=t(n); return /agent|llm|openai|anthropic|chatmodel|lmchat|langchain|@n8n\/n8n-nodes-langchain|ai_|gpt|claude|gemini/.test(s); }
+function isApproval(n){ var s=t(n); return /\bif\b|switch|wait|manualtrigger|manual_trigger|formtrigger|form_trigger|human|approval|approve/.test(s); }
+function isErrorTrigger(n){ var s=t(n); return /errortrigger|error_trigger/.test(s); }
+function isOutbound(n){
+  var s=t(n);
+  return /gmail|sendmail|send.*email|slack|telegram|discord|twilio|send.*message|http.*request|webhook.*respond|stripe|charge|refund|payment|\bpost\b|send/.test(s);
+}
+function isDestructive(n){
+  var s=t(n), p=JSON.stringify(n.params||{}).toLowerCase();
+  if(/delete|remove|drop|truncate|destroy|refund|charge|revoke/.test(s)) return true;
+  if(/stripe/.test(s) && /refund|charge/.test(p)) return true;
+  if(/http/.test(s) && /"(method|operation)"\s*:\s*"(delete|put|patch|post)"/.test(p)) return true;
+  if(/database|postgres|mysql|supabase|mongo|sheet/.test(s) && /delete|update|drop/.test(p)) return true;
+  return false;
+}
+function isWriteAction(n){
+  var s=t(n), p=JSON.stringify(n.params||{}).toLowerCase();
+  return isDestructive(n) ||
+    (/http/.test(s) && /"(method)"\s*:\s*"(post|put|patch|delete)"/.test(p)) ||
+    (/gmail|slack|telegram|stripe/.test(s) && /send|post|charge|refund|create|update/.test(s+ ' '+p));
+}
+var SENSITIVE_FIELDS=/\b(password|passwd|credit_?card|card_?number|cvv|ssn|social_?security|bank_?account|iban|phone|address|date_?of_?birth|passport)\b/i;
+var SENSITIVE_EMAIL=/\bemail\b/i;
+
+/* ---------- the audit (pure) ---------- */
+var SEV_POINTS={Critical:25, High:15, Medium:7, Low:3};
+function auditWorkflow(rawText){
+  var findings=[];
+  function add(id, sev, node, title, risk, evidence, fix, fixPrompt){
+    findings.push({id:id, severity:sev, node:node, title:title, risk:risk,
+      evidence:redactEvidence(evidence||''), fix:fix, fixPrompt:fixPrompt});
+  }
+  var data=null, parseErr=null, parsePos=-1;
+  try { data=JSON.parse(rawText); }
+  catch(e){
+    parseErr=e.message||String(e);
+    var m=/position (\d+)/.exec(parseErr); if(m) parsePos=parseInt(m[1],10);
+    return {ok:false, error:parseErr, position:parsePos, format:'invalid',
+      note:'Invalid JSON — fix the JSON first, then run the audit again.', findings:[]};
+  }
+  var norm=normalise(data, rawText);
+  var nodes=norm.nodes;
+  var adj=buildGraph(data, norm);
+  var byName={}; nodes.forEach(function(n){ byName[n.name]=n; });
+
+  /* ----- raw-text rules (unknown format only; known formats get the per-node pass, so secrets are not reported twice) ----- */
+  if(norm.format==='unknown'){
+  var rawFindings=0;
+  SECRET_RES.forEach(function(p){
+    var re2=new RegExp(p.re.source,'g'), hit;
+    while((hit=re2.exec(rawText))!==null){
+      add('AUTO-002','Critical','Raw text / whole workflow',
+        'Hardcoded secret: '+p.kind,
+        'Anyone who opens this exported file — a teammate, a forum post, a leaked repo — can copy this key and use it as you. Stripe keys can refund and charge; OpenAI keys can run up your bill; GitHub tokens can read and push code.',
+        'Found a value matching the shape of a '+p.kind+' in the workflow file: “'+hit[0].slice(0,4)+'••••”.',
+        'Delete the key from the workflow. Store it in the credentials store / secrets manager, reference it by name, then ROTATE the key at the provider (old key stays valid until you revoke it).',
+        'Remove the hardcoded '+p.kind+' from this workflow. Move it into the credentials store, reference it by name only, and rotate the key at the provider so the exposed value stops working. Do not paste the real key into any chat or file.');
+      rawFindings++;
+      if(rawFindings>=6) break;
+    }
+    if(rawFindings>=6) return finish();
+  });
+  /* SSRF in raw text (unknown format path) */
+  var ssrfRe=/(169\.254\.169\.254|metadata\.google\.internal|https?:\/\/(?:localhost|127\.0\.0\.1|0\.0\.0\.0|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(?:1[6-9]|2\d|3[01])\.\d+\.\d+))/g, ssrfHit;
+  while((ssrfHit=ssrfRe.exec(rawText))!==null){
+    add('AUTO-003','Critical','Raw text / whole workflow','Private-network URL in the workflow',
+      'A URL pointing at a private address (like the cloud metadata service) can be abused to steal cloud credentials or reach internal systems that should never be reachable from a workflow.',
+      'Found URL: '+ssrfHit[0],
+      'Remove the private-network URL. If the workflow must call an internal service, put it behind an authenticated private endpoint and allow-list only that exact host.',
+      'Remove every private-network / localhost / cloud-metadata URL from this workflow. If an internal call is genuinely needed, route it through an authenticated private endpoint that allow-lists only that one host.');
+    break;
+  }
+    return finish();
+  }
+
+  /* ----- per-node rules ----- */
+  nodes.forEach(function(n){
+    var ptxt=nodeText(n.params), ntxt=nodeText(n), lname=n.name;
+
+    /* AUTO-001 unauthenticated webhook */
+    if(isWebhook(n)){
+      var p=n.params||{};
+      var auth=p.authentication||p.auth||p.authType||'';
+      var hasAuth = auth && String(auth).toLowerCase()!=='none' && String(auth).toLowerCase()!=='';
+      var hasCreds = !!(n.raw && n.raw.credentials && Object.keys(n.raw.credentials).length);
+      var method=(p.httpMethod||p.method||'GET');
+      if(!hasAuth && !hasCreds){
+        add('AUTO-001','Critical',lname,'Unauthenticated webhook trigger',
+          'Anyone on the internet who guesses (or finds) this webhook URL can fire your workflow — trigger refunds, send emails as you, or flood your paid APIs. Webhook URLs leak in browser history, logs, and shared screenshots.',
+          'Webhook node “'+lname+'” — path: '+(p.path||p.webhookPath||'(no path shown)')+', method: '+method+', authentication: none.',
+          'Turn on authentication for this webhook (header auth, basic auth, or a signed secret), and use a long random path that nobody can guess. Never post the full webhook URL in public.',
+          'Add authentication to the webhook node "'+lname+'" (header auth or basic auth) and change its path to a long random value. Keep the full webhook URL private.');
+      }
+      /* AUTO-012 GET webhook -> write/delete/payment */
+      if(String(method).toUpperCase()==='GET'){
+        var downstream=reachableFrom(adj, lname);
+        var bad=downstream.filter(function(dn){ return byName[dn] && isWriteAction(byName[dn]); });
+        if(bad.length){
+          add('AUTO-012','High',lname,'GET webhook triggers a write / delete / payment',
+            'A GET request is supposed to be safe to repeat — browsers prefetch it, crawlers follow it, and anyone can trigger it by opening a link. If that link charges, deletes, or writes, one accidental click (or one search-engine bot) does it for real.',
+            'GET webhook “'+lname+'” can reach: '+bad.join(', ')+'.',
+            'Change the webhook to POST and require authentication. Destructive actions must never be reachable from a GET request.',
+            'Change the webhook node "'+lname+'" from GET to POST with authentication, so the write/delete/payment actions it reaches can never be triggered by opening a link.');
+        }
+      }
+    }
+
+    /* AUTO-003 SSRF per node */
+    var urlRe=/(169\.254\.169\.254|metadata\.google\.internal|https?:\/\/(?:localhost|127\.0\.0\.1|0\.0\.0\.0|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(?:1[6-9]|2\d|3[01])\.\d+\.\d+))/g, uHit, ssrfCount=0;
+    while((uHit=urlRe.exec(ntxt))!==null && ssrfCount<2){
+      ssrfCount++;
+      add('AUTO-003','Critical',lname,'Request to a private / internal address',
+        'This node calls an address that only exists inside a private network — including the cloud metadata service (169.254.169.254), which hands out cloud credentials. If an attacker can influence the URL, they can steal those credentials.',
+        'Node “'+lname+'” calls: '+uHit[0],
+        'Delete the private-network URL. Call only public, named hosts over HTTPS, and validate any user-supplied URL against an allow-list before requesting it.',
+        'Remove the private-network URL from node "'+lname+'". Replace it with a public HTTPS host, and validate any user-supplied URL against an allow-list.');
+    }
+
+    /* AUTO-002 per-node secrets (dedupe against the raw-text pass by node) */
+    var already002=findings.some(function(f){ return f.id==='AUTO-002' && f.node===lname; });
+    if(!already002){
+      SECRET_RES.forEach(function(sp){
+        var r2=new RegExp(sp.re.source,'g'), h;
+        while((h=r2.exec(ntxt))!==null){
+          add('AUTO-002','Critical',lname,'Hardcoded secret: '+sp.kind,
+            'Anyone who can open this exported file can copy this key and use it as you. Stripe keys can refund and charge; OpenAI keys can run up your bill; GitHub tokens can read and push code.',
+            'Node “'+lname+'” contains a value shaped like a '+sp.kind+': “'+h[0].slice(0,4)+'••••”.',
+            'Delete the key from the node. Store it in the credentials store, reference it by name, then ROTATE the key at the provider — the old value stays valid until revoked.',
+            'Remove the hardcoded '+sp.kind+' from node "'+lname+'". Move it into the credentials store, reference it by name only, and rotate the key at the provider.');
+          break;
+        }
+      });
+    }
+
+    /* AUTO-011 plain-text credentials in parameters */
+    walkStrings(n.params, function(val, key){
+      var leaf=key.split('.').pop();
+      if(/^(api[_-]?key|password|secret|client[_-]?secret|access[_-]?token|auth[_-]?token|private[_-]?key)$/i.test(leaf)){
+        if(typeof val==='string' && val.length>=8 && !isPlaceholder(val) && !/^\{\{/.test(val.trim())){
+          var looksKnown=SECRET_RES.some(function(sp){ return new RegExp(sp.re.source).test(val); });
+          if(!looksKnown){
+            add('AUTO-011','High',lname,'Credential stored as plain text in parameters',
+              'This password / key is written directly in the workflow instead of the credentials store. Anyone with the export — or with read access to the workflow — sees it in plain text, and it ends up in backups, git history, and screenshots.',
+              'Parameter “'+leaf+'” in node “'+lname+'” holds a plain-text value starting “'+val.slice(0,4)+'••••”.',
+              'Move this value into the credentials store (n8n: Credentials; Make: Connections; Zapier: connected account) and reference it by name. Then change the password / rotate the key.',
+              'Move the plain-text credential in node "'+lname+'" (parameter "'+leaf+'") into the credentials store and reference it by name only. Then rotate that credential.');
+          }
+        }
+      }
+    });
+
+    /* AUTO-004 code node sinks */
+    if(isCode(n)){
+      var code='';
+      walkStrings(n.params, function(v){ code+='\n'+v; });
+      var sinks=[];
+      if(/\beval\s*\(/.test(code)) sinks.push('eval()');
+      if(/\bexec(Sync)?\s*\(/.test(code)) sinks.push('exec()');
+      if(/child_process/.test(code)) sinks.push('child_process');
+      if(/fs\.(writeFile|unlink|rm|rmdir)/.test(code)) sinks.push('file write/delete');
+      if(/process\.env/.test(code)) sinks.push('process.env (reads secrets)');
+      if(/fetch\s*\(/.test(code)) sinks.push('external fetch()');
+      if(/axios\s*\.\s*(get|post|put|delete|request)\s*\(/.test(code)) sinks.push('axios call');
+      if(sinks.length){
+        var sev=(sinks.indexOf('eval()')>=0 || sinks.indexOf('exec()')>=0 || sinks.indexOf('child_process')>=0) ? 'Critical' : 'High';
+        add('AUTO-004',sev,lname,'Code node with dangerous operation: '+sinks.join(', '),
+          'Code nodes run with the workflow’s full permissions. eval / exec can run arbitrary commands; file writes can overwrite data; reading process.env can expose secrets; an external fetch can send your data to a stranger’s server.',
+          'Code in node “'+lname+'” uses: '+sinks.join(', ')+'.',
+          'Remove the dangerous call. Use the built-in nodes instead (HTTP Request node, Set node, or a sandboxed transform), and never pass user input into eval / exec.',
+          'Remove '+sinks.join(', ')+' from the Code node "'+lname+'". Replace it with the equivalent built-in node, and never pass user input into eval or exec.');
+      }
+    }
+
+    /* AUTO-005 execute command / SSH */
+    if(isExecute(n)){
+      add('AUTO-005','Critical',lname,'Execute Command / SSH node present',
+        'This node can run shell commands on the host that runs your automation. If an attacker reaches it — through a webhook, an AI agent, or a poisoned input — they get a shell on your server.',
+        'Node “'+lname+'” ('+(n.type||'execute')+') can run shell commands.',
+        'Remove this node if you can. If it is essential, lock it to one exact command with fixed arguments, run it on an isolated host with no secrets, and never feed it user input.',
+        'Remove the Execute Command / SSH node "'+lname+'" if possible. If it is essential, restrict it to a single fixed command with no user input, on an isolated host with no secrets.');
+    }
+
+    /* AUTO-008 sensitive data egress */
+    if(isOutbound(n)){
+      var hits=[];
+      if(SENSITIVE_FIELDS.test(ptxt)) hits.push('password / card / SSN / phone / address field');
+      if(SENSITIVE_EMAIL.test(ptxt) && /gmail|slack|telegram|http/.test(t(n))) hits.push('email addresses');
+      if(hits.length){
+        add('AUTO-008','High',lname,'Sensitive data sent to a third party',
+          'This node sends personal data out to Gmail, Slack, Telegram, or an external API. If the destination, the message, or the recipient list is wrong — or the workflow is triggered by a stranger — real people’s private data leaves your system.',
+          'Node “'+lname+'” sends out: '+hits.join('; ')+'.',
+          'Send only the minimum fields the recipient needs. Never send passwords, card numbers, or full addresses in a message. Check the recipient list and add an approval step before any bulk send.',
+          'In node "'+lname+'", stop sending sensitive fields ('+hits.join('; ')+') to the third party. Send only the minimum fields needed, and add an approval step before any bulk send.');
+      }
+    }
+
+    /* AUTO-009 destructive without approval gate */
+    if(isDestructive(n)){
+      if(!hasApprovalUpstream(adj, nodes, lname) && !isApproval(n)){
+        add('AUTO-009','High',lname,'Destructive operation with no approval gate',
+          'This node deletes, drops, refunds, or charges — and nothing in the workflow checks with a human first. One bad input, one AI hallucination, or one stray webhook call, and the damage is done before anyone notices.',
+          'Node “'+lname+'” performs a destructive action with no IF / Switch / Wait / approval step before it.',
+          'Add a human approval step before this node (IF check, manual approval, or a Wait-for-approval), and limit it to one record at a time with a filter — never “all rows”.',
+          'Add a human approval step (IF / Switch / Wait) before the destructive node "'+lname+'", and make sure it only ever acts on one filtered record, never all rows.');
+      }
+    }
+  });
+
+  /* ----- workflow-level rules ----- */
+  /* AUTO-006 AI -> destructive/outbound with no approval in between */
+  nodes.forEach(function(ai){
+    if(!isAI(ai)) return;
+    var downstream=reachableFrom(adj, ai.name);
+    var approvalNames=nodes.filter(isApproval).map(function(n){ return n.name; });
+    downstream.forEach(function(dn){
+      var target=byName[dn];
+      if(!target || (!isDestructive(target) && !isOutbound(target))) return;
+      var cleanPath=pathExistsWithout(adj, ai.name, dn, approvalNames);
+      if(cleanPath){
+        add('AUTO-006','Critical',ai.name,'AI Agent wired straight to “'+dn+'” — no approval in between',
+          'The AI decides, and the workflow acts — with no human checking first. An AI can be tricked by a prompt injection (a hidden instruction in an email, a document, or a web page) into sending emails, charging cards, or deleting data as you.',
+          'AI node “'+ai.name+'” can reach “'+dn+'” ('+(target.type||'')+') with no IF / Switch / Wait / approval node on the path.',
+          'Put a human approval step between the AI and the action: the AI drafts, a human approves, then the action runs. Also strip tool access the AI does not need.',
+          'Insert a human approval step between the AI node "'+ai.name+'" and the action node "'+dn+'". The AI should only draft — a human approves before anything is sent, charged, or deleted.');
+      }
+    });
+  });
+
+  /* AUTO-007 no error handling */
+  var hasErr=nodes.some(isErrorTrigger) ||
+    nodes.some(function(n){ var p=JSON.stringify(n.params||{}); return /continueOnFail|onError|retry/i.test(p); }) ||
+    !!(data && data.settings && data.settings.errorWorkflow);
+  if(!hasErr){
+    add('AUTO-007','Medium','Workflow','No error handling anywhere',
+      'When a step fails — a bad API response, a missing field, a rate limit — the workflow stops silently or, worse, keeps going with half-finished data. Nobody gets told, and the failure is discovered by a customer first.',
+      'No Error Trigger node, no retry setting, and no error workflow found in this export.',
+      'Add an Error Trigger node (n8n) or an error handler route (Make / Zapier), set retries on flaky HTTP calls, and send failures to yourself (email / Slack) so you hear about them first.',
+      'Add error handling to this workflow: an Error Trigger node or error-handler route, retries on flaky HTTP calls, and a notification to the owner when a run fails.');
+  }
+
+  /* AUTO-010 cost bomb */
+  var freqNode=null, freqDesc='';
+  nodes.forEach(function(n){
+    if(!isSchedule(n)) return;
+    var p=n.params||{}, ptxt=JSON.stringify(p);
+    var cron=p.rule && p.rule.expression ? String(p.rule.expression) : (p.cronExpression||p.expression||'');
+    var everyMin = /^\*\s+\*\s+\*\s+\*\s+\*/.test(cron) || /^\*\/1\s/.test(cron) || /every.?minute/i.test(ptxt) ||
+      (p.interval && (p.interval.value===1 && /minute/i.test(JSON.stringify(p.interval)))) ||
+      (p.mode==='everyMinute');
+    /* n8n scheduleTrigger shape: rule.interval = [{field:'minutes', minutesInterval:1}] */
+    if(p.rule && Array.isArray(p.rule.interval)){
+      p.rule.interval.forEach(function(iv){
+        if(iv.field==='minutes' && iv.minutesInterval && iv.minutesInterval<=1) everyMin=true;
+        if(iv.field==='seconds' && iv.secondsInterval && iv.secondsInterval<=60) everyMin=true;
+      });
+    }
+    var seconds = p.interval && p.interval.seconds ? parseInt(p.interval.seconds,10) : null;
+    if(everyMin || (seconds!==null && seconds<=60)){
+      freqNode=n; freqDesc=cron || ptxt.slice(0,80);
+    }
+  });
+  if(freqNode){
+    var paid=nodes.some(function(n){ return isAI(n) || /openai|anthropic|stripe|http/.test(t(n)); });
+    if(paid){
+      var paidNames=nodes.filter(function(n){ return isAI(n) || /openai|stripe/.test(t(n)); }).map(function(n){ return n.name; });
+      add('AUTO-010','High',freqNode.name,'Cost bomb: runs every minute AND calls a paid API / AI model',
+        'A workflow that fires every minute and calls an AI model or paid API can burn through credits while you sleep — one loop, one bad input, or one retry storm, and the bill is real money.',
+        'Schedule node “'+freqNode.name+'” runs every minute ('+trunc(freqDesc,80)+') and the workflow calls: '+(paidNames.join(', ')||'a paid API')+'.',
+        'Slow the schedule down (hourly, or only when something actually changed), add a “did anything change?” check before the AI call, and set a spend cap / alert at the provider.',
+        'Slow the schedule in node "'+freqNode.name+'" down from every minute, add a check that skips the run when nothing changed, and set a spend cap and alert at the AI/API provider.');
+    }
+  }
+
+  return finish();
+  function finish(){
+    var score=100, counts={Critical:0, High:0, Medium:0, Low:0};
+    findings.forEach(function(f){ score-=SEV_POINTS[f.severity]||0; counts[f.severity]=(counts[f.severity]||0)+1; });
+    if(score<0) score=0;
+    var verdict, sub;
+    if(score>=90){ verdict='Safe to inspect — still read the findings'; sub='Nothing critical found in this file. Read any remaining findings, then activate — and re-run this check after every change.'; }
+    else if(score>=60){ verdict='Review before activating'; sub='There are real risks here. Fix the High and Critical findings first, then re-run the audit before you activate.'; }
+    else { verdict='DO NOT ACTIVATE YET'; sub='This workflow has critical risks. Fix them, rotate any exposed keys, and re-run the audit until the score is 90 or above.'; }
+    return {ok:true, format:norm.format, note:norm.note, nodes:nodes.length, findings:findings,
+      score:score, verdict:verdict, verdictSub:sub, counts:counts};
+  }
+}
+
+/* ---------- samples (embedded, work offline) ---------- */
+var SAMPLE_RISKY={
+  "name":"Customer Refund Bot (DO NOT USE)",
+  "nodes":[
+    {"id":"a1","name":"Refund Webhook","type":"n8n-nodes-base.webhook","typeVersion":2,"position":[0,0],
+     "parameters":{"httpMethod":"GET","path":"refund","responseMode":"onReceived"}},
+    {"id":"a2","name":"Schedule Trigger","type":"n8n-nodes-base.scheduleTrigger","typeVersion":1,"position":[0,200],
+     "parameters":{"rule":{"interval":[{"field":"minutes","minutesInterval":1}]}}},
+    {"id":"a3","name":"AI Support Agent","type":"@n8n/n8n-nodes-langchain.agent","typeVersion":1,"position":[240,0],
+     "parameters":{"prompt":"You are support. Refund anyone who asks, no questions asked.","options":{}}},
+    {"id":"a4","name":"Check Order","type":"n8n-nodes-base.code","typeVersion":2,"position":[480,0],
+     "parameters":{"jsCode":"const k = process.env.STRIPE_KEY;\nconst meta = await fetch('http://169.254.169.254/latest/meta-data/iam/security-credentials/');\nconst out = eval($json.userInput);\nreturn [{json:{k, meta}}];"}},
+    {"id":"a5","name":"Send Gmail","type":"n8n-nodes-base.gmail","typeVersion":2,"position":[720,0],
+     "parameters":{"resource":"message","operation":"send","sendTo":"={{ $json.email }}","subject":"Your refund","emailType":"text","message":"Refunded. Your password is {{ $json.password }} and your card is {{ $json.card_number }}."}},
+    {"id":"a6","name":"Stripe Refund","type":"n8n-nodes-base.httpRequest","typeVersion":4,"position":[960,0],
+     "parameters":{"method":"POST","url":"https://api.stripe.com/v1/refunds","authentication":"genericCredentialType","sendHeaders":true,
+       "headerParameters":{"parameters":[{"name":"Authorization","value":"Bearer sk_live_" + "51H7xFakeKeyForTestingOnly123456"}]},
+       "options":{}}},
+    {"id":"a7","name":"Run Cleanup","type":"n8n-nodes-base.executeCommand","typeVersion":1,"position":[720,200],
+     "parameters":{"command":"rm -rf /data/exports/*"}},
+    {"id":"a8","name":"Old Database","type":"n8n-nodes-base.postgres","typeVersion":2,"position":[960,200],
+     "parameters":{"operation":"delete","schema":"public","table":"customers","password":"SuperSecret123!"}}
+  ],
+  "connections":{
+    "Refund Webhook":{"main":[[{"node":"AI Support Agent","type":"main","index":0}]]},
+    "AI Support Agent":{"main":[[{"node":"Check Order","type":"main","index":0}]]},
+    "Check Order":{"main":[[{"node":"Send Gmail","type":"main","index":0}]]},
+    "Send Gmail":{"main":[[{"node":"Stripe Refund","type":"main","index":0}]]},
+    "Schedule Trigger":{"main":[[{"node":"Run Cleanup","type":"main","index":0}]]},
+    "Run Cleanup":{"main":[[{"node":"Old Database","type":"main","index":0}]]}
+  }
+};
+var SAMPLE_SAFE={
+  "name":"Daily Report (safe example)",
+  "nodes":[
+    {"id":"s1","name":"Webhook","type":"n8n-nodes-base.webhook","typeVersion":2,"position":[0,0],
+     "parameters":{"httpMethod":"POST","path":"daily-report-9f3k2","responseMode":"onReceived","authentication":"headerAuth"},
+     "credentials":{"headerAuth":{"id":"12","name":"Webhook Auth"}}},
+    {"id":"s2","name":"Error Trigger","type":"n8n-nodes-base.errorTrigger","typeVersion":1,"position":[0,240],"parameters":{}},
+    {"id":"s3","name":"Needs Approval?","type":"n8n-nodes-base.if","typeVersion":2,"position":[240,0],
+     "parameters":{"conditions":{"options":{"caseSensitive":true},"conditions":[{"id":"c1","leftValue":"={{ $json.approved }}","rightValue":true,"operator":{"type":"boolean","operation":"equals"}}]}}},
+    {"id":"s4","name":"Fetch Public Data","type":"n8n-nodes-base.httpRequest","typeVersion":4,"position":[480,0],
+     "parameters":{"method":"GET","url":"https://api.example.com/v1/stats","options":{"timeout":10000,"response":{"response":{"responseFormat":"json"}}},"continueOnFail":true}},
+    {"id":"s5","name":"Format Report","type":"n8n-nodes-base.set","typeVersion":3,"position":[720,0],
+     "parameters":{"values":{"string":[{"name":"summary","value":"={{ 'Daily stats: ' + $json.total }}"}]},"options":{}}},
+    {"id":"s6","name":"Respond","type":"n8n-nodes-base.respondToWebhook","typeVersion":1,"position":[960,0],
+     "parameters":{"respondWith":"json","responseBody":"={{ $json }}"}}
+  ],
+  "connections":{
+    "Webhook":{"main":[[{"node":"Needs Approval?","type":"main","index":0}]]},
+    "Needs Approval?":{"main":[[{"node":"Fetch Public Data","type":"main","index":0}]]},
+    "Fetch Public Data":{"main":[[{"node":"Format Report","type":"main","index":0}]]},
+    "Format Report":{"main":[[{"node":"Respond","type":"main","index":0}]]}
+  }
+};
+</script>
+<script>
+/* ---------- UI wiring ---------- */
+var $=function(id){ return document.getElementById(id); };
+var lastResult=null, lastInput='';
+
+/* Live character count under the textarea (UI only — no audit logic here). */
+(function(){
+  var cc=$('charCount'), inp=$('wfInput');
+  if(!cc||!inp) return;
+  function sync(){
+    var n=inp.value.length;
+    cc.textContent=n.toLocaleString('en-US')+' character'+(n===1?'':'s')+(n?' \u2022 JSON':'');
+  }
+  inp.addEventListener('input', sync); sync();
+})();
+
+function showError(msg){
+  var box=$('errBox'); box.style.display='block'; box.textContent=msg;
+}
+function hideError(){ $('errBox').style.display='none'; }
+
+function renderResult(res){
+  lastResult=res;
+  var box=$('scoreBox'), okBox=$('okBox'), fBox=$('findingsBox');
+  box.style.display='block';
+  $('scoreNum').textContent=res.score;
+  $('scoreNum').style.color = res.score>=90 ? '#34d399' : (res.score>=60 ? '#facc15' : '#fb7185');
+  $('verdictText').textContent=res.verdict;
+  $('verdictText').style.color = res.score>=90 ? '#34d399' : (res.score>=60 ? '#facc15' : '#fb7185');
+  $('verdictSub').textContent=res.verdictSub+'  •  Format: '+res.format+'  •  '+res.nodes+' nodes checked.';
+  /* Premium circular gauge: the ring uses pathLength=100, so the offset is
+     simply 100 - score. Colour follows the same bands as the verdict. */
+  var ring=$('scoreBar');
+  ring.style.strokeDashoffset=String(100-res.score);
+  ring.style.stroke = res.score>=90 ? '#10b981' : (res.score>=60 ? '#eab308' : '#f43f5e');
+  var c=res.counts;
+  $('countsRow').innerHTML =
+    '<span class="aaa-chip"><i class="aaa-dot dot-critical"></i>'+c.Critical+' Critical</span>'+
+    '<span class="aaa-chip"><i class="aaa-dot dot-high"></i>'+c.High+' High</span>'+
+    '<span class="aaa-chip"><i class="aaa-dot dot-medium"></i>'+c.Medium+' Medium</span>'+
+    '<span class="aaa-chip"><i class="aaa-dot dot-low"></i>'+c.Low+' Low</span>'+
+    '<span class="aaa-chip"><i class="aaa-dot dot-total"></i>Total: '+res.findings.length+' findings</span>';
+  if(!res.findings.length){
+    okBox.style.display='block';
+    okBox.innerHTML='<b>✓ Nothing found.</b> No issue matched any of the 12 rules in this file. That means “nothing found here” — not a guarantee. Re-run after every change, and get a human review before real customer data or real money flows through it.';
+    fBox.innerHTML='';
+    return;
+  }
+  okBox.style.display='none';
+  var order={Critical:0, High:1, Medium:2, Low:3};
+  var sorted=res.findings.slice().sort(function(a,b){ return (order[a.severity]-order[b.severity]) || (a.id<b.id?-1:1); });
+  var html='';
+  sorted.forEach(function(f, i){
+    html+='<article class="aaa-finding sev-'+f.severity.toLowerCase()+'">'+
+      '<div class="aaa-finding-head">'+
+      '<span class="pill pill-'+f.severity.toLowerCase()+'">'+f.severity+'</span> '+
+      '<span class="aaa-rule">'+esc(f.id)+'</span>'+
+      '<span class="aaa-finding-node">'+esc(f.node)+'</span>'+
+      '</div>'+
+      '<h3>'+esc(f.title)+'</h3>'+
+      '<p><span class="aaa-label">What could happen</span>'+esc(f.risk)+'</p>'+
+      (f.evidence ? '<div class="aaa-ev"><span class="aaa-ev-label">Evidence</span>'+esc(f.evidence)+'</div>' : '')+
+      '<p><span class="aaa-label">Fix</span>'+esc(f.fix)+'</p>'+
+      '<button class="btn btn-secondary aaa-ghost aaa-fixbtn" type="button" data-fix="'+i+'">📋 Copy fix prompt</button>'+
+      '</article>';
+  });
+  fBox.innerHTML=html;
+  fBox.querySelectorAll('[data-fix]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var f=sorted[parseInt(btn.getAttribute('data-fix'),10)];
+      copyText(f.fixPrompt, btn, '✓ Fix prompt copied');
+    });
+  });
+  box.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function buildReport(res, fixesOnly){
+  var lines=[];
+  if(!fixesOnly){
+    lines.push('# AI Automation Audit — WebDevWorker');
+    lines.push('');
+    lines.push('Score: '+res.score+'/100 — '+res.verdict);
+    lines.push('Format: '+res.format+' ('+res.nodes+' nodes). '+res.note);
+    lines.push('Counts: '+res.counts.Critical+' Critical, '+res.counts.High+' High, '+res.counts.Medium+' Medium, '+res.counts.Low+' Low.');
+    lines.push('');
+    if(!res.findings.length){ lines.push('No findings. Nothing matched the 12 rules in this file.'); }
+    res.findings.forEach(function(f, i){
+      lines.push('## '+(i+1)+'. ['+f.severity+'] '+f.id+' — '+f.title+' (node: '+f.node+')');
+      lines.push('What could happen: '+f.risk);
+      if(f.evidence) lines.push('Evidence: '+f.evidence);
+      lines.push('Fix: '+f.fix);
+      lines.push('');
+    });
+    lines.push('---');
+    lines.push('Deterministic pattern check only — not a full security audit. Generated locally in the browser; no data was uploaded.');
+  } else {
+    res.findings.forEach(function(f, i){
+      lines.push((i+1)+'. ['+f.id+' — '+f.node+'] '+f.fixPrompt);
+    });
+    if(!res.findings.length) lines.push('No findings — nothing to fix.');
+  }
+  return redact(lines.join('\n'));
+}
+
+function copyText(text, btn, doneLabel){
+  function done(){
+    if(!btn) return;
+    var orig=btn.innerHTML; btn.innerHTML=doneLabel||'✓ Copied!';
+    btn.style.background='#10b981'; btn.style.color='#fff';
+    setTimeout(function(){ btn.innerHTML=orig; btn.style.background=''; btn.style.color=''; }, 2000);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done, function(){ fallbackCopy(text); done(); });
+  } else { fallbackCopy(text); done(); }
+}
+function fallbackCopy(text){
+  var ta=document.createElement('textarea');
+  ta.value=text; ta.style.cssText='position:fixed;top:0;left:0;width:2em;height:2em;opacity:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); } catch(e){}
+  document.body.removeChild(ta);
+}
+
+function runAudit(){
+  hideError();
+  var text=$('wfInput').value;
+  lastInput=text;
+  if(!text.trim()){ showError('Paste a workflow JSON first — or click “Try risky sample” / “Try safe sample” to see how it works.'); return; }
+  var res=auditWorkflow(text);
+  if(!res.ok){
+    var pos=res.position>=0 ? ('\nPosition: character '+res.position+lineCol(text, res.position)) : '';
+    showError('Invalid JSON — the audit did not run.\n'+res.error+pos+'\nTip: paste the whole exported file, exactly as downloaded. A missing brace or a trailing comma breaks JSON.');
+    $('scoreBox').style.display='none'; $('okBox').style.display='none'; $('findingsBox').innerHTML='';
+    return;
+  }
+  $('findingsBox').innerHTML='';
+  renderResult(res);
+}
+function lineCol(text, pos){
+  var upTo=text.slice(0, pos), lines=upTo.split('\n');
+  return ' (line '+lines.length+', column '+(lines[lines.length-1].length+1)+')';
+}
+
+$('runBtn').addEventListener('click', runAudit);
+$('riskyBtn').addEventListener('click', function(){
+  $('wfInput').value=JSON.stringify(SAMPLE_RISKY, null, 2); hideError(); runAudit();
+});
+$('safeBtn').addEventListener('click', function(){
+  $('wfInput').value=JSON.stringify(SAMPLE_SAFE, null, 2); hideError(); runAudit();
+});
+$('clearBtn').addEventListener('click', function(){
+  $('wfInput').value=''; hideError();
+  $('scoreBox').style.display='none'; $('okBox').style.display='none'; $('findingsBox').innerHTML='';
+});
+$('fileInput').addEventListener('change', function(ev){
+  var f=ev.target.files && ev.target.files[0];
+  if(!f) return;
+  var r=new FileReader();
+  r.onload=function(){ $('wfInput').value=String(r.result||''); hideError(); runAudit(); };
+  r.onerror=function(){ showError('Could not read that file. Try pasting the JSON instead.'); };
+  r.readAsText(f);
+  ev.target.value='';
+});
+$('copyReportBtn').addEventListener('click', function(){
+  if(!lastResult) return;
+  copyText(buildReport(lastResult, false), this, '✓ Report copied');
+});
+$('copyFixesBtn').addEventListener('click', function(){
+  if(!lastResult) return;
+  copyText(buildReport(lastResult, true), this, '✓ Fix prompts copied');
+});
+
+/* theme toggle + sidebar (same behaviour as other tools) */
+(function(){
+  var tBtn=$('themeToggleBtn'), hBtn=$('hamburgerBtn'), sb=$('sidebar'), bd=$('sidebarBackdrop');
+  function syncLabel(){
+    var cur=document.documentElement.getAttribute('data-theme')||'dark';
+    if(tBtn) tBtn.innerHTML = cur==='dark' ? '<span>🌙</span> Dark Mode' : '<span>☀️</span> Light Mode';
+  }
+  if(tBtn) tBtn.addEventListener('click', function(){
+    var cur=document.documentElement.getAttribute('data-theme')==='light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', cur);
+    try { localStorage.setItem('wdw_theme', cur); } catch(e){}
+    syncLabel();
+  });
+  syncLabel();
+  if(hBtn && sb){
+    hBtn.addEventListener('click', function(){
+      var open=sb.classList.toggle('open');
+      if(bd) bd.classList.toggle('show', open);
+    });
+  }
+  if(bd && sb) bd.addEventListener('click', function(){ sb.classList.remove('open'); bd.classList.remove('show'); });
+})();
+</script>
+</body>
+</html>
